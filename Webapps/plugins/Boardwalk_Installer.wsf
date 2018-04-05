@@ -1,0 +1,39 @@
+<job id="IncludeExample">
+	<script language="VBScript">
+		dim xlApp,ArgObj
+		Set objArgs = WScript.Arguments				'Create Argument object
+		Set xlApp = CreateObject("Excel.Application")		'Create Excel object
+		On Error Resume Next
+		xlApp.Wait Now + TimeValue("00:00:02")
+		if objArgs(1) = "uninstall" then
+			dim fso
+			Set fso = CreateObject("Scripting.FileSystemObject")
+			If fso.FileExists(xlApp.UserLibraryPath & "BoardwalkExcel-Add-In.xla") = true Then
+				fso.DeleteFile xlApp.UserLibraryPath & "BoardwalkExcel-Add-In.xla"  
+			End If	
+			If fso.FileExists(xlApp.UserLibraryPath & "vbzip11.dll") = true Then
+				fso.DeleteFile xlApp.UserLibraryPath & "vbzip11.dll"  
+			End If	
+			If fso.FileExists(xlApp.UserLibraryPath & "vbuzip10.dll") = true Then
+				fso.DeleteFile xlApp.UserLibraryPath & "vbuzip10.dll"  
+			End If
+			If fso.FileExists(xlApp.UserLibraryPath & "bwinstall.log") = true Then
+				fso.DeleteFile xlApp.UserLibraryPath & "bwinstall.log"  
+			End If			
+			MsgBox "BCP Client Successfully Un-Installed"
+		end if
+		xlApp.Workbooks.Open(objArgs(0))			'Open Excel file
+		xlApp.Application.ScreenUpdating = true			'Set default properties of Excel
+		xlapp.DisplayAlerts = True
+		xlapp.Interactive = True
+		xlapp.Cursor = xlDefault
+		xlapp.visible = true
+		xlapp.ActiveWindow.activate
+		xlApp.Wait Now + TimeValue("00:00:02")
+		if objArgs(1) = "upgrade" then
+			Application.Cursor= xlWait
+			xlApp.Run "'" & Mid(objArgs(0), InStrRev(objArgs(0), "\") + 1) & "'!CheckUpdateInstall"
+		end if
+		Application.Cursor= xlDefault
+	</script>
+</job>

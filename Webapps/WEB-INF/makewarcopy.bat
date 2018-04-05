@@ -1,0 +1,1 @@
+%JAVA_HOME%/bin/jar cf bw_bcp_demo.war -C . .

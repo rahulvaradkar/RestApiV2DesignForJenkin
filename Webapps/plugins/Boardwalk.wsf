@@ -1,0 +1,30 @@
+<job id="IncludeExample">
+<script language="VBScript">
+    dim sArg, sFile,newSheet
+
+    ' Loop through arguments
+    for each sArg in wscript.arguments
+        ' Add argument to filename
+        sFile = sFile & sArg & " "
+    next
+
+    Set xlApp = CreateObject("Excel.Application")
+    strRegValue = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\excel.exe\Path"
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+    addInLocation = WshShell.RegRead (strRegValue) & "XLSTART\BoardwalkExcel-Add-In.xla"    
+    xlApp.Workbooks.Open(addInLocation)
+    On Error Resume Next
+    xlapp.visible = true
+    xlApp.Application.DisplayAlerts = False
+    xlApp.Application.Interactive = False
+    xlApp.Application.ScreenUpdating = False
+    xlApp.Application.run "BwsFileHandler.readBWSFile", Cstr(sFile)
+    xlapp.visible = true
+    xlapp.DisplayAlerts = True
+    xlapp.Interactive = True
+    xlapp.Cursor = xlDefault
+    xlapp.ActiveWindow.activate
+      
+</script>
+
+</job>

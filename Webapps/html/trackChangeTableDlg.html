@@ -1,0 +1,260 @@
+<html>
+<head>
+
+<title>Track Changes</title>
+
+<script language="javascript">
+	var currrentSelectedType;
+	function initPage()
+	{
+		var args = window.dialogArguments;
+		currentSelectedType = args.currentSelectedType;
+
+		if (currentSelectedType == 'TABLE')
+		{
+				var trackLabel = eval("document.all.trackChangeLabel")
+
+				if ( args.selectedColumnId != -1 )
+				{
+					trackLabel.innerHTML = "<b>Column Differences</b>"
+				}
+				else
+				{
+					trackLabel.innerHTML = "<b>Table</b>"
+				}
+				//eval("document.all.trackChangeObject").value = "TABLE"
+
+				eval("document.all.cellValueLike").value  = ""
+				eval("document.all.cellValueLike").disabled  = true
+				eval("document.all.cellValueLike").style.backgroundColor  ="silver"
+				eval("document.all.endDate").value  = ""
+				eval("document.all.endDate").disabled  = true
+				eval("document.all.endDate").style.backgroundColor  ="silver"
+
+				if ( eval("document.all.trackingPeriod").options.length == 7 )
+				{
+
+					eval("document.all.trackingPeriod").options.remove(6)
+				}
+
+		}
+		else if (currentSelectedType == 'ROW')
+		{
+				var trackLabel = eval("document.all.trackChangeLabel")
+				eval("document.all.trackChangeObject").value = "ROW"
+				trackLabel.innerHTML = "<b>Row</b>"
+				eval("document.all.cellValueLike").value  = ""
+				eval("document.all.cellValueLike").disabled  = true
+				eval("document.all.cellValueLike").style.backgroundColor  ="#C0C0C0"
+
+
+				if ( eval("document.all.trackingPeriod").options.length == 6 )
+				{
+					var oOption = document.createElement("OPTION");
+					eval("document.all.trackingPeriod").options.add(oOption);
+					oOption.innerText = "All Changes";
+					oOption.value = "All Changes";
+				}
+		}
+		else if (currentSelectedType == 'COLUMN')
+		{
+			var trackLabel = eval("document.all.trackChangeLabel")
+			eval("document.all.trackChangeObject").value = "COLUMN"
+			trackLabel.innerHTML = "<b>Column</b>"
+			eval("document.all.cellValueLike").value  = ""
+			eval("document.all.cellValueLike").disabled  = true
+			eval("document.all.cellValueLike").style.backgroundColor  ="#C0C0C0"
+			eval("document.all.endDate").value = ""
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.endDate").style.backgroundColor  ="silver"
+			trackLabel.innerHTML = "<b>Track changes  : Table based on state changes for Column</b>"
+			if ( eval("document.all.trackingPeriod").options.length == 7 )
+			{
+
+				eval("document.all.trackingPeriod").options.remove(6)
+			}
+
+		}
+		else if (currentSelectedType == 'CELL')
+		{
+			var trackLabel = eval("document.all.trackChangeLabel")
+			trackLabel.innerHTML = "<b>Cell</b>"
+			eval("document.all.trackChangeObject").value = "CELL"
+			eval("document.all.cellValueLike").disabled  = false
+			eval("document.all.cellValueLike").style.backgroundColor  ="white"
+
+			if ( eval("document.all.trackingPeriod").options.length == 6 )
+			{
+				var oOption = document.createElement("OPTION");
+				eval("document.all.trackingPeriod").options.add(oOption);
+				oOption.innerText = "All Changes";
+				oOption.value = "All Changes";
+			}
+
+		}
+		else
+		{
+			alert(" Form cannot be initialized. Selection invalid");
+		}
+	}
+
+	function setStartEndDates(select)
+	{
+
+		var trackingPeriod = select.options[select.selectedIndex].value
+
+
+
+		if ( trackingPeriod != "Custom" )
+		{
+			eval("document.all.endDate").value  = ""
+			eval("document.all.startDate").value  = ""
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+
+
+			eval("document.all.endDate").style.backgroundColor  ="silver"
+			eval("document.all.startDate").style.backgroundColor  ="silver"
+
+		}
+		else
+		{
+			if (currentSelectedType == "CELL")
+			{
+				eval("document.all.endDate").disabled  = false
+				eval("document.all.endDate").style.backgroundColor  = "white"
+			}
+			eval("document.all.startDate").disabled  = false
+			eval("document.all.startDate").style.backgroundColor  = "white"
+		}
+
+	}
+
+
+	function dlgOK()
+	{
+		var q = new Object();
+		q.startDate = eval("document.all.startDate").value;
+		q.endDate = eval("document.all.endDate").value;
+		if (eval("document.all.trackingPeriod").selectedIndex == 0)
+		{
+			q.trackingPeriod = "Last Change";
+		}
+
+		else if (eval("document.all.trackingPeriod").selectedIndex == 1)
+				{
+					q.trackingPeriod = "Week";
+		}
+		else if (eval("document.all.trackingPeriod").selectedIndex == 2)
+				{
+					q.trackingPeriod = "Month";
+		}
+		else if (eval("document.all.trackingPeriod").selectedIndex == 3)
+				{
+					q.trackingPeriod = "Quarter";
+		}
+		else if (eval("document.all.trackingPeriod").selectedIndex == 4)
+				{
+					q.trackingPeriod = "Year";
+		}
+		else if (eval("document.all.trackingPeriod").selectedIndex == 5)
+				{
+					q.trackingPeriod = "Custom";
+		}
+		else if (eval("document.all.trackingPeriod").selectedIndex == 6)
+						{
+							q.trackingPeriod = "All Changes";
+		}
+		q.cellValueLike = eval("document.all.cellValueLike").value;
+
+		window.returnValue = q;
+
+		window.close();
+
+	}
+
+
+
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css" TITLE="stylesheet">
+
+
+
+<body onload="javascript:initPage()">
+
+<b id="trackChangeLabel">Table</b>
+<input type="hidden" name="trackChangeObject" value="TABLE">
+<br>
+
+<table >
+
+	<tr>
+	<td>Tracking Period</td>
+	<td>
+		<select   onchange="javascript:setStartEndDates(this)"  id="trackingPeriod" >
+		<option   value="Last Change" selected >Last Change</option>
+		<option value="Week">Week</option>
+		<option value="Month">Month</option>
+		<option value="Quarter">Quarter</option>
+		<option value="Year">Year</option>
+		<option  value="Custom"  >Custom</option>
+		</select>
+	</td>
+	</tr>
+
+
+
+	<tr >
+	<td>Start Date <br> ( mm/dd/yyyy or dd/mm/yyyy )</td>
+	<td>
+	<input   type="text" id="startDate"  value="" disabled=true  STYLE="background-color:silver" >
+	</td>
+	</tr>
+
+	<tr>
+	<td>End Date</td>
+	<td>
+	<input   type="text" id="endDate" value="" disabled=true  STYLE="background-color:silver"   >
+	</td>
+	</tr>
+
+	<tr>
+	<td>Filter By</td>
+	<td>
+	<input   type="text"  id="cellValueLike" value="" disabled=true  STYLE="background-color:silver" >
+	</td>
+	</tr>
+
+	<tr>
+		<td colspan=3>
+<br>
+			<input type='button' id="okBtn" onclick="dlgOK()" value=" OK ">
+			<input type='button' id="cancelBtn" onclick="window.close()" value=" Cancel ">
+
+		</td>
+	</tr>
+</table>
+</body>
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

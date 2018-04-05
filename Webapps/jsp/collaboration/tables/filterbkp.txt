@@ -1,0 +1,149 @@
+<html>
+<head>
+
+<title>Filter</title>
+
+<script language="javascript">
+
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="css/stylesheet.css" TITLE="stylesheet">
+
+
+
+<body bgcolor="#FFFFFF">
+
+
+<table border="0" cellspacing="0" cellpadding="0" class="body">
+  <tr>
+  	<td valign="top">
+  </tr>
+  <tr>
+	  <br>
+	  <td align="left" colspan="2" height="20"  class="page-heading"><b> Filtering Column </b></td>
+  </tr>
+
+
+
+
+
+<tr>
+
+    <td>
+
+        <!--start main page table-->
+        <table width="680" border="0" cellspacing="0" cellpadding="0" align="left" class="body">
+          <tr>
+            <td valign="top">
+                <!--start main page table 2 -->
+
+				<table width="500" border="0" cellspacing="0" cellpadding="0" align="left" valign="top">
+                    <tr valign="top" bgcolor="#FFCC66">
+                      <td height="2" width="500"><img src="images/clear.gif" width="500" height="2"></td>
+                    </tr>
+
+                    <tr valign="top">
+                        <td class="body" align=left>
+                            <br>
+
+                            <br>
+                        <table width="400" border="0" cellspacing="2" cellpadding="2" align="left" class="body">
+                        	<form method="post" action="MyTables">
+
+
+                                <!--start table for table-->
+							<tr bgcolor="#fddeb9" height=20>
+								<td class="body"> <b> Condition </b></td>
+								<td class="body"> <b> Value </b></td>
+							</tr>
+
+
+							<tr bgcolor="#eeeeee">
+							  <td width="150">
+								   <select width="150" class="LookupList"   >
+									 <option name="condition"  value="equals"> equals </option>
+									 <option name="condition"  value="doesNotEqual"> does not equal </option>
+									 <option name="condition"  value="isGreaterThan"> is greater than </option>
+									 <option name="condition"  value="isGreaterThanOrEqualTo"> is greater than or equal to </option>
+									 <option name="condition"  value="isLessThan"> is less than </option>
+									 <option name="condition"  value="isLessThanOrEqualTo"> is less than or equal to </option>
+									 <option name="condition"  value="beginsWith"> begins with </option>
+									 <option name="condition"  value="doesNotBeginWith"> does not begin with </option>
+									 <option name="condition"  value="endsWith"> ends with </option>
+									 <option name="condition"  value="doesNotEndWith"> does not end with </option>
+									 <option name="condition"  value="contains"> contains </option>
+									 <option name="condition"  value="doesNotContail"> does not contain </option>
+
+								   </select>
+		        			   </td>
+							  <td> <input type=text id="urlName" value="" ></input></td>
+							</tr>
+							 <tr   bgcolor="#eeeeee" >
+								<td colspan=3>
+								<small> Select the condition and value and click on Filter <small>
+								</td>
+							</tr>
+
+							<tr   align=center bgcolor="#cccccc">
+							<td colspan=2>
+							  <a href="javascript:submitFilterQuery()">Filter</a> |
+							  <a href="javascript:closeWindow()">Cancel</a>
+							</td>
+
+							</tr>
+							</form>
+        				</table>
+
+
+        <td width="2" valign="top" bgcolor="#FFCC66"><img src="images/clear.gif" width="2" height="2"></td>
+        <!--end table for table-->
+        </tr>
+
+     </table>
+              <!--end table for main page table 2 -->
+
+
+            </td>
+
+
+
+
+
+                   </tr>
+        </table>
+
+        <!--start main page table -->
+
+    <br>
+    </td>
+
+  </tr>
+<br>
+<tr><td height="20">&nbsp;</td></tr>
+<tr>
+    <td align="left" height="18" bgcolor="#999999" valign="top">
+      <font size="1" face="Verdana,Arial, Helvetica, sans-serif" color="white"><b>Powered by boardwalk Copyright UCSG Inc.</b></font>
+    </td>
+  </tr>
+</td>
+</tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1 @@
+%JAVA_HOME%/bin/jar cf C:\bwlib.jar sql -C WEB-INF\classes com -C WEB-INF\classes boardwalk

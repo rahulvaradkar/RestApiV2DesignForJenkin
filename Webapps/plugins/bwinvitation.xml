@@ -1,0 +1,159 @@
+<distributionList>
+
+<distribution name='Training Template Example'>
+	<!-- The Manager for this campaign/distribution-->
+	<manager>
+		<member>
+			<user>su@email.com</user>
+			<neighborhood>Root</neighborhood>
+		</member>
+	</manager>
+
+<!-- The template for Account Managers-->
+	<template name='Training Model' location='d:\\Tomcat5\\webapps\\bw_demo_test\\templates\\Bw_Training_Template.xls'>
+
+		<subject>Template</subject>
+		<message>d:\\Tomcat5\\webapps\\bw_demo_test\\plugins\\BodyText.txt</message>
+
+		<workbook name='Training'>
+<!-- Team Contacts worksheet -->
+		<worksheet name='SampleTable' useTemplateSheet='SampleTable'>
+				<tableDisplay name='Sample Table' xPos='0' yPos='0' hidden='N'>
+					<collaboration name='%Training Project%'/>
+					<whiteboard name='%Period Shift%'/>
+					<table name='%Sample Table%' transpose='false'>
+<!-- Table Level Actions -->
+						<tableActionList>
+							<action name='InsertProjectBtn'>
+								<bwInsertRowAction>
+									<preMacro name='preInsertRowForecastTable'/>
+									<postMacro name='postInsertRowForecastTable'/>
+								</bwInsertRowAction>
+							</action>
+							<action>
+								<bwDeleteRowAction name='DeleteProjectBtn'>
+									<preMacro name='preDeleteRowForecastTable'/>
+									<postMacro name='postDeleteRowForecastTable'/>
+								</bwDeleteRowAction>
+							</action>
+						</tableActionList>
+
+					</table>
+				</tableDisplay>
+
+				<sheetActionList>
+					
+					<action name="SubmitBtn">
+						<bwSubmitAllAction>
+							<preMacro name='preExportAll'/>
+							<postMacro name='postExportAll'/>
+						</bwSubmitAllAction>
+					</action>
+
+					<action name="RefreshBtn">
+						<bwRefreshAllAction>
+							<preMacro name='preImportAll'/>
+							<postMacro name='postImportAll'/>
+						</bwRefreshAllAction>
+					</action>
+
+					<action name='CheckStatusBtn'>
+						<bwCheckStatusAllAction>
+							<preMacro name='preCheckStatusAll'/>
+							<postMacro name='postCheckStatusAll'/>
+						</bwCheckStatusAllAction>
+					</action>
+
+					<action name='MyCustomAction'>
+						<bwCustomAction>
+							<argument>%userName%</argument>
+							<argument>http://myServlet</argument>
+						</bwCustomAction>
+					</action>
+
+				</sheetActionList>
+
+			</worksheet>
+			
+			<worksheet name='State Table' useTemplateSheet='StateTable' >
+				<tableDisplay name='State Table' xPos='0' yPos='0' hidden='N'>
+					<collaboration name='%Training Project%'/>
+					<whiteboard name='%Period Shift%'/>
+					<table name='%State Table%' transpose='false'>
+<!-- Table Level Actions -->
+						<tableActionList>
+							<action name='InsertProjectBtn'>
+								<bwInsertRowAction>
+									<preMacro name='preInsertRowForecastTable'/>
+									<postMacro name='postInsertRowForecastTable'/>
+								</bwInsertRowAction>
+							</action>
+							<action>
+								<bwDeleteRowAction name='DeleteProjectBtn'>
+									<preMacro name='preDeleteRowForecastTable'/>
+									<postMacro name='postDeleteRowForecastTable'/>
+								</bwDeleteRowAction>
+							</action>
+						</tableActionList>
+					</table>
+				</tableDisplay>
+<!-- Sheet level actions-->
+				<sheetActionList>
+					<action name="SubmitBtn">
+						<bwSubmitAllAction>
+							<preMacro name='preExportAll'/>
+							<postMacro name='postExportAll'/>
+						</bwSubmitAllAction>
+					</action>
+					<action name="RefreshBtn">
+						<bwRefreshAllAction>
+							<preMacro name='preImportAll'/>
+							<postMacro name='postImportAll'/>
+						</bwRefreshAllAction>
+					</action>
+					<action name='CheckStatusBtn'>
+						<bwCheckStatusAllAction>
+							<preMacro name='preCheckStatusAll'/>
+							<postMacro name='postCheckStatusAll'/>
+						</bwCheckStatusAllAction>
+					</action>
+					<action name='MyCustomAction'>
+						<bwCustomAction>
+							<argument>%userName%</argument>
+							<argument>http://myServlet</argument>
+						</bwCustomAction>
+					</action>
+				</sheetActionList>
+			</worksheet>
+
+		
+<!-- OnLoad Event for the workbook -->
+			<onLoadEvent>
+<!-- Certain arguments will be calculated on the server (boardwalk variables) -->
+				<argument>%time%</argument>
+				<argument>%memberId%</argument>
+				<argument>xyz</argument>
+			</onLoadEvent>
+
+		</workbook>
+<!-- List of people that will get the data in this template-->
+		<memberList>
+			<member>
+				<user>email.com</user>
+				<neighborhood>Root</neighborhood>
+			</member>
+			<member>
+				<user>email.com</user>
+				<neighborhood>Root</neighborhood>
+			</member>
+		</memberList>
+	</template>
+</distribution>
+
+
+<!-- End of Distribution -->
+
+
+
+
+</distributionList>

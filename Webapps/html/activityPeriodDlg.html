@@ -1,0 +1,206 @@
+<html>
+<head>
+
+<title>Select Activity Period</title>
+<script language="javascript" type="text/javascript"
+src="../jscript/datetimepicker.js">
+</script>
+<script language="javascript" type="text/javascript"
+src="../jscript/dateutil.js">
+</script>
+<script language="javascript">
+	var startDate;
+	var endDate;
+	function initPage()
+	{
+		var sel = eval("document.all.trackingPeriod");
+		sel.selectedIndex = 1
+		setStartEndDates (sel);
+
+	}
+
+
+
+
+
+	function setStartEndDates(select)
+	{
+		var trackingPeriod = select.options[select.selectedIndex].value
+		var cal = new Calendar(dtToday);
+
+		if ( trackingPeriod == "Week" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 7);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Month" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 30);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Quarter" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 90);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Year" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 365);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Custom" )
+		{
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = false
+			eval("document.all.calEnd").disabled  = false
+
+		}
+
+	}
+
+
+	function dlgOK()
+	{
+		var q = new Object();
+		q.period = eval("document.all.trackingPeriod").value;
+
+		if (q.period != "Custom")
+		{
+			q.startDate = startDate.getTime();
+			q.endDate = endDate.getTime();
+		}
+		else
+		{
+			var startDateStr = eval("document.all.startDate").value
+			var endDateStr = eval("document.all.endDate").value
+			var startTime;
+			var endTime;
+
+			startTime = getDateFromFormat(startDateStr, "d-NNN-yyyy hh:mm:ss a");
+			endTime = getDateFromFormat(endDateStr, "d-NNN-yyyy hh:mm:ss a");
+
+			if (startTime == 0 || endTime == 0)
+			{
+				alert ("The dates you have entered are not in the correct format")
+				return
+			}
+
+			if (startTime >= endTime)
+			{
+				alert ("The start date is greater than or same as the end date")
+				return
+			}
+
+			q.startDate = startTime
+			q.endDate = endTime
+
+
+		}
+
+		window.returnValue = q;
+
+		window.close();
+	}
+</script>
+
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css"
+TITLE="stylesheet">
+
+
+
+<body onload="javascript:initPage()">
+
+
+<table >
+	<tr>
+	<td>Activity Period</td>
+	<td>
+		<select   onchange="javascript:setStartEndDates(this)"
+id="trackingPeriod" >
+		<option value="Week">Past Week</option>
+		<option value="Month">Past Month</option>
+		<option value="Quarter">Past Quarter</option>
+		<option value="Year">Past Year</option>
+		<option  value="Custom"  >Custom</option>
+		</select>
+	</td>
+	</tr>
+
+
+	  <tr>
+	    <td>
+	      Start Date :
+	    </td>
+	  	<td>
+	  		<input type="Text" id="startDate" maxlength="25" size="30">
+	  		<input type='image' id="calStart"
+disabled="true" onclick="javascript:NewCal('startDate','ddmmmyyyy',true,12)"
+src="../images/cal.gif">
+	  	</td>
+	  </tr>
+	  <tr>
+	    <td>
+	      End Date :
+	    </td>
+	  	<td>
+	  		<input type="Text" id="endDate" maxlength="25" size="30">
+	  		<input type='image' id="calEnd"
+disabled="true" onclick="javascript:NewCal('endDate','ddmmmyyyy',true,12)"
+src="../images/cal.gif">
+	  	</td>
+	  </tr>
+	<tr>
+		<td colspan=3>
+<br>
+			<input type='button' id="okBtn" onclick="dlgOK()" value=" OK ">
+			<input type='button' id="cancelBtn" onclick="window.close()" value="Cancel ">
+
+		</td>
+	</tr>
+
+</table>
+</body>
+</head>
+</html>
+
+

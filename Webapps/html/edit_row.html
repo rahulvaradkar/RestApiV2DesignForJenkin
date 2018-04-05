@@ -1,0 +1,380 @@
+<html>
+<head>
+
+<title>Edit Row Form</title>
+
+
+<script language="javascript">
+
+
+
+var selectedCell;
+var args;
+var currentSelectedRow;
+var thead;
+
+
+
+  function datatypeCheck (cellvalue, celltype)
+  {
+  	if (celltype == "INTEGER")
+  	{
+  		if (isNaN (cellvalue) || parseInt (cellvalue,10) != cellvalue)
+  		{
+  			return false
+  		}
+  	}
+  	else if (celltype == "FLOAT")
+  	{
+  		if (isNaN (cellvalue) || parseFloat(cellvalue) != cellvalue )
+  		{
+  			return false
+  		}
+  	}
+  	return true
+
+}
+
+function trim(strText) {
+    // this will get rid of leading spaces
+    while (strText.substring(0,1) == ' ')
+        strText = strText.substring(1, strText.length);
+
+    // this will get rid of trailing spaces
+    while (strText.substring(strText.length-1,strText.length) == ' ')
+        strText = strText.substring(0, strText.length-1);
+
+   return strText;
+}
+
+
+
+function initPage()
+	{
+
+		args = window.dialogArguments;
+		currentSelectedRow = args.editRow;
+		thead = args.thead;
+		var thCollection = thead.children.tags("TH")
+		var thCtr = 1;
+
+
+
+		var tableForm = eval("document.all.editFormBody");
+
+		var i =1;
+		for ( i=1; i < 	 currentSelectedRow.children.length-4; i++ )
+		{
+			if ( currentSelectedRow.children.item(i).tagName == "TD" )
+			{
+				var divtag = null;
+				var formulatag = null;
+				var selecttag = null
+				var c = 0;
+
+				if ( currentSelectedRow.children.item(i).children != null )
+				{
+							for ( c=0; c < currentSelectedRow.children.item(i).children.length; c++ )
+							{
+								//alert (c)
+								// alert( currentSelectedRow.children.item(i).children(c).tagName )
+
+								if ( currentSelectedRow.children.item(i).children(c).tagName == "SPAN" )
+								{
+									formulatag =  currentSelectedRow.children.item(i).children(c).children(0);
+									//alert( formulatag.tagName )
+									//alert( formulatag.src )
+								}
+
+								if ( currentSelectedRow.children.item(i).children(c).tagName == "DIV" )
+								{
+									divtag = currentSelectedRow.children.item(i).children(c);
+									break;
+								}
+
+								if ( currentSelectedRow.children.item(i).children(c).tagName == "SELECT" )
+								{
+									selecttag = currentSelectedRow.children.item(i).children(c);
+									break;
+								}
+
+
+							}
+
+
+								if ( divtag != null	)
+								{
+
+										var trElement = document.createElement("TR");
+										tableForm.appendChild(trElement)
+										var columnElement = document.createElement("TD");
+
+										var columnName = thCollection.item(thCtr).name
+
+
+
+										columnElement.appendChild(document.createTextNode(columnName))
+										columnElement.style.backgroundColor="#C0C0C0"
+										columnElement.style.backgroundColor="#C0C0C0"
+										trElement.appendChild(columnElement)
+
+
+										var fieldElement = document.createElement("TD");
+										fieldElement.id = currentSelectedRow.children.item(i).id
+										fieldElement.name = currentSelectedRow.children.item(i).name
+										fieldElement.type = "value"
+										fieldElement.columnType = thCollection.item(thCtr).columnType
+										fieldElement.columnName = thCollection.item(thCtr).name
+
+
+
+										var divElement = document.createElement("DIV");
+										if ( thCollection.item(thCtr).canWrite == "false" )
+										{
+											divElement.contentEditable=false
+											columnElement.style.backgroundColor="lightblue"
+											fieldElement.style.backgroundColor="lightblue"
+										}
+										else
+										{
+											if ( formulatag == null )
+											{
+												divElement.contentEditable=true
+											}
+											else
+											{
+												divElement.contentEditable=false
+											}
+										}
+
+
+
+										var sourceDiv =  divtag
+
+										if (sourceDiv.children.length == 1 )
+										{
+											if (sourceDiv.children(0).tagName == "A")
+											{
+												// divElement.innerHTML =  sourceDiv.innerHTML
+												var hrefValue = sourceDiv.children(0).href
+												divElement.appendChild(document.createTextNode(trim(hrefValue)))
+											}
+										}
+										else
+										{
+											if ( formulatag != null )
+											{
+												var imgNode = document.createElement("IMG");
+												imgNode.src = formulatag.src
+												imgNode.title = formulatag.title
+												//imgNode.style = formulatag.style
+												//imgNode.width = formulatag.width
+												//imgNode.height = formulatag.height
+												divElement.appendChild(imgNode);
+												//alert ( formulatag.src )
+
+											}
+
+											divElement.appendChild(document.createTextNode( trim ( sourceDiv.innerText)))
+											selectedCell = fieldElement
+										}
+										fieldElement.appendChild(divElement)
+										trElement.appendChild(fieldElement)
+								   }// isitdiv tag
+
+						if ( selecttag != null	)
+							{
+
+									var trElement = document.createElement("TR");
+									tableForm.appendChild(trElement)
+									var columnElement = document.createElement("TD");
+
+									var columnName = thCollection.item(thCtr).name
+
+
+									columnElement.appendChild(document.createTextNode(columnName))
+									columnElement.style.backgroundColor="#C0C0C0"
+									trElement.appendChild(columnElement)
+
+
+									var fieldElement = document.createElement("TD");
+									fieldElement.id = currentSelectedRow.children.item(i).id
+									fieldElement.name = currentSelectedRow.children.item(i).name
+									fieldElement.type = "value"
+									fieldElement.columnType = thCollection.item(thCtr).columnType
+									fieldElement.columnName = thCollection.item(thCtr).name
+
+
+
+									var selectElement = document.createElement("SELECT");
+									var options = selecttag.options
+
+
+
+									var selectedindex = 0
+
+									for ( var op  = 0; op < options.length; op++ )
+									{
+											var optionElemFromTable = options.item(op)
+											var optionElement = document.createElement("OPTION")
+
+											optionElement.text = optionElemFromTable.text
+											if ( optionElemFromTable.selected == true )
+											{
+												selectedindex =  op
+											}
+											selectElement.options.add( optionElement)
+									}
+									selectElement.options.item(selectedindex).selected = true
+									fieldElement.appendChild(selectElement)
+									trElement.appendChild(fieldElement)
+						}
+					}
+
+					thCtr++;
+				}
+		}
+
+}
+
+function dlgOK()
+{
+
+	var tableForm = eval("document.all.editFormBody");
+	var trTags = tableForm.children.tags("TR")
+
+	for ( var r = 0; r < trTags.length; r++ )
+	{
+				var trTag = trTags.item(r);
+				if ( trTag.children  != null  )
+				{
+						var valueTags = trTag.children
+						if ( valueTags.length > 0 )
+						{
+								for ( var vTagIndex = 0; vTagIndex< valueTags.length; vTagIndex++ )
+								{
+												var vTag = valueTags.item(vTagIndex)
+
+												if ( vTag.type == "value")
+												{
+
+													var newValue =trim(vTag.children(0).innerText)
+													var columnName = vTag.columnName
+													// check the data type
+													if ( newValue == "" && ( vTag.columnType == "INTEGER" || vTag.columnType == "FLOAT" ) )
+													{
+														newValue = "0"
+														vTag.children(0).innerText = "0"
+
+													}
+
+
+													if ( ! datatypeCheck( newValue, vTag.columnType) )
+													{
+															alert ( " Not a valid entry for the Column " + columnName + " for the data type " +  vTag.columnType)
+															return false
+													}
+
+												}
+									}
+
+
+
+								for ( var vTagIndex = 0; vTagIndex< valueTags.length; vTagIndex++ )
+								{
+										var vTag = valueTags.item(vTagIndex)
+										if ( vTag.type == "value")
+										{
+
+												var tdCell = currentSelectedRow.all.item(vTag.id)
+
+												if (vTag.children(0).tagName == "DIV")
+												{
+															if (vTag.children(0).children.length == 1 )
+															{
+																if (vTag.children(0).children(0).tagName == "A")
+																{
+																	newValue = trim(vTag.children(0).innerHTML)
+																	tdCell.children(1).innerHTML= newValue
+																}
+															}
+															else
+															{
+																newValue =trim(vTag.children(0).innerText)
+																// check if the text starts with http or
+																if ( 		newValue.indexOf("http://") == 0
+																		|| newValue.indexOf("mailto://") == 0
+																		|| newValue.indexOf("file://") == 0
+																		|| newValue.indexOf("www://") == 0
+																	)
+																{
+																		newValue = "<A href="+newValue+" > "+newValue+ " </A>"
+																		tdCell.children(1).innerHTML= newValue
+																}
+																else
+																{
+																		tdCell.children(1).innerText= newValue
+																}
+															}
+												}
+												else if (vTag.children(0).tagName == "SELECT")
+												{
+														tdCell.children(0).selectedIndex= vTag.children(1).selectedIndex
+												}
+										}
+								}
+						}
+				}
+	}
+	window.close()
+}
+
+
+
+
+
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css" TITLE="stylesheet">
+
+
+<body onload="javascript:initPage()">
+
+ <form name="editrow" method="get" action="MyTables">
+
+ <small>
+ Please update the fields and click OK to go back to the Table Editor
+ </small>
+ <br>
+<br>
+
+
+
+<table >
+<tr>
+<td>
+  <table name="editForm"  style="table-layout=auto;" id="editForm" class="body" border="2" bordercolor="BLACK"  cellpadding="0" align="left" valign="top">
+ <tbody name="editFormBody"  id="editFormBody"  >
+<tr>
+	<td class="BWTableHead" > Columns </td>
+	<td class="BWTableHead" > Value </td>
+</tr>
+ </tbody>
+  </table>
+</td>
+</tr>
+<tr>
+<td>
+<br>
+<input type='button' id="okBtn" onclick="dlgOK()" value=" OK ">&nbsp;
+<input type='button' id="cancelBtn" onclick="window.close()" value=" Cancel ">
+</td>
+</tr>
+</table>
+
+<SCRIPT src="/jsp/common/footer.jsp"> </SCRIPT>
+
+</body>
+</html>

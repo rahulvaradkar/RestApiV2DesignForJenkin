@@ -1,0 +1,40 @@
+<job id="IncludeExample">
+<script language="VBScript">
+
+    dim sArg, sFile,newSheet
+    Dim parentDir,filename
+
+    ' Loop through arguments
+    for each sArg in wscript.arguments
+        sFile = sFile & sArg & " "
+    next
+    Dim i 	    
+    For i = Len(sFile) To 1 step -1
+    If Mid(sFile, i, 1) = "\" Then
+       parentDir= Left(sFile, Len(sFile)- (Len(sFile) - i + 1))
+       filename = Right(SFile,Len(sFile) -i  )
+    exit for
+    End If
+    Next
+
+    filename = parentDir  + "\" + trim(filename) + ".xls"
+    Set xlApp = CreateObject("Excel.Application")
+    strRegValue = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\excel.exe\Path"
+    Set WshShell = WScript.CreateObject("WScript.Shell")
+    addInLocation = WshShell.RegRead (strRegValue) & "XLSTART\BoardwalkExcel-Add-In.xla"    
+    xlApp.Workbooks.Open(addInLocation)
+    xlApp.Application.DisplayAlerts = False
+    xlApp.Application.Interactive = False
+    xlApp.Application.Visible = False
+    xlApp.Application.ScreenUpdating = False
+    xlApp.Application.run "BwsFileHandler.readBWSFile", Cstr(sFile)
+    xlApp.Application.ActiveWorkbook.SaveAs  filename
+    xlApp.Application.ActiveWorkbook.Close
+    on error resume next
+    xlApp.application.Quit    
+    Set xlApp.application = Nothing
+    Set xlApp= Nothing
+      
+</script>
+
+</job>

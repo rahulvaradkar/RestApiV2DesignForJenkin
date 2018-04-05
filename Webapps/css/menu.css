@@ -1,0 +1,82 @@
+#menu {
+    background: #666666;
+}
+#menu .top {
+    font-family: arial;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 3px 10px 3px 10px;
+}
+#menu .top a {
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+#menu .top a:hover {
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+#menu .section-top {
+    border-color: #b8b4ae;
+    border-width: 1px;
+    border-style: solid solid solid solid;
+    position: absolute;
+    z-index: -1;
+    visibility: hidden;
+}
+#menu .section {
+    border-color: #b8b4ae;
+    border-width: 1px;
+    border-style: solid solid solid solid;
+    position: absolute;
+    z-index: -1;
+    visibility: hidden;
+}
+#menu .sub {
+    position: relative;
+    width: 100%;
+}
+#menu .box {
+    background-color: #e5e1da;
+    font-family: tahoma;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px 4px 8px;
+}
+#menu .box-hover {
+    background-color: #ffffff;
+    font-family: tahoma;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px 4px 8px;
+}
+#menu .box-right {
+    background-color: #e5e1da;
+    font-family: tahoma;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 16px 4px 8px;
+}
+#menu .box-right-hover {
+    background-color: #ffffff;
+    font-family: tahoma;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 16px 4px 8px;
+}
+#menu .box-right img, #menu .box-right-hover img {
+    position: absolute;
+    top: 4px;
+    right: 1px;
+}
+#menu a {
+    color: #000000;
+    text-decoration: none;
+    white-space: nowrap;
+}
+#menu a:hover {
+    color: #FF8C00;
+    text-decoration: none;
+    white-space: nowrap;
+}

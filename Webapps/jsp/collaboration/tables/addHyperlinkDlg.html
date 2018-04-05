@@ -1,0 +1,135 @@
+<html>
+<head>
+
+<title>Add Hyperlink</title>
+
+<script language="javascript">
+
+	function initPage()
+	{
+		var urlObj = window.dialogArguments;
+		urlName.value = urlObj.urlName;
+		screentip.value = urlObj.screentip;
+		url.value = decodeURIComponent(urlObj.url)
+
+	}
+
+	function dlgOK()
+	{
+		var rUrlObj = new Object();
+		rUrlObj.urlName = urlName.value;
+		rUrlObj.screentip = screentip.value;
+		rUrlObj.url = url.value
+
+		window.returnValue = rUrlObj;
+		window.close();
+
+	}
+	function removeLink()
+	{
+		url.value = "";
+		dlgOK();
+
+	}
+	function browseURLS( )
+	{
+		var browseURL
+		var urlVal = url.value
+		if ( urlVal == null || urlVal =="")
+		{
+			browseURL = window.open('../../../MyCollaborations','chooseURL','toolbar=yes,location=yes,scrollbar=yes,resizable=yes,menubar=no', false)
+		}
+		else
+		{
+			browseURL= window.open (urlVal,'chooseURL','toolbar=yes,location=yes,scrollbar=yes,resizable=yes,menubar=no', false)
+		}
+
+		alert( 'In the  window that was opened select a web address and click OK')
+
+		if ( browseURL )
+		{
+			   url.value  = browseURL.location.href
+			   //browseURL.close()
+		}
+		else
+		{
+			alert( 'Boardwalk failed to get the web address as the window is closed')
+		}
+	}
+
+
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css" TITLE="stylesheet">
+
+
+
+<body onload="javascript:initPage()">
+<br>
+<table border="0" cellspacing="2" cellpadding="2" align="left" class="body">
+	<tr bgcolor="#fddeb9" height=20>
+		<td valign="top"> <b> Fields </b></td>
+		<td valign="top"> <b> Values </b></td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td valign="top" >URL Name</td>
+		<td> <input type=text id="urlName" value="" ></td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		  <td valign="top" >Screentip</td>
+		  <td><input type=text id="screentip" value=""></td>
+	</tr>
+
+	<tr  bgcolor="#eeeeee">
+		<td valign="top">Hyperlink</td>
+		<td >
+		<input type="text" value="" id="url" >
+		<input type="button" value="Web Page..." id="browseURL" onClick="javascript:browseURLS()" >
+		</td>
+	</tr>
+
+	<tr   bgcolor="#eeeeee" >
+		<td colspan=2>
+		<small> If you are entering a file here, please make sure you enter file:// before the file path <small>
+		</td>
+	</tr>
+	<tr   align=center bgcolor="#cccccc">
+	</tr>
+	<br>
+	<tr>
+		<td colspan=2>
+			<input type='button' onclick="dlgOK()" value=" OK ">
+			<input type='button' onclick="removeLink()" value=" Remove Link ">
+			<input type='button' onclick="window.close();" value=" Cancel ">
+		</td>
+	</tr>
+</table>
+
+<br><br>
+
+
+
+
+
+</body>
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

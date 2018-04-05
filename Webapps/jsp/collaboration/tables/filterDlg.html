@@ -1,0 +1,171 @@
+<html>
+<head>
+
+<title>Filter</title>
+
+<script language="javascript">
+
+	function populateForm()
+	{
+		var column = window.dialogArguments;
+		var columnName = column.columnName;
+		var columnType = column.columnType;
+
+		heading.innerText = "Filter Column " + columnName;
+
+		// add the relevant options to the select list based on colType
+		var oOption = document.createElement("OPTION");
+		conditionList.options.add(oOption);
+		oOption.innerText = "equals";
+		oOption.value = "equals";
+
+		oOption = document.createElement("OPTION");
+		conditionList.options.add(oOption);
+		oOption.innerText = "does not equal";
+		oOption.value = "doesNotEqual";
+
+		if (columnType == "INTEGER" || columnType == "FLOAT")
+		{
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "is greater than";
+			oOption.value = "isGreaterThan";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "is greater than or equal to";
+			oOption.value = "isGreaterThanOrEqualTo";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "is less than";
+			oOption.value = "isLessThan";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "is less than or equal to";
+			oOption.value = "isLessThanOrEqualTo";
+		}
+
+		if (columnType == "STRING" || columnType == "TABLE")
+		{
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "begins with";
+			oOption.value = "beginsWith";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "does not begin with";
+			oOption.value = "doesNotBeginWith";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "ends with";
+			oOption.value = "endsWith";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "does not end with";
+			oOption.value = "doesNotEndWith";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "contains";
+			oOption.value = "contains";
+
+			oOption = document.createElement("OPTION");
+			conditionList.options.add(oOption);
+			oOption.innerText = "does not contain";
+			oOption.value = "doesNotContain";
+		}
+
+	}
+
+	function filterColumn()
+	{
+		var filterObj = new Object();
+		// selected condition
+		var i;
+		for (i = 0; i < conditionList.options.length ; i++)
+		{
+			if(conditionList.options(i).selected == true)
+			{
+				filterObj.filterCondition = conditionList.options(i).value;
+				break;
+			}
+		}
+
+
+		filterObj.filterExpr = filterExpr.value;
+
+		window.returnValue = filterObj;
+		window.close();
+
+	}
+
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="css/stylesheet.css" TITLE="stylesheet">
+
+
+
+<body onload="javascript:populateForm()" bgcolor="#FFFFFF">
+
+<b id="heading"></b>
+
+<table  align="center" border="0" cellspacing="2" cellpadding="2"  class="body">
+		<!--start table for table-->
+	<tr bgcolor="#fddeb9" height=20>
+		<td class="body"> <b> Condition </b></td>
+		<td class="body"> <b> Value </b></td>
+	</tr>
+
+
+	<tr bgcolor="#eeeeee">
+	  <td width="150">
+		   <select id="conditionList" width="150" class="LookupList"   >
+
+
+		   </select>
+	   </td>
+	  <td> <input type=text id="filterExpr" value="" ></input></td>
+	</tr>
+	 <tr   bgcolor="#eeeeee" >
+		<td colspan=3>
+		<small> Select the condition and value and click on Filter <small>
+		</td>
+	</tr>
+
+	<tr   align=center bgcolor="#cccccc">
+	<td colspan=2>
+	  <input type='button' onclick="filterColumn()" value=" Filter ">
+	  <input type='button' onclick="window.close();" value=" Cancel ">
+
+	</td>
+
+	</tr>
+</table>
+</body>
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
