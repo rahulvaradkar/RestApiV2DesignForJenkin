@@ -1,0 +1,228 @@
+.body  { font-famly:verdana,arial,sans serif; font-size:9pt; line-height:11pt; color:#00000; text-decoration: none;}
+.body2  { font-family:verdana,arial,sans serif; font-size:8pt; line-height:11pt;  color:#00000; text-decoration: none;}
+.page-heading { font-family:verdana,arial,sans serif; font-size:12pt; line-height:12pt;  color:#000000; font-weight: bold; text-decoration: none;}
+.small-text { font-family:verdana,arial,sans serif; font-size:8pt; line-height:8pt;  color:#000000; text-decoration: none;}
+.largetext  { font-family:verdana,arial,sans serif; font-size:30pt; line-height:30pt; color:#00000; text-decoration: none;}
+
+
+A:link   { font-family:verdana,arial,helvetica,sans serif;  font-size:8pt; line-height:9.5pt;  color: #0033cc; text-decoration: none;}
+A:active  { font-family:verdana,arial,helvetica,sans serif;  font-size:8pt; line-height:9.5pt;  color: #353535; text-decoration: none;}
+A:visited { font-family:verdana,arial,helvetica,sans serif;  font-size:8pt; line-height:9.5pt;  color: #0033cc; text-decoration: none;}
+A:hover   { font-family:verdana,arial,helvetica,sans serif;  font-size:8pt; line-height:9.5pt;  color: #980101; text-decoration: none;}
+
+A.body:link   { font-family:verdana,arial,helvetica,sans serif;  font-size:9pt; line-height:9.5pt;  color: #0033cc; text-decoration: none;}
+A.body:active  { font-family:verdana,arial,helvetica,sans serif;  font-size:9pt; line-height:9.5pt;  color: #353535; text-decoration: none;}
+A.body:visited { font-family:verdana,arial,helvetica,sans serif;  font-size:9pt; line-height:9.5pt;  color: #0033cc; text-decoration: none;}
+A.body:hover   { font-family:verdana,arial,helvetica,sans serif;  font-size:9pt; line-height:9.5pt;  color: #980101; text-decoration: none;}
+
+
+A IMG   
+{ align=center; 
+  font-family:verdana,arial,helvetica,sans serif;  
+  font-size:12px; 
+  line-height:10pt;   
+  text-decoration: none;
+  BORDER: #cccccc 0px ;
+  PADDING: 0px;
+  MARGIN: 0px;
+  BACKGROUND-COLOR: #cccccc
+  
+  }
+
+.tbody { 
+	overflow-x: auto; 
+	overflow-y: auto;
+        FONT-SIZE: 9px;
+    	MARGIN: 0px;
+    	FONT-FAMILY: Verdana, Arial, sans-serif;
+    	BACKGROUND-COLOR: #fddeb9;
+    	align=left;
+}
+
+
+.BWTableHead
+{
+    BORDER: #cccccc 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 13px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #fddeb9;
+    align=left;
+} 
+
+.BWTableGreyHead
+{
+    BORDER: #cccccc 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #666666;
+    COLOR :#FFFFFF ;
+    cursor: hand;
+    align=center;
+
+} 
+
+.BWTableWhiteHead
+{
+    BORDER: #cccccc 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR:#FFFFFF ;
+    cursor: hand;
+    align=center;
+
+} 
+
+.BWTableAccessHead
+{
+    BORDER: #eeeeee 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 1px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #eeeeee;
+    align=center;
+} 
+
+.BWTableHeadUserDetails
+{
+    BORDER: #cccccc 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: lightblue;
+    align=left;
+
+} 
+
+
+.InputBoxSmall
+{
+    BORDER: #999999 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 9px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #Ffffff    
+}
+
+.LookupList
+{
+    BORDER: #999999 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 13px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #ffffff
+    z-index: -1;
+    overflow-x: auto
+}
+
+
+
+.InputBoxSmallReadonly
+{
+    BORDER: #999999 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 9px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: lightgrey
+}
+
+
+.startingPointColumns
+{   BORDER: #999999 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #ffffff
+}
+
+.OptionListTDField
+{   BORDER: white 0px;
+    PADDING: 0px;
+    FONT-SIZE: 9px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: white
+}
+
+
+
+.tdClick
+{   BORDER: #999999 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #dddddd
+}
+.InputBoxFront
+{
+    BORDER: #333333 2px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 2px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #ffffff
+}
+
+.AccessTable
+{
+    BORDER: #333333;
+    PADDING: 1px;
+    FONT-SIZE: 12px;
+    MARGIN: 1px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #ffffff
+}
+
+.CheckboxStyle
+{
+    BORDER: #999999 1px solid;
+    PADDING: 0px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #ffffff
+}
+
+.InputBox
+{   BORDER: #999999 1px solid;
+    PADDING: 2px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #ffffff
+}
+
+.Command
+{   BORDER: #999999 0px solid;
+    PADDING: 0px;
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    FONT-FAMILY: Verdana, Arial, sans-serif;
+    BACKGROUND-COLOR: #ffffff
+}
+
+div.scroll {
+	background-color: #FFFFCC;
+	border: 1px solid #000000;
+	overflow-y: scroll;
+	position: absolute;
+	height: 100px;
+	width: 400px;
+	left: 50px;
+	top: 50px;
+}
+
+
+

@@ -1,0 +1,321 @@
+<html>
+<head>
+
+<title>Column</title>
+
+<script language="javascript">
+
+	function trim(strText) {
+	    // this will get rid of leading spaces
+	    while (strText.substring(0,1) == ' ')
+	        strText = strText.substring(1, strText.length);
+
+	    // this will get rid of trailing spaces
+	    while (strText.substring(strText.length-1,strText.length) == ' ')
+	        strText = strText.substring(0, strText.length-1);
+
+	   return strText;
+}
+
+
+
+function datatypeCheck (defaultvalue, celltype)
+{
+
+
+	if (celltype == "INTEGER")
+	{
+		if ( defaultvalue == null || defaultvalue == '')
+		{
+			return true
+		}
+
+		if (isNaN (defaultvalue) || parseInt (defaultvalue,10) != defaultvalue)
+		{
+			return false
+		}
+	}
+	else if (celltype == "FLOAT")
+	{
+		if ( defaultvalue == null || defaultvalue == '')
+		{
+				return true
+		}
+
+		if (isNaN (defaultvalue) || parseFloat(defaultvalue) != defaultvalue )
+		{
+			return false
+		}
+	}
+	return true
+
+}
+
+	function initPage()
+	{
+		var props = window.dialogArguments;
+		var forUpdate = props.forUpdate;
+		if (forUpdate == true)
+		{
+			columnName.value = props.columnName;
+
+			if (props.columnType == "STRING")
+			{
+				columnType[0].selected = true
+			}
+			else if (props.columnType == "INTEGER")
+			{
+				columnType[1].selected = true
+
+			}
+			else if (props.columnType == "FLOAT")
+			{
+				columnType[2].selected = true
+			}
+
+			columnType.disabled = true
+
+			columnDefaultValue.value =  trim ( props.columnDefaultValue);
+			trackLevelTableURL.innerText = props.orderedTableName;
+			trackLevelTableId.value = props.orderedTableId;
+			trackLevelTableColumnId.value = props.orderColumnId;
+			lookupTableId.value = props.lookupTableId;
+			lookupTableURL.innerText = props.lookupTableName;
+			lookupTableColumnId.value = props.lookupColumnId;
+		}
+	}
+
+	function dlgOK()
+	{
+
+		if (datatypeCheck(columnDefaultValue.value,  columnType.value ))
+		{
+				var col = new Object();
+				col.columnName = columnName.value;
+				col.columnType = columnType.value;
+				col.columnDefaultValue = columnDefaultValue.value;
+				col.lookupTableId = lookupTableId.value;
+				col.lookupTableColumnId = lookupTableColumnId.value;
+				col.trackLevelTableId = trackLevelTableId.value;
+				col.trackLevelTableColumnId = trackLevelTableColumnId.value;
+
+
+				col.columnDefaultValue = trim(  col.columnDefaultValue )
+				window.returnValue = col;
+
+				window.close();
+		}
+		else
+		{
+
+			alert ( ' Please check the default value, it doesnt match the column type ')
+		}
+
+	}
+
+
+	function  clearLookup()
+	{
+		lookupTableURL.innerText  = 'Select'
+		lookupTableId.value  = -1
+		lookupTableURL.href  =  'javascript:selectTableForLookup( )'
+
+	}
+
+	function  clearTrack()
+	{
+		trackLevelTableURL.innerText  = 'Select'
+		trackLevelTableId.value  = -1
+		trackLevelTableURL.href  =  'javascript:selectTableForTrackLevels( )'
+
+	}
+
+
+	function selectTableForTrackLevels( )
+	{
+	   var TableForTrackLevels = window.open('../MyCollaborations','newin','toolbar=yes,location=yes,scrollbar=yes,resizable=yes,menubar=no', false)
+	   alert( 'In the boardwalk window that was opened select an ordered table column and click OK')
+	   if ( TableForTrackLevels )
+	   {
+	   		try
+	   		{
+					if ( TableForTrackLevels.document.all.item("selectedColumnId").value != - 1 )
+					{
+					   trackLevelTableURL.innerText  = TableForTrackLevels.document.all.item("tableName").value
+					   trackLevelTableURL.href  = TableForTrackLevels.location.href
+					   trackLevelTableId.value  = TableForTrackLevels.document.all.item("tableId").value
+					   trackLevelTableColumnId.value  = TableForTrackLevels.document.all.item("selectedColumnId").value
+					   TableForTrackLevels.close()
+					 }
+					 else
+					 {
+						alert( 'Boardwalk failed to get the tracking  column ')
+						if ( TableForTrackLevels )
+							   TableForTrackLevels.close()
+					 }
+				}
+		catch ( Exception  )
+		{
+			alert( 'Boardwalk failed to get the tracking column  table as the either the window was closed or the column was not selected')
+			try
+			{
+				TableForTrackLevels.close()
+			}
+			catch( Exception )
+			{
+					}
+		}
+
+	   }
+	   else
+	   {
+	   	alert( 'Boardwalk failed to get the ordered table as the window was closed')
+	   }
+
+	}
+
+	function selectTableForLookup( )
+	{
+		var TableForLookup = window.open('../MyCollaborations','newin','toolbar=yes,location=yes,scrollbar=yes,resizable=yes,menubar=no', false)
+		alert( 'In the new boardwalk window that was opened select a lookup column within a table and click OK')
+		if ( TableForLookup )
+		{
+			try
+			{
+							if ( TableForLookup.document.all.item("selectedColumnId").value != -1 )
+							{
+							   lookupTableURL.innerText  = TableForLookup.document.all.item("tableName").value
+							   lookupTableURL.href  = TableForLookup.location.href
+
+							   lookupTableId.value  = TableForLookup.document.all.item("tableId").value
+							   lookupTableColumnId.value  = TableForLookup.document.all.item("selectedColumnId").value
+
+
+							   TableForLookup.close()
+							}
+							else
+							{
+								if ( TableForLookup )
+								{
+									  alert( 'Boardwalk failed to get the lookup column as the column was not selected')
+									  TableForLookup.close()
+								 }
+							}
+				}
+				catch ( Exception  )
+				{
+					alert( 'Boardwalk failed to get the lookup column  table as the either the window was closed or the column was not selected')
+					try
+					{
+						TableForLookup.close()
+					}
+					catch( Exception )
+					{
+
+					}
+
+				}
+		}
+		else
+		{
+			alert( 'Boardwalk failed to get the lookup column  table as the window was closed')
+		}
+	}
+
+
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css" TITLE="stylesheet">
+
+
+
+<body onload="javascript:initPage()" >
+<br>
+<table  class="body" border="1" cellspacing="0" cellpadding="1" >
+	 <tr>
+	   <td>
+	   Column Name
+	   </td>
+	   <td colspan="2">
+	   <input type="text" id="columnName" value="">
+	   </td>
+
+	 </tr>
+	 <tr >
+	   <td>Column Type </td>
+	   <td colspan="2">
+	   <select  id="columnType">
+		<option value="STRING" selected >STRING</option>
+		<option value="INTEGER">INTEGER</option>
+		<option value="FLOAT">NUMBER</option>
+	   </select>
+	   </td>
+	  </tr>
+	 <tr >
+	   <td>Default Value </td>
+	   <td colspan="2">
+	   <input   type="text" id="columnDefaultValue" value="">
+	   </td>
+	 </tr>
+	 <tr>
+		<td>Lookup Table</td>
+		<td>
+		<a id="lookupTableURL" href="#"> Not Selected </a>
+		</td>
+		<td>
+		<a href="#" onclick="selectTableForLookup()" ><img  src="../images/open.jpg" height=15></a>
+		<a href="#" onclick="javascript:clearLookup( )" ><img  src="../images/delete.jpg" height=15></a>
+		</td>
+		<input type="hidden" name="lookupTableId" value="-1" >
+		<input type="hidden" name="lookupTableColumnId" value="-1" >
+
+		</td>
+	 </tr>
+
+	 <tr  height="14" >
+		<td> Tracking Table</td>
+		<td>
+		<a id="trackLevelTableURL" href="#" >Not Selected</a>
+		</td>
+		<td>
+		<a href="#" onclick="javascript:selectTableForTrackLevels( )" ><img  src="../images/open.jpg" height=15></a>
+		<a href="#" onclick="javascript:clearTrack()" ><img  src="../images/delete.jpg" height=15></a>
+		</td>
+		<input type="hidden" name="trackLevelTableId" value="-1" >
+		<input type="hidden" name="trackLevelTableColumnId" value="-1" >
+
+		</td>
+	 </tr>
+
+	<tr>
+
+		<td colspan=3>
+			<br>
+			<input type='button' id="okBtn" onclick="dlgOK()" value=" OK ">&nbsp;
+			<input type='button' id="cancelBtn" onclick="window.close()" value=" Cancel ">
+
+		</td>
+	</tr>
+</table>
+</body>
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

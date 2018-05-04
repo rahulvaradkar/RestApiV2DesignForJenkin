@@ -1,0 +1,240 @@
+<html>
+<head>
+
+<title>Properties</title>
+
+<script language="javascript">
+
+	function initPage()
+	{
+		var props = window.dialogArguments;
+		tableName.value = props.tableName;
+		description.value = props.description;
+		collab.innerText = props.collab;
+		whiteboard.innerText = props.whiteboard;
+		neighborhood.innerText = props.neighborhood;
+		formTableId.value = props.formTableId;
+		if (formTableId.value == -1)
+		{
+			formTableURL.innerText = "Not Selected"
+		}
+		else
+		{
+			formTableURL.innerText = "Selected"
+		}
+		criteriaTableId.value = props.criteriaTableId;
+		if (criteriaTableId.value == -1)
+		{
+			criteriaTableURL.innerText = "Not Selected"
+		}
+		else
+		{
+			criteriaTableURL.innerText = "Selected"
+		}
+	}
+
+	function dlgOK()
+	{
+		var props = new Object()
+		props.tableName  = tableName.value
+		props.description  = description.value
+		props.formTableId = formTableId.value
+		props.criteriaTableId = criteriaTableId.value
+		window.returnValue = props;
+		window.close();
+
+	}
+
+	function selectTableForForm( )
+	{
+		var TableForForm = window.open('../MyCollaborations','newin','toolbar=yes,location=yes,scrollbar=yes,resizable=yes,menubar=no', false)
+		alert( 'In the new boardwalk window that was opened select a table and click OK')
+		if ( TableForForm )
+		{
+			try
+			{
+				if ( TableForForm.document.all.item("tableId").value != -1 )
+				{
+				   formTableURL.innerText  = "Selected"
+				   formTableURL.href  = TableForForm.location.href
+				   formTableId.value  = TableForForm.document.all.item("tableId").value
+				   TableForForm.close()
+				}
+				else
+				{
+					if ( TableForForm )
+					{
+					  alert( 'Boardwalk failed to get the table')
+					  TableForForm.close()
+					}
+				}
+			}
+			catch ( Exception  )
+			{
+				alert( 'Boardwalk failed to get the table.')
+				try
+				{
+					TableForForm.close()
+				}
+				catch( Exception )
+				{
+
+				}
+
+			}
+		}
+		else
+		{
+			alert( 'Boardwalk failed to get the form  table as the window was closed')
+		}
+	}
+	function  removeForm()
+	{
+		formTableURL.innerText  = 'Not Selected'
+		formTableId.value  = -1
+		formTableURL.href  =  'javascript:selectTableForForm( )'
+
+	}
+	function selectTableForCriteria( )
+	{
+		var TableForCriteria = window.open('../MyCollaborations','newin','toolbar=yes,location=yes,scrollbar=yes,resizable=yes,menubar=no', false)
+		alert( 'In the new boardwalk window that was opened select the criteria table and click OK')
+		if ( TableForCriteria )
+		{
+			try
+			{
+				if ( TableForCriteria.document.all.item("tableId").value != -1 )
+				{
+				   criteriaTableURL.innerText  = "Selected"
+				   criteriaTableURL.href  = TableForCriteria.location.href
+				   criteriaTableId.value  = TableForCriteria.document.all.item("tableId").value
+				   TableForCriteria.close()
+				}
+				else
+				{
+					if ( TableForCriteria )
+					{
+					  alert( 'Boardwalk failed to get the table')
+					  TableForCriteria.close()
+					}
+				}
+			}
+			catch ( Exception  )
+			{
+				alert( 'Boardwalk failed to get the table.')
+				try
+				{
+					TableForCriteria.close()
+				}
+				catch( Exception )
+				{
+
+				}
+
+			}
+		}
+		else
+		{
+			alert( 'Boardwalk failed to get the criteria table as the window was closed')
+		}
+	}
+	function  removeCriteria()
+	{
+		criteriaTableURL.innerText  = 'Not Selected'
+		criteriaTableId.value  = -1
+		criteriaTableURL.href  =  'javascript:selectTableForCriteria( )'
+
+	}
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css" TITLE="stylesheet">
+
+
+
+<body onload="javascript:initPage()">
+
+<br>
+<table border="1" cellspacing="0" cellpadding="1" width="100%"  class="body">
+	<tr bgcolor="#fddeb9" height=20>
+		<td colspan="3" valign="top"> <b> Properties </b></td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+			<td colspan="2"><b>Name</b></td>
+			<td ><input type=textarea  id="tableName" ></input></td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td colspan="2"><b>Description</b></td>
+
+		<td ><input type=textarea  id="description" ></input></td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td colspan="2"><b>Collaboration</b></td>
+		<td id="collab"></td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td colspan="2"><b>Whiteboard</b></td>
+		<td id="whiteboard"></td>
+	</tr>
+
+	<tr bgcolor="#eeeeee">
+		<td colspan="2"><b>Neighborhood</b></td>
+		<td id="neighborhood"></td>
+	</tr>
+	<tr  height="14" >
+		<td> Form Definition</td>
+		<td>
+		<a id="formTableURL" href="#" >Not Selected</a>
+		</td>
+		<td>
+		<a href="#" onclick="javascript:selectTableForForm()" ><img  src="../images/open.jpg" height=15></a>
+		<a href="#" onclick="javascript:removeForm()" ><img  src="../images/delete.jpg" height=15></a>
+		</td>
+		<input type="hidden" name="formTableId" id="formTableId" value="-1" >
+		</td>
+	 </tr>
+
+	<tr  height="14" >
+		<td> Criteria Definition</td>
+		<td>
+		<a id="criteriaTableURL" href="#" >Not Selected</a>
+		</td>
+		<td>
+		<a href="#" onclick="javascript:selectTableForCriteria()" ><img  src="../images/open.jpg" height=15></a>
+		<a href="#" onclick="javascript:removeCriteria()" ><img  src="../images/delete.jpg" height=15></a>
+		</td>
+		<input type="hidden" name="criteriaTableId" id="criteriaTableId" value="-1" >
+		</td>
+	 </tr>
+
+	<tr   align=center bgcolor="#cccccc">
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td colspan=2>
+				<br>
+			<input type='button' onclick="dlgOK()" value=" Save ">
+			<input type='button' onclick="javascript:window.close()" value=" Cancel ">
+		</td>
+	</tr>
+</table>
+</body>
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

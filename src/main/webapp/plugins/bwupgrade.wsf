@@ -1,0 +1,86 @@
+<job id="main">
+	<script language="VBScript">
+	    Dim Process
+        IsProcessRunning = False
+        proceedAfterExcelCheck = False
+        Do While proceedAfterExcelCheck = False
+            proceedAfterExcelCheck = True
+            For Each Process In GetObject("winmgmts:").InstancesOf("win32_process")
+                If UCase(Process.Name) = UCase("EXCEL.EXE") Then
+                    proceedAfterExcelCheck = False
+                    'process is running
+                    dim msgres
+                    msgres = MsgBox("Please close all open Excel applications to continue and click on OK" ,1 , "Boardwalk Upgrade")
+                    if msgres = 2 then
+                        WScript.quit(1)
+                    end if
+               End If
+            Next
+        Loop
+        
+        'Get the server address
+        strRegValue = "HKCU\Software\VB and VBA Program Settings\Boardwalk\2.0\BOARDWALK_SERVER"
+        Set WshShell = WScript.CreateObject("WScript.Shell")
+        serverURL = WshShell.RegRead (strRegValue)
+        serverURL = Replace(serverURL, """", "")
+        'Wscript.Echo serverURL
+        
+        'Uninstall the Excel Add-In
+        Set xlApp = CreateObject("Excel.Application")
+        'xlApp.AddIns("Boardwalkexcel-Add-In").Installed = false
+
+        Set objExplorer = WScript.CreateObject("InternetExplorer.Application")
+        objExplorer.Navigate "about:blank"   
+        objExplorer.ToolBar = 0
+        objExplorer.StatusBar = 0
+        objExplorer.Width=400
+        objExplorer.Height = 200 
+        objExplorer.Left = 0
+        objExplorer.Top = 0
+
+        Do While (objExplorer.Busy)
+            Wscript.Sleep 200
+        Loop    
+
+        objExplorer.Visible = 1             
+        objExplorer.Document.Body.InnerHTML = "Downloading Boardwalk Add-In." _
+            & "This might take several minutes to complete."
+        
+        'download the file
+        'WScript.Echo serverURL & "/plugins/BoardwalkExcel-Add-In.xla" 
+        Set req = CreateObject("MSXML2.ServerXMLHTTP")
+        req.open "GET", serverURL & "/plugins/BoardwalkExcel-Add-In.xla", false
+        req.send()
+        
+        'Location of file to save
+        strRegValue = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\excel.exe\Path"
+        addInLocation = WshShell.RegRead (strRegValue) & "XLSTART\BoardwalkExcel-Add-In.xla"
+        'Wscript.Echo addInLocation
+        
+        If req.Status = 200 Then
+            Set objADOStream = CreateObject("ADODB.Stream")
+            objADOStream.Open
+            objADOStream.Type = 1 'adTypeBinary 
+            objADOStream.Write req.ResponseBody
+            objADOStream.Position = 0 'Set the stream position to the start 
+            Set objFSO = Createobject("Scripting.FileSystemObject")
+            If objFSO.FileExists(addInLocation) Then objFSO.DeleteFile addInLocation
+            Set objFSO = Nothing 
+            objADOStream.SaveToFile addInLocation
+            objADOStream.close()
+        End if
+        Set req = Nothing
+        
+        ' Install the AddIn
+        'xlApp.AddIns("Boardwalkexcel-Add-In").Installed = True
+        xlApp.Quit
+        
+        objExplorer.Document.Body.InnerHTML = "The Boardwalk Add-In has been updated successfully!"
+        Wscript.Sleep 3000
+        objExplorer.Quit
+        
+        'WScript.Echo "The Boardwalk Add-In has been updated successfully!"
+        WScript.quit(0)
+                
+	</script>
+</job>

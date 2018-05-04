@@ -1,0 +1,56 @@
+<job id="main">	
+	<script language="VBScript">
+
+Set xlApp = CreateObject("Excel.Application")
+xlApp.Application.DisplayAlerts = False
+xlApp.Application.Interactive = False
+xlApp.Application.ScreenUpdating = False
+
+'Set WmObj = GetObject("WinMgmts:{impersonationLevel=impersonate}")
+
+'excelusername = xlapp.username
+
+
+
+'Set colItems = WmObj.ExecQuery("Select * from Win32_OperatingSystem", , 48)
+'For Each objItem In colItems
+'    os = objItem.Caption 'OS
+'    osbuildnumber = objItem.BuildNumber 'OS Build
+'    osversion = objItem.CSDVersion '
+'    osversionnumber = objItem.Version '
+'Next
+
+Dim objShell, objExecObject
+'Set objShell = CreateObject("WScript.Shell")
+'windowslogin = objShell.ExpandEnvironmentStrings("%USERNAME%")
+'Set objExecObject = objShell.Exec("%comspec% /c ipconfig.exe")
+'Do Until objExecObject.StdOut.AtEndOfStream
+'    strLine = objExecObject.StdOut.ReadLine()
+'    strIP = InStr(strLine, "Address")
+'   If strIP <> 0 Then
+'        IPArray = Split(strLine, ":")
+'        strIPAddress = IPArray(1)
+'    End If
+'Loop
+
+'WScript.Echo excelusername
+'WScript.Echo windowslogin
+'WScript.Echo osbuildnumber
+'WScript.Echo osversion
+'WScript.Echo osversionnumber
+'WScript.Echo strIPAddress
+
+'xlApp.Workbooks.Open("C:\Program Files\Boardwalk\install_test.xls")
+strRegValue = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\excel.exe\Path"
+addInLocation = objShell.RegRead (strRegValue) & "XLSTART\BoardwalkExcel-Add-In.xla"
+xlApp.Workbooks.Open(addInLocation)
+loginOK = xlApp.Run ("Common.checkUserLogin")
+If loginOK = True then
+    Wscript.Echo "Login test successful"
+Else
+    Wscript.Echo "Login test was not successful"
+End If
+xlApp.Quit
+
+	</script>
+</job>

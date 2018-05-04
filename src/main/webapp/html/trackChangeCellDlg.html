@@ -1,0 +1,89 @@
+<html>
+<head>
+
+<title>Track Changes</title>
+
+<script language="javascript">
+	<%@ include file="/jscript/tracktable.js" %>
+</script>
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css" TITLE="stylesheet">
+
+
+
+<body onload="javascript:initPage()">
+
+<b id="trackChangeLabel">Table</b>
+<input type="hidden" name="trackChangeObject" value="TABLE">
+<br>
+
+<table >
+
+	<tr>
+	<td>Tracking Period</td>
+	<td>
+		<select   onchange="javascript:setStartEndDates(this)"  id="trackingPeriod" >
+		<option   value="Last Change" selected >Last Change</option>
+		<option value="Week">Week</option>
+		<option value="Month">Month</option>
+		<option value="Quarter">Quarter</option>
+		<option value="Year">Year</option>
+		<option  value="Custom"  >Custom</option>
+		</select>
+	</td>
+	</tr>
+
+
+
+	<tr >
+	<td>Start Date <br> ( mm/dd/yyyy or dd/mm/yyyy )</td>
+	<td>
+	<input   type="text" id="startDate"  value="" disabled=true  STYLE="background-color:silver" >
+	</td>
+	</tr>
+
+	<tr>
+	<td>End Date</td>
+	<td>
+	<input   type="text" id="endDate" value="" disabled=true  STYLE="background-color:silver"   >
+	</td>
+	</tr>
+
+	<tr>
+	<td>Filter By</td>
+	<td>
+	<input   type="text"  id="cellValueLike" value="" disabled=true  STYLE="background-color:silver" >
+	</td>
+	</tr>
+
+	<tr>
+		<td colspan=3>
+<br>
+			<input type='button' id="okBtn" onclick="dlgOK()" value=" OK ">
+			<input type='button' id="cancelBtn" onclick="window.close()" value=" Cancel ">
+
+		</td>
+	</tr>
+</table>
+</body>
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

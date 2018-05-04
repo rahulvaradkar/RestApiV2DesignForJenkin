@@ -1,0 +1,17 @@
+SELECT 
+	LKP_COL.ID   LKP_COLUMN_ID,
+	TBL_W_LKP.ID TBL_W_LKP_ID,
+	TBL_W_LKP.NAME TBL_W_LKP_NAME,
+	TBL_W_LKP.PURPOSE TBL_W_LKP_PURPOSE,
+	COL_W_LKP.ID COL_W_LKP_ID,
+	COL_W_LKP.NAME    COL_W_LKP_NAME
+FROM  
+	BW_TBL LKP_TBL, /* table having the lookup column */
+	BW_COLUMN  LKP_COL, /* the lookup column */
+     	BW_TBL  TBL_W_LKP, /* table using lookup */
+     	BW_COLUMN  COL_W_LKP /* column using lookup */   
+WHERE 
+	LKP_TBL.ID = ?
+    	AND LKP_COL.BW_TBL_ID = LKP_TBL.ID
+	AND COL_W_LKP.LOOKUP_COLUMN_ID = LKP_COL.ID
+	AND COL_W_LKP.BW_TBL_ID = TBL_W_LKP.ID

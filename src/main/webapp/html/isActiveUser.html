@@ -1,0 +1,28 @@
+<script language="javascript">
+function dlgOK()
+{	
+
+		var q = new Object();
+		q.args = true;
+		window.returnValue = q;
+		window.close()	
+}
+
+function funClose()
+{
+		var q = new Object();
+		q.args = false;
+		window.returnValue = q;
+		window.close()	
+}
+</script>
+<HTML>
+<title></title>
+<B>
+The User is currently deactivated ,do you want to activate this user?
+</B>
+<br>
+<br>
+<input type='button' id="okBtn" onClick="dlgOK()" value=" OK ">&nbsp;&nbsp;
+<input type='button' id="cancelBtn" value="Cancel" onClick="funClose()">
+</HTML>

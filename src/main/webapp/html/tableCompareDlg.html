@@ -1,0 +1,330 @@
+<html>
+<head>
+
+<title>Compare Table</title>
+<script language="javascript" type="text/javascript" src="../jscript/datetimepicker.js">
+</script>
+<script language="javascript" type="text/javascript" src="../jscript/dateutil.js">
+</script>
+<script language="javascript">
+	var startDate;
+	var endDate;
+	var selectedColumnId = -1
+	function initPage()
+	{
+		var args = window.dialogArguments;
+		selectedColumnId = args.selectedColumnId;
+		if (selectedColumnId == -1)
+		{
+			eval("document.all.compare").disabled = true;
+			eval("document.all.showSelection").disabled = true;
+		}
+		eval("document.all.advancedSection").style.display="none";
+		var sel = eval("document.all.trackingPeriod");
+		sel.selectedIndex = 0;
+		setStartEndDates (sel);
+	}
+
+
+	function setStartEndDates(select)
+	{
+		var trackingPeriod = select.options[select.selectedIndex].value
+		var cal = new Calendar(dtToday);
+
+		if ( trackingPeriod == "LastChange" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			//startDate.setDate(endDate.getDate() - 7);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Week" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 7);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Month" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 30);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Quarter" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 90);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Year" )
+		{
+			endDate = new Date();
+			startDate = new Date();
+			startDate.setDate(endDate.getDate() - 365);
+			eval("document.all.endDate").value  = formatDateTime(endDate, "dd-NNN-yyyy hh:mm:ss a");
+			eval("document.all.startDate").value  = formatDateTime(startDate, "dd-NNN-yyyy hh:mm:ss a");
+
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = true
+			eval("document.all.calEnd").disabled  = true
+
+		}
+		else if ( trackingPeriod == "Custom" )
+		{
+			eval("document.all.endDate").disabled  = true
+			eval("document.all.startDate").disabled  = true
+			eval("document.all.calStart").disabled  = false
+			eval("document.all.calEnd").disabled  = false
+
+		}
+
+	}
+
+	var advancedSectionShown = false
+	function showAdvanced()
+	{
+		if (advancedSectionShown == false)
+		{
+			eval("document.all.advancedSection").style.display=""
+			eval("document.all.showAdvancedImg").src="../images/collapse.gif"
+			eval("document.all.showAdvancedImg").title="Hide Advanced Section"
+			window.dialogHeight=26;
+			advancedSectionShown = true
+		}
+		else
+		{
+			eval("document.all.advancedSection").style.display="none"
+			eval("document.all.showAdvancedImg").src="../images/expand.gif"
+			eval("document.all.showAdvancedImg").title="Show Advanced Section"
+			window.dialogHeight=14;
+
+			advancedSectionShown = false
+		}
+	}
+	function dlgOK()
+	{
+		var q = new Object();
+		q.period = eval("document.all.trackingPeriod").value;
+
+		if (q.period != "Custom")
+		{
+			q.startDate = startDate.getTime();
+			q.endDate = endDate.getTime();
+		}
+		else
+		{
+			var startDateStr = eval("document.all.startDate").value
+			var endDateStr = eval("document.all.endDate").value
+			var startTime;
+			var endTime;
+
+			startTime = getDateFromFormat(startDateStr, "d-NNN-yyyy hh:mm:ss a");
+			endTime = getDateFromFormat(endDateStr, "d-NNN-yyyy hh:mm:ss a");
+
+			if (startTime == 0 || endTime == 0)
+			{
+				alert ("The dates you have entered are not in the correct format")
+				return
+			}
+
+			if (startTime >= endTime)
+			{
+				alert ("The start date is greater than or same as the end date")
+				return
+			}
+
+			q.startDate = startTime
+			q.endDate = endTime
+		}
+
+		if (eval("document.all.showDiffSideBySide").checked == true)
+		{
+			q.showDiffSideBySide = true;
+		}
+
+		var rgrp = eval("document.all.numericDiff")
+		for (var i=0;i<rgrp.length;i++)
+		{
+			if (rgrp[i].checked==true)
+				q.numericDiff=rgrp[i].value;
+		}
+
+		rgrp = eval("document.all.compareSelection");
+		if (rgrp[0].checked == true)
+		{
+			//alert("compare selected column");
+			q.reqColsComp = selectedColumnId;
+		}
+		if (eval("document.all.showSelectionOnly").checked == true)
+		{
+			//alert("display selected column");
+			q.reqCols = selectedColumnId
+		}
+		if (eval("document.all.showUnchangedRows").checked == false)
+		{
+			q.hideUnchangedRows = true;
+		}
+		if (eval("document.all.showChangedRows").checked == false)
+		{
+			q.hideChangedRows = true;
+		}
+		if (eval("document.all.showNewRows").checked == false)
+		{
+			q.hideNewRows = true;
+		}
+		if (eval("document.all.showDeletedRows").checked == false)
+		{
+			q.hideDeletedRows = true;
+		}
+		window.returnValue = q;
+
+		window.close();
+	}
+</script>
+
+
+</head>
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../css/stylesheet.css" TITLE="stylesheet">
+<body onload="javascript:initPage()">
+<table >
+	<tr>
+	  <td >Timeline :</td>
+	  <td >
+		<select onchange="javascript:setStartEndDates(this)"  id="trackingPeriod" >
+		 <option value="LastChange">Last Change</option>
+		 <option value="Week">Week</option>
+		 <option value="Month">Month</option>
+		 <option value="Quarter">Quarter</option>
+		 <option value="Year">Year</option>
+		 <option value="Custom"  >Custom</option>
+		</select>
+	  </td>
+	</tr>
+	  <tr>
+	    <td>
+	      Start Date :
+	    </td>
+	  	<td>
+	  		<input type="Text" id="startDate" maxlength="25" size="30">
+	  		<input type='image' id="calStart" onclick="javascript:NewCal('startDate','ddmmmyyyy',true,12)" src="../images/cal.gif">
+	  	</td>
+	  </tr>
+	  <tr>
+	    <td>
+	      End Date :
+	    </td>
+	  	<td>
+	  		<input type="Text" id="endDate" maxlength="25" size="30">
+	  		<input type='image' id="calEnd" onclick="javascript:NewCal('endDate','ddmmmyyyy',true,12)" src="../images/cal.gif">
+	  	</td>
+	  </tr>
+	  <tr id="advancedSelection" syle="display:none;">
+	    <td colspan=3>
+	    <img id="showAdvancedImg" valign="bottom" onclick="showAdvanced()" src="../images/expand.gif" title="Show advanced section">
+	    Advanced</td>
+  	  </tr>
+
+	  <tr id="advancedSection" syle="display:none;">
+	    <td colspan=3>
+	    <table width="100%" style="border: 1px solid #000000;" cellpadding=2>
+          <tr>
+            <td width="327" height="26" >
+              <font color="blue">Show rows that are :</font>
+              	<br>
+				<input id="showUnchangedRows" type="checkbox" value="checkbox" checked>Unchanged
+				<input id="showChangedRows" type="checkbox" value="checkbox" checked>Changed
+				<input id="showDeletedRows" type="checkbox" value="checkbox" checked>Deleted
+				<input id="showNewRows" type="checkbox" value="checkbox" checked>New
+    		</td>
+          </tr>
+          <tr border="0">
+            <td id="compare" ><font color="blue">Compare</font>
+            	<br>
+    			<input id="compareSelection" name="compareSelection" type="radio" value="selectedColumn">
+    				Selected Column
+				<input id="compareSelection" name="compareSelection" type="radio" value="entireTable" checked>
+					Entire Table
+			</td>
+          </tr>
+          <tr>
+            <td><font color="blue">Display Options</font>
+            <br>
+				<input type="checkbox" id="showDiffSideBySide" name="showDiffSideBySide" value="true">Show changes side by side
+				<br>
+				<div id="showSelection">
+			    <input type="checkbox" id="showSelectionOnly" name="showSelectionOnly" value="true">Display Selected Column Only
+			    </div>
+			</td>
+		  <tr>
+		    <td><font color="blue">Show Numeric Differences as :</font>
+		    	<br>
+    			<input id="numericDiff" name="numericDiff" type="radio" value="showDiffAbsolute" checked>Absolute Change
+				<input id="numericDiff" name="numericDiff" type="radio" value="showDiffPercent">Percent Change
+				<input id="numericDiff" name="numericDiff" type="radio" value="showDiffNone">None
+            </td>
+          </tr>
+        </table></td>
+  </tr>
+
+    <tr>
+		<td colspan=3>
+<br>
+			<input type='button' id="okBtn" onclick="dlgOK()" value=" OK ">
+			<input type='button' id="cancelBtn" onclick="window.close()" value=" Cancel ">
+
+		</td>
+	</tr>
+</table>
+</body>
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
