@@ -1,10 +1,21 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+<display-name>Jersey REST APIs for Boardwalk (com.vogella.jersey.first)</display-name>
+<servlet>
+	<servlet-name>BAE REST Service</servlet-name>
+	<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+	<init-param>
+		<param-name>jersey.config.server.provider.packages</param-name>
+		<param-value>io.swagger.api</param-value>
+	</init-param>
+	<load-on-startup>1</load-on-startup>
+</servlet>
+<servlet-mapping>
+	<servlet-name>BAE REST Service</servlet-name>
+	<url-pattern>/rest/*</url-pattern>
+</servlet-mapping>
 
-<!DOCTYPE web-app
-    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-    "http://java.sun.com/dtd/web-app_2_3.dtd">
 
-<web-app>
 	<filter>
 		<filter-name>BWExcelAuthenticationFilter</filter-name>
 		<filter-class>servlets.BWExcelAuthenticationFilter</filter-class>
@@ -223,12 +234,12 @@
 
 		<init-param>
 			<param-name>sourcexml</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_3\\plugins\\bwtraining.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_3\\plugins\\bwtraining.xml</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>targetxml</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_3\\plugins\\bwtrainingTarget.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_3\\plugins\\bwtrainingTarget.xml</param-value>
 		</init-param>
 	</servlet>
 
@@ -248,7 +259,7 @@
 
 		<init-param>
 			<param-name>InstanceName</param-name>
-			<param-value>SQL2012STANDARD</param-value>
+			<param-value>default</param-value>
 		</init-param>
 
 		<init-param>
@@ -273,22 +284,22 @@
 
 		<init-param>
 			<param-name>sqlpath</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_3\\sql\\</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_3\\sql\\</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>templatedir</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_3\\templates</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_3\\templates</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>sourcexml</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_3\\plugins\\bwtraining.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_3\\plugins\\bwtraining.xml</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>targetxml</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_3\\plugins\\bwtrainingTarget.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_3\\plugins\\bwtrainingTarget.xml</param-value>
 		</init-param>
 
 		<load-on-startup>1</load-on-startup>
@@ -438,6 +449,7 @@
 		<servlet-name>xlAdminService</servlet-name>
 		<servlet-class>servlets.xlAdminService</servlet-class>
 	</servlet>
+
 
 	<servlet-mapping>
 		<servlet-name>xlAdminService</servlet-name>
@@ -742,4 +754,5 @@
 		<extension>deploy</extension>
 		<mime-type>application/octet-stream</mime-type>
 	</mime-mapping>
+
 </web-app>
