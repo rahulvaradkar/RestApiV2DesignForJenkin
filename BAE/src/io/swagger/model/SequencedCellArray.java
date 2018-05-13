@@ -37,13 +37,22 @@ import javax.validation.constraints.*;
 /**
  * SequencedCellArray
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-07T10:23:52.356Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T14:51:11.960Z")
 public class SequencedCellArray   {
   @JsonProperty("columnId")
   private Integer columnId = null;
 
+  @JsonProperty("colSequence")
+  private Integer colSequence = null;
+
   @JsonProperty("cellValues")
   private List<String> cellValues = null;
+
+  @JsonProperty("cellFormulas")
+  private List<String> cellFormulas = null;
+
+  @JsonProperty("cellAccess")
+  private List<Integer> cellAccess = null;
 
   public SequencedCellArray columnId(Integer columnId) {
     this.columnId = columnId;
@@ -62,6 +71,25 @@ public class SequencedCellArray   {
 
   public void setColumnId(Integer columnId) {
     this.columnId = columnId;
+  }
+
+  public SequencedCellArray colSequence(Integer colSequence) {
+    this.colSequence = colSequence;
+    return this;
+  }
+
+  /**
+   * Get colSequence
+   * @return colSequence
+   **/
+  @JsonProperty("colSequence")
+  @ApiModelProperty(value = "")
+  public Integer getColSequence() {
+    return colSequence;
+  }
+
+  public void setColSequence(Integer colSequence) {
+    this.colSequence = colSequence;
   }
 
   public SequencedCellArray cellValues(List<String> cellValues) {
@@ -91,6 +119,60 @@ public class SequencedCellArray   {
     this.cellValues = cellValues;
   }
 
+  public SequencedCellArray cellFormulas(List<String> cellFormulas) {
+    this.cellFormulas = cellFormulas;
+    return this;
+  }
+
+  public SequencedCellArray addCellFormulasItem(String cellFormulasItem) {
+    if (this.cellFormulas == null) {
+      this.cellFormulas = new ArrayList<String>();
+    }
+    this.cellFormulas.add(cellFormulasItem);
+    return this;
+  }
+
+  /**
+   * Get cellFormulas
+   * @return cellFormulas
+   **/
+  @JsonProperty("cellFormulas")
+  @ApiModelProperty(value = "")
+  public List<String> getCellFormulas() {
+    return cellFormulas;
+  }
+
+  public void setCellFormulas(List<String> cellFormulas) {
+    this.cellFormulas = cellFormulas;
+  }
+
+  public SequencedCellArray cellAccess(List<Integer> cellAccess) {
+    this.cellAccess = cellAccess;
+    return this;
+  }
+
+  public SequencedCellArray addCellAccessItem(Integer cellAccessItem) {
+    if (this.cellAccess == null) {
+      this.cellAccess = new ArrayList<Integer>();
+    }
+    this.cellAccess.add(cellAccessItem);
+    return this;
+  }
+
+  /**
+   * Get cellAccess
+   * @return cellAccess
+   **/
+  @JsonProperty("cellAccess")
+  @ApiModelProperty(value = "")
+  public List<Integer> getCellAccess() {
+    return cellAccess;
+  }
+
+  public void setCellAccess(List<Integer> cellAccess) {
+    this.cellAccess = cellAccess;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -102,12 +184,15 @@ public class SequencedCellArray   {
     }
     SequencedCellArray sequencedCellArray = (SequencedCellArray) o;
     return Objects.equals(this.columnId, sequencedCellArray.columnId) &&
-        Objects.equals(this.cellValues, sequencedCellArray.cellValues);
+        Objects.equals(this.colSequence, sequencedCellArray.colSequence) &&
+        Objects.equals(this.cellValues, sequencedCellArray.cellValues) &&
+        Objects.equals(this.cellFormulas, sequencedCellArray.cellFormulas) &&
+        Objects.equals(this.cellAccess, sequencedCellArray.cellAccess);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(columnId, cellValues);
+    return Objects.hash(columnId, colSequence, cellValues, cellFormulas, cellAccess);
   }
 
 
@@ -117,7 +202,10 @@ public class SequencedCellArray   {
     sb.append("class SequencedCellArray {\n");
     
     sb.append("    columnId: ").append(toIndentedString(columnId)).append("\n");
+    sb.append("    colSequence: ").append(toIndentedString(colSequence)).append("\n");
     sb.append("    cellValues: ").append(toIndentedString(cellValues)).append("\n");
+    sb.append("    cellFormulas: ").append(toIndentedString(cellFormulas)).append("\n");
+    sb.append("    cellAccess: ").append(toIndentedString(cellAccess)).append("\n");
     sb.append("}");
     return sb.toString();
   }

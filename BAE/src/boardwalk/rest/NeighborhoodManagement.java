@@ -790,7 +790,6 @@ public class NeighborhoodManagement {
 			}
 		 return memberList;
 	}
-
 	
 	
 	//@DELETE

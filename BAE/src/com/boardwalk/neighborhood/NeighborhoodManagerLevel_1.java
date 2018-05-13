@@ -18,9 +18,9 @@ public class NeighborhoodManagerLevel_1 {
 
     private static String CALL_CR_NH_LEVEL_1 = "{CALL BW_CR_NH_LEVEL_1(?,?,?,?,?,?)}";
     private static String CALL_DEL_NH_LEVEL_1 = "{CALL BW_DEL_NH_LEVEL_1(?,?,?)}";
-    private static String BW_GET_NHS_AT_LEVEL_1 = "SELECT BW_NH_LEVEL_1.ID,"+
-    "BW_NH_LEVEL_1.NAME,"+
-    "BW_NH_LEVEL_1.NEIGHBORHOOD_ID,"+
+    private static String BW_GET_NHS_AT_LEVEL_1 = "SELECT BW_NH_LEVEL_1.ID, "+
+    "BW_NH_LEVEL_1.NAME, "+
+    "BW_NH_LEVEL_1.NEIGHBORHOOD_ID, "+
     "BW_NH.IS_SECURE, "+
     "BW_NH.MANAGED_BY "+
     "FROM BW_NH_LEVEL_1,BW_NH "+
@@ -31,10 +31,10 @@ public class NeighborhoodManagerLevel_1 {
     "BW_NH_LEVEL_1.NEIGHBORHOOD_ID,     "+
     "BW_NH.IS_SECURE, "+
     "BW_NH.IS_ACTIVE, "+
-    "BW_NH.MANAGED_BY"+
+    "BW_NH.MANAGED_BY "+
     "FROM BW_NH_LEVEL_1,     BW_NH  "+
-    "WHERE BW_NH_LEVEL_1.ID = ?" +
-    " AND BW_NH.ID = BW_NH_LEVEL_1.NEIGHBORHOOD_ID";
+    "WHERE BW_NH_LEVEL_1.ID = ? " +
+    "AND BW_NH.ID = BW_NH_LEVEL_1.NEIGHBORHOOD_ID";
     private static String BW_GET_NH_AT_LEVEL_1_USING_NH_ID = "SELECT BW_NH_LEVEL_1.ID,     "+
     "BW_NH_LEVEL_1.NAME,     "+
     "BW_NH_LEVEL_1.NEIGHBORHOOD_ID,     "+
@@ -43,7 +43,7 @@ public class NeighborhoodManagerLevel_1 {
     "BW_NH.MANAGED_BY  "+
     "FROM BW_NH_LEVEL_1,     BW_NH "+
     "WHERE BW_NH_LEVEL_1.NEIGHBORHOOD_ID = ?  " +
-    " AND BW_NH.ID = BW_NH_LEVEL_1.NEIGHBORHOOD_ID";
+    "AND BW_NH.ID = BW_NH_LEVEL_1.NEIGHBORHOOD_ID";
 
 
 
@@ -212,7 +212,6 @@ public class NeighborhoodManagerLevel_1 {
     public static NeighborhoodLevel_1 getNeighborhoodLevel_1_by_Neighborhood_Level_1_Id(Connection connection, int Neighborhood_Level_1_Id)
     throws SystemException {
 
-
         Object obj = null;
         ResultSet resultset = null;
         PreparedStatement preparedstatement = null;
@@ -220,6 +219,7 @@ public class NeighborhoodManagerLevel_1 {
         try {
             preparedstatement = connection.prepareStatement(BW_GET_NH_AT_LEVEL_1_USING_LEVEL_1_ID);
             preparedstatement.setInt(1,Neighborhood_Level_1_Id);
+            
             resultset = preparedstatement.executeQuery();
             if ( resultset.next() ) {
                 int id;
@@ -242,6 +242,7 @@ public class NeighborhoodManagerLevel_1 {
 
         }
         catch(SQLException sqlexception) {
+        	
             throw new SystemException(sqlexception);
         }
         finally {

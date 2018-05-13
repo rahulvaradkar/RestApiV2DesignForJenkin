@@ -36,13 +36,16 @@ import javax.validation.constraints.*;
 /**
  * GridInfo
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-07T10:02:31.749Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T14:51:11.960Z")
 public class GridInfo   {
   @JsonProperty("id")
   private Integer id = null;
 
   @JsonProperty("name")
   private String name = null;
+
+  @JsonProperty("purpose")
+  private String purpose = null;
 
   @JsonProperty("view")
   private String view = null;
@@ -76,6 +79,27 @@ public class GridInfo   {
 
   @JsonProperty("memberId")
   private Integer memberId = null;
+
+  @JsonProperty("userId")
+  private Integer userId = null;
+
+  @JsonProperty("nhId")
+  private Integer nhId = null;
+
+  @JsonProperty("rowCount")
+  private Integer rowCount = null;
+
+  @JsonProperty("colCount")
+  private Integer colCount = null;
+
+  @JsonProperty("maxTxId")
+  private Integer maxTxId = null;
+
+  @JsonProperty("mode")
+  private Integer mode = null;
+
+  @JsonProperty("criteriaTableId")
+  private Integer criteriaTableId = null;
 
   @JsonProperty("neighborhoodHeirarchy")
   private NeighborhoodPath neighborhoodHeirarchy = null;
@@ -116,6 +140,25 @@ public class GridInfo   {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public GridInfo purpose(String purpose) {
+    this.purpose = purpose;
+    return this;
+  }
+
+  /**
+   * Get purpose
+   * @return purpose
+   **/
+  @JsonProperty("purpose")
+  @ApiModelProperty(value = "")
+  public String getPurpose() {
+    return purpose;
+  }
+
+  public void setPurpose(String purpose) {
+    this.purpose = purpose;
   }
 
   public GridInfo view(String view) {
@@ -327,6 +370,139 @@ public class GridInfo   {
     this.memberId = memberId;
   }
 
+  public GridInfo userId(Integer userId) {
+    this.userId = userId;
+    return this;
+  }
+
+  /**
+   * Get userId
+   * @return userId
+   **/
+  @JsonProperty("userId")
+  @ApiModelProperty(value = "")
+  public Integer getUserId() {
+    return userId;
+  }
+
+  public void setUserId(Integer userId) {
+    this.userId = userId;
+  }
+
+  public GridInfo nhId(Integer nhId) {
+    this.nhId = nhId;
+    return this;
+  }
+
+  /**
+   * Get nhId
+   * @return nhId
+   **/
+  @JsonProperty("nhId")
+  @ApiModelProperty(value = "")
+  public Integer getNhId() {
+    return nhId;
+  }
+
+  public void setNhId(Integer nhId) {
+    this.nhId = nhId;
+  }
+
+  public GridInfo rowCount(Integer rowCount) {
+    this.rowCount = rowCount;
+    return this;
+  }
+
+  /**
+   * Get rowCount
+   * @return rowCount
+   **/
+  @JsonProperty("rowCount")
+  @ApiModelProperty(value = "")
+  public Integer getRowCount() {
+    return rowCount;
+  }
+
+  public void setRowCount(Integer rowCount) {
+    this.rowCount = rowCount;
+  }
+
+  public GridInfo colCount(Integer colCount) {
+    this.colCount = colCount;
+    return this;
+  }
+
+  /**
+   * Get colCount
+   * @return colCount
+   **/
+  @JsonProperty("colCount")
+  @ApiModelProperty(value = "")
+  public Integer getColCount() {
+    return colCount;
+  }
+
+  public void setColCount(Integer colCount) {
+    this.colCount = colCount;
+  }
+
+  public GridInfo maxTxId(Integer maxTxId) {
+    this.maxTxId = maxTxId;
+    return this;
+  }
+
+  /**
+   * Get maxTxId
+   * @return maxTxId
+   **/
+  @JsonProperty("maxTxId")
+  @ApiModelProperty(value = "")
+  public Integer getMaxTxId() {
+    return maxTxId;
+  }
+
+  public void setMaxTxId(Integer maxTxId) {
+    this.maxTxId = maxTxId;
+  }
+
+  public GridInfo mode(Integer mode) {
+    this.mode = mode;
+    return this;
+  }
+
+  /**
+   * Get mode
+   * @return mode
+   **/
+  @JsonProperty("mode")
+  @ApiModelProperty(value = "")
+  public Integer getMode() {
+    return mode;
+  }
+
+  public void setMode(Integer mode) {
+    this.mode = mode;
+  }
+
+  public GridInfo criteriaTableId(Integer criteriaTableId) {
+    this.criteriaTableId = criteriaTableId;
+    return this;
+  }
+
+  /**
+   * Get criteriaTableId
+   * @return criteriaTableId
+   **/
+  @JsonProperty("criteriaTableId")
+  @ApiModelProperty(value = "")
+  public Integer getCriteriaTableId() {
+    return criteriaTableId;
+  }
+
+  public void setCriteriaTableId(Integer criteriaTableId) {
+    this.criteriaTableId = criteriaTableId;
+  }
+
   public GridInfo neighborhoodHeirarchy(NeighborhoodPath neighborhoodHeirarchy) {
     this.neighborhoodHeirarchy = neighborhoodHeirarchy;
     return this;
@@ -358,6 +534,7 @@ public class GridInfo   {
     GridInfo gridInfo = (GridInfo) o;
     return Objects.equals(this.id, gridInfo.id) &&
         Objects.equals(this.name, gridInfo.name) &&
+        Objects.equals(this.purpose, gridInfo.purpose) &&
         Objects.equals(this.view, gridInfo.view) &&
         Objects.equals(this.importTid, gridInfo.importTid) &&
         Objects.equals(this.exportTid, gridInfo.exportTid) &&
@@ -369,12 +546,19 @@ public class GridInfo   {
         Objects.equals(this.collabId, gridInfo.collabId) &&
         Objects.equals(this.wbId, gridInfo.wbId) &&
         Objects.equals(this.memberId, gridInfo.memberId) &&
+        Objects.equals(this.userId, gridInfo.userId) &&
+        Objects.equals(this.nhId, gridInfo.nhId) &&
+        Objects.equals(this.rowCount, gridInfo.rowCount) &&
+        Objects.equals(this.colCount, gridInfo.colCount) &&
+        Objects.equals(this.maxTxId, gridInfo.maxTxId) &&
+        Objects.equals(this.mode, gridInfo.mode) &&
+        Objects.equals(this.criteriaTableId, gridInfo.criteriaTableId) &&
         Objects.equals(this.neighborhoodHeirarchy, gridInfo.neighborhoodHeirarchy);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, view, importTid, exportTid, filter, asOfTid, baselineId, serverName, serverURL, collabId, wbId, memberId, neighborhoodHeirarchy);
+    return Objects.hash(id, name, purpose, view, importTid, exportTid, filter, asOfTid, baselineId, serverName, serverURL, collabId, wbId, memberId, userId, nhId, rowCount, colCount, maxTxId, mode, criteriaTableId, neighborhoodHeirarchy);
   }
 
 
@@ -385,6 +569,7 @@ public class GridInfo   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    purpose: ").append(toIndentedString(purpose)).append("\n");
     sb.append("    view: ").append(toIndentedString(view)).append("\n");
     sb.append("    importTid: ").append(toIndentedString(importTid)).append("\n");
     sb.append("    exportTid: ").append(toIndentedString(exportTid)).append("\n");
@@ -396,6 +581,13 @@ public class GridInfo   {
     sb.append("    collabId: ").append(toIndentedString(collabId)).append("\n");
     sb.append("    wbId: ").append(toIndentedString(wbId)).append("\n");
     sb.append("    memberId: ").append(toIndentedString(memberId)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+    sb.append("    nhId: ").append(toIndentedString(nhId)).append("\n");
+    sb.append("    rowCount: ").append(toIndentedString(rowCount)).append("\n");
+    sb.append("    colCount: ").append(toIndentedString(colCount)).append("\n");
+    sb.append("    maxTxId: ").append(toIndentedString(maxTxId)).append("\n");
+    sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
+    sb.append("    criteriaTableId: ").append(toIndentedString(criteriaTableId)).append("\n");
     sb.append("    neighborhoodHeirarchy: ").append(toIndentedString(neighborhoodHeirarchy)).append("\n");
     sb.append("}");
     return sb.toString();

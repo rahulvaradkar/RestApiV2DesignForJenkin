@@ -19,7 +19,7 @@ import java.io.InputStream;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-05T04:57:22.014Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public abstract class NeighborhoodApiService {
     public abstract Response neighborhoodGet( String neighborhoodSpec,SecurityContext securityContext) throws NotFoundException;
     public abstract Response neighborhoodNhIdCollaborationGet(Integer nhId,SecurityContext securityContext) throws NotFoundException;
