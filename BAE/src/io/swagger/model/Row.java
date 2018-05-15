@@ -35,7 +35,7 @@ import javax.validation.constraints.*;
 /**
  * Row
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-04-27T06:34:45.359Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T14:51:11.960Z")
 public class Row   {
   @JsonProperty("id")
   private Integer id = null;
@@ -52,8 +52,26 @@ public class Row   {
   @JsonProperty("active")
   private Boolean active = null;
 
+  @JsonProperty("rowName")
+  private String rowName = null;
+
   @JsonProperty("tid")
   private Integer tid = null;
+
+  @JsonProperty("ownerId")
+  private Integer ownerId = null;
+
+  @JsonProperty("ownerName")
+  private String ownerName = null;
+
+  @JsonProperty("creationTid")
+  private Integer creationTid = null;
+
+  @JsonProperty("createrId")
+  private Integer createrId = null;
+
+  @JsonProperty("ownershipAssignedTid")
+  private Integer ownershipAssignedTid = null;
 
   public Row id(Integer id) {
     this.id = id;
@@ -150,6 +168,25 @@ public class Row   {
     this.active = active;
   }
 
+  public Row rowName(String rowName) {
+    this.rowName = rowName;
+    return this;
+  }
+
+  /**
+   * Get rowName
+   * @return rowName
+   **/
+  @JsonProperty("rowName")
+  @ApiModelProperty(value = "")
+  public String getRowName() {
+    return rowName;
+  }
+
+  public void setRowName(String rowName) {
+    this.rowName = rowName;
+  }
+
   public Row tid(Integer tid) {
     this.tid = tid;
     return this;
@@ -169,6 +206,101 @@ public class Row   {
     this.tid = tid;
   }
 
+  public Row ownerId(Integer ownerId) {
+    this.ownerId = ownerId;
+    return this;
+  }
+
+  /**
+   * Get ownerId
+   * @return ownerId
+   **/
+  @JsonProperty("ownerId")
+  @ApiModelProperty(value = "")
+  public Integer getOwnerId() {
+    return ownerId;
+  }
+
+  public void setOwnerId(Integer ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public Row ownerName(String ownerName) {
+    this.ownerName = ownerName;
+    return this;
+  }
+
+  /**
+   * Get ownerName
+   * @return ownerName
+   **/
+  @JsonProperty("ownerName")
+  @ApiModelProperty(value = "")
+  public String getOwnerName() {
+    return ownerName;
+  }
+
+  public void setOwnerName(String ownerName) {
+    this.ownerName = ownerName;
+  }
+
+  public Row creationTid(Integer creationTid) {
+    this.creationTid = creationTid;
+    return this;
+  }
+
+  /**
+   * Get creationTid
+   * @return creationTid
+   **/
+  @JsonProperty("creationTid")
+  @ApiModelProperty(value = "")
+  public Integer getCreationTid() {
+    return creationTid;
+  }
+
+  public void setCreationTid(Integer creationTid) {
+    this.creationTid = creationTid;
+  }
+
+  public Row createrId(Integer createrId) {
+    this.createrId = createrId;
+    return this;
+  }
+
+  /**
+   * Get createrId
+   * @return createrId
+   **/
+  @JsonProperty("createrId")
+  @ApiModelProperty(value = "")
+  public Integer getCreaterId() {
+    return createrId;
+  }
+
+  public void setCreaterId(Integer createrId) {
+    this.createrId = createrId;
+  }
+
+  public Row ownershipAssignedTid(Integer ownershipAssignedTid) {
+    this.ownershipAssignedTid = ownershipAssignedTid;
+    return this;
+  }
+
+  /**
+   * Get ownershipAssignedTid
+   * @return ownershipAssignedTid
+   **/
+  @JsonProperty("ownershipAssignedTid")
+  @ApiModelProperty(value = "")
+  public Integer getOwnershipAssignedTid() {
+    return ownershipAssignedTid;
+  }
+
+  public void setOwnershipAssignedTid(Integer ownershipAssignedTid) {
+    this.ownershipAssignedTid = ownershipAssignedTid;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -184,12 +316,18 @@ public class Row   {
         Objects.equals(this.previousRowid, row.previousRowid) &&
         Objects.equals(this.previousRowSequence, row.previousRowSequence) &&
         Objects.equals(this.active, row.active) &&
-        Objects.equals(this.tid, row.tid);
+        Objects.equals(this.rowName, row.rowName) &&
+        Objects.equals(this.tid, row.tid) &&
+        Objects.equals(this.ownerId, row.ownerId) &&
+        Objects.equals(this.ownerName, row.ownerName) &&
+        Objects.equals(this.creationTid, row.creationTid) &&
+        Objects.equals(this.createrId, row.createrId) &&
+        Objects.equals(this.ownershipAssignedTid, row.ownershipAssignedTid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, seqNo, previousRowid, previousRowSequence, active, tid);
+    return Objects.hash(id, seqNo, previousRowid, previousRowSequence, active, rowName, tid, ownerId, ownerName, creationTid, createrId, ownershipAssignedTid);
   }
 
 
@@ -203,7 +341,13 @@ public class Row   {
     sb.append("    previousRowid: ").append(toIndentedString(previousRowid)).append("\n");
     sb.append("    previousRowSequence: ").append(toIndentedString(previousRowSequence)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
+    sb.append("    rowName: ").append(toIndentedString(rowName)).append("\n");
     sb.append("    tid: ").append(toIndentedString(tid)).append("\n");
+    sb.append("    ownerId: ").append(toIndentedString(ownerId)).append("\n");
+    sb.append("    ownerName: ").append(toIndentedString(ownerName)).append("\n");
+    sb.append("    creationTid: ").append(toIndentedString(creationTid)).append("\n");
+    sb.append("    createrId: ").append(toIndentedString(createrId)).append("\n");
+    sb.append("    ownershipAssignedTid: ").append(toIndentedString(ownershipAssignedTid)).append("\n");
     sb.append("}");
     return sb.toString();
   }

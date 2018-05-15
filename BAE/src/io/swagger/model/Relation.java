@@ -38,7 +38,7 @@ import javax.validation.constraints.*;
 /**
  * Relation
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-03T09:32:43.786Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class Relation   {
   @JsonProperty("name")
   private String name = null;

@@ -35,7 +35,7 @@ import javax.validation.constraints.*;
 /**
  * Grid
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-07T10:02:31.749Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T14:51:11.960Z")
 public class Grid   {
   @JsonProperty("id")
   private Integer id = null;

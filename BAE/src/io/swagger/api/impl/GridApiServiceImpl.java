@@ -8,7 +8,6 @@ import java.util.Date;
 import io.swagger.model.ErrorAddRows;
 import io.swagger.model.ErrorDeleteObject;
 import io.swagger.model.ErrorDeleteRows;
-import io.swagger.model.ErrorReadObject;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.ErrorUpdateObject;
 import io.swagger.model.Grid;
@@ -29,17 +28,49 @@ import boardwalk.rest.NeighborhoodManagement;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-07T10:23:52.356Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-11T15:06:49.282Z")
 public class GridApiServiceImpl extends GridApiService {
     @Override
-    public Response gridDelete(Integer tableId, SecurityContext securityContext) throws NotFoundException {
+    public Response gridDelete(Integer gridId, SecurityContext securityContext) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridGet(String tableId, CellBuffer cellBufferRequest, SecurityContext securityContext) throws NotFoundException {
+    public Response gridGridIdGet(Integer gridId, CellBuffer cellBufferRequest, SecurityContext securityContext) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    	ErrorRequestObject erb;
+		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+			System.out.println("Inside GridApiServiceImpl.gridGet --- gridId : " + gridId);
+			System.out.println("Inside GridApiServiceImpl.gridGet --- cellBufferRequest : " + cellBufferRequest);
+
+		if (gridId <= 0)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
+			erb.setProposedSolution("You must enter an Existing Grid ID. It should be a Positive Number.");
+			erbs.add(erb);
+		}
+
+	   	if (erbs.size() == 0)
+	   	{
+	   		CellBuffer cbf;
+	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+	  	 	
+	  	 	cbf = GridManagement.gridGridIdGet(gridId, cellBufferRequest, ErrResps);
+	    	
+	    	if (ErrResps.size() > 0)
+	    		return Response.ok().entity(ErrResps).build();   	
+	    	else
+	    	{
+	    		return Response.ok().entity(cbf).build();
+	    	}
+	   	}
+	   	else
+	   	{
+	       	return Response.ok().entity(erbs).build();
+	   	}    
+
+//        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
     public Response gridPost(Grid grid, SecurityContext securityContext) throws NotFoundException {
@@ -102,7 +133,7 @@ public class GridApiServiceImpl extends GridApiService {
     	//return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridPut(Integer gridId, CellBuffer cellBufferRequest, SecurityContext securityContext) throws NotFoundException {
+    public Response gridPut( @NotNull Integer gridId, CellBuffer cellBufferRequest, SecurityContext securityContext) throws NotFoundException {
         // do some magic!
 
 		ErrorRequestObject erb;

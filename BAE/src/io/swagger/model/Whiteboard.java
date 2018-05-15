@@ -38,7 +38,7 @@ import javax.validation.constraints.*;
 /**
  * Whiteboard
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-05T04:57:22.014Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class Whiteboard   {
   @JsonProperty("id")
   private Long id = null;

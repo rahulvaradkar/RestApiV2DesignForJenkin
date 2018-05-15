@@ -32,6 +32,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Cell;
 import io.swagger.model.Column;
+import io.swagger.model.GridChangeBuffer;
 import io.swagger.model.GridInfo;
 import io.swagger.model.Row;
 import io.swagger.model.SequencedCellArray;
@@ -42,7 +43,7 @@ import javax.validation.constraints.*;
 /**
  * CellBuffer
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-07T09:34:58.805Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-11T14:19:58.049Z")
 public class CellBuffer   {
   @JsonProperty("info")
   private GridInfo info = null;
@@ -66,7 +67,7 @@ public class CellBuffer   {
   private List<Cell> cells = null;
 
   @JsonProperty("GridChangeBuffer")
-  private Object gridChangeBuffer = null;
+  private GridChangeBuffer gridChangeBuffer = null;
 
   public CellBuffer info(GridInfo info) {
     this.info = info;
@@ -249,7 +250,7 @@ public class CellBuffer   {
     this.cells = cells;
   }
 
-  public CellBuffer gridChangeBuffer(Object gridChangeBuffer) {
+  public CellBuffer gridChangeBuffer(GridChangeBuffer gridChangeBuffer) {
     this.gridChangeBuffer = gridChangeBuffer;
     return this;
   }
@@ -260,11 +261,11 @@ public class CellBuffer   {
    **/
   @JsonProperty("GridChangeBuffer")
   @ApiModelProperty(value = "")
-  public Object getGridChangeBuffer() {
+  public GridChangeBuffer getGridChangeBuffer() {
     return gridChangeBuffer;
   }
 
-  public void setGridChangeBuffer(Object gridChangeBuffer) {
+  public void setGridChangeBuffer(GridChangeBuffer gridChangeBuffer) {
     this.gridChangeBuffer = gridChangeBuffer;
   }
 

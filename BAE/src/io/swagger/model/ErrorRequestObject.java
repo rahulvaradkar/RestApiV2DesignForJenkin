@@ -35,7 +35,7 @@ import javax.validation.constraints.*;
 /**
  * ErrorRequestObject
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-04-29T06:54:49.820Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class ErrorRequestObject   {
   @JsonProperty("error")
   private String error = null;

@@ -238,6 +238,7 @@ public class NeighborhoodManagerLevel_0 {
         try {
             preparedstatement = connection.prepareStatement(BW_GET_NH_AT_LEVEL_0_USING_LEVEL_0_ID);
             preparedstatement.setInt(1,Neighborhood_Level_0_Id);
+
             resultset = preparedstatement.executeQuery();
             if ( resultset.next() ) {
                 int id;
@@ -255,13 +256,14 @@ public class NeighborhoodManagerLevel_0 {
                 return neighborhoodlevel_0;
             }
             else {
-                return null;
+            	return null;
 
             }
 
         }
         catch(SQLException sqlexception) {
-            throw new SystemException(sqlexception);
+
+        	throw new SystemException(sqlexception);
         }
         finally {
             try {

@@ -59,7 +59,7 @@ extends ExcelAuthenticationFilter
 				e.printStackTrace();
 			} 
 		}
-		else if(rURI.contains("xlLogoutService") || rURI.contains("forgotPassword") || rURI.endsWith("jsp") || rURI.contains("logo-boardwalk.gif"))// to bypass filter for jsp in weblogic deployment
+		else if(rURI.contains("/rest/") || rURI.contains("xlLogoutService") || rURI.contains("forgotPassword") || rURI.endsWith("jsp") || rURI.contains("logo-boardwalk.gif"))// to bypass filter for jsp in weblogic deployment
 		{
 			try {
 				chain.doFilter(request, response);

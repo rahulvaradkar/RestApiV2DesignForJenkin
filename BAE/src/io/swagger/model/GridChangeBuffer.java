@@ -37,7 +37,7 @@ import javax.validation.constraints.*;
 /**
  * GridChangeBuffer
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-06T17:48:54.305Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-11T14:19:58.049Z")
 public class GridChangeBuffer   {
   @JsonProperty("newRowdArray")
   private List<Integer> newRowdArray = null;

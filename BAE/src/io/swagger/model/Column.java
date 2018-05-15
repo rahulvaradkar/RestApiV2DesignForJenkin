@@ -30,12 +30,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
 import javax.validation.constraints.*;
 
 /**
  * Column
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-04-27T06:34:45.359Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class Column   {
   @JsonProperty("id")
   private Integer id = null;
@@ -44,13 +45,13 @@ public class Column   {
   private String name = null;
 
   @JsonProperty("seqNo")
-  private Integer seqNo = null;
+  private BigDecimal seqNo = null;
 
   @JsonProperty("previousColumnid")
   private Integer previousColumnid = null;
 
   @JsonProperty("previousColumnSequence")
-  private Integer previousColumnSequence = null;
+  private BigDecimal previousColumnSequence = null;
 
   @JsonProperty("active")
   private Boolean active = null;
@@ -96,7 +97,7 @@ public class Column   {
     this.name = name;
   }
 
-  public Column seqNo(Integer seqNo) {
+  public Column seqNo(BigDecimal seqNo) {
     this.seqNo = seqNo;
     return this;
   }
@@ -107,11 +108,11 @@ public class Column   {
    **/
   @JsonProperty("seqNo")
   @ApiModelProperty(value = "")
-  public Integer getSeqNo() {
+  public BigDecimal getSeqNo() {
     return seqNo;
   }
 
-  public void setSeqNo(Integer seqNo) {
+  public void setSeqNo(BigDecimal seqNo) {
     this.seqNo = seqNo;
   }
 
@@ -134,7 +135,7 @@ public class Column   {
     this.previousColumnid = previousColumnid;
   }
 
-  public Column previousColumnSequence(Integer previousColumnSequence) {
+  public Column previousColumnSequence(BigDecimal previousColumnSequence) {
     this.previousColumnSequence = previousColumnSequence;
     return this;
   }
@@ -145,11 +146,11 @@ public class Column   {
    **/
   @JsonProperty("previousColumnSequence")
   @ApiModelProperty(value = "")
-  public Integer getPreviousColumnSequence() {
+  public BigDecimal getPreviousColumnSequence() {
     return previousColumnSequence;
   }
 
-  public void setPreviousColumnSequence(Integer previousColumnSequence) {
+  public void setPreviousColumnSequence(BigDecimal previousColumnSequence) {
     this.previousColumnSequence = previousColumnSequence;
   }
 

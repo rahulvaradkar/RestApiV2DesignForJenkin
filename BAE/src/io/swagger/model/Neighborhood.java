@@ -35,7 +35,7 @@ import javax.validation.constraints.*;
 /**
  * Neighborhood
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-05T04:57:22.014Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T14:51:11.960Z")
 public class Neighborhood   {
   @JsonProperty("id")
   private Long id = null;

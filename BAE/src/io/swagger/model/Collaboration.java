@@ -38,13 +38,16 @@ import javax.validation.constraints.*;
 /**
  * Collaboration
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-05T04:57:22.014Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class Collaboration   {
   @JsonProperty("id")
   private Long id = null;
 
   @JsonProperty("name")
   private String name = null;
+
+  @JsonProperty("purpose")
+  private String purpose = null;
 
   @JsonProperty("wbList")
   private List<Whiteboard> wbList = null;
@@ -87,6 +90,25 @@ public class Collaboration   {
     this.name = name;
   }
 
+  public Collaboration purpose(String purpose) {
+    this.purpose = purpose;
+    return this;
+  }
+
+  /**
+   * Get purpose
+   * @return purpose
+   **/
+  @JsonProperty("purpose")
+  @ApiModelProperty(value = "")
+  public String getPurpose() {
+    return purpose;
+  }
+
+  public void setPurpose(String purpose) {
+    this.purpose = purpose;
+  }
+
   public Collaboration wbList(List<Whiteboard> wbList) {
     this.wbList = wbList;
     return this;
@@ -126,12 +148,13 @@ public class Collaboration   {
     Collaboration collaboration = (Collaboration) o;
     return Objects.equals(this.id, collaboration.id) &&
         Objects.equals(this.name, collaboration.name) &&
+        Objects.equals(this.purpose, collaboration.purpose) &&
         Objects.equals(this.wbList, collaboration.wbList);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, wbList);
+    return Objects.hash(id, name, purpose, wbList);
   }
 
 
@@ -142,6 +165,7 @@ public class Collaboration   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    purpose: ").append(toIndentedString(purpose)).append("\n");
     sb.append("    wbList: ").append(toIndentedString(wbList)).append("\n");
     sb.append("}");
     return sb.toString();

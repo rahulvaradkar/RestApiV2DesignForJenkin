@@ -337,6 +337,7 @@ import boardwalk.connection.BoardwalkConnection;
                 //bwe
                 sqe.printStackTrace();
             }
+            throw new BoardwalkException(10020);		//Added by Rahul on 02-MAY-2018
         }
     }
 

@@ -35,7 +35,7 @@ import javax.validation.constraints.*;
 /**
  * User
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-04-30T03:35:16.055Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class User   {
   @JsonProperty("id")
   private Long id = -1l;

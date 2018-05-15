@@ -35,6 +35,18 @@ public class BoardwalkMessages {
 			errorMessages.put( new Integer( 10009 ), new BoardwalkMessage( 10009, "ACCESS EXCEPTION", 5 ,"The password you have entered is incorrect",  "Please try again"));
 			errorMessages.put(new Integer(10010), new BoardwalkMessage(10010, "BOARDWALK EXCEPTION", 5, "No such Collaboration and/or Whiteboard exist", "Please check the collaboration name and whiteboard name"));
 
+			//ADded for REST APIS
+            errorMessages.put( new Integer( 10011 ), new BoardwalkMessage( 10011, "WHITEBOARD EXCEPTION", 5 ,"A Whiteboard with this name already exists within this Collaboration",  "The Whiteboard Name has to be unique within a Collaboration, Please choose a different name"));
+            errorMessages.put( new Integer( 10012 ), new BoardwalkMessage( 10012, "TABLE CREATE EXCEPTION", 5 ,"A Table with this name already exists within Collaboration/s",  "The Table Name has to be unique across all Collaborations, Please choose a different name"));
+            errorMessages.put( new Integer( 10013 ), new BoardwalkMessage( 10013, "COLLABORATION RENAME EXCEPTION", 5 ,"A Collaboration with this name already exists within Neighborhood",  "The Collaboration Name has to be unique within the Neighborhood, Please choose a different name"));
+            errorMessages.put( new Integer( 10014 ), new BoardwalkMessage( 10014, "WHITEBOARD RENAME EXCEPTION", 5 ,"A Whiteboard with this name already exists within Collaboration",  "The Whiteboard Name has to be unique within the Collaboration, Please choose a different name"));
+            errorMessages.put( new Integer( 10015 ), new BoardwalkMessage( 10015, "TABLE RENAME EXCEPTION", 5 ,"A Table with this name already exists within Whiteboard",  "The TableName has to be unique within the Whiteboard, Please choose a different name"));
+            errorMessages.put( new Integer( 10016 ), new BoardwalkMessage( 10016, "NEIGHBORHOOD CREATE EXCEPTION", 5 ,"A Neighborhood with this name already exists within it's Parent Neighborhood",  "The Neighborhood Name has to be unique within it's Parent Neighborhood, Please choose a different name"));
+            errorMessages.put( new Integer( 10017 ), new BoardwalkMessage( 10017, "CREATE MEMBER EXCEPTION", 5 ,"This User is already a member of the Neighborhood",  "User membership already exists for the Neighborhood"));
+            errorMessages.put( new Integer( 10018 ), new BoardwalkMessage( 10018, "COLLABORATION EXCEPTION", 5 ,"Collaboration does not exist for this Collaboration Id",  "Use existing Collaboration Id"));
+            errorMessages.put( new Integer( 10019 ), new BoardwalkMessage( 10019, "COLLABORATION EXCEPTION", 5 ,"Collaboration does not exist for this Neighborhood",  "Use Neighborhood Id of existing Collaboration"));
+			//ADded for REST APIS
+
 			/* TABLE UPDATE ERRORS */
 			errorMessages.put( new Integer( 12001 ), new BoardwalkMessage( 12001, "TABLE UPDATE EXCEPTION", 5 ,"Columns are not unqiue",  "Please make sure the columns are unique"));
 			errorMessages.put( new Integer( 12002), new BoardwalkMessage( 12002, "TABLE UPDATE EXCEPTION", 5 ,"The values entered are not valid",  "Please make sure the values are correct wrt to the lookup column values"));

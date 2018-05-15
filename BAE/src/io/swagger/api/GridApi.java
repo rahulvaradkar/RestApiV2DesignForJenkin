@@ -12,7 +12,6 @@ import java.util.Date;
 import io.swagger.model.ErrorAddRows;
 import io.swagger.model.ErrorDeleteObject;
 import io.swagger.model.ErrorDeleteRows;
-import io.swagger.model.ErrorReadObject;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.ErrorUpdateObject;
 import io.swagger.model.Grid;
@@ -38,7 +37,7 @@ import javax.validation.constraints.*;
 
 @Produces({ "application/json" })
 @io.swagger.annotations.Api(description = "the grid API")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-07T10:23:52.356Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-11T15:06:49.282Z")
 public class GridApi  {
    private final GridApiService delegate;
 
@@ -76,27 +75,27 @@ public class GridApi  {
         @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Void.class),
         
         @io.swagger.annotations.ApiResponse(code = 404, message = "Cuboid not found", response = Void.class) })
-    public Response gridDelete(@ApiParam(value = "",required=true) @PathParam("tableId") Integer tableId
+    public Response gridDelete(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
 ,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.gridDelete(tableId,securityContext);
+        return delegate.gridDelete(gridId,securityContext);
     }
     @GET
-    
+    @Path("/{gridId}")
     
     @Produces({ "application/json" })
     @io.swagger.annotations.ApiOperation(value = "Download grid data for a given cell specification", notes = "", response = CellBuffer.class, authorizations = {
         @io.swagger.annotations.Authorization(value = "bwAuth")
     }, tags={ "grid", })
     @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 103, message = "No Permissions to create this object", response = ErrorReadObject.class),
+        @io.swagger.annotations.ApiResponse(code = 103, message = "No Permissions to create this object", response = ErrorRequestObject.class),
         
         @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = CellBuffer.class) })
-    public Response gridGet(@ApiParam(value = "",required=true) @PathParam("tableId") String tableId
-,@ApiParam(value = "" ,required=true) CellBuffer cellBufferRequest
+    public Response gridGridIdGet(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
+,@ApiParam(value = "Cell buffer details" ,required=true) CellBuffer cellBufferRequest
 ,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.gridGet(tableId,cellBufferRequest,securityContext);
+        return delegate.gridGridIdGet(gridId,cellBufferRequest,securityContext);
     }
     @POST
     
