@@ -289,6 +289,7 @@ import com.boardwalk.member.Member;
         catch (Exception e)
         {
             // bwe
+        	System.out.println("Exception caught in boardwalk.neighborhood.BoardwalkUser.getUser();");
             e.printStackTrace();
             try
             {

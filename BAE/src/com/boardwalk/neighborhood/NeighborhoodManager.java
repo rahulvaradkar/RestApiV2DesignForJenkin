@@ -66,64 +66,123 @@ public final class NeighborhoodManager
     }
 
      public static Hashtable getNeighborhoodRelationships(Connection connection, int nhid)throws SystemException
-		    {
-		        Hashtable relationships = new Hashtable();
-				PreparedStatement preparedstatement = null;
-				ResultSet resultset = null;
-			//	System.out.println("getNeighborhoodRelationships for nh" + nhid);
-				 try
-				   {
-					    if ( DatabaseLoader.getDatabaseType().trim().equalsIgnoreCase("ORACLE"))
-						{
-							preparedstatement = DatabaseLoader.getPreparedStatementFromPreLoadedQueries("BW_GET_NH_RELS", connection );
-							preparedstatement.setInt(1,nhid);
+    {
+        Hashtable relationships = new Hashtable();
+		PreparedStatement preparedstatement = null;
+		ResultSet resultset = null;
+	//	System.out.println("getNeighborhoodRelationships for nh" + nhid);
+		 try
+		   {
+			    if ( DatabaseLoader.getDatabaseType().trim().equalsIgnoreCase("ORACLE"))
+				{
+					preparedstatement = DatabaseLoader.getPreparedStatementFromPreLoadedQueries("BW_GET_NH_RELS", connection );
+					preparedstatement.setInt(1,nhid);
 
-						}
-						else
-						{
-				            preparedstatement = connection.prepareStatement(CALL_BW_GET_NH_RELS);
-				            preparedstatement.setInt(1, nhid);
-						}
-						resultset = preparedstatement.executeQuery();
-						while( resultset.next() )
-						{
-							int  targetNHId = resultset.getInt("ID");
-							String name = resultset.getString("NAME");
-							String relationship = resultset.getString("REL");
-							NeighborhoodId nh = new NeighborhoodId(targetNHId, name);
+				}
+				else
+				{
+		            preparedstatement = connection.prepareStatement(CALL_BW_GET_NH_RELS);
+		            preparedstatement.setInt(1, nhid);
+				}
+				resultset = preparedstatement.executeQuery();
+				while( resultset.next() )
+				{
+					int  targetNHId = resultset.getInt("ID");
+					String name = resultset.getString("NAME");
+					String relationship = resultset.getString("REL");
+					NeighborhoodId nh = new NeighborhoodId(targetNHId, name);
 
-							if ( relationships.get(relationship ) == null )
-							{
-								relationships.put(relationship, new Vector());
-							}
-
-						   ( (Vector)relationships.get(relationship )).add(nh);
-
-						}
-					}
-					catch(SQLException sqlexception)
+					if ( relationships.get(relationship ) == null )
 					{
-						throw new SystemException(sqlexception);
+						relationships.put(relationship, new Vector());
 					}
-					finally
+				   ( (Vector)relationships.get(relationship )).add(nh);
+				}
+			}
+			catch(SQLException sqlexception)
+			{
+				throw new SystemException(sqlexception);
+			}
+			finally
+			{
+					try
 					{
-							try
-							{
-								if ( resultset!= null )
-									resultset.close();
+						if ( resultset!= null )
+							resultset.close();
 
-								if ( preparedstatement != null )
-								   preparedstatement.close();
-							}
-							catch(SQLException sqlexception1)
-							{
-								throw new SystemException(sqlexception1);
-							}
+						if ( preparedstatement != null )
+						   preparedstatement.close();
 					}
-
+					catch(SQLException sqlexception1)
+					{
+						throw new SystemException(sqlexception1);
+					}
+			}
 	        return relationships;
 	    }
 
+     //Added by Rahul on 01-May-2018
+     public static Vector getBoardwalkPathIds( Connection connection, int nhid )
+     {
+
+   	   String nhPath = null;
+   	  Vector nhPaths = new Vector();
+
+   	  try
+   	  {
+   	  Neighborhood nh = getNeighborhoodById( connection, nhid );
+   	  nhPath = "" + nh.getId();
+   	  String pathSep = System.getProperty("file.separator");
+
+	   	  if ( nh.getLevels() == 0 )
+	   	  {
+	   		  nhPaths.add(nhPath);
+	   	  }
+	   	  else if (nh.getLevels() == 1)
+	   	  {
+	   		  NeighborhoodLevel_0 nh_0 = NeighborhoodManagerLevel_0.getNeighborhoodLevel_0_by_Neighborhood_Level_0_Id(connection, nh.getLevel0Id());
+	   		  nhPaths.add(nh_0.getNhId() + pathSep + nhPath );
+	   		  nhPaths.add(nhPath);
+	   	  }
+	   	  else if (nh.getLevels() == 2)
+	   	  {
+	   		  NeighborhoodLevel_0 nh_0 = NeighborhoodManagerLevel_0.getNeighborhoodLevel_0_by_Neighborhood_Level_0_Id(connection, nh.getLevel0Id());
+	   		  NeighborhoodLevel_1 nh_1 = NeighborhoodManagerLevel_1.getNeighborhoodLevel_1_by_Neighborhood_Level_1_Id(connection, nh.getLevel1Id());  
+	   		  nhPaths.add(nh_0.getNhId() + pathSep + nh_1.getNhId() + pathSep+ nhPath );
+	   		  nhPaths.add(nh_1.getNhId() + pathSep+ nhPath );
+	   		  nhPaths.add(nhPath);
+	   	  }
+	   	  else if ( nh.getLevels() == 3 )
+	   	  {
+	   		  System.out.println("nh.getLevel0Id() ->" + nh.getLevel0Id());
+	   		  System.out.println("nh.getLevel1Id() ->" + nh.getLevel1Id());
+	   		  System.out.println("nh.getLevel2Id() ->" + nh.getLevel2Id());
+	   		  
+	   		  NeighborhoodLevel_0 nh_0 = NeighborhoodManagerLevel_0.getNeighborhoodLevel_0_by_Neighborhood_Level_0_Id(connection, nh.getLevel0Id());
+	   		  NeighborhoodLevel_1 nh_1 = NeighborhoodManagerLevel_1.getNeighborhoodLevel_1_by_Neighborhood_Level_1_Id(connection, nh.getLevel1Id());
+	   		  NeighborhoodLevel_2 nh_2 = NeighborhoodManagerLevel_2.getNeighborhoodLevel_2_by_Neighborhood_Level_2_Id(connection, nh.getLevel2Id());
+	
+	   		  System.out.println(nh_0.getNhId() + pathSep + nh_1.getNhId() + pathSep + nh_2.getNhId() + pathSep + nhPath );
+	   		  System.out.println(nh_1.getNhId() +pathSep+ nh_2.getNhId() + pathSep + nhPath );
+	   		  System.out.println(nh_2.getNhId() + pathSep+ nhPath );
+	   		  System.out.println(nhPath);
+	   		  
+	   		  
+	   		  nhPaths.add(nh_0.getNhId() + pathSep + nh_1.getNhId() + pathSep + nh_2.getNhId() + pathSep + nhPath );
+	   		  nhPaths.add(nh_1.getNhId() +pathSep+ nh_2.getNhId() + pathSep + nhPath );
+	   		  nhPaths.add(nh_2.getNhId() + pathSep+ nhPath );
+	   		  nhPaths.add(nhPath);
+	   	  }
+     	}
+     	catch( Exception ex )
+     	{
+     		System.out.println("Exception occured in com.boardwalk.neighborhood.NeighborhoodManager::getBoardwalkPaths occured()");
+     		ex.printStackTrace();
+     	}
+   	  return nhPaths;
+ }
+
+     
 
   public static Vector getBoardwalkPaths( Connection connection, int nhid )
   {
@@ -133,8 +192,6 @@ public final class NeighborhoodManager
 
 	  try
 	  {
-
-
 	  Neighborhood nh = getNeighborhoodById( connection, nhid );
 	  nhPath = nh.getName();
 	  String pathSep = System.getProperty("file.separator");
@@ -144,43 +201,49 @@ public final class NeighborhoodManager
 	  {
 		  nhPaths.add(nhPath);
 	  }
-
-	  if (nh.getLevels() == 1)
+	  else if (nh.getLevels() == 1)
 	  {
 		  NeighborhoodLevel_0 nh_0 = NeighborhoodManagerLevel_0.getNeighborhoodLevel_0_by_Neighborhood_Level_0_Id(connection, nh.getLevel0Id());
+		  
 		  nhPaths.add(nh_0.getName() + pathSep + nhPath );
 		  nhPaths.add(nhPath);
 	  }
-
-	  if (nh.getLevels() == 2)
+	  else if (nh.getLevels() == 2)
 	  {
 		  NeighborhoodLevel_0 nh_0 = NeighborhoodManagerLevel_0.getNeighborhoodLevel_0_by_Neighborhood_Level_0_Id(connection, nh.getLevel0Id());
-		  NeighborhoodLevel_1 nh_1 = NeighborhoodManagerLevel_1.getNeighborhoodLevel_1_by_Neighborhood_Level_1_Id(connection, nh.getLevel1Id());
-		  nhPaths.add(nh_1.getName() + pathSep + nh_0.getName() + pathSep+ nhPath );
-		  nhPaths.add(nh_0.getName() + pathSep+ nhPath );
+		  NeighborhoodLevel_1 nh_1 = NeighborhoodManagerLevel_1.getNeighborhoodLevel_1_by_Neighborhood_Level_1_Id(connection, nh.getLevel1Id());  
+		  nhPaths.add(nh_0.getName() + pathSep + nh_1.getName() + pathSep+ nhPath );
+		  nhPaths.add(nh_1.getName() + pathSep+ nhPath );
 		  nhPaths.add(nhPath);
 	  }
-
-	   if ( nh.getLevels() == 3 )
+	  else if ( nh.getLevels() == 3 )
 	  {
+		  System.out.println("nh.getLevel0Id() ->" + nh.getLevel0Id());
+		  System.out.println("nh.getLevel1Id() ->" + nh.getLevel1Id());
+		  System.out.println("nh.getLevel2Id() ->" + nh.getLevel2Id());
+		  
 		  NeighborhoodLevel_0 nh_0 = NeighborhoodManagerLevel_0.getNeighborhoodLevel_0_by_Neighborhood_Level_0_Id(connection, nh.getLevel0Id());
 		  NeighborhoodLevel_1 nh_1 = NeighborhoodManagerLevel_1.getNeighborhoodLevel_1_by_Neighborhood_Level_1_Id(connection, nh.getLevel1Id());
 		  NeighborhoodLevel_2 nh_2 = NeighborhoodManagerLevel_2.getNeighborhoodLevel_2_by_Neighborhood_Level_2_Id(connection, nh.getLevel2Id());
-		  nhPaths.add(nh_2.getName() + pathSep + nh_1.getName() + pathSep + nh_0.getName() + pathSep + nhPath );
-		  nhPaths.add(nh_1.getName() +pathSep+ nh_0.getName() + pathSep + nhPath );
-		  nhPaths.add(nh_0.getName() + pathSep+ nhPath );
+
+		  System.out.println(nh_0.getName() + pathSep + nh_1.getName() + pathSep + nh_2.getName() + pathSep + nhPath );
+		  System.out.println(nh_1.getName() +pathSep+ nh_2.getName() + pathSep + nhPath );
+		  System.out.println(nh_2.getName() + pathSep+ nhPath );
+		  System.out.println(nhPath);
+		  
+		  
+		  nhPaths.add(nh_0.getName() + pathSep + nh_1.getName() + pathSep + nh_2.getName() + pathSep + nhPath );
+		  nhPaths.add(nh_1.getName() +pathSep+ nh_2.getName() + pathSep + nhPath );
+		  nhPaths.add(nh_2.getName() + pathSep+ nhPath );
 		  nhPaths.add(nhPath);
 	  }
-
   	}
   	catch( Exception ex )
   	{
-
-
-	}
-
+  		System.out.println("Exception occured in com.boardwalk.neighborhood.NeighborhoodManager::getBoardwalkPaths occured()");
+  		ex.printStackTrace();
+  	}
 	  return nhPaths;
-
   }
 
 
