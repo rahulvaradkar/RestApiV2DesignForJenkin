@@ -8,7 +8,11 @@ import javax.sql.DataSource;
 import java.util.Properties;
 import java.io.PrintStream;
 
+<<<<<<< HEAD
 //import com.boardwalk.test.*;
+=======
+import com.boardwalk.test.*;
+>>>>>>> branch 'BAE-RestAPI-RahulVaradkar' of https://github.com/techvision/BAE-SQL-Version.git
 import boardwalk.connection.*;
 import com.boardwalk.exception.BoardwalkException;
 
