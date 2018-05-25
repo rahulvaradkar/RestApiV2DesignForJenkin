@@ -1,8 +1,8 @@
-// Test cases fot getting single user with his id
+// Test cases for getting single user with his id
 QUnit.test( "Get test cases for single user", function( assert ) {
     var id = 1;
     var done = assert.async();
-    $.ajax({url: "http://localhost:8080/BAE/rest/user/"+id,
+    $.ajax({url: Globals.baseURL + "rest/user/"+id,
           type: "GET",
           dataType: "json",
           success: function(result){
@@ -21,7 +21,7 @@ QUnit.test( "Get test cases for all active users", function( assert ) {
     var done = assert.async();
     var flag= false;
     var count_flag=false;
-    $.ajax({url: "http://localhost:8080/BAE/rest/user?active=true",
+    $.ajax({url: Globals.baseURL + "rest/user?active=true",
           type: "GET",
           dataType: "json",
           success: function(result){
@@ -55,7 +55,7 @@ QUnit.test( "Get test cases for non-active users", function( assert ) {
   var done = assert.async();
   var flag= false;
     var count_flag=false;
-  $.ajax({url: "http://localhost:8080/BAE/rest/user?active=false",
+  $.ajax({url: Globals.baseURL + "rest/user?active=false",
       type: "GET",
       dataType: "json",
       success: function(result){
@@ -92,7 +92,7 @@ QUnit.test( "Get test cases for non-active users", function( assert ) {
         "externalid": "sauravg",
         "id":"0"
     }
-    $.ajax({url: "http://localhost:8080/BAE/rest/user",
+    $.ajax({url: Globals.baseURL + "rest/user",
           type: "POST",
           dataType: "json",
           data: JSON.stringify(data),
@@ -124,7 +124,7 @@ QUnit.test("Put test cases for User", function(assert){
         "externalid": "sachin",
         "id":"1007"
     }
-    var res = $.ajax({url: "http://localhost:8080/BAE/rest/user",
+    var res = $.ajax({url: Globals.baseURL + "rest/user",
         type: "PUT",
         dataType: "json",
         data: JSON.stringify(data),
@@ -138,7 +138,7 @@ QUnit.test("Put test cases for User", function(assert){
 // Test cases fot deleting the user
 QUnit.test("Delete test cases for User", function(assert){
     var id = 1007
-    var res = $.ajax({url: "http://localhost:8080/BAE/rest/user/"+id,
+    var res = $.ajax({url: Globals.baseURL + "rest/user/"+id,
         type: "DELETE",
         dataType: "json",
         contentType: "application/json",
