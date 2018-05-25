@@ -1,2 +1,3 @@
 /target/
 /bin/
+/src/test/rest-api/scripts/globals.js
