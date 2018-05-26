@@ -1,3 +1,11 @@
+//check whether number is > n
+function isValidNumber(number, n) {
+  if(!n) {
+    n = 0;
+  }
+  return $.isNumeric(number) && number > n;
+}
+
 //Check whether there are 1 or more elements
 function hasOneOrMoreElements(object) {
   return object.length > 0;
