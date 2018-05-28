@@ -178,7 +178,7 @@
       "externalid": "s1auravg",
       "id":"1013"
     }
-    var res = $.ajax({url: "http://localhost:8080/BAE/rest/user",
+    var res = $.ajax({url: Globals.baseURL + "rest/user",
       type: "PUT",
       dataType: "json",
       data: JSON.stringify(data),
