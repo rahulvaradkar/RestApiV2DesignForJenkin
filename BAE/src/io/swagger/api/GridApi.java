@@ -33,11 +33,18 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.*;
 import javax.validation.constraints.*;
 
+
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 @Path("/grid")
 
 @Produces({ "application/json" })
 @io.swagger.annotations.Api(description = "the grid API")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-11T15:06:49.282Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-24T10:14:04.800Z")
 public class GridApi  {
    private final GridApiService delegate;
 
@@ -93,9 +100,9 @@ public class GridApi  {
         @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = CellBuffer.class) })
     public Response gridGridIdGet(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
 ,@ApiParam(value = "Cell buffer details" ,required=true) CellBuffer cellBufferRequest
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String )
     throws NotFoundException {
-        return delegate.gridGridIdGet(gridId,cellBufferRequest,securityContext);
+        return delegate.gridGridIdGet(gridId,cellBufferRequest,securityContext, authBase64String);
     }
     @POST
     
@@ -111,9 +118,9 @@ public class GridApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "101 No Permissions to create this object", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response gridPost(@ApiParam(value = "Cuboid creation details" ,required=true) Grid grid
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.gridPost(grid,securityContext);
+        return delegate.gridPost(grid,securityContext, authBase64String);
     }
     @PUT
     
@@ -134,9 +141,9 @@ public class GridApi  {
         @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response gridPut(@ApiParam(value = "",required=true) @QueryParam("gridId") Integer gridId
 ,@ApiParam(value = "Cell buffer details" ,required=true) CellBuffer cellBufferRequest
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.gridPut(gridId,cellBufferRequest,securityContext);
+        return delegate.gridPut(gridId,cellBufferRequest,securityContext, authBase64String);
     }
     @GET
     @Path("/{tableId}/{transactionId}/changes")
