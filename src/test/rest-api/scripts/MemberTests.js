@@ -9,6 +9,8 @@ var errorAttributes = ["error", "path", "proposedSolution"];
 var zeroNhId = 0;
 var negativeNhId = -1;
 var nonExistingNhId = 30000;
+var validAttributesForCreatedMember = ["active", "id", "nhid", "userId"];
+
 
 module('Member');
 //GET members in Neighborhood
@@ -115,6 +117,36 @@ module('Member');
     });
   });
 
-//
+//Create member test
+  test("Create new membership for user", function(assert) {
+    var done = assert.async();
+    UserTests.createNewUser().then(function(result) {
+      var user = result[0];
+      var membershipData = {
+        userId: user.id,
+        nhid: rootNhId,
+        id: 0
+      };
+      $.ajax({
+        url: Globals.baseURL + "rest/neighborhood/" + rootNhId + "/member",
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(membershipData),
+        contentType: "application/json",
+        success: function(data) {
+          assert.notOk(isNullObject(data), "Member data shouldn't be null");
+          assert.ok(hasOneOrMoreElements(data), "Response has some data to parse on sending POST request to create membership.");
+          var membership = data[0];
+          assert.ok(hasValidProperties(membership, validAttributesForCreatedMember), "On successful creation of membership, membership object should have active, id, nhid and userId properties");
+          assert.notOk(hasNullAttributes(membership, validAttributesForCreatedMember), "On successful creation of membership, membership object should not have null attributes.");
+          assert.ok(isValidNumber(membership.id), "Member id should be greater than 0.");
+          assert.ok(isValidNumber(membership.nhid), "Member's nhid should be greater than 0.");
+          assert.ok(isValidNumber(membership.userId), "Member's userId should be greater than 0.");
+          assert.ok(membership.active, "Membership is active for newly created membership.");
+          done();
+        }
+      });
+    });
+  });
 
 })( QUnit.module, QUnit.test );

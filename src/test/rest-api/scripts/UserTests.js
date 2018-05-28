@@ -1,5 +1,27 @@
-(function( module, test ) {
-
+var UserTests = (function( module, test ) {
+function createNewUser() {
+    var x = Math.floor((Math.random() * 10000) + 1);
+    var data = {
+      "firstName":"u",
+      "lastName": "u",
+      "password":"u",
+      "email": "u"+x+"@gmail.com",
+      "externalid": "u",
+      "id":"0"
+    };
+    var userCreated = new Promise(function(resolve, reject) {
+      $.ajax({url: Globals.baseURL + "rest/user",
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        success: function(result){
+          resolve(result);
+        }
+      });
+    });
+    return userCreated;
+  }
   module('User');
   var userid=0;
 
@@ -96,24 +118,9 @@
     });
   });
   
-  test( "Post test cases for new User", function( assert ) {
+  test( "Post test cases for new User", function(assert) {
     var done = assert.async();
-
-    var x = Math.floor((Math.random() * 10000) + 1);
-    var data = {
-      "firstName":"u",
-      "lastName": "u",
-      "password":"u",
-      "email": "u"+x+"@gmail.com",
-      "externalid": "u",
-      "id":"0"
-    }
-    $.ajax({url: Globals.baseURL + "rest/user",
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(data),
-        contentType: "application/json",
-        success: function(result){
+    createNewUser().then(function(result) {
           console.log("Post test cases for new User");
           console.log(result);
           console.log(JSON.stringify(result));
@@ -131,8 +138,9 @@
 
         }
         done();
-      }});
+
     });
+  });
 
     test( "Post test cases for new User with Blank Name And Password", function( assert ) {
     var done = assert.async();
@@ -208,4 +216,9 @@
   
 
   
+
+//Public methods for reusability
+  return {
+    createNewUser: createNewUser
+  };
 })( QUnit.module, QUnit.test );
