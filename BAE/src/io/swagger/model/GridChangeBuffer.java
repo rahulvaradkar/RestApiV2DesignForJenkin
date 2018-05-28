@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.CellChangeDetails;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.*;
@@ -37,10 +38,16 @@ import javax.validation.constraints.*;
 /**
  * GridChangeBuffer
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-11T14:19:58.049Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-24T10:39:10.773Z")
 public class GridChangeBuffer   {
-  @JsonProperty("newRowdArray")
-  private List<Integer> newRowdArray = null;
+  @JsonProperty("critical")
+  private Integer critical = null;
+
+  @JsonProperty("criticalLevel")
+  private Integer criticalLevel = null;
+
+  @JsonProperty("newRowArray")
+  private List<Integer> newRowArray = null;
 
   @JsonProperty("deletedRowArray")
   private List<Integer> deletedRowArray = null;
@@ -51,31 +58,72 @@ public class GridChangeBuffer   {
   @JsonProperty("deletedColumnArray")
   private List<Integer> deletedColumnArray = null;
 
-  public GridChangeBuffer newRowdArray(List<Integer> newRowdArray) {
-    this.newRowdArray = newRowdArray;
-    return this;
-  }
+  @JsonProperty("cellChangesArray")
+  private List<CellChangeDetails> cellChangesArray = null;
 
-  public GridChangeBuffer addNewRowdArrayItem(Integer newRowdArrayItem) {
-    if (this.newRowdArray == null) {
-      this.newRowdArray = new ArrayList<Integer>();
-    }
-    this.newRowdArray.add(newRowdArrayItem);
+  public GridChangeBuffer critical(Integer critical) {
+    this.critical = critical;
     return this;
   }
 
   /**
-   * Get newRowdArray
-   * @return newRowdArray
+   * Get critical
+   * @return critical
    **/
-  @JsonProperty("newRowdArray")
+  @JsonProperty("critical")
   @ApiModelProperty(value = "")
-  public List<Integer> getNewRowdArray() {
-    return newRowdArray;
+  public Integer getCritical() {
+    return critical;
   }
 
-  public void setNewRowdArray(List<Integer> newRowdArray) {
-    this.newRowdArray = newRowdArray;
+  public void setCritical(Integer critical) {
+    this.critical = critical;
+  }
+
+  public GridChangeBuffer criticalLevel(Integer criticalLevel) {
+    this.criticalLevel = criticalLevel;
+    return this;
+  }
+
+  /**
+   * Get criticalLevel
+   * @return criticalLevel
+   **/
+  @JsonProperty("criticalLevel")
+  @ApiModelProperty(value = "")
+  public Integer getCriticalLevel() {
+    return criticalLevel;
+  }
+
+  public void setCriticalLevel(Integer criticalLevel) {
+    this.criticalLevel = criticalLevel;
+  }
+
+  public GridChangeBuffer newRowArray(List<Integer> newRowArray) {
+    this.newRowArray = newRowArray;
+    return this;
+  }
+
+  public GridChangeBuffer addNewRowArrayItem(Integer newRowArrayItem) {
+    if (this.newRowArray == null) {
+      this.newRowArray = new ArrayList<Integer>();
+    }
+    this.newRowArray.add(newRowArrayItem);
+    return this;
+  }
+
+  /**
+   * Get newRowArray
+   * @return newRowArray
+   **/
+  @JsonProperty("newRowArray")
+  @ApiModelProperty(value = "")
+  public List<Integer> getNewRowArray() {
+    return newRowArray;
+  }
+
+  public void setNewRowArray(List<Integer> newRowArray) {
+    this.newRowArray = newRowArray;
   }
 
   public GridChangeBuffer deletedRowArray(List<Integer> deletedRowArray) {
@@ -159,6 +207,33 @@ public class GridChangeBuffer   {
     this.deletedColumnArray = deletedColumnArray;
   }
 
+  public GridChangeBuffer cellChangesArray(List<CellChangeDetails> cellChangesArray) {
+    this.cellChangesArray = cellChangesArray;
+    return this;
+  }
+
+  public GridChangeBuffer addCellChangesArrayItem(CellChangeDetails cellChangesArrayItem) {
+    if (this.cellChangesArray == null) {
+      this.cellChangesArray = new ArrayList<CellChangeDetails>();
+    }
+    this.cellChangesArray.add(cellChangesArrayItem);
+    return this;
+  }
+
+  /**
+   * Get cellChangesArray
+   * @return cellChangesArray
+   **/
+  @JsonProperty("cellChangesArray")
+  @ApiModelProperty(value = "")
+  public List<CellChangeDetails> getCellChangesArray() {
+    return cellChangesArray;
+  }
+
+  public void setCellChangesArray(List<CellChangeDetails> cellChangesArray) {
+    this.cellChangesArray = cellChangesArray;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -169,15 +244,18 @@ public class GridChangeBuffer   {
       return false;
     }
     GridChangeBuffer gridChangeBuffer = (GridChangeBuffer) o;
-    return Objects.equals(this.newRowdArray, gridChangeBuffer.newRowdArray) &&
+    return Objects.equals(this.critical, gridChangeBuffer.critical) &&
+        Objects.equals(this.criticalLevel, gridChangeBuffer.criticalLevel) &&
+        Objects.equals(this.newRowArray, gridChangeBuffer.newRowArray) &&
         Objects.equals(this.deletedRowArray, gridChangeBuffer.deletedRowArray) &&
         Objects.equals(this.newColumnArray, gridChangeBuffer.newColumnArray) &&
-        Objects.equals(this.deletedColumnArray, gridChangeBuffer.deletedColumnArray);
+        Objects.equals(this.deletedColumnArray, gridChangeBuffer.deletedColumnArray) &&
+        Objects.equals(this.cellChangesArray, gridChangeBuffer.cellChangesArray);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(newRowdArray, deletedRowArray, newColumnArray, deletedColumnArray);
+    return Objects.hash(critical, criticalLevel, newRowArray, deletedRowArray, newColumnArray, deletedColumnArray, cellChangesArray);
   }
 
 
@@ -186,10 +264,13 @@ public class GridChangeBuffer   {
     StringBuilder sb = new StringBuilder();
     sb.append("class GridChangeBuffer {\n");
     
-    sb.append("    newRowdArray: ").append(toIndentedString(newRowdArray)).append("\n");
+    sb.append("    critical: ").append(toIndentedString(critical)).append("\n");
+    sb.append("    criticalLevel: ").append(toIndentedString(criticalLevel)).append("\n");
+    sb.append("    newRowArray: ").append(toIndentedString(newRowArray)).append("\n");
     sb.append("    deletedRowArray: ").append(toIndentedString(deletedRowArray)).append("\n");
     sb.append("    newColumnArray: ").append(toIndentedString(newColumnArray)).append("\n");
     sb.append("    deletedColumnArray: ").append(toIndentedString(deletedColumnArray)).append("\n");
+    sb.append("    cellChangesArray: ").append(toIndentedString(cellChangesArray)).append("\n");
     sb.append("}");
     return sb.toString();
   }
