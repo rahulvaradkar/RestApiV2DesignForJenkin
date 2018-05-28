@@ -1,3 +1,12 @@
+//Undecided asserts
+function undecidedAssertEqual(assert, value, forNow, neat, message) {
+  if(Globals.assertHow == "forNow") {
+    assert.equal(value, forNow, message);
+  } else {
+    assert.equal(value, neat, message);
+  }
+}
+
 //check whether number is > n
 function isValidNumber(number, n) {
   if(!n) {

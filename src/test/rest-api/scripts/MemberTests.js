@@ -107,13 +107,14 @@ module('Member');
         var exception = data[0];
         assert.ok(hasValidProperties(exception, errorAttributes), "Exception object should have valid 3 attributes - error, path and proposedSolution");
         assert.notOk(hasNullAttributes(exception, errorAttributes), "Exception object shouldn't have null attribute values for its 3 attributes");
-        assert.equal(exception.error, "NotFound", "Non-existing nhId results in error message indicating not found");
-        assert.equal(exception.path, "nhId", "Should specify which part of API path caused exception to occur. In this case, nhId.");
+        undecidedAssertEqual(assert, exception.error, "NeighborhoodId NOT FOUND ", "NotFound", "Non-existing nhId results in error message indicating not found");
+        undecidedAssertEqual(assert, exception.path, "NeighborhoodManagement.neighborhoodNhIdMemberGet::BoardwalkNeighborhoodManager.getNeighborhoodTree", "nhId", "Should specify which part of API path caused exception to occur. In this case, nhId.");
         assert.equal(exception.proposedSolution, "The NeighborhoodId NOT FOUND. You must provide an existing Neighborhood Id.", "Should provide appropriate solution.");
         done();
       }
     });
   });
 
+//
 
 })( QUnit.module, QUnit.test );

@@ -7,5 +7,6 @@
 //  b. And then adding this line to .gitignore back again "/src/test/rest-api/scripts/globals.js"
 var Globals = {
   //change following line to match your test instance URL
-  baseURL: "http://localhost:8081/BAE4/"
+  baseURL: "http://localhost:8081/BAE4/",
+  assertHow: "forNow"//Or "clean"
 };
