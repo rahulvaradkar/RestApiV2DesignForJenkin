@@ -26,66 +26,132 @@ import boardwalk.rest.UserManagement;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-04-30T03:35:16.055Z")
 public class UserApiServiceImpl extends UserApiService {
     @Override
-    public Response userGet( Boolean active, SecurityContext securityContext) throws NotFoundException {
+    public Response userGet( Boolean active, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	System.out.println("active : " + active);
 
-		 //No check for API Parameters. As true or false is read. so <ErrorRequestObject erb> IS NOT USED
-		//ErrorRequestObject erb;
-		// ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-   	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-   	 
-		ArrayList<User> ul;
-    	ul = UserManagement.userGet(active, ErrResps);
-
-    	System.out.println("ul.size :"+ ul.size());
-    	System.out.println("ErrResps.size :"+ ErrResps.size());
-    	
-    	if (ul.size() > 0)
-    		return Response.ok().entity(ul).build();
-		else
-		{
-			return Response.ok().entity(ErrResps).build();
+		System.out.println("authBase64String : " + authBase64String);
+			
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
 		}
+
+    	if (erbs.size() == 0)
+    	{
+       	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+
+    		ArrayList<User> ul;
+        	ul = UserManagement.userGet(active, ErrResps, authBase64String);
+       	 	
+        	System.out.println("ul.size :"+ ul.size());
+        	System.out.println("ErrResps.size :"+ ErrResps.size());
+        	
+        	if (ul.size() > 0)
+        		return Response.ok().entity(ul).build();
+    		else
+    		{
+    			return Response.ok().entity(ErrResps).build();
+    		}
+    	}
+    	else
+    	{
+        	return Response.ok().entity(erbs).build();
+    	}
+		
   //      return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response userPost(User user, SecurityContext securityContext) throws NotFoundException {
+    public Response userPost(User user, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	
-    	System.out.println("user.getEmail()->" + user.getEmail());
+/*    	System.out.println("user.getEmail()->" + user.getEmail());
     	System.out.println("user.getExternalId()->" + user.getExternalId() );
     	System.out.println("user.getFirstName()->" + user.getFirstName() );
     	System.out.println("user.getLastName()->" + user.getLastName() );
     	System.out.println("user.getPassword()->" + user.getPassword());
     	System.out.println("user.getId()->" + user.getId());
-    	
-		ErrorRequestObject erb;
+*/    	
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
-    	if (user.getEmail().equals(""))
+		ErrorRequestObject erb;
+
+    	System.out.println("authBase64String : " + authBase64String);
+		
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+
+		String Email = user.getEmail();
+		String ExternalId = user.getExternalId();
+		String FirstName = user.getFirstName();
+		String LastName = user.getLastName();
+		String Password = user.getPassword();
+		
+		if (Email == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+		}
+		else if (Email.trim().equals(""))
     	{	
     		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
     		erb.setProposedSolution("Enter Email");
     		erbs.add(erb);
     	}
-    	if (user.getExternalId().equals(""))
+		
+		if (ExternalId == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.ExternalId");
+    		erb.setProposedSolution("Enter ExternalId");
+    		erbs.add(erb);
+		}
+		else if (ExternalId.trim().equals(""))
     	{	
     		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.ExternalId"); 
     		erb.setProposedSolution("Enter ExternalId");
     		erbs.add(erb);
     	}
-    	if (user.getFirstName().equals(""))
+		
+		if (FirstName == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.FirstName");
+    		erb.setProposedSolution("Enter FirstName");
+    		erbs.add(erb);
+		}
+		else if (FirstName.trim().equals(""))
     	{	
     		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.FirstName");
     		erb.setProposedSolution("Enter First Name");
     		erbs.add(erb);
     	}
-    	if (user.getLastName().equals(""))
+    	
+		if (LastName == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.LastName");
+    		erb.setProposedSolution("Enter LastName");
+    		erbs.add(erb);
+		}
+		else if (LastName.trim().equals(""))
     	{	
     		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.LastName"); 
     		erb.setProposedSolution("Enter Last Name");
     		erbs.add(erb);
     	}
-    	if (user.getPassword().equals(""))
+    	
+		if (Password == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.Password");
+    		erb.setProposedSolution("Enter Password");
+    		erbs.add(erb);
+		}
+    	else if (Password.trim().equals(""))
     	{	
     		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.Password"); 
     		erb.setProposedSolution("Enter Password");
@@ -97,7 +163,7 @@ public class UserApiServiceImpl extends UserApiService {
        	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
        	 
     		ArrayList<User> ul;
-        	ul = UserManagement.userPost(user, ErrResps);
+        	ul = UserManagement.userPost(user, ErrResps, authBase64String);
         	System.out.println("ul.size :"+ ul.size());
         	System.out.println("ErrResps.size :"+ ErrResps.size());
         	
@@ -113,75 +179,131 @@ public class UserApiServiceImpl extends UserApiService {
         	return Response.ok().entity(erbs).build();
     	}
     }
+    
     @Override
-    public Response userPut(User user, SecurityContext securityContext) throws NotFoundException {
+    public Response userPut(User user, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	
 		ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-	    	if (user.getEmail().equals(""))
-	    	{	
-	    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email"); 
-	    		erb.setProposedSolution("Enter Email");
-	    		erbs.add(erb);
-	    	}
-	    	if (user.getExternalId().equals(""))
-	    	{	
-	    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.ExternalId");
-	    		erb.setProposedSolution("Enter ExternalId");
+		System.out.println("authBase64String : " + authBase64String);
+			
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
 
-	    		erbs.add(erb);
-	    	}
-	    	if (user.getFirstName().equals(""))
-	    	{	
-	    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.FirstName");
-	    		erb.setProposedSolution("Enter First Name");
-	    		erbs.add(erb);
-	    	}
-	    	if (user.getLastName().equals(""))
-	    	{	
-	    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.LastName"); 
-	    		erb.setProposedSolution("Enter Last Name");
-	    		erbs.add(erb);
-	    	}
-	    	if (user.getPassword().equals(""))
-	    	{	
-	    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.Password");
-	    		erb.setProposedSolution("Enter Password");
-	    		erbs.add(erb);
-	    	}
+		String Email = user.getEmail();
+		String ExternalId = user.getExternalId();
+		String FirstName = user.getFirstName();
+		String LastName = user.getLastName();
+		String Password = user.getPassword();
 
-	    	if (erbs.size() == 0)
-	    	{
-		   	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-				 
-				String o;
-				o = UserManagement.userPut(user, ErrResps);
+		if (Email == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+		}
+		else if (Email.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+    	}
+		
+		if (ExternalId == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.ExternalId");
+    		erb.setProposedSolution("Enter ExternalId");
+    		erbs.add(erb);
+		}
+		else if (ExternalId.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.ExternalId"); 
+    		erb.setProposedSolution("Enter ExternalId");
+    		erbs.add(erb);
+    	}
+		
+		if (FirstName == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.FirstName");
+    		erb.setProposedSolution("Enter FirstName");
+    		erbs.add(erb);
+		}
+		else if (FirstName.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.FirstName");
+    		erb.setProposedSolution("Enter First Name");
+    		erbs.add(erb);
+    	}
+    	
+		if (LastName == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.LastName");
+    		erb.setProposedSolution("Enter LastName");
+    		erbs.add(erb);
+		}
+		else if (LastName.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.LastName"); 
+    		erb.setProposedSolution("Enter Last Name");
+    		erbs.add(erb);
+    	}
+    	
+		if (Password == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.Password");
+    		erb.setProposedSolution("Enter Password");
+    		erbs.add(erb);
+		}
+    	else if (Password.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.Password"); 
+    		erb.setProposedSolution("Enter Password");
+    		erbs.add(erb);
+    	}
 
-	        	System.out.println("After calling UserManagement.userPut o:"+ o);
-	        	System.out.println("ErrResps.size :"+ ErrResps.size());
+    	if (erbs.size() == 0)
+    	{
+	   	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+			String o;
+			o = UserManagement.userPut(user, ErrResps, authBase64String);
 
-	        	if (ErrResps.size() > 0)
-	    			return Response.ok().entity(ErrResps).build();
-	    		else
-	    		{
-			        return Response.ok().entity(o).build();
-	    		}
-	    	}
-	    	else
-	    	{
-	        	return Response.ok().entity(erbs).build();
-	    	}
-		        
+        	System.out.println("After calling UserManagement.userPut o:"+ o);
+        	System.out.println("ErrResps.size :"+ ErrResps.size());
+
+        	if (ErrResps.size() > 0)
+    			return Response.ok().entity(ErrResps).build();
+    		else
+    		{
+		        return Response.ok().entity(o).build();
+    		}
+    	}
+    	else
+    	{
+        	return Response.ok().entity(erbs).build();
+    	}
         // do some magic!
 //        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
-    @Override
-    public Response userUserIdDelete(Integer userId, SecurityContext securityContext) throws NotFoundException {
-        // do some magic!
 
+    @Override
+    public Response userUserIdDelete(Integer userId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+        // do some magic!
 		ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+		System.out.println("authBase64String : " + authBase64String);
+		
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
 
 		 if (userId <= 0)
 		{	
@@ -194,7 +316,7 @@ public class UserApiServiceImpl extends UserApiService {
     	{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	    	String o;
-			o = UserManagement.userUserIdDelete(userId, ErrResps);
+			o = UserManagement.userUserIdDelete(userId, ErrResps, authBase64String);
 
 	    	if (ErrResps.size() == 0)
 	        	return Response.ok().entity(o).build();
@@ -206,13 +328,23 @@ public class UserApiServiceImpl extends UserApiService {
         	return Response.ok().entity(erbs).build();
     	}
     }
+    
     @Override
-    public Response userUserIdGet(Integer userId, SecurityContext securityContext) throws NotFoundException {
+    public Response userUserIdGet(Integer userId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
 //    	UserManagement um = new UserManagement();
 
-		ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+    	ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+    	System.out.println("authBase64String : " + authBase64String);
+
+    	if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
 		 
 		 if (userId <= 0)
     	{	
@@ -224,7 +356,7 @@ public class UserApiServiceImpl extends UserApiService {
     	if (erbs.size() == 0)
     	{
 	 	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-	    	User user = UserManagement.userUserIdGet(userId, ErrResps);
+	    	User user = UserManagement.userUserIdGet(userId, ErrResps, authBase64String);
 	    	
 	    	if (user != null)
 	        	return Response.ok().entity(user).build();

@@ -38,7 +38,7 @@ public class GridApiServiceImpl extends GridApiService {
 
 	 
 	@Override
-    public Response gridDelete(Integer gridId, SecurityContext securityContext) throws NotFoundException {
+    public Response gridDelete(Integer gridId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -235,17 +235,17 @@ public class GridApiServiceImpl extends GridApiService {
 //        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridTableIdTransactionIdChangesGet(Integer tableId, Integer transactionId, SecurityContext securityContext) throws NotFoundException {
+    public Response gridTableIdTransactionIdChangesGet(Integer tableId, Integer transactionId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridTableIdTransactionsBetweenTidsGet(Long tableId,  @NotNull Long startTid,  @NotNull Long endTid, SecurityContext securityContext) throws NotFoundException {
+    public Response gridTableIdTransactionsBetweenTidsGet(Long tableId,  @NotNull Long startTid,  @NotNull Long endTid, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridTableIdTransactionsGet(Integer tableId,  Long startTid,  Long endTid,  Date startTime,  Date endTime, CellBuffer cellBufferRequest, SecurityContext securityContext) throws NotFoundException {
+    public Response gridTableIdTransactionsGet(Integer tableId,  Long startTid,  Long endTid,  Date startTime,  Date endTime, CellBuffer cellBufferRequest, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
