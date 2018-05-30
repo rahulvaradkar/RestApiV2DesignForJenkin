@@ -46,3 +46,140 @@ function hasValidProperties(object, props) {
   }
   return hasValidProps;
 }
+
+
+var TestUtils=(function(){
+
+    function for_GETMethod(URL)
+    {
+        var authorization=getAuthorization("j",0,"JSAddin");
+        var Response=new Promise(function(resolve,reject){
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+			$.ajax({
+				url: URL,
+		        type: "GET",
+                dataType: "json",
+                headers: {
+                    'Authorization': Globals.authorization,
+                    'Accept': 'application/json'
+                },
+		        success: function(result){
+                    resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+				}
+			});
+		});
+		return Response;
+	}
+	
+	function for_POSTMethod(URL,Data)
+	{
+		var Response=new Promise(function(resolve,reject){
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+			$.ajax({
+                url:URL,
+				type: "POST",
+				dataType: "json",
+				data: JSON.stringify(Data),
+                contentType: "application/json",
+                headers: {
+                    'Authorization': Globals.authorization,
+                    'Accept': 'application/json'
+                },
+				success: function(result){			
+                    resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+				}
+			});
+		});
+		return Response;
+    }
+
+    function for_PUTMethod(URL,Data)
+	{
+		var Response=new Promise(function(resolve,reject){
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+            var res = $.ajax({
+                url: URL,
+			    type: "PUT",
+			    dataType: "json",
+			    data: JSON.stringify(Data),
+                contentType: "application/json",
+                headers: {
+                    'Authorization': Globals.authorization,
+                    'Accept': 'application/json'
+                },
+			    async: false
+            }).responseText;
+            console.log("Response  : " + res);
+            console.log("***********************************************************************************************");
+            console.log("\n");
+            resolve(res);
+		});
+		return Response;
+    }
+    
+    function for_DELETEMethod(URL)
+	{
+		var Response=new Promise(function(resolve,reject){
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+            var res = $.ajax({
+                url: URL,
+			    type: "DELETE",
+			    dataType: "json",
+                contentType: "application/json",
+                headers: {
+                    'Authorization': Globals.authorization,
+                    'Accept': 'application/json'
+                },
+			    async: false
+            }).responseText;
+            console.log("Response  : " + res);
+            console.log("***********************************************************************************************");
+            console.log("\n");
+            resolve(res);
+		});
+		return Response;
+    }
+
+    function for_PUTMethod_JSON(URL,Data)
+	{
+		var Response=new Promise(function(resolve,reject){
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+			$.ajax({
+                url:URL,
+				type: "PUT",
+				dataType: "json",
+				data: JSON.stringify(Data),
+                contentType: "application/json",
+                headers: {
+                    'Authorization': Globals.authorization,
+                    'Accept': 'application/json'
+                },
+				success: function(result){			
+                    resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+				}
+			});
+		});
+		return Response;
+    }
+    return  {
+        for_GETMethod: for_GETMethod, 
+        for_POSTMethod: for_POSTMethod, 
+        for_PUTMethod: for_PUTMethod,
+        for_DELETEMethod: for_DELETEMethod,
+        for_PUTMethod_JSON : for_PUTMethod_JSON
+    };
+})();
