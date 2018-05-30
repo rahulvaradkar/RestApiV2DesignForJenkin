@@ -83,9 +83,9 @@ public class GridApi  {
         
         @io.swagger.annotations.ApiResponse(code = 404, message = "Cuboid not found", response = Void.class) })
     public Response gridDelete(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.gridDelete(gridId,securityContext);
+        return delegate.gridDelete(gridId,securityContext,authBase64String);
     }
     @GET
     @Path("/{gridId}")
@@ -156,9 +156,9 @@ public class GridApi  {
         @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = CellBuffer.class) })
     public Response gridTableIdTransactionIdChangesGet(@ApiParam(value = "",required=true) @PathParam("tableId") Integer tableId
 ,@ApiParam(value = "",required=true) @PathParam("transactionId") Integer transactionId
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.gridTableIdTransactionIdChangesGet(tableId,transactionId,securityContext);
+        return delegate.gridTableIdTransactionIdChangesGet(tableId,transactionId,securityContext, authBase64String);
     }
     @GET
     @Path("/{tableId}/transactionsBetweenTids")
@@ -172,9 +172,9 @@ public class GridApi  {
     public Response gridTableIdTransactionsBetweenTidsGet(@ApiParam(value = "",required=true) @PathParam("tableId") Long tableId
 ,@ApiParam(value = "",required=true) @QueryParam("startTid") Long startTid
 ,@ApiParam(value = "",required=true) @QueryParam("endTid") Long endTid
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.gridTableIdTransactionsBetweenTidsGet(tableId,startTid,endTid,securityContext);
+        return delegate.gridTableIdTransactionsBetweenTidsGet(tableId,startTid,endTid,securityContext, authBase64String);
     }
     @GET
     @Path("/{tableId}/transactions")
@@ -191,8 +191,8 @@ public class GridApi  {
 ,@ApiParam(value = "") @QueryParam("startTime") Date startTime
 ,@ApiParam(value = "") @QueryParam("endTime") Date endTime
 ,@ApiParam(value = "limits transactions to a cell, row, column or a specification" ) CellBuffer cellBufferRequest
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.gridTableIdTransactionsGet(tableId,startTid,endTid,startTime,endTime,cellBufferRequest,securityContext);
+        return delegate.gridTableIdTransactionsGet(tableId,startTid,endTid,startTime,endTime,cellBufferRequest,securityContext, authBase64String);
     }
 }

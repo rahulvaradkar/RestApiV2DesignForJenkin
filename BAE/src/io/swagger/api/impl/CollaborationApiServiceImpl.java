@@ -30,7 +30,7 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 //    @DELETE
 //    @Path("/{collabId}")
     @Override
-    public Response collaborationCollabIdDelete(Integer collabId, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdDelete(Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -38,7 +38,7 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 //    @GET
 //    @Path("/{collabId}/whiteboard")
     @Override
-    public Response collaborationCollabIdWhiteboardGet(Integer collabId, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdWhiteboardGet(Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
  		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -71,7 +71,7 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 //    @POST
 //    @Path("/{collabId}/whiteboard")
     @Override
-    public Response collaborationCollabIdWhiteboardPost(Integer collabId, Whiteboard wb, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdWhiteboardPost(Integer collabId, Whiteboard wb, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
  		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -112,7 +112,7 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 //    @DELETE
 //    @Path("/{collabId}/whiteboard/{whiteboardId}")
     @Override
-    public Response collaborationCollabIdWhiteboardWhiteboardIdDelete(Integer collabId, Integer whiteboardId, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdWhiteboardWhiteboardIdDelete(Integer collabId, Integer whiteboardId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }

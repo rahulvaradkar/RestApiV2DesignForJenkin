@@ -31,7 +31,7 @@ import boardwalk.rest.UserManagement;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     @Override
-    public Response neighborhoodGet( String neighborhoodSpec, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodGet( String neighborhoodSpec, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -40,7 +40,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 //  @GET
 //  @Path("/{nhId}/collaboration")
   @Override
-  public Response neighborhoodNhIdCollaborationGet(Integer nhId, SecurityContext securityContext) throws NotFoundException {
+  public Response neighborhoodNhIdCollaborationGet(Integer nhId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
       // do some magic!
 		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -76,7 +76,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 //  @DELETE
 //  @Path("/{nhId}/member/{memberId}")
     @Override
-    public Response neighborhoodNhIdDelete(Integer nhId, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdDelete(Integer nhId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
    		ErrorRequestObject erb;
   		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -111,7 +111,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 //	@GET
 //	@Path("/{nhId}")
     @Override
-    public Response neighborhoodNhIdGet(Integer nhId, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdGet(Integer nhId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
  		ErrorRequestObject erb;
  		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -145,7 +145,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     //@GET
     //@Path("/{nhId}/member")
     @Override
-    public Response neighborhoodNhIdMemberGet(Integer nhId, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdMemberGet(Integer nhId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
  		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -178,7 +178,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     //@POST
     //@Path("/{nhId}/member/{memberId}/collaboration")
     @Override
-    public Response neighborhoodNhIdMemberMemberIdCollaborationPost(Integer nhId, Integer memberId, Collaboration collaboration, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdMemberMemberIdCollaborationPost(Integer nhId, Integer memberId, Collaboration collaboration, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         // do some magic!
  		ErrorRequestObject erb;
@@ -227,7 +227,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     //@DELETE
     // @Path("/{nhId}/member/{memberId}")
     @Override
-    public Response neighborhoodNhIdMemberMemberIdDelete(Integer nhId, Integer memberId, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdMemberMemberIdDelete(Integer nhId, Integer memberId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
  		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -267,7 +267,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     //@POST
     //@Path("/{nhId}/member")
     @Override
-    public Response neighborhoodNhIdMemberPost(Integer nhId, Member member, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdMemberPost(Integer nhId, Member member, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
 
  		ErrorRequestObject erb;
@@ -304,7 +304,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     }
 
     @Override
-    public Response neighborhoodNhIdRelationDelete(Integer nhId,  @NotNull Integer relation, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdRelationDelete(Integer nhId,  @NotNull Integer relation, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -312,7 +312,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     //@GET
     //@Path("/{nhId}/relation")
     @Override
-    public Response neighborhoodNhIdRelationGet(Integer nhId, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdRelationGet(Integer nhId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
  		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -345,7 +345,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     //@POST
     //@Path("/{nhId}/relation")
     @Override
-    public Response neighborhoodNhIdRelationPost(Integer nhId, Relation relationship, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodNhIdRelationPost(Integer nhId, Relation relationship, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
  		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
@@ -398,7 +398,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     
     //@POST
     @Override
-    public Response neighborhoodPost(Neighborhood neighborhood, SecurityContext securityContext) throws NotFoundException {
+    public Response neighborhoodPost(Neighborhood neighborhood, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
 		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
