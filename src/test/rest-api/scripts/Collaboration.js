@@ -8,7 +8,7 @@
         var flag=false;
         var count_flag=false;
 
-        TestUtils.for_GETMethod( Globals.baseURL+"rest/neighborhood/1/collaboration").then(function(result){
+        TestUtils.sendGetRequest( Globals.baseURL+"rest/neighborhood/1/collaboration").then(function(result){
             if(result.length>0)
             {
                 count_flag=true;
@@ -38,7 +38,7 @@
         var done = assert.async();       
         var count_flag=false;
 
-        TestUtils.for_GETMethod( Globals.baseURL+"rest/neighborhood/30/collaboration").then(function(result){
+        TestUtils.sendGetRequest( Globals.baseURL+"rest/neighborhood/30/collaboration").then(function(result){
             if(result.length == 0 )
             {
                 count_flag=true;

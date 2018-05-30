@@ -9,7 +9,7 @@
         var flag=false;
 
 
-        TestUtils.for_GETMethod(Globals.baseURL +  "rest/neighborhood/1/relation").then(function(result){
+        TestUtils.sendGetRequest(Globals.baseURL +  "rest/neighborhood/1/relation").then(function(result){
 			if(result.length > 0)
                 {
                     count_flag=true;
@@ -42,7 +42,7 @@
         "relatedneighborhoodId":[{"id":2},{"id":3}]
         }
         
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/neighborhood/1/relation",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/neighborhood/1/relation",data).then(function(result){
             assert.ok(result != null ,"Response Should not be");
             assert.equal(result[0].error,"All Neighborhood Relations Created Successfully","Relation Created Successfully");
             done();

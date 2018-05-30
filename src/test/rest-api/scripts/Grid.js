@@ -18,7 +18,7 @@
         "memberId": Globals.Member_Id_1,  
         "id": 0
         }
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
             cuboid_id=result.gridId;            
             var flag=false;                                
 			if(result.collabId !=null && result.gridId != null && result.name !=null && result.memberId != null && result.wbId != null && result.description !=null) 
@@ -43,7 +43,7 @@
             "memberId":  Globals.Member_Id_1,  
             "id": 0
         }
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
 			var cString = result[0].error;
 			var checkSubString = cString.indexOf("Violation of UNIQUE KEY constraint");
 			assert.ok(checkSubString > 0,"Grid is already exists");
@@ -65,7 +65,7 @@
         "id": 0
         }
         
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
             var flag=false;
             cuboid_id_=result.gridId;
             if(result.collabId !=null && result.gridId != null && result.name !=null && result.memberId != null && result.wbId != null && result.description !=null) 
@@ -90,7 +90,7 @@
         "memberId":  Globals.Member_Id_2,  
         "id": 0
         }
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
             var flag=false;
             if(result.collabId !=null && result.gridId != null && result.name !=null && result.memberId != null && result.wbId != null && result.description !=null)
             {
@@ -114,7 +114,7 @@
         "memberId": -1007,
         "id": 0
         }
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
            var flag=false;
     
 			var cString = result[0].error;
@@ -142,7 +142,7 @@
         "memberId":  Globals.Member_Id_1,  
         "id": 0
         }
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
             assert.ok(result !=null,"Response should not be null");               
             assert.equal(result[0].error,"Collaboration ID NOT FOUND","InValid Collaboration ID");
             done();
@@ -160,7 +160,7 @@
         "memberId":  Globals.Member_Id_1,
         "id": 0
         }
-        TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+        TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
             assert.ok(result !=null,"Response should not be null");
             assert.equal(result[0].error,"Whitebaord ID NOT FOUND","InValid Whiteboard ID");
             done();
@@ -202,7 +202,7 @@
              "baselineId": -1
             }
            }
-           TestUtils.for_PUTMethod_JSON(Globals.baseURL + "rest/grid?gridId=" + cuboid_id,data).then(function(result){
+           TestUtils.sendPutRequestJson(Globals.baseURL + "rest/grid?gridId=" + cuboid_id,data).then(function(result){
                 var resultJSON=result;
                 assert.equal(Object.keys(resultJSON).length, 8, "cuboid object should have only 8 properties !");
                 assert.ok(Array.isArray(resultJSON.cells), "cells should be an Array !");
@@ -250,7 +250,7 @@
             }
         }   
 
-        TestUtils.for_PUTMethod_JSON(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
+        TestUtils.sendPutRequestJson(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
             assert.ok(result != null,"Response Should not be null");
             assert.equal(result[0].error,"Missing element cells:[]","Missing element cells:[]");
             done();
@@ -294,7 +294,7 @@
             }
            }
 
-        TestUtils.for_PUTMethod_JSON(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
+        TestUtils.sendPutRequestJson(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
             assert.ok(result != null,"Response Should not be null");
             assert.equal(result[0].error,"Missing element rowArray:[]","Missing element rowArray:[]");
             done();
@@ -336,7 +336,7 @@
              "baselineId": -1
             }
            }
-        TestUtils.for_PUTMethod_JSON(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
+        TestUtils.sendPutRequestJson(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
             assert.ok(result != null,"Response Should not be null");
             assert.equal(result[0].error,"Missing element columnArray:[]","Missing element columnArray:[]");
             done();
@@ -375,7 +375,7 @@
              "baselineId": -1
             }
            }
-        TestUtils.for_PUTMethod_JSON(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
+        TestUtils.sendPutRequestJson(Globals.baseURL + "rest/grid?gridId=" + cuboid_id_,data).then(function(result){
 
             assert.ok(result != null,"Response Should not be null");
             assert.equal(result[0].error,"Missing element cells:[]","Missing element cells:[]");
