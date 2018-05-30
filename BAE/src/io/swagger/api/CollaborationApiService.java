@@ -18,8 +18,8 @@ import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public abstract class CollaborationApiService {
-    public abstract Response collaborationCollabIdDelete(Integer collabId,SecurityContext securityContext) throws NotFoundException;
-    public abstract Response collaborationCollabIdWhiteboardGet(Integer collabId,SecurityContext securityContext) throws NotFoundException;
-    public abstract Response collaborationCollabIdWhiteboardPost(Integer collabId,Whiteboard wb,SecurityContext securityContext) throws NotFoundException;
-    public abstract Response collaborationCollabIdWhiteboardWhiteboardIdDelete(Integer collabId,Integer whiteboardId,SecurityContext securityContext) throws NotFoundException;
+    public abstract Response collaborationCollabIdDelete(Integer collabId,SecurityContext securityContext, String authBase64String) throws NotFoundException;
+    public abstract Response collaborationCollabIdWhiteboardGet(Integer collabId,SecurityContext securityContext, String authBase64String) throws NotFoundException;
+    public abstract Response collaborationCollabIdWhiteboardPost(Integer collabId,Whiteboard wb,SecurityContext securityContext, String authBase64String) throws NotFoundException;
+    public abstract Response collaborationCollabIdWhiteboardWhiteboardIdDelete(Integer collabId,Integer whiteboardId,SecurityContext securityContext, String authBase64String) throws NotFoundException;
 }
