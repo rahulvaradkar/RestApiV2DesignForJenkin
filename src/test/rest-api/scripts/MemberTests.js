@@ -13,6 +13,19 @@ var validAttributesForCreatedMember = ["active", "id", "nhid", "userId"];
 
 
 module('Member');
+
+//reusable methods
+
+//Assert membership object received as response when membership is newly created.
+  function assertValidMembershipCreatedResponse(assert, membership) {
+    assert.ok(hasValidProperties(membership, validAttributesForCreatedMember), "On successful creation of membership, membership object should have active, id, nhid and userId properties");
+    assert.notOk(hasNullAttributes(membership, validAttributesForCreatedMember), "On successful creation of membership, membership object should not have null attributes.");
+    assert.ok(isValidNumber(membership.id), "Member id should be greater than 0.");
+    assert.ok(isValidNumber(membership.nhid), "Member's nhid should be greater than 0.");
+    assert.ok(isValidNumber(membership.userId), "Member's userId should be greater than 0.");
+    assert.ok(membership.active, "Membership is active for newly created membership.");
+  }
+
 //GET members in Neighborhood
   test("Get members of neighborhood", function(assert) {
     var done = assert.async();
@@ -137,16 +150,38 @@ module('Member');
           assert.notOk(isNullObject(data), "Member data shouldn't be null");
           assert.ok(hasOneOrMoreElements(data), "Response has some data to parse on sending POST request to create membership.");
           var membership = data[0];
-          assert.ok(hasValidProperties(membership, validAttributesForCreatedMember), "On successful creation of membership, membership object should have active, id, nhid and userId properties");
-          assert.notOk(hasNullAttributes(membership, validAttributesForCreatedMember), "On successful creation of membership, membership object should not have null attributes.");
-          assert.ok(isValidNumber(membership.id), "Member id should be greater than 0.");
-          assert.ok(isValidNumber(membership.nhid), "Member's nhid should be greater than 0.");
-          assert.ok(isValidNumber(membership.userId), "Member's userId should be greater than 0.");
-          assert.ok(membership.active, "Membership is active for newly created membership.");
+          assertValidMembershipCreatedResponse(assert, membership);
           done();
         }
       });
     });
   });
 
+//Create membership by passing mismatching nhid
+  test("New membership for user should ignore nhid when mismatching nhid is sent in POST data", function(assert) {
+    var done = assert.async();
+    UserTests.createNewUser().then(function(result) {
+      var user = result[0];
+      var membershipData = {
+        userId: user.id,
+        nhid: emptyNhId,
+        id: 0
+      };
+      $.ajax({
+        url: Globals.baseURL + "rest/neighborhood/" + rootNhId + "/member",
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(membershipData),
+        contentType: "application/json",
+        success: function(data) {
+          assert.notOk(isNullObject(data), "Member data shouldn't be null");
+          assert.ok(hasOneOrMoreElements(data), "Response has some data to parse on sending POST request to create membership.");
+          var membership = data[0];
+          assertValidMembershipCreatedResponse(assert, membership);
+          assert.notEqual(membership.nhid, membershipData.nhid, "Nhid in request data doesn't match nhid in response and path param but still membership is created ignoring the nhid in request.");
+          done();
+        }
+      });
+    });
+  });
 })( QUnit.module, QUnit.test );
