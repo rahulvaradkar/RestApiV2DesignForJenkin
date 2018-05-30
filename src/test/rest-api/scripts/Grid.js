@@ -44,6 +44,9 @@
             "id": 0
         }
         TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
+			var cString = result[0].error;
+			var checkSubString = cString.indexOf("Violation of UNIQUE KEY constraint");
+			assert.ok(checkSubString > 0,"Grid is already exists");
             assert.ok(result[0].error.includes("Violation of UNIQUE KEY constraint"),"Grid is already exists");
             done();
         });	
@@ -112,12 +115,17 @@
         "id": 0
         }
         TestUtils.for_POSTMethod(Globals.baseURL + "rest/grid",data).then(function(result){
-            var flag=false;
-            if(result[0].error.includes("IsBlank") || result[0].error.includes("IsNegative"));                                                  				           
+           var flag=false;
+    
+			var cString = result[0].error;
+			var checkSubString1 = ("initial"+cString).indexOf("IsBlank");
+			var checkSubString2 = ("initial"+cString).indexOf("IsNegative");
+        
+            if((checkSubString1 > 6) || (checkSubString2 > 6 ));                                                                 
             {
                 flag=true;
             }
-            assert.ok(result != null,"Response should not be null");
+            assert.equal(result != null,true,"Response should not be null");
             assert.equal(flag,true,"Parameters passed are blank or negative");                
             done();
         });
