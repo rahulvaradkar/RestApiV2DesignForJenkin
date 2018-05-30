@@ -60,7 +60,7 @@ public class GridApiServiceImpl extends GridApiService {
 			erbs.add(erb);
 		}
 
-		if (gridId <= 0)
+		if (gridId <= 0)	
 		{	
 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
 			erb.setProposedSolution("You must enter an Existing Grid ID. It should be a Positive Number.");
