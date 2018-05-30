@@ -53,7 +53,7 @@ var TestUtils=(function(){
     function for_GETMethod(URL)
     {
         var authorization=getAuthorization("j",0,"JSAddin");
-        var Response=new Promise(function(resolve,reject){
+        var Response=new $.Deferred();
             console.log("***********************************************************************************************");
             console.log("Fetching :" + URL);
 			$.ajax({
@@ -65,19 +65,19 @@ var TestUtils=(function(){
                     'Accept': 'application/json'
                 },
 		        success: function(result){
-                    resolve(result);
+                    Response.resolve(result);
                     console.log("Response  : " + JSON.stringify(result));
                     console.log("***********************************************************************************************");
                     console.log("\n");
 				}
 			});
-		});
-		return Response;
+		
+		return Response.promise();
 	}
 	
 	function for_POSTMethod(URL,Data)
 	{
-		var Response=new Promise(function(resolve,reject){
+        var Response=new $.Deferred();
             console.log("***********************************************************************************************");
             console.log("Fetching :" + URL);
 			$.ajax({
@@ -91,19 +91,18 @@ var TestUtils=(function(){
                     'Accept': 'application/json'
                 },
 				success: function(result){			
-                    resolve(result);
+                    Response.resolve(result);
                     console.log("Response  : " + JSON.stringify(result));
                     console.log("***********************************************************************************************");
                     console.log("\n");
 				}
 			});
-		});
-		return Response;
+		return Response.promise();
     }
 
     function for_PUTMethod(URL,Data)
 	{
-		var Response=new Promise(function(resolve,reject){
+        var Response=new $.Deferred();
             console.log("***********************************************************************************************");
             console.log("Fetching :" + URL);
             var res = $.ajax({
@@ -121,14 +120,14 @@ var TestUtils=(function(){
             console.log("Response  : " + res);
             console.log("***********************************************************************************************");
             console.log("\n");
-            resolve(res);
-		});
-		return Response;
+            Response.resolve(res);
+		
+		return Response.promise();;
     }
     
     function for_DELETEMethod(URL)
 	{
-		var Response=new Promise(function(resolve,reject){
+        var Response=new $.Deferred();
             console.log("***********************************************************************************************");
             console.log("Fetching :" + URL);
             var res = $.ajax({
@@ -145,35 +144,36 @@ var TestUtils=(function(){
             console.log("Response  : " + res);
             console.log("***********************************************************************************************");
             console.log("\n");
-            resolve(res);
-		});
-		return Response;
+            Response.resolve(res);
+		
+		return Response.promise();;
     }
 
     function for_PUTMethod_JSON(URL,Data)
 	{
-		var Response=new Promise(function(resolve,reject){
-            console.log("***********************************************************************************************");
-            console.log("Fetching :" + URL);
-			$.ajax({
-                url:URL,
-				type: "PUT",
-				dataType: "json",
-				data: JSON.stringify(Data),
-                contentType: "application/json",
-                headers: {
-                    'Authorization': Globals.authorization,
-                    'Accept': 'application/json'
-                },
-				success: function(result){			
-                    resolve(result);
-                    console.log("Response  : " + JSON.stringify(result));
-                    console.log("***********************************************************************************************");
-                    console.log("\n");
+		
+        console.log("***********************************************************************************************");
+        console.log("Fetching :" + URL);
+        var Response=new $.Deferred();
+		$.ajax({
+            url:URL,
+			type: "PUT",
+			dataType: "json",
+			data: JSON.stringify(Data),
+            contentType: "application/json",
+			headers: {
+			'Authorization': Globals.authorization,
+			'Accept': 'application/json'
+			},
+			success: function(result){			
+				Response.resolve(result);
+				console.log("Response  : " + JSON.stringify(result));
+				console.log("***********************************************************************************************");
+				console.log("\n");
 				}
 			});
-		});
-		return Response;
+		
+		return Response.promise();
     }
     return  {
         for_GETMethod: for_GETMethod, 
