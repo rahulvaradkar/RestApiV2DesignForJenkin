@@ -38,7 +38,7 @@ module('Neighbourhood');
 		var done = assert.async();
 		var data = {
 		"level":"2",
-		"name": "BoardwalkAPI_",
+		"name": "BoardwalkAPI_12",
 		"id":"0",
 		"parentId": "30",
 		"secure": "true"
@@ -52,19 +52,18 @@ module('Neighbourhood');
 		});			
       });
 
-      QUnit.test("Delete test case for neighborhood", function(assert){
+	QUnit.test("Delete test case for neighborhood at level 2", function(assert){
         var done=assert.async();       
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/neighborhood/" + nhid_).then(function(res){
-			assert.equal(typeof res, "string", "response should be string !");
-	        assert.notEqual(res.length, 0, "should not be null !");
-			var getResponse = res;
-			var checkSubString = getResponse.indexOf("Neighborhood Deleted Successfully");
-			assert.ok((checkSubString > 0),"record must be updated successfully !");
-        	//assert.equal(res.includes("Neighborhood Deleted Successfully"), true, "record must be updated successfully !");
-        	done();
-		});
+  		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/neighborhood/" + nhid_).then(function(res){
+   		assert.equal(typeof res, "string", "response should be string !");
+        assert.notEqual(res.length, 0, "should not be null !");
+   		var getResponse = res;
+   		var checkSubString = getResponse.indexOf("Neighborhood Deleted Successfully");
+   		assert.ok((checkSubString >= 0),"record must be updated successfully !");
+        
+         done();
+ 		 });
     });
-	
 	QUnit.test( "Posting new Neighborhood at level 0", function( assert ) {
 		var done = assert.async();
 		var data = {
@@ -88,10 +87,7 @@ module('Neighbourhood');
 		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/neighborhood/" + nhid).then(function(res){
 			assert.equal(typeof res, "string", "response should be string !");
 	        assert.notEqual(res.length, 0, "should not be null !");
-			var getResponse = res;
-			var checkSubString = getResponse.indexOf("Neighborhood Deleted Successfully");
-			assert.ok((checkSubString > 0),"record must be updated successfully !");
-        	//assert.equal(res.includes("Neighborhood Deleted Successfully"), true, "record must be updated successfully !");
+        	assert.equal(res.includes("Neighborhood Deleted Successfully"), true, "record must be updated successfully !");
         	done();
 		});
     });

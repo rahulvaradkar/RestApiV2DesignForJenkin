@@ -13,5 +13,7 @@ var Globals = {
   Collab_Id : 1001,
   Member_Id_1 : 1001,
   Member_Id_2 : 1013,
-  authorization : getAuthorization("j",0,"JSAddin")
+  authorization : getAuthorization("j",0,"JSAddin"),
+  invalidAuthorization : getAuthorization("j",0,"ROOT|demo|JSAddin"),
+  importTid : -1,
 };
