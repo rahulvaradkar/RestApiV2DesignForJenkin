@@ -408,6 +408,14 @@
             assert.ok(result.rows != null,"rows Element Should not be null");
             done();
         });
-
-    })
+    });
+	
+	QUnit.test("Importing Grid with Invalid Authorization",function(assert){
+		var done=assert.async();
+		TestUtils.sendRequestInvalidAuthorization(Globals.baseURL+"rest/grid/"+cuboid_id+"?importTid="+Globals.importTid+"&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function(result){               
+            assert.ok(result != null, "Response should not be null");
+            assert.equal(result[0].error, "Invalid Authorization. User is not a member of Neighborhood Path.","Invalid Authorization. User is not a member of Neighborhood Path.");
+            done();
+        });
+    });
 })( QUnit.module, QUnit.test );
