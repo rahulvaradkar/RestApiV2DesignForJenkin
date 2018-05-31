@@ -35,10 +35,11 @@
 		  });        
     });   
      
-    QUnit.test( "Creating Relation", function( assert ) {
-		var done = assert.async();
+     QUnit.test( "Creating Relation", function( assert ) {
+        var done = assert.async();
+        var x = Math.floor((Math.random() * 10000) + 1);
 		var data = {		
-        "name": "APIRelation",
+        "name": "APIRelation_" + x,
         "relatedneighborhoodId":[{"id":2},{"id":3}]
         }
         
