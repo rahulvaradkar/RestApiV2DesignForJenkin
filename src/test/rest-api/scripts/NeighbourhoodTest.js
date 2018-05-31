@@ -7,7 +7,7 @@ module('Neighbourhood');
 
 	QUnit.test( "Reading Neighborhood with ID=1", function( assert ) {
 		var done = assert.async();
-		TestUtils.for_GETMethod(Globals.baseURL + "rest/neighborhood/1").then(function(result){
+		TestUtils.sendGetRequest(Globals.baseURL + "rest/neighborhood/1").then(function(result){
 			var flag=false;
 			if(result.length>0)
 			{
@@ -43,7 +43,7 @@ module('Neighbourhood');
 		"parentId": "30",
 		"secure": "true"
 		}
-		TestUtils.for_POSTMethod(Globals.baseURL + "rest/neighborhood",data).then(function(result){
+		TestUtils.sendPostRequest(Globals.baseURL + "rest/neighborhood",data).then(function(result){
 			nhid_=result[0].id;
 			assert.notEqual(result.length,0,"object should not be empty !");
 			assert.ok(result[0].id > 0 ,"Neighborhood ID shoul greater than 0");
@@ -54,7 +54,7 @@ module('Neighbourhood');
 
       QUnit.test("Delete test case for neighborhood", function(assert){
         var done=assert.async();       
-		TestUtils.for_DELETEMethod(Globals.baseURL + "rest/neighborhood/" + nhid_).then(function(res){
+		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/neighborhood/" + nhid_).then(function(res){
 			assert.equal(typeof res, "string", "response should be string !");
 	        assert.notEqual(res.length, 0, "should not be null !");
 			var getResponse = res;
@@ -74,7 +74,7 @@ module('Neighbourhood');
 		"parentId": "-1",
 		"secure": "false"
 		}
-		TestUtils.for_POSTMethod(Globals.baseURL + "rest/neighborhood",data).then(function(result){
+		TestUtils.sendPostRequest(Globals.baseURL + "rest/neighborhood",data).then(function(result){
 			nhid=result[0].id;
 			assert.notEqual(result.length,0,"object should not be empty !");
 			assert.ok(result[0].id > 0 ,"Neighborhood ID shoul greater than 0");
@@ -85,7 +85,7 @@ module('Neighbourhood');
       
       QUnit.test("Delete test case for neighborhood", function(assert){
         var done=assert.async();		
-		TestUtils.for_DELETEMethod(Globals.baseURL + "rest/neighborhood/" + nhid).then(function(res){
+		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/neighborhood/" + nhid).then(function(res){
 			assert.equal(typeof res, "string", "response should be string !");
 	        assert.notEqual(res.length, 0, "should not be null !");
 			var getResponse = res;

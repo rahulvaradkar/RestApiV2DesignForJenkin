@@ -50,7 +50,7 @@ function hasValidProperties(object, props) {
 
 var TestUtils=(function(){
 
-    function for_GETMethod(URL)
+    function sendGetRequest(URL)
     {
         var authorization=getAuthorization("j",0,"JSAddin");
         var Response=new $.Deferred();
@@ -75,7 +75,7 @@ var TestUtils=(function(){
 		return Response.promise();
 	}
 	
-	function for_POSTMethod(URL,Data)
+	function sendPostRequest(URL,Data)
 	{
         var Response=new $.Deferred();
             console.log("***********************************************************************************************");
@@ -100,7 +100,7 @@ var TestUtils=(function(){
 		return Response.promise();
     }
 
-    function for_PUTMethod(URL,Data)
+    function sendPutRequest(URL,Data)
 	{
         var Response=new $.Deferred();
             console.log("***********************************************************************************************");
@@ -125,7 +125,7 @@ var TestUtils=(function(){
 		return Response.promise();;
     }
     
-    function for_DELETEMethod(URL)
+    function sendDeleteRequest(URL)
 	{
         var Response=new $.Deferred();
             console.log("***********************************************************************************************");
@@ -149,7 +149,7 @@ var TestUtils=(function(){
 		return Response.promise();;
     }
 
-    function for_PUTMethod_JSON(URL,Data)
+    function sendPutRequestJson(URL,Data)
 	{
 		
         console.log("***********************************************************************************************");

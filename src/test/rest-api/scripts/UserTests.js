@@ -12,7 +12,7 @@ var UserTests =(function( module, test ) {
 		  "id":"0"
 		};
 
-		return TestUtils.for_POSTMethod(Globals.baseURL + "rest/user",data);
+		return TestUtils.sendPostRequest(Globals.baseURL + "rest/user",data);
 		// .then(function(result){
 		// 	console.log("++++++++++++++++++++++++++++"+JSON.stringify(result));
 		// 	Response=result;
@@ -30,7 +30,7 @@ var UserTests =(function( module, test ) {
   
 	QUnit.test("Test Case For Single User", function( assert ) {
 		var done = assert.async();		
-		TestUtils.for_GETMethod(Globals.baseURL + "rest/user/1").then(function(result){
+		TestUtils.sendGetRequest(Globals.baseURL + "rest/user/1").then(function(result){
 			var flag=false;
 			if(result.email !=null && result.firstName != null && result.lastName !=null)
 			{						
@@ -45,7 +45,7 @@ var UserTests =(function( module, test ) {
 	QUnit.test("Test Case For User With id=2", function( assert ) {
 		var done = assert.async();
 		var input = $( "#test-input" ).focus();
-		TestUtils.for_GETMethod(Globals.baseURL + "rest/user/2").then(function(result){
+		TestUtils.sendGetRequest(Globals.baseURL + "rest/user/2").then(function(result){
 			var flag=false;
 				if(result.email !=null && result.firstName != null && result.lastName !=null)
 				{						
@@ -61,7 +61,7 @@ var UserTests =(function( module, test ) {
 		var input = $( "#test-input" ).focus();
 		var flag= false;
 		var count_flag=false;
-		TestUtils.for_GETMethod(Globals.baseURL + "rest/user?active=true").then(function(result){			
+		TestUtils.sendGetRequest(Globals.baseURL + "rest/user?active=true").then(function(result){			
 			if (result.length > 0)
 			{
 				count_flag=true;
@@ -92,7 +92,7 @@ var UserTests =(function( module, test ) {
 		var input = $( "#test-input" ).focus();
 		var flag= false;
 		var count_flag=false;
-		TestUtils.for_GETMethod(Globals.baseURL + "rest/user?active=false").then(function(result){
+		TestUtils.sendGetRequest(Globals.baseURL + "rest/user?active=false").then(function(result){
 			if (result.length >= 0)
 			{
 				count_flag=true;
@@ -152,7 +152,7 @@ var UserTests =(function( module, test ) {
 			"externalid": "sauravg",
 			"id":"0"
 		}
-		TestUtils.for_POSTMethod(Globals.baseURL + "rest/user",data).then(function(result){
+		TestUtils.sendPostRequest(Globals.baseURL + "rest/user",data).then(function(result){
 			var json = result[0];
 			assert.notEqual(result.length,0,"object should not be empty !");
 			if(Object.keys(json).length == 3)
@@ -182,7 +182,7 @@ var UserTests =(function( module, test ) {
 			"externalid": "s1auravg",
 			"id":"1013"
 		}
-		TestUtils.for_PUTMethod(Globals.baseURL + "rest/user",data).then(function(res){
+		TestUtils.sendPutRequest(Globals.baseURL + "rest/user",data).then(function(res){
 			assert.equal(typeof res, "string", "response should be string !");
 			assert.notEqual(res.length, 0, "should not be null !");
 			assert.equal(res.includes("Successfully"), true, "record must be updated successfully !");
@@ -192,7 +192,7 @@ var UserTests =(function( module, test ) {
 
 	QUnit.test( "Deleting User", function( assert ) {
 		var done=assert.async();		
-		TestUtils.for_DELETEMethod(Globals.baseURL + "rest/user/"+userid).then(function(res){
+		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/user/"+userid).then(function(res){
 
 
 			var getResponse = res;
