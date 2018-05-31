@@ -124,13 +124,16 @@ public class UserManagement {
 	}
 	
 	//PUT		....DONE ACORDING TO TEMPLATE
-	public static String userPut(User u, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+//	public static String userPut(User u, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static String userPut(User u, ArrayList<Object> sections, String authBase64String)
 	{
 		String retMsg = null;
 		ErrorRequestObject erb;
 		Connection connection = null;
 		BoardwalkConnection bwcon = null;
 
+		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+		
 		int nhId = -1;
 		int memberId = -1;
 		
@@ -139,6 +142,8 @@ public class UserManagement {
 				
 		if (!ErrResps.isEmpty())
 		{
+			sections.add(401);				//UNAUTHORIZED: The request has not been applied because it lacks valid authentication credentials for the target resource.
+			sections.addAll(ErrResps);
 			return retMsg;
 		}
 

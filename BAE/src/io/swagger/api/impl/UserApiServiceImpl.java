@@ -56,6 +56,7 @@ public class UserApiServiceImpl extends UserApiService {
     		else
     		{
     			return Response.ok().entity(ErrResps).build();
+    			//return Response.status(500).entity(ErrResps).build();
     		}
     	}
     	else
@@ -179,7 +180,8 @@ public class UserApiServiceImpl extends UserApiService {
         	return Response.ok().entity(erbs).build();
     	}
     }
-    
+
+
     @Override
     public Response userPut(User user, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	
@@ -266,25 +268,49 @@ public class UserApiServiceImpl extends UserApiService {
     		erbs.add(erb);
     	}
 
+	    //@io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = String.class),
+	    //@io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List"),
+	    //@io.swagger.annotations.ApiResponse(code = 404, message = "User profile not found", response = String.class),
+	    //@io.swagger.annotations.ApiResponse(code = 422, message = "Failed to Update User Profile. Reason could be trying to create Duplicate entities", response = ErrorRequestObject.class, responseContainer = "List") })
+		
     	if (erbs.size() == 0)
     	{
-	   	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+    		ArrayList<Object> sections = new ArrayList <Object>();
+//    		sections.add(500);
+  //  		sections.add(ErrRsps);
+	//        return Response.status(sections.get(0) ).entity(sections.get(1)).build();
+    		
+    		
+	   	 	//ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();	// ORIGNAL WORKING
 			String o;
-			o = UserManagement.userPut(user, ErrResps, authBase64String);
+			//o = UserManagement.userPut(user, ErrResps, authBase64String);		// Original	WORKING
+			
+			
+			o = UserManagement.userPut(user, sections, authBase64String);
 
+  			if (sections.size() > 0)
+    			return Response.status((Integer)sections.get(0)).entity(sections.get(1)).build();
+    		else
+    		{
+		        return Response.status(200).entity(o).build();
+    		}
+			
+			/*        	ORIGINAL CODE ---- WORKING00
+			
         	System.out.println("After calling UserManagement.userPut o:"+ o);
         	System.out.println("ErrResps.size :"+ ErrResps.size());
 
-        	if (ErrResps.size() > 0)
+  			if (ErrResps.size() > 0)
     			return Response.ok().entity(ErrResps).build();
     		else
     		{
-		        return Response.ok().entity(o).build();
+		        return Response.status(200).entity(o).build();
     		}
-    	}
+*/    	
+		}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();						//	400, message = "Invalid input (Bad Request)",
     	}
         // do some magic!
 //        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();

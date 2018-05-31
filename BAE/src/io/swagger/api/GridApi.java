@@ -44,7 +44,7 @@ import javax.ws.rs.core.MediaType;
 
 @Produces({ "application/json" })
 @io.swagger.annotations.Api(description = "the grid API")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-24T10:14:04.800Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-30T16:47:27.652Z")
 public class GridApi  {
    private final GridApiService delegate;
 
@@ -99,10 +99,13 @@ public class GridApi  {
         
         @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = CellBuffer.class) })
     public Response gridGridIdGet(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
-,@ApiParam(value = "Cell buffer details" ,required=true) CellBuffer cellBufferRequest
+,@ApiParam(value = "",required=true) @QueryParam("importTid") Integer importTid
+,@ApiParam(value = "",required=true) @QueryParam("view") String view
+,@ApiParam(value = "",required=true) @QueryParam("mode") Integer mode
+,@ApiParam(value = "",required=true) @QueryParam("baselineId") Integer baselineId
 ,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String )
     throws NotFoundException {
-        return delegate.gridGridIdGet(gridId,cellBufferRequest,securityContext, authBase64String);
+        return delegate.gridGridIdGet(gridId,importTid,view,mode,baselineId,securityContext, authBase64String);
     }
     @POST
     
