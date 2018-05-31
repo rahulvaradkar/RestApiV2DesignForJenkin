@@ -79,8 +79,9 @@ public class GridManagement {
 
     //@GET
     //@Path("/{gridId}")
-	public static CellBuffer gridGridIdGet(int gridId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, String authBase64String)
+	public static CellBuffer gridGridIdGet(int gridId, int importTid, String view, int mode, int baselineId , ArrayList<ErrorRequestObject> ErrResps, String authBase64String)
 	{
+		//CellBuffer  cellBufferRequest = new CellBuffer();
 		CellBuffer cbfReturn = new CellBuffer();
 		ErrorRequestObject erb;
 
@@ -111,11 +112,12 @@ public class GridManagement {
     	{
     		int userId = bwcon.getUserId();
     		
-    		System.out.println("cellBufferRequest.toString() as follows...................");
-    		System.out.println(cellBufferRequest.toString());
+    		//System.out.println("cellBufferRequest.toString() as follows...................");
+    		//System.out.println(cellBufferRequest.toString());
 
-    		GridInfo ginfo = cellBufferRequest.getInfo();
-    		
+    		//GridInfo ginfo = cellBufferRequest.getInfo();
+    		GridInfo ginfo = new GridInfo();
+/*    		
     		if (ginfo.getMode() == null)
     		{
     			erb = new ErrorRequestObject();
@@ -178,14 +180,14 @@ public class GridManagement {
     			erb.setProposedSolution("BaselineId is mandetory. Provide default BaselineId as -1");
     			ErrResps.add(erb);
     			return cbfReturn;
-    		}
-    		
+			} 			*/
+
     		int wbId;
     		int collabId;
-    		String gridName = ginfo.getName();
-    		String view = ginfo.getView();
-    		int baselineId = ginfo.getBaselineId();
-    		int mode = ginfo.getMode();
+    		//String gridName = ginfo.getName();
+    		//String view = ginfo.getView();
+    		//int baselineId = ginfo.getBaselineId();
+    		//int mode = ginfo.getMode();
     		
     		ArrayList<Integer> rowArray = new ArrayList<Integer>();
     		ArrayList<Integer> columnArray  = new ArrayList<Integer>();
@@ -208,7 +210,7 @@ public class GridManagement {
 
     		System.out.println("GRID/PUT REST-API CALL :  memberId : " + memberId);
     		System.out.println("GRID/PUT REST-API CALL :  gridId : " + gridId);
-    		System.out.println("GRID/PUT REST-API CALL :  gridName : " + gridName);
+    		//System.out.println("GRID/PUT REST-API CALL :  gridName : " + gridName);
     		System.out.println("GRID/PUT REST-API CALL :  view : " + view);
 
     		// Error vector to all the Exceptions
@@ -334,8 +336,8 @@ public class GridManagement {
 					previousColumnSequence = col.getSequenceNumber();
 					previousColumnid = col.getId();
 				}
-	    		cellBufferRequest.setColumns(gridCols);
-	    		cellBufferRequest.setColumnArray(columnArray);
+	    		//cellBufferRequest.setColumns(gridCols);
+	    		//cellBufferRequest.setColumnArray(columnArray);
 	    		
 				// Get the rows
 				String lsRowQuery = ""; // Row query String
@@ -401,8 +403,8 @@ public class GridManagement {
 
 		    		gridRows.add(gridRow);
 				}
-	    		cellBufferRequest.setRows(gridRows);
-	    		cellBufferRequest.setRowArray(rowArray);
+	    		//cellBufferRequest.setRows(gridRows);
+	    		//cellBufferRequest.setRowArray(rowArray);
 	    		
 				// Get the cells
 				String q = null;
@@ -522,7 +524,7 @@ public class GridManagement {
 								
 								scas.add(sca);
 							}
-							cellBufferRequest.setColumnCellArrays(scas);
+							//cellBufferRequest.setColumnCellArrays(scas);
 						}
 						rsCount++;
 						rs.close();
