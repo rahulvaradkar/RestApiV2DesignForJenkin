@@ -176,10 +176,10 @@ var TestUtils=(function(){
 		return Response.promise();
     }
     return  {
-        for_GETMethod: for_GETMethod, 
-        for_POSTMethod: for_POSTMethod, 
-        for_PUTMethod: for_PUTMethod,
-        for_DELETEMethod: for_DELETEMethod,
-        for_PUTMethod_JSON : for_PUTMethod_JSON
+        sendGetRequest: sendGetRequest, 
+        sendPostRequest: sendPostRequest, 
+        sendPutRequest: sendPostRequest,
+        sendDeleteRequest: sendDeleteRequest,
+        sendPutRequestJson : sendPutRequestJson
     };
 })();
