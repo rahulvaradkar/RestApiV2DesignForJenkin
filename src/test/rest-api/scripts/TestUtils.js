@@ -1,58 +1,57 @@
-//Undecided asserts
 function undecidedAssertEqual(assert, value, forNow, neat, message) {
-  if(Globals.assertHow == "forNow") {
-    assert.equal(value, forNow, message);
-  } else {
-    assert.equal(value, neat, message);
-  }
-}
-
-//check whether number is > n
-function isValidNumber(number, n) {
-  if(!n) {
-    n = 0;
-  }
-  return $.isNumeric(number) && number > n;
-}
-
-//Check whether there are 1 or more elements
-function hasOneOrMoreElements(object) {
-  return object.length > 0;
-}
-
-//Check whether object is null
-function isNullObject(object) {
-  return object === null;
-}
-
-//Check whether object has null attributes
-function hasNullAttributes(object, props) {
-  var hasNullAttributes = false;
-  for(var i = 0; i < props.length; i++) {
-    if(object[props[i]] == null) {
-      hasNullAttributes = true;
+    if(Globals.assertHow == "forNow") {
+      assert.equal(value, forNow, message);
+    } else {
+      assert.equal(value, neat, message);
     }
   }
-  return hasNullAttributes;
-}
-
-//Check whether object has valid properties
-function hasValidProperties(object, props) {
-  var hasValidProps = true;
-  for(var i = 0; i < props.length; i++) {
-    if(!object.hasOwnProperty(props[i])) {
-      hasValidProps = false;
+  
+  //check whether number is > n
+  function isValidNumber(number, n) {
+    if(!n) {
+      n = 0;
     }
+    return $.isNumeric(number) && number > n;
   }
-  return hasValidProps;
-}
+  
+  //Check whether there are 1 or more elements
+  function hasOneOrMoreElements(object) {
+    return object.length > 0;
+  }
+  
+  //Check whether object is null
+  function isNullObject(object) {
+    return object === null;
+  }
+  
+  //Check whether object has null attributes
+  function hasNullAttributes(object, props) {
+    var hasNullAttributes = false;
+    for(var i = 0; i < props.length; i++) {
+      if(object[props[i]] == null) {
+        hasNullAttributes = true;
+      }
+    }
+    return hasNullAttributes;
+  }
+  
+  //Check whether object has valid properties
+  function hasValidProperties(object, props) {
+    var hasValidProps = true;
+    for(var i = 0; i < props.length; i++) {
+      if(!object.hasOwnProperty(props[i])) {
+        hasValidProps = false;
+      }
+    }
+    return hasValidProps;
+  }
+
 
 
 var TestUtils=(function(){
 
     function sendGetRequest(URL)
-    {
-        var authorization=getAuthorization("j",0,"JSAddin");
+    {      
         var Response=new $.Deferred();
             console.log("***********************************************************************************************");
             console.log("Fetching :" + URL);
@@ -152,34 +151,146 @@ var TestUtils=(function(){
     function sendPutRequestJson(URL,Data)
 	{
 		
-        console.log("***********************************************************************************************");
-        console.log("Fetching :" + URL);
-        var Response=new $.Deferred();
-		$.ajax({
-            url:URL,
-			type: "PUT",
-			dataType: "json",
-			data: JSON.stringify(Data),
-            contentType: "application/json",
-			headers: {
-			'Authorization': Globals.authorization,
-			'Accept': 'application/json'
-			},
-			success: function(result){			
-				Response.resolve(result);
-				console.log("Response  : " + JSON.stringify(result));
-				console.log("***********************************************************************************************");
-				console.log("\n");
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+            var Response=new $.Deferred();
+			$.ajax({
+                url:URL,
+				type: "PUT",
+				dataType: "json",
+				data: JSON.stringify(Data),
+                contentType: "application/json",
+                headers: {
+                    'Authorization': Globals.authorization,
+                    'Accept': 'application/json'
+                },
+				success: function(result){			
+                    Response.resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
 				}
 			});
 		
 		return Response.promise();
+    }
+
+    function sendRequestMissingAuthorization(URL,Data,requestType)
+    {
+        var Response=new $.Deferred();
+        if(requestType.toString() == "GET")
+        {
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+			$.ajax({
+				url: URL,
+		        type: "GET",
+                dataType: "json",                
+		        success: function(result){
+                    Response.resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+				}
+			});
+        }
+        if(requestType.toString() == "DELETE")
+        {
+            var Response=new $.Deferred();
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+            $.ajax({
+                url: URL,
+			    type: "DELETE",
+			    dataType: "json",
+                contentType: "application/json",              
+                async: false,
+                dataType: "json",                
+		        success: function(result){
+                    Response.resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+                    Response.resolve(result);
+				}
+            });          
+           
+        }
+        else
+        {            
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+			$.ajax({
+                url:URL,
+				type: requestType,
+				dataType: "json",
+				data: JSON.stringify(Data),
+                contentType: "application/json",                
+				success: function(result){			
+                    Response.resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+				}
+			});
+        }
+        return Response.promise();
+    }
+
+    function sendRequestInvalidAuthorization(URL,Data,requestType)
+    {
+        var Response=new $.Deferred();
+        if(requestType.toString() == "GET")
+        {
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+			$.ajax({
+				url: URL,
+		        type: "GET",
+                dataType: "json",
+                headers: {
+                    'Authorization': Globals.invalidAuthorization,
+                    'Accept': 'application/json'
+                },
+		        success: function(result){
+                    Response.resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+				}
+			});
+        }
+        else
+        {            
+            console.log("***********************************************************************************************");
+            console.log("Fetching :" + URL);
+			$.ajax({
+                url:URL,
+				type: requestType,
+				dataType: "json",
+				data: JSON.stringify(Data),
+                contentType: "application/json",
+                headers: {
+                    'Authorization': Globals.invalidAuthorization,
+                    'Accept': 'application/json'
+                },
+				success: function(result){			
+                    Response.resolve(result);
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
+				}
+			});
+        }
+        return Response.promise();
     }
     return  {
         sendGetRequest: sendGetRequest, 
         sendPostRequest: sendPostRequest, 
         sendPutRequest: sendPostRequest,
         sendDeleteRequest: sendDeleteRequest,
-        sendPutRequestJson : sendPutRequestJson
+        sendPutRequestJson : sendPutRequestJson,
+        sendRequestMissingAuthorization : sendRequestMissingAuthorization,
+        sendRequestInvalidAuthorization : sendRequestInvalidAuthorization
     };
 })();

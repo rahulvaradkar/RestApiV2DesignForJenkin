@@ -8,7 +8,7 @@
     var cuboid_name_="";
     QUnit.test( "Creating Grid", function( assert ) {
         var done = assert.async();
-        var x = Math.floor((Math.random() * 10000) + 1);
+        var x = Math.floor((Math.random() * 100000000) + 1);
         cuboid_name="GOOD_CUBOID_"+x;    
 		var data = {		
         "name":"GOOD_CUBOID_"+x,  
@@ -24,12 +24,22 @@
 			if(result.collabId !=null && result.gridId != null && result.name !=null && result.memberId != null && result.wbId != null && result.description !=null) 
 			{						
 				flag=true;
-			}                        
-            assert.ok(result !=null,"Response should not be null");
-            assert.ok(flag,"Should have 6 Properties or should not have any Property Null");
-            assert.ok(result.gridId > 2000000,"Grid Created Successfully");
-            done();
+            }
+            assert.ok(result != null, "Response should not be null");
 
+            assert.equal(typeof result.collabId, "number", "Collab Id should be number");
+            assert.ok(result.collabId > 1000, "Collab should greater than 1000");
+            assert.equal(typeof result.gridId, "number", "Collab Id should be number");
+            assert.ok(result.gridId > 2000000,"Grid Created Successfully");
+            assert.equal(typeof result.memberId, "number", "Collab Id should be number");
+            assert.ok(result.memberId > 1000,"Grid Created Successfully");
+            assert.equal(typeof result.wbId, "number", "Collab Id should be number");
+            assert.ok(result.wbId > 1000,"Grid Created Successfully");
+            assert.equal(typeof result.description, "string", "Name should be String");
+            assert.equal(typeof result.name, "string", "Name should be String");
+            
+            assert.ok(flag,"Should have 6 Properties or should not have any Property Null");           
+            done();
         })
       });
       
@@ -44,9 +54,6 @@
             "id": 0
         }
         TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
-			var cString = result[0].error;
-			var checkSubString = cString.indexOf("Violation of UNIQUE KEY constraint");
-			assert.ok(checkSubString > 0,"Grid is already exists");
             assert.ok(result[0].error.includes("Violation of UNIQUE KEY constraint"),"Grid is already exists");
             done();
         });	
@@ -54,7 +61,7 @@
 
     QUnit.test( "User having Multiple Memberships creating Grid using MEMBERSHIP-1 ", function( assert ) {
         var done = assert.async();
-        var x = Math.floor((Math.random() * 1000) + 1);
+        var x = Math.floor((Math.random() * 200000) + 1);
         cuboid_name_= "GOOD_CUBOID_"+x;
 		var data = {		
         "name":"GOOD_CUBOID_"+x,  
@@ -115,17 +122,12 @@
         "id": 0
         }
         TestUtils.sendPostRequest(Globals.baseURL + "rest/grid",data).then(function(result){
-           var flag=false;
-    
-			var cString = result[0].error;
-			var checkSubString1 = ("initial"+cString).indexOf("IsBlank");
-			var checkSubString2 = ("initial"+cString).indexOf("IsNegative");
-        
-            if((checkSubString1 > 6) || (checkSubString2 > 6 ));                                                                 
+            var flag=false;
+            if(result[0].error.includes("IsBlank") || result[0].error.includes("IsNegative"));                                                  				           
             {
                 flag=true;
             }
-            assert.equal(result != null,true,"Response should not be null");
+            assert.ok(result != null,"Response should not be null");
             assert.equal(flag,true,"Parameters passed are blank or negative");                
             done();
         });
@@ -254,10 +256,8 @@
             assert.ok(result != null,"Response Should not be null");
             assert.equal(result[0].error,"Missing element cells:[]","Missing element cells:[]");
             done();
-       });
-		
+       });		
     });
-
 
     QUnit.test("Missing Row element while Exporting Grid", function( assert ) {
         var done = assert.async();       
@@ -384,4 +384,30 @@
             done();
        });		
     });
+
+
+    QUnit.test("Importing Grid",function(assert){
+        var done=assert.async();
+        TestUtils.sendGetRequest(Globals.baseURL+"rest/grid/"+cuboid_id+"?importTid="+Globals.importTid+"&view=LATEST&mode=1&baselineId=-1").then(function(result){
+            assert.ok(result != null, "Response Should not be null");
+            assert.ok(result.cells != null,"Cells  Element Should not be null");
+            assert.ok(result.columnArray != null,"columnArray Element Should not be null");
+            assert.ok(result.columnCellArrays != null,"columnCellArrays Element Should not be null");
+            alert(result.columnArray.length);
+            for(var i = 0; i < result.columnArray.length; i++)
+            {
+                assert.ok(result.columnCellArrays[i].cellFormulas != null,"cellFormulas Element Should not be null");
+                assert.ok(result.columnCellArrays[i].cellAccess != null,"cellAccess Element Should not be null");
+                assert.ok(result.columnCellArrays[i].cellValues != null,"cellValues Element Should not be null");
+                assert.ok(result.columnCellArrays[i].colSequence != null,"colSequence Element Should not be null");
+                assert.ok(result.columnCellArrays[i].columnId != null,"columnId Element Should not be null");
+            }
+            assert.ok(result.gridChangeBuffer != null,"gridChangeBuffer Element Should not be null");
+            assert.ok(result.info != null,"info Element Should not be null");
+            assert.ok(result.rowArray != null,"rowArray Element Should not be null");
+            assert.ok(result.rows != null,"rows Element Should not be null");
+            done();
+        });
+
+    })
 })( QUnit.module, QUnit.test );
