@@ -31,9 +31,7 @@ import boardwalk.rest.NeighborhoodManagement;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
-
-
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-24T10:14:04.800Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-30T16:47:27.652Z")
 public class GridApiServiceImpl extends GridApiService {
 
 	 
@@ -42,16 +40,15 @@ public class GridApiServiceImpl extends GridApiService {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
-    @Override
-    public Response gridGridIdGet(Integer gridId, CellBuffer cellBufferRequest, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+
+    // Old call ->    public Response gridGridIdGet(Integer gridId, CellBuffer cellBufferRequest, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+	@Override
+    public Response gridGridIdGet(Integer gridId,  @NotNull Integer importTid,  @NotNull String view,  @NotNull Integer mode,  @NotNull Integer baselineId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
     	
     	System.out.println("authBase64String : " + authBase64String);
     	ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
-
-		System.out.println("Inside GridApiServiceImpl.gridGet --- gridId : " + gridId);
-		System.out.println("Inside GridApiServiceImpl.gridGet --- cellBufferRequest : " + cellBufferRequest);
 
 		if (authBase64String == null)
 		{	
@@ -67,12 +64,78 @@ public class GridApiServiceImpl extends GridApiService {
 			erbs.add(erb);
 		}
 
+		if (importTid == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("importTid is missing in GET Request");
+			erb.setPath("importTid");
+			erb.setProposedSolution("importTid is mandetory. Enter importTid as -1 or Positive Tranaction Number ");
+			erbs.add(erb);
+		}
+		
+		if (view == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("View is missing in GET Request");
+			erb.setPath("view");
+			erb.setProposedSolution("View is mandetory. Valid View values are [ MY_ROWS |LATEST | DESIGN | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ]");
+			erbs.add(erb);
+		}
+		else if (view.trim().equals("MY_ROWS") || 
+    			view.trim().equals("LATEST") || 
+    			view.trim().equals("DESIGN") || 
+    			view.trim().equals("LATEST_BY_USER") || 
+    			view.trim().equals("LATEST_VIEW_OF_ALL_USERS") || 
+    			view.trim().equals("LATEST_VIEW_OF_ALL_CHILDREN") || 
+    			view.trim().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH") || 
+    			view.trim().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH") || 
+    			view.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH") || 
+    			view.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD") || 
+    			view.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD") || view.trim().indexOf("?") == 0 )
+		{    			
+    		System.out.println("view : " + view);
+		}		
+		else 
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("Invalid View in GET Request");
+			erb.setPath("view");
+			erb.setProposedSolution("View is mandetory. Valid View values are [ MY_ROWS |LATEST | DESIGN | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ]");
+			erbs.add(erb);
+		}
+
+		if (mode == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("Mode is missing in GET Request");
+			erb.setPath("mode");
+			erb.setProposedSolution("Mode is mandetory. Valid Mode is 1 or 0 to get the Grid Status");
+			erbs.add(erb);
+		}
+		else if ((mode != 0) && (mode != 1))
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("Invalid Mode in GET Request");
+			erb.setPath("mode");
+			erb.setProposedSolution("Valid Mode is 1 or 0 to get the Grid Status");
+			erbs.add(erb);
+		}
+		
+		if (baselineId == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("BaselineId is missing in GET Request");
+			erb.setPath("baselineId");
+			erb.setProposedSolution("BaselineId is mandetory. Provide default BaselineId as -1");
+			erbs.add(erb);
+		}
+		
 		if (erbs.size() == 0)
 	   	{
 	   		CellBuffer cbf;
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	  	 	
-	  	 	cbf = GridManagement.gridGridIdGet(gridId, cellBufferRequest, ErrResps, authBase64String);
+	  	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String);
 
 	  	 	//	        return Response.ok().entity( new ApiResponseMessage( 201, ErrResps.toString())).build();
     		//return Response.ok().entity(ErrResps).build();   	
