@@ -28,13 +28,13 @@
             assert.ok(result != null, "Response should not be null");
 
             assert.equal(typeof result.collabId, "number", "Collab Id should be number");
-            assert.ok(result.collabId > 1000, "Collab should greater than 1000");
+            assert.ok(result.collabId >= 1000, "Collab should greater or equal to 1000");
             assert.equal(typeof result.gridId, "number", "Collab Id should be number");
-            assert.ok(result.gridId > 2000000,"Grid Created Successfully");
+            assert.ok(result.gridId > 2000000,"Grid Id should be greater than 2000000");
             assert.equal(typeof result.memberId, "number", "Collab Id should be number");
-            assert.ok(result.memberId > 1000,"Grid Created Successfully");
+            assert.ok(result.memberId >= 1000,"Member Id should be greater or equal to 1000");
             assert.equal(typeof result.wbId, "number", "Collab Id should be number");
-            assert.ok(result.wbId > 1000,"Grid Created Successfully");
+            assert.ok(result.wbId >= 1000,"Whitebaord Id should be greater or equal to 1000");
             assert.equal(typeof result.description, "string", "Name should be String");
             assert.equal(typeof result.name, "string", "Name should be String");
             
@@ -393,7 +393,6 @@
             assert.ok(result.cells != null,"Cells  Element Should not be null");
             assert.ok(result.columnArray != null,"columnArray Element Should not be null");
             assert.ok(result.columnCellArrays != null,"columnCellArrays Element Should not be null");
-            alert(result.columnArray.length);
             for(var i = 0; i < result.columnArray.length; i++)
             {
                 assert.ok(result.columnCellArrays[i].cellFormulas != null,"cellFormulas Element Should not be null");
@@ -402,20 +401,11 @@
                 assert.ok(result.columnCellArrays[i].colSequence != null,"colSequence Element Should not be null");
                 assert.ok(result.columnCellArrays[i].columnId != null,"columnId Element Should not be null");
             }
-            assert.ok(result.gridChangeBuffer != null,"gridChangeBuffer Element Should not be null");
             assert.ok(result.info != null,"info Element Should not be null");
             assert.ok(result.rowArray != null,"rowArray Element Should not be null");
             assert.ok(result.rows != null,"rows Element Should not be null");
             done();
         });
-    });
-	
-	QUnit.test("Importing Grid with Invalid Authorization",function(assert){
-		var done=assert.async();
-		TestUtils.sendRequestInvalidAuthorization(Globals.baseURL+"rest/grid/"+cuboid_id+"?importTid="+Globals.importTid+"&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function(result){               
-            assert.ok(result != null, "Response should not be null");
-            assert.equal(result[0].error, "Invalid Authorization. User is not a member of Neighborhood Path.","Invalid Authorization. User is not a member of Neighborhood Path.");
-            done();
-        });
-    });
+
+    })
 })( QUnit.module, QUnit.test );

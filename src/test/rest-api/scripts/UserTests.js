@@ -107,8 +107,11 @@ var UserTests =(function( module, test ) {
 			{
 				for(var i=0;i<result.length;i++)
 				{
-					if(result[i].email !=null && result[i].firstName != null && result[i].lastName !=null && result[i].id != null && result[i].password != null && result[i].externalId != null)
-					{						
+					if(result[i].email !=null && result[i].firstName != null && result[i].lastName !=null && result[i].id != null && result[i].password != null && result[i].external_id != null)
+					{
+					
+
+				
 						flag=true;
 					}
 					else
@@ -119,9 +122,9 @@ var UserTests =(function( module, test ) {
 					assert.equal(typeof result[i].email, "string", "Email should be String");
 					assert.equal(typeof result[i].firstName, "string", "Firstname should be String");
 					assert.equal(typeof result[i].lastName, "string", "Last name should be String");
-					assert.equal(typeof result[i].externalId, "string", "externalid shold be string")
 					assert.equal(typeof result[i].id, "number", "Id Should be number");
 					assert.ok(result[i].id > 0,"Id should greater than 0");
+					assert.equal(typeof result[i].external_id, "string", "externalid shold be string")
 					assert.equal(typeof result[i].password, "string", "Password should be String");
 				}
 				assert.ok(flag,"Parameters should not be null");
@@ -154,7 +157,11 @@ var UserTests =(function( module, test ) {
 			{
 				for(var i=0;i<result.length;i++)
 				{
-					if(result[i].email !=null && result[i].firstName != null && result[i].lastName !=null && result[i].id != null && result[i].password != null && result[i].externalId != null)
+			
+					
+					
+					
+					if(result[i].email !=null && result[i].firstName != null && result[i].lastName !=null && result[i].id != null && result[i].password != null && result[i].external_id != null )
 					{
 						flag=true;
 					}
@@ -166,8 +173,8 @@ var UserTests =(function( module, test ) {
 					assert.equal(typeof result[i].email, "string", "Email should be String");
 					assert.equal(typeof result[i].firstName, "string", "Firstname should be String");
 					assert.equal(typeof result[i].lastName, "string", "Last name should be String");
-					assert.equal(typeof result[i].externalId, "string", "externalid shold be string")
 					assert.equal(typeof result[i].id, "number", "Id Should be number");
+					assert.equal(typeof result[i].external_id, "string", "externalid shold be string")
 					assert.ok(result[i].id > 0,"Id should greater than 0");
 					assert.equal(typeof result[i].password, "string", "Password should be String");
 				}
@@ -186,8 +193,9 @@ var UserTests =(function( module, test ) {
 			if(Object.keys(json).length == 3)
 			assert.equal(Object.keys(json).length, 3,"Error, trying to create existing user!");
 			else {
-			  	userid=json.id;
-				assert.equal(Object.keys(json).length, 4,"user should have 4 properties !");
+			  	userid=json.id;	
+	
+				assert.equal(Object.keys(json).length, 6,"user should have 4 properties !");
 				assert.equal(json.email != null, true, "email should not be null");
 				assert.equal(json.firstName != null, true, "firstName should not be null");
 				assert.equal(json.lastName != null, true, "lastName should not be null");
@@ -197,6 +205,21 @@ var UserTests =(function( module, test ) {
 		});
 	});
 
+	QUnit.test( "Test case for Deleting User", function( assert ) {
+		var done=assert.async();	
+		console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		console.log(Globals.baseURL + "rest/user/"+userid);		
+		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/user/"+userid).then(function(res){
+			console.log("++++++++++++");
+			var getResponse = res;
+ 			var checkSubString = getResponse.indexOf("de-activated successfully");
+  			assert.ok((checkSubString > 0),"User Deleted Successfully!");
+			assert.equal(typeof res, "string", "response should be string !");
+			assert.notEqual(res.length, 0, "should not be null !");			
+			done();
+		});		
+	});
+	
 	QUnit.test("Test Case For Invalid Authorization for Posting new user", function( assert ) {
 		var done = assert.async();
 		var x = Math.floor((Math.random() * 10000) + 1);
@@ -234,8 +257,7 @@ var UserTests =(function( module, test ) {
 				assert.equal(Object.keys(json).length, 3,"Error, trying to create existing user!");
 			} 
 			else 
-			{
-				userid=json.id;
+			{				
 				assert.equal(Object.keys(json).length, 4,"user should have 4 properties !");
 				assert.ok(json.email != null, "email should not be null");
 				assert.ok(json.firstName != null, "firstName should not be null");
@@ -243,24 +265,6 @@ var UserTests =(function( module, test ) {
 			} 
 			done();
 		});
-	});
-
-	QUnit.test("Put test cases for User", function(assert){
-		var done = assert.async();
-		var data = {
-			"firstName":"j",
-			"lastName": "jp",
-			"password":"0",
-			"email": "j",
-			"externalid": "j",
-			"id":"1001"
-		}
-		TestUtils.sendPutRequest(Globals.baseURL + "rest/user",data).then(function(res){
-			assert.equal(typeof res, "string", "response should be string !");
-			assert.notEqual(res.length, 0, "should not be null !");
-			assert.equal(res.includes("Successfully"), true, "record must be updated successfully !");
-			done();
-		});		
 	});
 
 	QUnit.test("Put test cases for User with Blank email, firstName, lastName", function(assert){
@@ -298,22 +302,12 @@ var UserTests =(function( module, test ) {
 		});		
 	});
 
-	QUnit.test( "Test case for Deleting User", function( assert ) {
-		var done=assert.async();		
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/user/"+userid).then(function(res){
-			var getResponse = res;
- 			var checkSubString = getResponse.indexOf("de-activated successfully");
-  			assert.ok((checkSubString > 0),"User Deleted Successfully!");
-			assert.equal(typeof res, "string", "response should be string !");
-			assert.notEqual(res.length, 0, "should not be null !");			
-			done();
-		});		
-	});
 	
 	QUnit.test( "Test case for Deleting User with Missing Authorization", function( assert ) {
 		var done=assert.async();		
 		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/user/1", null, "DELETE").then(function(result){	
 			console.log((result));	
+			
 			assert.ok(result != null , "Response Should not null")
 			assert.equal(result[0].error,"Missing Authorization in Header","Missing Authorization in Header");		
 			assert.equal(result[0].proposedSolution,"Authorization Header should contain user:pwd:nhPath as Base64 string","Authorization Header should contain user:pwd:nhPath as Base64 string");
