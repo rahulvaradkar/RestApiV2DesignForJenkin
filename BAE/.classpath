@@ -29,9 +29,6 @@
 	<classpathentry kind="lib" path="D:/tomcat8.5/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/aopalliance-repackaged-2.5.0-b42.jar"/>
 	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/cdi-api-1.1.jar"/>
-	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/com.fasterxml.jackson.annotations.jar"/>
-	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/com.fasterxml.jackson.core.jar"/>
-	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/com.fasterxml.jackson.databind.jar"/>
 	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/el-api-2.2.jar"/>
 	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/hk2-api-2.5.0-b42.jar"/>
 	<classpathentry kind="lib" path="D:/tomcat8.5/webapps/BAE_4_3_API/WEB-INF/lib/hk2-locator-2.5.0-b42.jar"/>
