@@ -32,14 +32,14 @@
             assert.ok(result != null, "Response should not be null");
 
             assert.equal(typeof result.collabId, "number", "Collab Id should be number");
-            assert.ok(result.collabId >= 1000, "Collab should greater or equal to 1000");
-            assert.equal(typeof result.gridId, "number", "Collab Id should be number");
-            assert.ok(result.gridId > 2000000,"Grid Id should be greater than 2000000");
-            assert.equal(typeof result.memberId, "number", "Collab Id should be number");
-            assert.ok(result.memberId >= 1000,"Member Id should be greater or equal to 1000");
-            assert.equal(typeof result.wbId, "number", "Collab Id should be number");
-            assert.ok(result.wbId >= 1000,"Whitebaord Id should be greater or equal to 1000");
-            assert.equal(typeof result.description, "string", "Name should be String");
+            assert.ok(result.collabId > 1000, "Collab should greater than 1000");
+            assert.equal(typeof result.gridId, "number", "Grid Id Id should be number");
+            assert.ok(result.gridId > 2000000,"Grid Id should greater than 2000000");
+            assert.equal(typeof result.memberId, "number", "Member should be number");
+            assert.ok(result.memberId > 1000,"Member Id should greater than 1000");
+            assert.equal(typeof result.wbId, "number", "Whiteboard Id should be number");
+            assert.ok(result.wbId > 1000,"Whiteboard Id should greater than 1000");
+            assert.equal(typeof result.description, "string", "description should be String");
             assert.equal(typeof result.name, "string", "Name should be String");
             
             assert.ok(flag,"Should have 6 Properties or should not have any Property Null");           
@@ -57,8 +57,8 @@
             "memberId":  Globals.Member_Id_1,  
             "id": 0
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/grid", data, Globals.authorization, "POST").then(function(result){
-            assert.ok(result[0].error.includes("Violation of UNIQUE KEY constraint"),"Grid is already exists");
+        TestUtils.sendRequest(Globals.baseURL + "rest/grid", data, Globals.authorization, "POST").then(function(result){           
+            assert.ok(result[0].error,"SQLException:2627, Cause:Violation of UNIQUE KEY constraint 'UQ_NC_BW_TBL'. Cannot insert duplicate key in object 'dbo.BW_TBL'.","Grid is already exists");
             done();
         });	
     });
@@ -125,14 +125,12 @@
         "memberId": -1007,
         "id": 0
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/grid", data, Globals.authorization,"POST").then(function(result){
-            var flag=false;
-            if(result[0].error.includes("IsBlank") || result[0].error.includes("IsNegative"));                                                  				           
-            {
-                flag=true;
-            }
+        TestUtils.sendRequest(Globals.baseURL + "rest/grid", data, Globals.authorization,"POST").then(function(result){           
             assert.ok(result != null,"Response should not be null");
-            assert.equal(flag,true,"Parameters passed are blank or negative");                
+            assert.equal(result[0].error,"IsNegative","Collab Id is Blank");
+            assert.equal(result[1].error,"IsNegative","Whiteboard Id is Blank");
+            assert.equal(result[3].error,"IsBlank","Name is Blank");
+            assert.equal(result[2].error,"IsBlank","description is Blank");                  
             done();
         });
     });
@@ -600,11 +598,7 @@
             assert.ok(result != null, "Response Should not be null");
             assert.ok(result.cells != null,"Cells  Element Should not be null");
             assert.ok(result.columnArray != null,"columnArray Element Should not be null");
-<<<<<<< HEAD
             assert.ok(result.columnCellArrays != null,"columnCellArrays Element Should not be null");          
-=======
-            assert.ok(result.columnCellArrays != null,"columnCellArrays Element Should not be null");
->>>>>>> 258602749d5ee55b00ddf3ccf0b377566efc43bd
             for(var i = 0; i < result.columnArray.length; i++)
             {
                 assert.ok(result.columnCellArrays[i].cellFormulas != null,"cellFormulas Element Should not be null");
@@ -613,11 +607,11 @@
                 assert.ok(result.columnCellArrays[i].colSequence != null,"colSequence Element Should not be null");
                 assert.ok(result.columnCellArrays[i].columnId != null,"columnId Element Should not be null");
             }
+            assert.ok(result.gridChangeBuffer != null,"gridChangeBuffer Element Should not be null");
             assert.ok(result.info != null,"info Element Should not be null");
             assert.ok(result.rowArray != null,"rowArray Element Should not be null");
             assert.ok(result.rows != null,"rows Element Should not be null");
             done();
-<<<<<<< HEAD
         });       
     });
 
@@ -667,9 +661,4 @@
     });
 
     
-=======
-        });
-
-    })
->>>>>>> 258602749d5ee55b00ddf3ccf0b377566efc43bd
 })( QUnit.module, QUnit.test );
