@@ -2,14 +2,14 @@
 
     module('Collaborations');
     var Collab_Name="";
-        //Collaborations
+    //Collaborations
     QUnit.test("Reading Collaborations of Neighborhood ID=1", function(assert){
         var done = assert.async();
         var input = $( "#test-input" ).focus();
         var flag=false;
         var count_flag=false;
 
-        TestUtils.sendRequest( Globals.baseURL+"rest/neighborhood/1/collaboration", null, Globals.authorization, "GET").then(function(result){
+        TestUtils.sendRequest( Globals.baseURL+"rest/neighborhood/" + NeighborhoodInput.ROOT_NhId + "/collaboration", null, UserInput.authorization, "GET").then(function(result){
             if(result.length > 0)
             {
                 count_flag=true;
@@ -39,14 +39,14 @@
     });
 
     QUnit.test("Reading Collaborations of Neighborhood when collaboration are not exist", function(assert){
-        var done = assert.async();       
+        var done = assert.async();
         var count_flag=false;
 
-        TestUtils.sendRequest( Globals.baseURL+"rest/neighborhood/30/collaboration",null, Globals.authorization, "GET").then(function(result){
+        TestUtils.sendRequest( Globals.baseURL + "rest/neighborhood/" + NeighborhoodInput.NHID_3 + "/collaboration", null, UserInput.authorization, "GET").then(function(result){
             if(result.length == 0 )
             {
                 count_flag=true;
-            }                
+            }
             assert.ok(count_flag,"Collaborations don't Exist");
             done();
         });      
@@ -60,9 +60,9 @@
             "name" : Collab_Name,
             "Purpose" : "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/3/member/" + Globals.Member_Id_2 + "/collaboration", data, Globals.authorization, "POST").then(function(result){
+        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.authorization, "POST").then(function(result){
             assert.ok(result != null,"Response should not be null");
-            assert.equal()           
+            assert.equal()
             assert.ok(result > 0,"Collab Id Should greater than 0");
             done();
         });
@@ -74,7 +74,7 @@
             "name" : Collab_Name,
             "Purpose" : "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/3/member/" + Globals.Member_Id_2 + "/collaboration", data, Globals.authorization, "POST").then(function(result){
+        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.authorization, "POST").then(function(result){
             assert.ok(result != null,"Response Should not be null");
 			assert.equal(result[0].error,"Failed to Create New Collaboration","Collaboration Already Exists");
 			done();
@@ -82,12 +82,12 @@
     });
 
     QUnit.test("Posting new Collaboration with negative nhid and negative member ID",function(assert){
-        var done=assert.async();       
+        var done=assert.async();
         var data={
             "name" : Collab_Name,
             "Purpose" : "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/-3/member/-1001/collaboration", data, Globals.authorization, "POST").then(function(result){
+        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/" + NeighborhoodInput.Negative_Nh_Id + "/member/-1001/collaboration", data, UserInput.authorization, "POST").then(function(result){
             assert.ok(result != null,"Response Should not be null");
             assert.equal(result[0].error,"IsNegative","NHID is Negative");
             assert.equal(result[1].error,"IsNegative","Member ID is Negative");
@@ -103,7 +103,7 @@
             "name" : collab_name,
             "Purpose" : "Test"
         }
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/neighborhood/3/member/" + Globals.Member_Id_2 + "/collaboration", data, "POST").then(function(result){
+        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, "POST").then(function(result){
             assert.ok(result != null,"Response Should not be null");
 			assert.equal(result[0].error,"Missing Authorization in Header","Missing Authorization in Header");
 			done();
@@ -118,7 +118,7 @@
             "name" : collab_name,
             "Purpose" : "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/3/member/" + Globals.Member_Id_2 + "/collaboration", data, Globals.invalidAuthorization, "POST").then(function(result){
+        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.invalidAuthorization, "POST").then(function(result){
             assert.ok(result != null,"Response Should not be null");
 			assert.equal(result[0].error,"Invalid Authorization. User is not a member of Neighborhood Path.","Invalid Authorization. User is not a member of Neighborhood Path.");
 			done();
@@ -133,7 +133,7 @@
             "name" : collab_name,
             "Purpose" : "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/3/member/1002/collaboration", data, Globals.authorization, "POST").then(function(result){
+        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Invalid_MemberId + "/collaboration", data, UserInput.authorization, "POST").then(function(result){
             assert.ok(result != null,"Response Should not be null");
 			assert.equal(result[0].error,"Authorization Is not allowed to create Collaboration in this Neighborood. [MemberID mismatch]","Invalid Memberships");
 			done();
@@ -148,13 +148,12 @@
             "name" : "",
             "Purpose" : ""
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/3/member/" + Globals.Member_Id_2 + "/collaboration", data, Globals.authorization, "POST").then(function(result){
+        TestUtils.sendRequest(Globals.baseURL + "rest/neighborhood/3/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.authorization, "POST").then(function(result){
             assert.ok(result != null,"Response Should not be null");
-            assert.equal(result[0].error,"IsBlank","Collab_Name is Blank");
-            assert.equal(result[1].error,"IsBlank","Collab_Name is Blank");
+            assert.equal(result[0].error , "IsBlank" , "Collab_Name is Blank");
+            assert.equal(result[1].error , "IsBlank" , "Collab_Name is Blank");
 			done();
         });
     });
-
 
 })( QUnit.module, QUnit.test );
