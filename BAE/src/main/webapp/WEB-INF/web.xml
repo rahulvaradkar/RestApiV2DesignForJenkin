@@ -16,16 +16,7 @@
 </servlet-mapping>
 
 
-	<filter>
-		<filter-name>BWExcelAuthenticationFilter</filter-name>
-		<filter-class>servlets.BWExcelAuthenticationFilter</filter-class>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>BWExcelAuthenticationFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
+	
 	<servlet>
 		<servlet-name>fileUploadService</servlet-name>
 		<servlet-class>servlets.fileUploadService</servlet-class>
@@ -249,7 +240,7 @@
 
 		<init-param>
 			<param-name>databasename</param-name>
-			<param-value>BAE_4_3</param-value>
+			<param-value>BAE_4_2</param-value>
 		</init-param>
 
 		<init-param>
