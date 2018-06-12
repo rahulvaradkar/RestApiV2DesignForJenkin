@@ -41,7 +41,7 @@ implements SingleThreadModel
 	StringTokenizer st;
 	int userId;
 	String userName;
-	String userPassword;
+	//String userPassword; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 	int nhId;
 	int  memberId;
 	String nhName;
@@ -65,7 +65,7 @@ implements SingleThreadModel
         String responseBuffer = null;
 
 		String buf = getRequestBuffer(request).toString();
-		System.out.println("Buffer" + buf);
+		//System.out.println("Buffer" + buf);
 
 		st = new StringTokenizer( buf );
 
@@ -1238,23 +1238,21 @@ public String addNewTableForCollabName()
 		String wrkstr;
 		wrkstr = st.nextToken (Seperator);
 		userId = Integer.parseInt(wrkstr);
-		System.out.println("User id :"+userId);
-		
+
 		wrkstr = st.nextToken (Seperator);
 		userName = wrkstr;
-		System.out.println("User Name :"+userName);
-		//wrkstr = st.nextToken (Seperator);
-		//userPassword = wrkstr;
+
+		//wrkstr = st.nextToken (Seperator); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
+		//userPassword = wrkstr; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 
 		wrkstr = st.nextToken (Seperator);
 		memberId = Integer.parseInt(wrkstr);
-		System.out.println("Member id :"+memberId);
-		
+
 		wrkstr = st.nextToken (Seperator);
 		nhId = Integer.parseInt(wrkstr);
-		System.out.println("NH id :"+nhId);
-	//	wrkstr = st.nextToken (Seperator);
-	//	nhName =wrkstr;
+
+		//wrkstr = st.nextToken (Seperator);
+		//nhName =wrkstr;
 
 		Connection connection = null;
 		try
@@ -1262,7 +1260,7 @@ public String addNewTableForCollabName()
 			DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 			connection = databaseloader.getConnection();
 
-			if (  userName == null  || userName == "" )
+			if (  userName == null  || userName == "" ) //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 			{
 				return false;
 			}
@@ -1270,7 +1268,7 @@ public String addNewTableForCollabName()
 			{
 				//System.out.println("Authenticating User : " + userName + ":" + userPassword);
 
-				int db_userId = UserManager.authenticateUser(connection, userName, false);
+				int db_userId = UserManager.authenticateUser(connection, userName, false); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 
 				if ( userId != -1 && userId == db_userId )
 				{

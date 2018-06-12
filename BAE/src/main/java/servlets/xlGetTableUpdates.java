@@ -43,7 +43,7 @@ implements SingleThreadModel
 	StringTokenizer st;
 	int userId;
 	String userName;
-	//String userPassword;
+	//String userPassword; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 	int nhId;
 	int  memberId;
 	String nhName;
@@ -332,6 +332,9 @@ implements SingleThreadModel
 		wrkstr = st.nextToken (Seperator);
 		userName = wrkstr;
 
+		//wrkstr = st.nextToken (Seperator); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
+		//userPassword = wrkstr; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
+
 		wrkstr = st.nextToken (Seperator);
 		memberId = Integer.parseInt(wrkstr);
 
@@ -347,7 +350,7 @@ implements SingleThreadModel
 			DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 			connection = databaseloader.getConnection();
 
-			if (  userName == null  || userName == ""  )
+			if (  userName == null  || userName == "" ) //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 			{
 				return false;
 			}
@@ -355,7 +358,7 @@ implements SingleThreadModel
 			{
 				//System.out.println("Authenticating User : " + userName + ":" + userPassword);
 
-				int db_userId = UserManager.authenticateUser(connection, userName, false);
+				int db_userId = UserManager.authenticateUser(connection, userName, false); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 
 				if ( userId != -1 && userId == db_userId )
 				{

@@ -43,7 +43,7 @@ implements SingleThreadModel
 	StringTokenizer st;
 	int userId;
 	String userName;
-//	String userPassword;
+	String userPassword;
 	int nhId;
 	int  memberId;
 	String nhName;
@@ -465,8 +465,8 @@ public static int getNhId(String userNh, int level)
 		wrkstr = st.nextToken (Seperator);
 		userName = wrkstr;
 
-		//wrkstr = st.nextToken (Seperator);
-		//userPassword = wrkstr;
+		wrkstr = st.nextToken (Seperator);
+		userPassword = wrkstr;
 
 		wrkstr = st.nextToken (Seperator);
 		memberId = Integer.parseInt(wrkstr);
@@ -483,7 +483,7 @@ public static int getNhId(String userNh, int level)
 			DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 			connection = databaseloader.getConnection();
 
-			if (  userName == null  || userName == "")
+			if (  userName == null  || userName == ""  || userPassword ==null || userPassword == "" )
 			{
 				return false;
 			}
@@ -491,7 +491,7 @@ public static int getNhId(String userNh, int level)
 			{
 				//System.out.println("Authenticating User : " + userName + ":" + userPassword);
 
-				int db_userId = UserManager.authenticateUser(connection, userName, false);
+				int db_userId = UserManager.authenticateUser(connection, userName,userPassword, false);
 
 				if ( userId != -1 && userId == db_userId )
 				{

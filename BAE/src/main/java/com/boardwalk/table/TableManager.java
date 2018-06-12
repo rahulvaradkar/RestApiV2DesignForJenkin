@@ -1267,17 +1267,17 @@ public class TableManager{
         PreparedStatement preparedstatement = null;
         TableInfo tbi = null;
         try {
-//			if ( DatabaseLoader.getDatabaseType().trim().equalsIgnoreCase("ORACLE"))
-//			{
-//				preparedstatement = DatabaseLoader.getPreparedStatementFromPreLoadedQueries("BW_GET_TBL_INFO", connection );
-//				preparedstatement.setInt(1,a_table_id);
-//
-//			}
-//			else
-//			{
+			if ( DatabaseLoader.getDatabaseType().trim().equalsIgnoreCase("ORACLE"))
+			{
+				preparedstatement = DatabaseLoader.getPreparedStatementFromPreLoadedQueries("BW_GET_TBL_INFO", connection );
+				preparedstatement.setInt(1,a_table_id);
+
+			}
+			else
+			{
 				preparedstatement = connection.prepareStatement(CALL_BW_GET_TBL_INFO);
 				preparedstatement.setInt(1,a_table_id);
-//			}
+			}
 
 			resultset = preparedstatement.executeQuery();
 			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -1714,17 +1714,17 @@ public class TableManager{
 
 	        try
 	        {
-//				if ( DatabaseLoader.getDatabaseType().trim().equalsIgnoreCase("ORACLE"))
-//				{
-//					preparedstatement = DatabaseLoader.getPreparedStatementFromPreLoadedQueries("BW_GET_TBL_ACCESS", connection );
-//					preparedstatement.setInt(1,table_id);
-//
-//				}
-//				else
-//				{
+				if ( DatabaseLoader.getDatabaseType().trim().equalsIgnoreCase("ORACLE"))
+				{
+					preparedstatement = DatabaseLoader.getPreparedStatementFromPreLoadedQueries("BW_GET_TBL_ACCESS", connection );
+					preparedstatement.setInt(1,table_id);
+
+				}
+				else
+				{
 					preparedstatement = connection.prepareStatement(CALL_BW_GET_TBL_ACCESS);
 					preparedstatement.setInt(1,table_id);
-//				}
+				}
 	            resultset = preparedstatement.executeQuery();
 
 	           while( resultset.next() )

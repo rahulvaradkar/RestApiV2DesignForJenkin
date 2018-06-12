@@ -16,31 +16,31 @@ public class NeighborhoodManagerLevel_2 {
     private static String CALL_CR_NH_LEVEL_2 = "{CALL BW_CR_NH_LEVEL_2(?,?,?,?,?,?)}";
     private static String CALL_DEL_NH_LEVEL_2 = "{CALL BW_DEL_NH_LEVEL_2(?,?,?)}";
     private static String BW_GET_NHS_AT_LEVEL_2 = " SELECT BW_NH_LEVEL_2.ID, " +
-    " BW_NH_LEVEL_2.NAME, " +
-    " BW_NH_LEVEL_2.NEIGHBORHOOD_ID," +
-    " BW_NH.IS_SECURE, " +
-    " BW_NH.MANAGED_BY, " +
-    " FROM BW_NH_LEVEL_2, BW_NH  " +
-    " WHERE BW_NH_LEVEL_2.NEIGHBORHOOD_ID = BW_NH.ID " +
-    " AND BW_NH.IS_ACTIVE=1";
-    private static String BW_GET_NH_AT_LEVEL_2_USING_LEVEL_2_ID = "SELECT BW_NH_LEVEL_2.ID,"+
+    "BW_NH_LEVEL_2.NAME, " +
+    "BW_NH_LEVEL_2.NEIGHBORHOOD_ID, " +
+    "BW_NH.IS_SECURE,  " +
+    "BW_NH.MANAGED_BY  " +
+    "FROM BW_NH_LEVEL_2, BW_NH  " +
+    "WHERE BW_NH_LEVEL_2.NEIGHBORHOOD_ID = BW_NH.ID  " +
+    "AND BW_NH.IS_ACTIVE=1";
+    private static String BW_GET_NH_AT_LEVEL_2_USING_LEVEL_2_ID = "SELECT BW_NH_LEVEL_2.ID, "+
     "BW_NH_LEVEL_2.NAME,     "+
     "BW_NH_LEVEL_2.NEIGHBORHOOD_ID,     "+
     "BW_NH.IS_SECURE, "+
     "BW_NH.IS_ACTIVE, "+
-    " BW_NH.MANAGED_BY, " +
-    "FROM BW_NH_LEVEL_2,     BW_NH  "+
-    "WHERE BW_NH_LEVEL_2.ID = ?" +
-    " AND BW_NH.ID = BW_NH_LEVEL_2.NEIGHBORHOOD_ID";
+    "BW_NH.MANAGED_BY " +
+    "FROM BW_NH_LEVEL_2,  BW_NH  "+
+    "WHERE BW_NH_LEVEL_2.ID = ? " +
+    "AND BW_NH.ID = BW_NH_LEVEL_2.NEIGHBORHOOD_ID";
     private static String BW_GET_NH_AT_LEVEL_2_USING_NH_ID = "SELECT BW_NH_LEVEL_2.ID,     "+
     "BW_NH_LEVEL_2.NAME,     "+
     "BW_NH_LEVEL_2.NEIGHBORHOOD_ID,     "+
     "BW_NH.IS_SECURE, "+
     "BW_NH.IS_ACTIVE, "+
-    " BW_NH.MANAGED_BY  " +
-    "FROM BW_NH_LEVEL_2,     BW_NH "+
-    "WHERE BW_NH_LEVEL_2.NEIGHBORHOOD_ID = ?" +
-    " AND BW_NH.ID = BW_NH_LEVEL_2.NEIGHBORHOOD_ID";
+    "BW_NH.MANAGED_BY  " +
+    "FROM BW_NH_LEVEL_2,     BW_NH  "+
+    "WHERE BW_NH_LEVEL_2.NEIGHBORHOOD_ID = ? " +
+    "AND BW_NH.ID = BW_NH_LEVEL_2.NEIGHBORHOOD_ID";
 
 
 

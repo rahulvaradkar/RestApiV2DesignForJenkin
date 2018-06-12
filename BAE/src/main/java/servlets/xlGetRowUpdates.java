@@ -40,7 +40,7 @@ public class xlGetRowUpdates extends xlService implements SingleThreadModel
 	StringTokenizer st;
 	int userId;
 	String userName;
-	//String userPassword;
+	//String userPassword; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 	int nhId;
 	int  memberId;
 	int tableId;

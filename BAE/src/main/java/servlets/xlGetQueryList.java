@@ -50,6 +50,7 @@ public class xlGetQueryList extends xlService implements SingleThreadModel
 			//System.out.println("userId headerInfo = " + userId);
 
 			// authenticate the user - added by shirish on 06/30/10
+			//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
 			userId = Integer.parseInt(requestInfo[0]);
 			System.out.println("userId requestInfo = " + userId);
 			String userName = requestInfo[1];
@@ -68,6 +69,7 @@ public class xlGetQueryList extends xlService implements SingleThreadModel
 
 			// authenticate the user - added by shirish on 06/30/10
 			Member memberObj = UserManager.authenticateMember(connection, userName, memberId);
+			//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - END
 			if (memberObj == null)
 			{
 				//System.out.println("Authentication failed for user : " + userName);

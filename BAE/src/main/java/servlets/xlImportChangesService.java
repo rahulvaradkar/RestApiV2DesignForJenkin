@@ -41,6 +41,7 @@ public class xlImportChangesService extends xlService implements SingleThreadMod
 		{
 			String[] buffArray = buff.split(ContentDelimeter);
 
+			//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
 			String[] requestInfo = buffArray[0].split(Seperator);
 			int userId = Integer.parseInt(requestInfo[0]);
 			String userName = requestInfo[1];
@@ -54,6 +55,7 @@ public class xlImportChangesService extends xlService implements SingleThreadMod
 			int exportTid = Integer.parseInt(requestInfo[8]);
 			int mode = Integer.parseInt(requestInfo[9]);
 			int synch = Integer.parseInt(requestInfo[10]);
+			//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - END
 
 			HashMap localRowHash = new HashMap();
 			if (buffArray.length > 1)
@@ -101,7 +103,7 @@ public class xlImportChangesService extends xlService implements SingleThreadMod
 			}
 			//Added by Lakshman on 20171121 to fix an issue with Id: 14024 - END
 			// authenticate the user
-			Member memberObj = UserManager.authenticateMember(connection, userName, memberId);
+			Member memberObj = UserManager.authenticateMember(connection, userName, memberId); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 			if (memberObj == null)
 			{
 				//System.out.println("Authentication failed for user : " + userName);
@@ -331,7 +333,7 @@ public class xlImportChangesService extends xlService implements SingleThreadMod
 			System.out.println("userId = " + userId);
 			System.out.println("memberId = " + memberId);
 			System.out.println("nhId = " + nhId);
-			System.out.println("view = " + view);
+			//System.out.println("view = " + view);
 			System.out.println("importTid = " + importTid);
 			System.out.println("newTid = " + tid);
 			System.out.println("mode = " + mode);

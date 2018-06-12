@@ -439,7 +439,7 @@ public class BoardwalkUserWizards
 						try
 						{
 							Properties props = new Properties();
-							System.out.println("######### Using smtp host = " + msSmtpServer);
+							//System.out.println("######### Using smtp host = " + msSmtpServer);
 							SMTPAuthenticatorUserBulk auth = new SMTPAuthenticatorUserBulk ();
 							props.put("mail.smtp.host", msSmtpServer);
 							props.put("mail.smtp.port", msSmtpPort);

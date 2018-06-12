@@ -83,7 +83,7 @@ public class Get_Boardwalk_Template_Prop  extends xlService implements SingleThr
 			//System.out.println(" In servlet userId "+ liUserId);
 			//System.out.println(" In servlet lsUserName "+ lsUserName);
 			//System.out.println(" In servlet lsReportTitle "+ lsReportTitle);
-			//System.out.println(" In servlet lsQueryString "+ lsQueryString);
+			System.out.println(" In servlet Get_Boardwalk_Template_Prop: lsQueryString: "+ lsQueryString);
 			//System.out.println(" In servlet lsParameters "+ lsParameters);
 			
 

@@ -10,18 +10,13 @@ import java.util.zip.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import com.boardwalk.table.*;
 import com.boardwalk.excel.*;
 import com.boardwalk.exception.*;
 import com.boardwalk.database.*;
-
 import java.sql.*;                  // JDBC package
-
 import javax.sql.*;                 // extended JDBC packa
-
 import boardwalk.common.*;
-
 import com.boardwalk.member.Member;
 import com.boardwalk.user.UserManager;
 
@@ -79,13 +74,7 @@ public class xlExportChangesService extends xlService implements SingleThreadMod
 		// start the timer
 		getElapsedTime();
 		//String[] fullTableArr = getRequestBuffer(request).toString().split(ContentDelimeter);
-		BoardwalkRequestReader reader=null;
-		try {
-			reader = getRequestReader(request);
-		} catch (DataFormatException e3) {
-			// TODO Auto-generated catch block
-			e3.printStackTrace();
-		}
+		BoardwalkRequestReader reader = getRequestReader(request);
 		//System.out.println(fullTable);
 		System.out.println("xlExportChangesService: Time to read the buffer = " + getElapsedTime());
 
@@ -405,7 +394,7 @@ public class xlExportChangesService extends xlService implements SingleThreadMod
 		//System.out.println("header = " + sub);
 		String[] headerInfo = sub.split(Seperator);
 
-
+		//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
 		userId = Integer.parseInt(headerInfo[0]);
 		String userName = headerInfo[1];
 		//String userPassword = headerInfo[2];
@@ -423,6 +412,8 @@ public class xlExportChangesService extends xlService implements SingleThreadMod
 	
 		// authenticate the user
 		Member memberObj = UserManager.authenticateMember(connection, userName, memberId);
+		//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - END
+
 		if (memberObj == null)
 		{
 			//System.out.println("Authentication failed for user : " + userName);
@@ -444,7 +435,6 @@ public class xlExportChangesService extends xlService implements SingleThreadMod
 		//System.out.println(lsRowQuery);
 		if (!(view == null || view.trim().equals("") || view.equalsIgnoreCase("Latest")))
 		{
-			System.out.println ("View = " + view );
 			//mod on 20150620 by Sohum Team
 			//String lsRowQuery = TableViewManager.getRowQuery(connection, tableId, userId, criteriaTableId, true, view);
 			oldSheetCheck(connection, tableId, memberId, userId, exportTid, lsRowQuery);

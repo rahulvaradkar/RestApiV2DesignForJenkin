@@ -40,7 +40,7 @@ public class xlEditTable extends HttpServlet implements SingleThreadModel
 	StringTokenizer st;
 	int userId;
 	String userName;
-	String userPassword;
+	//String userPassword; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 	int nhId;
 	int  memberId;
 	String nhName;
@@ -142,8 +142,8 @@ public class xlEditTable extends HttpServlet implements SingleThreadModel
 		wrkstr = st.nextToken (Seperator);
 		userName = wrkstr;
 
-		wrkstr = st.nextToken (Seperator);
-		userPassword = wrkstr;
+		//wrkstr = st.nextToken (Seperator); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
+		//userPassword = wrkstr; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 
 		wrkstr = st.nextToken (Seperator);
 		memberId = Integer.parseInt(wrkstr);
@@ -1306,7 +1306,7 @@ public class xlEditTable extends HttpServlet implements SingleThreadModel
 			DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 			connection = databaseloader.getConnection();
 
-			if (  userName == null  || userName == ""  || userPassword ==null || userPassword == "" )
+			if (  userName == null  || userName == "" ) //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 			{
 				return false;
 			}
@@ -1314,7 +1314,7 @@ public class xlEditTable extends HttpServlet implements SingleThreadModel
 			{
 				//System.out.println("Authenticating User : " + userName + ":" + userPassword);
 
-				int db_userId = UserManager.authenticateUser(connection, userName,userPassword, false);
+				int db_userId = UserManager.authenticateUser(connection, userName, false); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 
 				if ( userId != -1 && userId == db_userId )
 				{

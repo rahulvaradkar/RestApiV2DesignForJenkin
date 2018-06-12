@@ -3,15 +3,11 @@
 
 package com.boardwalk.database;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.sql.*;
 import java.util.Properties;
 import java.io.*;
-
 import javax.sql.DataSource;
-
 import java.lang.Runtime;
 
 public class DatabaseLoader
@@ -45,88 +41,61 @@ public class DatabaseLoader
 
    public static void initDatabase(Properties properties)
    {
-//	   try
-//	   {
-//			System.out.println("Inside DatabaseLoader.initDatabase");
-//			if ( ! databaseInit && properties.size() > 0 )
-//			{
-//				databaseInit = true;
-//				// DriverManager.setLogWriter(null);
-//
-//				databasename = properties.getProperty("databasename");
-//				InstanceName = properties.getProperty("InstanceName");
-//				user = properties.getProperty("user");
-//				password = properties.getProperty("password");
-//				server = properties.getProperty("server");
-//				port = properties.getProperty("port");
-//				databasetype = properties.getProperty("databasetype");
-//				sqlpath = properties.getProperty("sqlpath");
-//				templatedir = properties.getProperty("templatedir");
-//				sourcexml = properties.getProperty("sourcexml");
-//				targetxml = properties.getProperty("targetxml");
-//
-//				//DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
-//				//jdbcConnectionString = "jdbc:microsoft:sqlserver://"+server+":"+port+";DatabaseName="+databasename+";sendStringParametersAsUnicode=true"+ ";user="+user+";password="+password;
-//
-//				Class.forName("net.sourceforge.jtds.jdbc.Driver");
-//				jdbcConnectionString = "jdbc:jtds:sqlserver://" + server + ":" + port;
-//
-///*				//Code for SSL - START
-//				//With JTDS
-//				Class.forName("net.sourceforge.jtds.jdbc.Driver");
-//				jdbcConnectionString = "jdbc:jtds:sqlserver://" + server + ":" + port;
-//				jdbcConnectionString = jdbcConnectionString + ";DatabaseName=" + databasename + ";encrypt=True;user=" + user + ";password=" + password;
-//				jdbcConnectionString = jdbcConnectionString + ";ssl=require";
-//
-//				//With JDBS
-//				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//				jdbcConnectionString = "jdbc:sqlserver://" + server + ":" + port;
-//				jdbcConnectionString = jdbcConnectionString + ";DatabaseName=" + databasename + ";encrypt=True;user=" + user + ";password=" + password;
-//				//Code for SSL - END
-//*/
-//
-//				if (!((InstanceName.trim().equals("")) || InstanceName.trim().equalsIgnoreCase("default")))
-//					jdbcConnectionString = jdbcConnectionString + ";instance=" + InstanceName;
-//				
-//				jdbcConnectionString = jdbcConnectionString + ";DatabaseName="+databasename+";sendStringParametersAsUnicode=true"+ ";user="+user+";password="+password;
-//				//System.out.println("jdbcConnectionString --------------> "+jdbcConnectionString);
-//				queryLoader = new  QueryLoader(properties);
-//
-//				//jdbcConnectionString = "jdbc:microsoft:sqlserver://"+databasehostname+":"+ portnumber+";SelectMethod=cursor;DatabaseName="+databasename+";user="+user+";password="+ password;
-//				//jdbcConnectionString = "jdbc:odbc:"+ databasename+";user="+user+";password="+password+";EXEC="+"T"+";XSM="+"SA"+";DBQ="+"BW";
-//			}
-//	   }
-//	   catch(Exception exception)
-//	   {
-//		   exception.printStackTrace();
-//	   }
-	   if ( ! databaseInit && properties.size() > 0 )
+	   try
 	   {
+			System.out.println("Inside DatabaseLoader.initDatabase");
+			if ( ! databaseInit && properties.size() > 0 )
+			{
 				databaseInit = true;
-	   //Properties properties =null;		  
-		try
-		{
-			properties = new Properties();
-			InputStream is = new FileInputStream("E:\\wksp2\\BAE_4_3\\WebContent\\props\\boardwalk.properties");
-			properties.load(is);
-			databasename = properties.getProperty("databasename");
-			InstanceName = properties.getProperty("InstanceName");
-			user = properties.getProperty("user");
-			password = properties.getProperty("password");
-			server = properties.getProperty("server");
-			port = properties.getProperty("port");
-			databasetype = properties.getProperty("databasetype");
-			//Memberid=properties.getProperty("memberId");
-			Class.forName("net.sourceforge.jtds.jdbc.Driver");
-			jdbcConnectionString = properties.getProperty("jdbcConnectionString");//"jdbc:jtds:sqlserver://"+server+":"+port;
-				//	System.out.println("jdbc connection string "+jdbcConnectionString);
-			queryLoader = new  QueryLoader(properties);
-		   }
-		   catch(Exception exception)
-		   {
-			   exception.printStackTrace();
-		   }
-   }
+				// DriverManager.setLogWriter(null);
+
+				databasename = properties.getProperty("databasename");
+				InstanceName = properties.getProperty("InstanceName");
+				user = properties.getProperty("user");
+				password = properties.getProperty("password");
+				server = properties.getProperty("server");
+				port = properties.getProperty("port");
+				databasetype = properties.getProperty("databasetype");
+				sqlpath = properties.getProperty("sqlpath");
+				templatedir = properties.getProperty("templatedir");
+				sourcexml = properties.getProperty("sourcexml");
+				targetxml = properties.getProperty("targetxml");
+
+				//DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
+				//jdbcConnectionString = "jdbc:microsoft:sqlserver://"+server+":"+port+";DatabaseName="+databasename+";sendStringParametersAsUnicode=true"+ ";user="+user+";password="+password;
+
+				Class.forName("net.sourceforge.jtds.jdbc.Driver");
+				jdbcConnectionString = "jdbc:jtds:sqlserver://" + server + ":" + port;
+
+/*				//Code for SSL - START
+				//With JTDS
+				Class.forName("net.sourceforge.jtds.jdbc.Driver");
+				jdbcConnectionString = "jdbc:jtds:sqlserver://" + server + ":" + port;
+				jdbcConnectionString = jdbcConnectionString + ";DatabaseName=" + databasename + ";encrypt=True;user=" + user + ";password=" + password;
+				jdbcConnectionString = jdbcConnectionString + ";ssl=require";
+
+				//With JDBS
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				jdbcConnectionString = "jdbc:sqlserver://" + server + ":" + port;
+				jdbcConnectionString = jdbcConnectionString + ";DatabaseName=" + databasename + ";encrypt=True;user=" + user + ";password=" + password;
+				//Code for SSL - END
+*/
+
+				if (!((InstanceName.trim().equals("")) || InstanceName.trim().equalsIgnoreCase("default")))
+					jdbcConnectionString = jdbcConnectionString + ";instance=" + InstanceName;
+				
+				jdbcConnectionString = jdbcConnectionString + ";DatabaseName="+databasename+";sendStringParametersAsUnicode=true"+ ";user="+user+";password="+password;
+				//System.out.println("jdbcConnectionString --------------> "+jdbcConnectionString);
+				queryLoader = new  QueryLoader(properties);
+
+				//jdbcConnectionString = "jdbc:microsoft:sqlserver://"+databasehostname+":"+ portnumber+";SelectMethod=cursor;DatabaseName="+databasename+";user="+user+";password="+ password;
+				//jdbcConnectionString = "jdbc:odbc:"+ databasename+";user="+user+";password="+password+";EXEC="+"T"+";XSM="+"SA"+";DBQ="+"BW";
+			}
+	   }
+	   catch(Exception exception)
+	   {
+		   exception.printStackTrace();
+	   }
     }
 
     public DatabaseLoader(Properties properties)
@@ -159,7 +128,7 @@ public class DatabaseLoader
 
 	public static String getDatabaseType()
     {
-		return "SQLSERVER";//databasetype;
+		return databasetype;
 	}
 
 	public static String getSQLPath()

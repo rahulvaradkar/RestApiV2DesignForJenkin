@@ -4,19 +4,14 @@ package servlets;
  */
 import java.io.*;
 import java.util.*;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import com.boardwalk.table.*;
 import com.boardwalk.excel.*;
 import com.boardwalk.exception.*;
 import com.boardwalk.database.*;
-
 import java.sql.*;                  // JDBC package
-
 import javax.sql.*;                 // extended JDBC packa
-
 import com.boardwalk.member.Member;
 import com.boardwalk.user.UserManager;
 
@@ -50,6 +45,7 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 		Connection connection = null;
 		try
 		{
+			//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
 			String[] requestInfo = buff.split(Seperator);
 			int userId = Integer.parseInt(requestInfo[0]);
 			String userName = requestInfo[1];
@@ -60,15 +56,16 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 			int baselineId = Integer.parseInt(requestInfo[5]);
 			String view = requestInfo[6];
 			int mode = Integer.parseInt(requestInfo[7]);
+			//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - END
 
 			// Start a connection
 			DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 			connection = databaseloader.getConnection();
 
 			//Added to get the Membership ID in case of Multiple Membership
-			if( requestInfo.length == 10)
+			if( requestInfo.length == 9) //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 			{
-				String nhHierarchy = requestInfo[9];
+				String nhHierarchy = requestInfo[8]; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 				String templateMode = "USER";
 				
 				int checkMembershipStatus = UserManager.checkMembershipStatus(connection, userId, templateMode, nhHierarchy, tableId);
@@ -115,8 +112,8 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 
 
 
-// authenticate the user
-			Member memberObj = UserManager.authenticateMember(connection, userName, memberId);
+			// authenticate the user
+			Member memberObj = UserManager.authenticateMember(connection, userName, memberId); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 			if (memberObj == null)
 			{
 				//System.out.println("Authentication failed for user : " + userName);
@@ -130,7 +127,7 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 				nhId = memberObj.getNeighborhoodId();
 				
 			}
-			//System.out.println("User Password :"+userPassword);
+
 			System.out.println("Time to authenticate user = " + getElapsedTime());
 
 			// This happens only when the user has no access to the said table

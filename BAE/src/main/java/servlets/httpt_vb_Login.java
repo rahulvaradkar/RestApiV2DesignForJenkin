@@ -86,6 +86,10 @@ public class httpt_vb_Login extends xlService implements SingleThreadModel {
                 {
 					DatabaseLoader databaseloader1 = new DatabaseLoader(new Properties());
 					connection1 = databaseloader1.getConnection();
+
+					//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 (And fix for Issue Id: 14200)
+					UserManager.userLoginSuccess(connection1, userId);
+					
 					System.out.println(" Hashtable memberships check before "+userId);
 					Hashtable memberships  = UserManager.getMembershipsForUser( connection1, userId );
 					System.out.println(" Hashtable memberships check Aftr "+userId);

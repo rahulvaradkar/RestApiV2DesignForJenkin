@@ -59,7 +59,7 @@ extends ExcelAuthenticationFilter
 				e.printStackTrace();
 			} 
 		}
-		else if(rURI.contains("xlLogoutService") || rURI.contains("forgotPassword") || rURI.endsWith("jsp") || rURI.contains("logo-boardwalk.gif"))// to bypass filter for jsp in weblogic deployment
+		else if(rURI.contains("/rest/") || rURI.contains("xlLogoutService") || rURI.contains("forgotPassword") || rURI.endsWith("jsp") || rURI.contains("logo-boardwalk.gif"))// to bypass filter for jsp in weblogic deployment
 		{
 			try {
 				chain.doFilter(request, response);
@@ -82,8 +82,8 @@ extends ExcelAuthenticationFilter
 					StringTokenizer st = new StringTokenizer(line);
 					wrkstr = st.nextToken(Seperator);
 					userName = wrkstr;
-					//wrkstr = st.nextToken(Seperator);
-					//userPassword = wrkstr;
+					wrkstr = st.nextToken(Seperator);
+					userPassword = wrkstr;
 					//Added to get the Membership ID in case of Multiple Membership
 					wrkstr = st.nextToken(Seperator);
 					templateMode = wrkstr;
@@ -113,13 +113,13 @@ extends ExcelAuthenticationFilter
 				//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - START
 				//userId = UserManager.authenticateUser(connection, userName, userPassword);
 				if (browserRequest)
-					userId = UserManager.authenticateUser(connection, userName,  false);
+					userId = UserManager.authenticateUser(connection, userName, userPassword, false);
 				else
 				{
 					if (templateMode.equals("PasswordChange"))
-						userId = UserManager.authenticateUser(connection, userName,  true);
+						userId = UserManager.authenticateUser(connection, userName, userPassword, true);
 					else
-						userId = UserManager.authenticateUser(connection, userName,  false);
+						userId = UserManager.authenticateUser(connection, userName, userPassword, false);
 				}
 				//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - END
 				if (userId > 0)

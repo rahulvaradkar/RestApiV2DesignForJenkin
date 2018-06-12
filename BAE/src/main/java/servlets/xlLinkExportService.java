@@ -4,25 +4,19 @@ package servlets;
  */
 import java.io.*;
 import java.util.*;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import com.boardwalk.table.*;
 import com.boardwalk.excel.*;
 import com.boardwalk.exception.*;
 import com.boardwalk.database.*;
-
 import java.sql.*;                  // JDBC package
-
 import javax.sql.*;                 // extended JDBC packa
-
 import com.boardwalk.member.Member;
 import com.boardwalk.user.UserManager;
 
 import java.lang.Exception;
 import java.util.zip.*;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.*;
 
@@ -74,13 +68,7 @@ public class xlLinkExportService extends xlService implements SingleThreadModel
 		// Failure String
 		String failureReason = "";
 		//String reqBuffer = getRequestBuffer(request).toString();
-		BoardwalkRequestReader reader=null;
-		try {
-			reader = getRequestReader(request);
-		} catch (DataFormatException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+		BoardwalkRequestReader reader = getRequestReader(request);
 		//System.out.println(reqBuffer);
 		//String[] fullTableArr = reqBuffer.split(ContentDelimeter);
 		//System.out.println(fullTable);
@@ -505,6 +493,7 @@ public class xlLinkExportService extends xlService implements SingleThreadModel
 
 		String[] headerInfo = header.split(Seperator);
 
+		//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
 		userId				= Integer.parseInt(headerInfo[0]);
 		userName			= headerInfo[1];
 		//userPassword        = headerInfo[2];
@@ -515,12 +504,12 @@ public class xlLinkExportService extends xlService implements SingleThreadModel
 		numRows				= Integer.parseInt (headerInfo[6]);
 		view = "LATEST";
 		xlErrorCells = new Vector();
+		//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - END
 
 		// Start a connection
 		DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 		connection = databaseloader.getConnection();
-		System.out.println("The datails are as below->>>>>>>>");
-		System.out.println(userId+"  "+userName+"  "+memberId+"  "+tableId+"  "+nhId+"  "+numColumns+"  "+numRows);
+
 		//	Access control checks
 		TableInfo tinfo = TableManager.getTableInfo(connection, userId, tableId);
 		TableAccessList ftal = TableViewManager.getSuggestedAccess(connection, tinfo, userId, memberId, nhId);
@@ -542,8 +531,8 @@ public class xlLinkExportService extends xlService implements SingleThreadModel
 		canDeleteRows			= ftal.canDeleteRow();
 		canAdministerColumns	= ftal.canAdministerColumn();
 
-// authenticate the user
-		Member memberObj = UserManager.authenticateMember(connection, userName, memberId);
+		// authenticate the user
+		Member memberObj = UserManager.authenticateMember(connection, userName, memberId); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 		if (memberObj == null)
 		{
 			//System.out.println("Authentication failed for user : " + userName);
@@ -572,7 +561,7 @@ public class xlLinkExportService extends xlService implements SingleThreadModel
 			xlErrorCells.add( new xlErrorNew( tableId,0,0,12012));
 			System.out.println("No access to add rows");
 		}
-		System.out.println("view = " + view);
+		//System.out.println("view = " + view);
 		if(view.equals("None"))
 		{
 			xlErrorCells.add( new xlErrorNew(tableId, 0, 0, 10005));

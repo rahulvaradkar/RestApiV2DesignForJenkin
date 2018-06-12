@@ -7,10 +7,8 @@
 package servlets;
 
 import java.io.*;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import java.util.*;
 import java.util.zip.*;
 
@@ -68,15 +66,7 @@ public class BoardwalkRequestReader
 			throw e;
 		}
 	}
-	public BoardwalkRequestReader(String request,int n1) throws IOException, DataFormatException
-	{
-		zipIn = new ZipInputStream(new ByteArrayInputStream(Base64.decodeBase64(request.toString().getBytes())));
-		zipIn.getNextEntry();
-				
-		reader = new BufferedReader(new InputStreamReader(zipIn, "UTF-8"));
-		//reader = new BufferedReader(new InputStreamReader(zipIn, "ISO-8859-1")); 
-		System.out.println("reader = " + reader);
-	}
+
 	// returns data upto next content delimeter
 	// returns null if reached end of request buffer
 	public String getNextContent() throws IOException

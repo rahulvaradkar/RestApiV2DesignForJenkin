@@ -1937,9 +1937,9 @@ public class TableViewManager {
 				view = view.replace("'","''");
 			}
 			
-			System.out.println("view = " + view);
-			System.out.println("baselineId = " + baselineId);
-			System.out.println("mode = " + mode);
+			//System.out.println("view = " + view);
+			//System.out.println("baselineId = " + baselineId);
+			//System.out.println("mode = " + mode);
 			// Check access control :: TBD
 			int raccess = 1;
 			int ACLFromDB = ftal.getACL();

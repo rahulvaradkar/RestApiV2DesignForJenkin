@@ -68,7 +68,7 @@ public class UserManager
 			{
 				table_count = rs.getInt(1);
 			}
-			System.out.println(" ------------Value of count ---------"+table_count);
+			//System.out.println(" ------------Value of count ---------"+table_count);
 			if (table_count > 0)
 				check_access = true;
 			//hs.setAttribute("check_access", check_access);
@@ -208,7 +208,7 @@ public class UserManager
 		return userMgmtAccess;
 	}
 
-    static public Member authenticateMember(Connection a_connection, String userEmail, int memberId) {
+    static public Member authenticateMember(Connection a_connection, String userEmail, int memberId) { //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
         PreparedStatement preparedstatement = null;
         ResultSet rs = null;
         int userId = -1;
@@ -221,7 +221,7 @@ public class UserManager
 
             preparedstatement.setString(1,userEmail);
             //preparedstatement.setString(2,userEmail); // User can now be verified based on either loginid or email
-            PasswordService ps = PasswordService.getInstance();
+            //PasswordService ps = PasswordService.getInstance(); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
             //String encryptedPassword = ps.encrypt( password ); Authentication should be done in the filter
             //preparedstatement.setString(2,encryptedPassword);
             preparedstatement.setInt(2,memberId);
@@ -785,7 +785,8 @@ public class UserManager
 		System.out.println("value of userId is :::::::::"+userId);
         return userId;
     }
-    
+
+	//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
     static public int authenticateUser(Connection a_connection, String userEmail, boolean passwordChange) {
         PreparedStatement preparedstatement = null;
 		CallableStatement callablestatement = null;
@@ -798,29 +799,40 @@ public class UserManager
 			System.out.println("--------Inside UserManager::AunthenticateUser--------");
 			checkStatus = isUserAccessPresent(a_connection);
 			System.out.println("--------After isuserAccessPresent--------");
+			//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - START
 			if(checkStatus)
 			{
-				lsQuery = "SELECT ID, ACTIVE from BW_USER WHERE BW_USER.EMAIL_ADDRESS=? AND ACTIVE =1";
+				lsQuery = "SELECT ID, ACTIVE, PASSWORD from BW_USER WHERE BW_USER.EMAIL_ADDRESS=? AND ACTIVE =1";
 				preparedstatement = a_connection.prepareStatement(lsQuery);
 				preparedstatement.setString(1,userEmail);
+
 				rs = preparedstatement.executeQuery();
 			}
 			else
 			{
 				System.out.println("--------checkStatus == false--------");
+				//lsQuery = "select ID, PASSWORD from BW_USER where BW_USER.EMAIL_ADDRESS=?";
+
 				callablestatement = a_connection.prepareCall(CALL_BW_CHECK_USER);
 				callablestatement.setString(1,userEmail);
 				callablestatement.setBoolean(2,passwordChange);
 				rs = callablestatement.executeQuery();
 			}
+			//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - END
 			if ( rs.next() ) {
 				userId = rs.getInt("ID");
 				if(checkStatus)
 				{
 					active = rs.getString("ACTIVE");
 					System.out.println("--------checkStatus == true--------");
-				}				
+				}
+				//encryptedPassword =  rs.getString("PASSWORD");
+			
+        
+			// call PasswordService to validate the password set userid= -1 if incorrect password 			- shirish 20150724
+			//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - START			
 			}
+			//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - END
 		}
         catch( Exception e ) {
         	System.out.println("Exception - Inside UserManager.authenticateUser");
@@ -844,6 +856,7 @@ public class UserManager
 		System.out.println("value of userId is :::::::::"+userId);
         return userId;
     }
+	//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - END
 
     static public User getUser(Connection a_connection, String userName) {
         PreparedStatement preparedstatement = null;

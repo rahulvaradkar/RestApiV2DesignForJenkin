@@ -359,156 +359,59 @@ public class LoginServlet extends HttpServlet implements SingleThreadModel {
     {
 		doGet(  request, response );
     }
+
     public void init(ServletConfig config) throws ServletException
-   	{
-       	
-    
-       	
-       	
-   		BWLogger log = new BWLogger(System.out); //Added by Jeetendra to print the TimeStamp in Tomcat logs on 20170601
-   		super.init(config);
-   		if ( ! DatabaseLoader.databaseInit)
-   		{
-   			
-   			
-   			System.out.println("Fetching init params");
-   			
-   					//databasename=BAE_4_2_N
-   					//InstanceName=default
-   					//user=BOARDWALK_APPLICATION_USER
-   					//password=BOARDWALK_APPLICATION_USER
-   					//server=localhost
-   					//port=1433
-   					//databasetype=SQLSERVER
-   			
-   			String xmlSmtpServer;
-   	    	String xmlSmtpPort;
-   	    	String xmlUserName;
-   	    	String xmlPassword;
-   	    	String xmldbname;
-   	    	String xmldbType;
-   	    	String xmlInstanceName;
-   	    	String jdbcConString;
-   	    	
-   	    	xmlSmtpServer	= getServletConfig().getInitParameter("server");
-   			xmlSmtpPort		= getServletConfig().getInitParameter("port");
-   			xmlUserName		= getServletConfig().getInitParameter("user");
-   			xmlPassword		= getServletConfig().getInitParameter("password");
-   			xmldbname		= getServletConfig().getInitParameter("databasename");
-   			xmlInstanceName	= getServletConfig().getInitParameter("InstanceName");
-   			xmldbType		= getServletConfig().getInitParameter("databasetype");
-   			
-   			
-   			
-   			jdbcConString = "jdbc:jtds:sqlserver://"+xmlSmtpServer+":"+xmlSmtpPort+";DatabaseName="+xmldbname+";sendStringParametersAsUnicode=true"+ ";user="+xmlUserName+";password="+xmlPassword;
-   			
-   			
-   			
-   		/*	
-   		
-   			jdbcConString = "jdbc:jtds:sqlserver://"+xmlSmtpServer+":"+xmlSmtpPort;
-   			
-   			if (!((xmlInstanceName.trim().equals("")) || xmlInstanceName.trim().equalsIgnoreCase("default"))) 
-   					jdbcConString = jdbcConString + ";instance=" + xmlInstanceName;
-   			
-   			jdbcConString = jdbcConString + ";DatabaseName="+xmldbname+";sendStringParametersAsUnicode=true"+ ";user="+xmlUserName+";password="+xmlPassword;
-   			
-   			*/
-   	    	
-   			System.out.println("****************************************************");
-   			System.out.println(xmlSmtpPort+" "+xmlSmtpServer+ "  "+xmlUserName+"   "+xmlPassword+"   "+xmldbname+"   "+xmldbType+"  "+xmlInstanceName);
-   			System.out.println("jdbc conn string   :"+jdbcConString);
-   			
-   			String connToProp = jdbcConString;
-   			System.out.println("jdbc conn string   :"+connToProp);
-   			
-   			 FileOutputStream fileOut = null;
-   		     FileInputStream fileIn = null;
-   		     
-   		     
-   		     try {
-   		    	 Properties configProperty = new Properties();
-   			     File file = new File("E:\\wksp2\\BAE_4_3\\WebContent\\props\\boardwalk.properties");
-   			     fileIn = new FileInputStream(file);
-   			     try {
-   					configProperty.load(fileIn);
-   				} catch (IOException e) {
-   					
-   					e.printStackTrace();
-   				}
-   		            configProperty.setProperty("server", xmlSmtpServer);
-   		            configProperty.setProperty("port", xmlSmtpPort);
-   		            configProperty.setProperty("user", xmlUserName);
-   		            configProperty.setProperty("password", xmlPassword);
-   		            configProperty.setProperty("databasename", xmldbname);
-   		            configProperty.setProperty("InstanceName", xmlInstanceName);
-   		            configProperty.setProperty("databasetype", xmldbType); 
-   		            configProperty.setProperty("jdbcConnectionString", connToProp);		           
-   		            fileOut = new FileOutputStream(file);
-   		            try {
-   						configProperty.store(fileOut, "sample properties");
-   					} catch (IOException e) {
-   						
-   						e.printStackTrace();
-   					}
-   				
-   		
-   				
-   			} catch (IOException e1) {
-   				// TODO Auto-generated catch block
-   				e1.printStackTrace();
-   			}
-   			
-   			
-   			
-   			
-   			
-   			
-   			Properties databaseProps  = new Properties();
-   			databaseProps.setProperty( "databasename" , config.getInitParameter("databasename"));
-   			databaseProps.setProperty( "InstanceName" , config.getInitParameter("InstanceName"));
-   			databaseProps.setProperty( "user" ,  config.getInitParameter("user"));
-   			databaseProps.setProperty( "password" , config.getInitParameter("password"));
-   			//databaseProps.setProperty( "passwordencryption" , config.getInitParameter("passwordencryption"));// added by shirish 12/11/15 - db password encryption
-   			databaseProps.setProperty( "server" , config.getInitParameter("server"));
-   			databaseProps.setProperty( "port" , config.getInitParameter("port"));
-   			databaseProps.setProperty( "databasetype" , config.getInitParameter("databasetype"));
-   			databaseProps.setProperty( "sqlpath" , config.getInitParameter("sqlpath"));
-   			databaseProps.setProperty( "templatedir" , config.getInitParameter("templatedir"));
-   			databaseProps.setProperty( "sourcexml", config.getInitParameter("sourcexml"));
-   			databaseProps.setProperty( "targetxml", config.getInitParameter("targetxml"));
+	{
+		BWLogger log = new BWLogger(System.out); //Added by Jeetendra to print the TimeStamp in Tomcat logs on 20170601
+		super.init(config);
+		if ( ! DatabaseLoader.databaseInit)
+		{
+			System.out.println("Fetching init params");
+			Properties databaseProps  = new Properties();
+			databaseProps.setProperty( "databasename" , config.getInitParameter("databasename"));
+			databaseProps.setProperty( "InstanceName" , config.getInitParameter("InstanceName"));
+			databaseProps.setProperty( "user" ,  config.getInitParameter("user"));
+			databaseProps.setProperty( "password" , config.getInitParameter("password"));
+			//databaseProps.setProperty( "passwordencryption" , config.getInitParameter("passwordencryption"));// added by shirish 12/11/15 - db password encryption
+			databaseProps.setProperty( "server" , config.getInitParameter("server"));
+			databaseProps.setProperty( "port" , config.getInitParameter("port"));
+			databaseProps.setProperty( "databasetype" , config.getInitParameter("databasetype"));
+			databaseProps.setProperty( "sqlpath" , config.getInitParameter("sqlpath"));
+			databaseProps.setProperty( "templatedir" , config.getInitParameter("templatedir"));
+			databaseProps.setProperty( "sourcexml", config.getInitParameter("sourcexml"));
+			databaseProps.setProperty( "targetxml", config.getInitParameter("targetxml"));
 
-   			
-   			DatabaseLoader dbLoader = new DatabaseLoader(databaseProps,config.getServletContext());
-   			//DatabaseLoader dbLoader = new DatabaseLoader(new Properties());//sjcd
-   			
-   			
-   			System.out.println("Database test");
-   			Connection conn = null;
-   			try
-   			{
-   				conn = 	dbLoader.getConnection();				
-   				if ( conn != null )
-   				conn.close();
-   				System.out.println("Database OK");
-   			}
-   			catch( SQLException sqe )
-   			{
-   				DatabaseLoader.databaseStatus="There is a Database connection problem, either the database is down or the connection parameters are wrong";
-   				sqe.printStackTrace();
-   				try
-   				{
-   					if ( conn != null )
-   					conn.close();
-   				}
-   				catch( Exception e )
-   				{
-   					e.printStackTrace();
-   				}
+			
+			DatabaseLoader dbLoader = new DatabaseLoader(databaseProps,config.getServletContext());
+			//DatabaseLoader dbLoader = new DatabaseLoader(new Properties());//sjcd
+			
+			
+			System.out.println("Database test");
+			Connection conn = null;
+			try
+			{
+				conn = 	dbLoader.getConnection();				
+				if ( conn != null )
+				conn.close();
+				System.out.println("Database OK");
+			}
+			catch( SQLException sqe )
+			{
+				DatabaseLoader.databaseStatus="There is a Database connection problem, either the database is down or the connection parameters are wrong";
+				sqe.printStackTrace();
+				try
+				{
+					if ( conn != null )
+					conn.close();
+				}
+				catch( Exception e )
+				{
+					e.printStackTrace();
+				}
 
-   			}
-   		}
-   	}
+			}
+		}
+	}
 
 	
 

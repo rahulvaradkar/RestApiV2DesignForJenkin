@@ -105,7 +105,7 @@ public class xlExportMergeService extends xlService implements SingleThreadModel
 
 				if (jcount == 0) // header
 				{
-					//System.out.println("header = " + sub);
+					//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
 					String[] headerInfo = sub.split(Seperator);
 					userId = Integer.parseInt(headerInfo[0]);
 					String userName = headerInfo[1];
@@ -121,6 +121,8 @@ public class xlExportMergeService extends xlService implements SingleThreadModel
 					isCritical = Integer.parseInt(headerInfo[10]);
 					criticalLevel = Integer.parseInt(headerInfo[11]);
 					asTxComment = headerInfo[12];
+					//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - END
+
 					// Start a connection
 					DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 					connection = databaseloader.getConnection();
@@ -129,7 +131,7 @@ public class xlExportMergeService extends xlService implements SingleThreadModel
 					oldSheetCheck(connection, tableId, memberId, userId, exportTid, view );
 
 					// authenticate the user
-					Member memberObj = UserManager.authenticateMember(connection, userName, memberId);
+					Member memberObj = UserManager.authenticateMember(connection, userName, memberId); //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 					if (memberObj == null)
 					{
 						//System.out.println("Authentication failed for user : " + userName);

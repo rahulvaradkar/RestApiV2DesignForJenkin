@@ -37,7 +37,7 @@ public class xlTableHistory extends xlService implements SingleThreadModel
 
 	int	userId				= -1;
 	String userName			= "";
-	//String userPassword		= "";
+	//String userPassword	= ""; //Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241)
 	int	tableId				= -1;
 	int	memberId			= -1;
 	int	nhId				= -1;

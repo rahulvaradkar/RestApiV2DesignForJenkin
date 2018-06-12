@@ -90,7 +90,7 @@ implements SingleThreadModel
 				try
 				{
 					Properties props 		= new Properties();
-					System.out.println("######### Using smtp host = " + msSmtpServer);
+					//System.out.println("######### Using smtp host = " + msSmtpServer);
 					
 					SMTPAuthenticator auth 	= new SMTPAuthenticator(msUserName,msPassword);
 					
