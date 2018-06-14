@@ -218,7 +218,7 @@ import boardwalk.connection.BoardwalkConnection;
         catch (Exception e)
         {
             // bwe
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return nnl;
@@ -384,6 +384,7 @@ import boardwalk.connection.BoardwalkConnection;
                 //bwe
                 sqe.printStackTrace();
             }
+            throw new BoardwalkException( 10020 );
         }
     }
     /**

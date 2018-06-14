@@ -200,6 +200,7 @@
         }
         TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function(result){
             var resultJSON=result;
+            /*
             assert.equal(Object.keys(resultJSON).length, 8, "cuboid object should have only 8 properties !");
             assert.ok(Array.isArray(resultJSON.cells), "cells should be an Array !");
             assert.ok(Array.isArray(resultJSON.columnArray), "columnArray should be an Array !");
@@ -207,6 +208,26 @@
             assert.ok(Array.isArray(resultJSON.columns), "columns property should be an Array !");
             assert.ok(Array.isArray(resultJSON.rows), "rows should be an Array !");
             assert.ok(Array.isArray(resultJSON.rowArray), "rowArray should be an Array !");
+            */
+            assert.equal(Object.keys(resultJSON).length, 8, "cuboid object should have only 8 properties !");
+            assert.ok(result.cells != null,"Cells  Element Should not be null");
+
+            assert.ok(result.columnArray != null,"columnArray Element Should not be null");
+            assert.ok(Array.isArray(resultJSON.columnArray), "columnArray should be an Array !");
+
+            assert.ok(result.columnCellArrays != null,"columnCellArrays Element Should not be null");
+            assert.ok(Array.isArray(resultJSON.columnCellArrays), "columns cells should be an Array !");
+            GridUtils.assertColumnCellArrays(result.columnCellArrays, assert, result.columnArray.length, "export");
+
+            assert.ok(Array.isArray(resultJSON.columns), "columns property should be an Array !");
+            GridUtils.assertColumns(result.columns, assert, result.columnArray.length);
+            assert.ok(result.info != null,"info Element Should not be null");
+            GridUtils.assertGridInfo(result.info, assert, "export");
+
+            assert.ok(Array.isArray(resultJSON.rowArray), "rowArray should be an Array !");
+            assert.ok(result.rowArray != null,"rowArray Element Should not be null");
+            GridUtils.assertRows(result.rows, assert, result.rowArray.length);
+            assert.ok(result.rows != null,"rows Element Should not be null");
             done();
         });
     });
@@ -515,22 +536,17 @@
 
     QUnit.test("Importing Grid",function(assert){
         var done=assert.async();
-        TestUtils.sendRequest(Globals.baseURL+"rest/grid/"+cuboid_id+"?importTid="+GridInput.importTid+"&view=LATEST&mode=1&baselineId=-1",null, UserInput.authorization, "GET").then(function(result){
+        TestUtils.sendRequest(Globals.baseURL+"rest/grid/"+cuboid_id+"?importTid="+GridInput.importTid+"&view=LATEST&mode=1&baselineId=-1",null, UserInput.authorization, "GET").then(function(result){           
             assert.ok(result != null, "Response Should not be null");
             assert.ok(result.cells != null,"Cells  Element Should not be null");
             assert.ok(result.columnArray != null,"columnArray Element Should not be null");
-            assert.ok(result.columnCellArrays != null,"columnCellArrays Element Should not be null");          
-            for(var i = 0; i < result.columnArray.length; i++)
-            {
-                assert.ok(result.columnCellArrays[i].cellFormulas != null,"cellFormulas Element Should not be null");
-                assert.ok(result.columnCellArrays[i].cellAccess != null,"cellAccess Element Should not be null");
-                assert.ok(result.columnCellArrays[i].cellValues != null,"cellValues Element Should not be null");
-                assert.ok(result.columnCellArrays[i].colSequence != null,"colSequence Element Should not be null");
-                assert.ok(result.columnCellArrays[i].columnId != null,"columnId Element Should not be null");
-            }
-        //    assert.ok(result.gridChangeBuffer != null,"gridChangeBuffer Element Should not be null");
+            assert.ok(result.columnCellArrays != null,"columnCellArrays Element Should not be null");                     
+            GridUtils.assertColumnCellArrays(result.columnCellArrays, assert, result.columnArray.length, "import");
+            GridUtils.assertColumns(result.columns, assert, result.columnArray.length);
             assert.ok(result.info != null,"info Element Should not be null");
+            GridUtils.assertGridInfo(result.info, assert, "import");
             assert.ok(result.rowArray != null,"rowArray Element Should not be null");
+            GridUtils.assertRows(result.rows, assert, result.rowArray.length);
             assert.ok(result.rows != null,"rows Element Should not be null");
             done();
         });       

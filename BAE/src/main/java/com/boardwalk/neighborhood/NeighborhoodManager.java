@@ -65,7 +65,7 @@ public final class NeighborhoodManager
         }
     }
 
-     public static Hashtable getNeighborhoodRelationships(Connection connection, int nhid)throws SystemException
+    public static Hashtable getNeighborhoodRelationships(Connection connection, int nhid)throws SystemException
     {
         Hashtable relationships = new Hashtable();
 		PreparedStatement preparedstatement = null;
@@ -77,7 +77,7 @@ public final class NeighborhoodManager
 				{
 					preparedstatement = DatabaseLoader.getPreparedStatementFromPreLoadedQueries("BW_GET_NH_RELS", connection );
 					preparedstatement.setInt(1,nhid);
-
+		
 				}
 				else
 				{
@@ -91,7 +91,7 @@ public final class NeighborhoodManager
 					String name = resultset.getString("NAME");
 					String relationship = resultset.getString("REL");
 					NeighborhoodId nh = new NeighborhoodId(targetNHId, name);
-
+		
 					if ( relationships.get(relationship ) == null )
 					{
 						relationships.put(relationship, new Vector());
@@ -109,7 +109,7 @@ public final class NeighborhoodManager
 					{
 						if ( resultset!= null )
 							resultset.close();
-
+		
 						if ( preparedstatement != null )
 						   preparedstatement.close();
 					}
@@ -118,8 +118,8 @@ public final class NeighborhoodManager
 						throw new SystemException(sqlexception1);
 					}
 			}
-	        return relationships;
-	    }
+		    return relationships;
+	}
 
      //Added by Rahul on 01-May-2018
      public static Vector getBoardwalkPathIds( Connection connection, int nhid )

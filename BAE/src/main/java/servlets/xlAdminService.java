@@ -132,7 +132,7 @@ public class xlAdminService extends xlService implements SingleThreadModel
 		
 		
 		HttpSession hs = ((HttpServletRequest)request).getSession(false);
-		int userId =  (Integer) hs.getAttribute("userId"); //u.getId();
+		int userId = (int) hs.getAttribute("userId"); //u.getId();
 		System.out.println("xlAdminService::  userId:"+userId);
 		
 		bwcon = getBoardwalkConnection(userId);
