@@ -41,7 +41,7 @@ extends ExcelAuthenticationFilter
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
 
-		
+		System.out.println("inside authentication");
 		// pass through request if call to authentication service
 		String rURI = req.getRequestURI();
 		
