@@ -24,6 +24,7 @@ public class BoardwalkMessages {
         if ( init == false )
         {
 
+
             errorMessages.put( new Integer( 10000 ), new BoardwalkMessage( 10000, "COLLABORATION EXCEPTION", 5 ,"A Collaboration with this name already exists within this Neighborhood",  "The Collaboration Name has to be unique within a Neighborhood, Please choose a different name"));
             errorMessages.put( new Integer( 10002 ), new BoardwalkMessage( 10002, "BOARDWALK EXCEPTION", 5 ,"No Entity Selected",  "You have selected an action that requires an entity to be selected. Please select an item first"));
 			errorMessages.put(new Integer(10003), new BoardwalkMessage(10003, "WHITEBOARD EXCEPTION", 5, "Selected Whiteboard could not be purged", "The whiteboard may be on a baseline or you might not have permissions to delete it"));
@@ -44,7 +45,6 @@ public class BoardwalkMessages {
             errorMessages.put( new Integer( 10017 ), new BoardwalkMessage( 10017, "CREATE MEMBER EXCEPTION", 5 ,"This User is already a member of the Neighborhood",  "User membership already exists for the Neighborhood"));
             errorMessages.put( new Integer( 10018 ), new BoardwalkMessage( 10018, "COLLABORATION EXCEPTION", 5 ,"Collaboration does not exist for this Collaboration Id",  "Use existing Collaboration Id"));
             errorMessages.put( new Integer( 10019 ), new BoardwalkMessage( 10019, "COLLABORATION EXCEPTION", 5 ,"Collaboration does not exist for this Neighborhood",  "Use Neighborhood Id of existing Collaboration"));
-            errorMessages.put( new Integer( 10020 ), new BoardwalkMessage( 10020, "NEIGHBORHOOD RELATION EXCEPTION", 5 ,"Neighborhood Relation Exists",  "Neighborhood Relation Name has to be Unique within it's Parent Neighborhood, Please choose a different Relation Name"));
 			//ADded for REST APIS
 
 			/* TABLE UPDATE ERRORS */

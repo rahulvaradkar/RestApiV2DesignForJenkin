@@ -1,0 +1,5 @@
+Opening file:///C:/Users/Admin/Desktop/js/index.html
+Status: success
+TypeError: null is not an object (evaluating 'document.getElementById('junitresult').value')
+
+  phantomjs://code/plg.js:25

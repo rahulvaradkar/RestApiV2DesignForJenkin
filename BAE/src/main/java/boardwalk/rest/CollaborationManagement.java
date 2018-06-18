@@ -33,117 +33,48 @@ public class CollaborationManagement {
 	
 	public CollaborationManagement()
 	{	
-		
 	}
 	
-//  @DELETE	--- AUTHORIZATION DONE
-//	Path("/{collabId}
-	public static void collaborationCollabIdDelete(int collabId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static void collaborationCollabIdDelete(int collabId, ArrayList <ErrorRequestObject> ErrRespst)
     {
-		ErrorRequestObject erb;
-		ArrayList <Collaboration> collabList = new ArrayList<Collaboration>();
-
-		// get the connection
-    	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int loginNhId = -1;
-		int loginMemberId = -1;
-		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return;
-		}
-
-		connection = bwcon.getConnection();
-		loginMemberId = memberNh.get(0);
-		loginNhId = memberNh.get(1);
-		loginUserId = bwcon.getUserId();
-		
-    	try
-    	{
-			//Custom Code Starts
-			try
-			{
-				BoardwalkCollaborationNode bcn = null;
-				bcn = BoardwalkCollaborationManager.getCollaborationTree(bwcon, collabId);
-				
-				if (bcn == null) 
-				{
-					//throw new NoSuchElementException("Collaboration Id NOT FOUND") ;
-					throw new BoardwalkException( 10018 );
-				}    		
-				System.out.println("Sucessfully fetched the collab tree from the database");
-	    		BoardwalkCollaborationManager.deleteCollaboration(bwcon, collabId);
-	    		System.out.println("Collaboration Id [" + collabId +  "] Deleted Successfully");
-			}
-			catch (NoSuchElementException nse)
-			{
-				System.out.println("CollaborationId  [" + collabId +  "] does not exist.");
-				throw new BoardwalkException( 10018 );
-			}
-    		
-    	}
-		//Custom code Ends
-		catch (BoardwalkException bwe)
-		{
-        	System.out.println("Collaboration Id not found");
-        	erb = new ErrorRequestObject();
-        	erb.setError("Collaboration ID NOT FOUND");
-        	erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardGet::BoardwalkCollaborationManager.getCollaborationTree");
-			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-        	ErrResps.add(erb);
-        	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-		}
-		finally
-		{
-			try
-			{
-				connection.close();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}    		
-		return ;
+        // do some magic!
     }
 
-//  @GET	-- AUTHORIZATION DONE
+//  @GET
 //  @Path("/{collabId}/whiteboard")
-    public static ArrayList <Collaboration>  collaborationCollabIdWhiteboardGet(int collabId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+    public static ArrayList <Collaboration>  collaborationCollabIdWhiteboardGet(int collabId, ArrayList <ErrorRequestObject> ErrResps)
 	{
 		ErrorRequestObject erb;
 		ArrayList <Collaboration> collabList = new ArrayList<Collaboration>();
 
-		// get the connection
+        // get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int loginNhId = -1;
-		int loginMemberId = -1;
-		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return collabList;
-		}
-
-		connection = bwcon.getConnection();
-		loginMemberId = memberNh.get(0);
-		loginNhId = memberNh.get(1);
-		loginUserId = bwcon.getUserId();
-		
     	try
     	{
-			//Custom Code Starts
+    		// Start a connection
+    		DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
+    		connection = databaseloader.getConnection();
+    		// Get an authenticated boardwalk connection
+    		BoardwalkConnection bwcon = null;
+    		try
+    		{
+    			String loginName = "admin";
+    			String loginPwd = "0";
+    		    bwcon = BoardwalkConnectionManager.getBoardwalkConnection(connection, loginName, loginPwd, -1);
+    		    System.out.println("Successfully obtained authenticated Boardwalk connection");
+    		}
+    		catch(BoardwalkException bwe)
+    		{
+    			erb = new ErrorRequestObject();
+    			erb.setError("Authentication_Connection_Failure");
+    			erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardGet::getBoradwalkConnection");
+    			erb.setProposedSolution("Authentication/Connection Failed. Contact Boardwalk System Administrator");
+    			ErrResps.add(erb);
+    		    System.out.println("Authentication/Connection Failed");
+    		    return collabList;
+    		}
+    		//Custom Code Starts
+
 			try
 			{
 				Collaboration collab = new Collaboration();
@@ -207,6 +138,16 @@ public class CollaborationManagement {
         	ErrResps.add(erb);
         	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
 		}
+    	
+		catch (SQLException sqe)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("SQLException:" + sqe.getCause());
+			erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardGet::getConnection");
+			erb.setProposedSolution("Get DBConnection failed. Contact Boardwalk System Administrator");
+			ErrResps.add(erb);
+			sqe.printStackTrace();
+		}
 		finally
 		{
 			try
@@ -224,87 +165,92 @@ public class CollaborationManagement {
 
 	//  @POST
 	//  @Path("/{collabId}/whiteboard")
-    public static int collaborationCollabIdWhiteboardPost(int collabId, Whiteboard wb, ArrayList <ErrorRequestObject> ErrResps, String authBase64String) 
+    public static int collaborationCollabIdWhiteboardPost(int collabId, Whiteboard wb, ArrayList <ErrorRequestObject> ErrResps) 
 	{
     	int wbId = -1;
     	ErrorRequestObject erb;
 
-		// get the connection
+        // get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int loginNhId = -1;
-		int loginMemberId = -1;
-		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    	try
+    	{
+    		// Start a connection
+    		DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
+    		connection = databaseloader.getConnection();
+    		// Get an authenticated boardwalk connection
+    		BoardwalkConnection bwcon = null;
+    		try
+    		{
+    			String loginName = "admin";
+    			String loginPwd = "0";
+    		    bwcon = BoardwalkConnectionManager.getBoardwalkConnection(connection, loginName, loginPwd, -1);
+    		    System.out.println("Successfully obtained authenticated Boardwalk connection");
+    		}
+    		catch(BoardwalkException bwe)
+    		{
+    			erb = new ErrorRequestObject();
+    			erb.setError("Authentication_Connection_Failure");
+    			erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardPost::getBoradwalkConnection");
+    			erb.setProposedSolution("Authentication/Connection Failed. Contact Boardwalk System Administrator");
+    			ErrResps.add(erb);
+    		    System.out.println("Authentication/Connection Failed");
+    		    return wbId;
+    		}
+    		//Custom Code Starts
+			try
+			{
+				//Collaboration collab = new Collaboration();
+				String wbName = wb.getName();
 				
-		if (!ErrResps.isEmpty())
-		{
-			return wbId;
-		}
-
-		connection = bwcon.getConnection();
-		loginMemberId = memberNh.get(0);
-		loginNhId = memberNh.get(1);
-		loginUserId = bwcon.getUserId();
-
-		//Custom Code Starts
-		try
-		{
-			//Collaboration collab = new Collaboration();
-			String wbName = wb.getName();
-			
-			BoardwalkCollaborationNode bcn ;
-			bcn = BoardwalkCollaborationManager.getCollaborationTree(bwcon, collabId);
-			
-			if (bcn == null) 
-			{
-				System.out.println("Collaboration of this Id does not exist.");
-				throw new NoSuchElementException("Collaboration Id NOT FOUND") ;
-				//throw new BoardwalkException( 10018 );
-			}    		
-			
-			boolean wbExists = false;
-			Vector wv = bcn.getWhiteboards();
-			Iterator wvi = wv.iterator();
-			while ( wvi.hasNext())
-			{
-				BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
-				System.out.println("\tWhiteboard = " + bwn.getName());
-			
-				if(bwn.getName().trim().toUpperCase().equals(wbName.trim().toUpperCase()))
+				BoardwalkCollaborationNode bcn ;
+				bcn = BoardwalkCollaborationManager.getCollaborationTree(bwcon, collabId);
+				
+    			if (bcn == null) 
+    			{
+    				System.out.println("Collaboration of this Id does not exist.");
+					throw new NoSuchElementException("Collaboration Id NOT FOUND") ;
+    				//throw new BoardwalkException( 10018 );
+    			}    		
+    			
+    			boolean wbExists = false;
+    			Vector wv = bcn.getWhiteboards();
+				Iterator wvi = wv.iterator();
+				while ( wvi.hasNext())
 				{
-					wbExists = true;
-					break;
+					BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
+					System.out.println("\tWhiteboard = " + bwn.getName());
+				
+					if(bwn.getName().trim().toUpperCase().equals(wbName.trim().toUpperCase()))
+					{
+						wbExists = true;
+						break;
+					}
+				}
+			
+				if(wbExists == true)
+				{
+					throw new BoardwalkException( 10011 );
+				}
+				else
+				{
+					wbId = BoardwalkCollaborationManager.createWhiteboard(bwcon, wbName, collabId);
+					System.out.println("Whiteboard: " + wbName + " is successfully created under Collaboration : " + collabId);
 				}
 			}
+	        catch (NoSuchElementException nse)
+	        {
+				System.out.println("Collaboration NOT FOUND.");
+				erb = new ErrorRequestObject();
+				erb.setError("Collaboration does not exist for this Collaboration Id");
+				erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::BoardwalkNeighborhoodManager.getNeighborhoodTree");
+				erb.setProposedSolution("Use existing Collaboration Id");
+				ErrResps.add(erb);
+	        }	 		    			
 		
-			if(wbExists == true)
+			catch (BoardwalkException bwe)
 			{
-				throw new BoardwalkException( 10011 );
-			}
-			else
-			{
-				wbId = BoardwalkCollaborationManager.createWhiteboard(bwcon, wbName, collabId);
-				System.out.println("Whiteboard: " + wbName + " is successfully created under Collaboration : " + collabId);
-			}
-		}
-        catch (NoSuchElementException nse)
-        {
-			System.out.println("Collaboration NOT FOUND.");
-			erb = new ErrorRequestObject();
-			erb.setError("Collaboration does not exist for this Collaboration Id");
-			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::BoardwalkNeighborhoodManager.getNeighborhoodTree");
-			erb.setProposedSolution("Use existing Collaboration Id");
-			ErrResps.add(erb);
-        }	 		    			
-	
-		catch (BoardwalkException bwe)
-		{
-			switch(bwe.getErrorCode())
-			{
+				switch(bwe.getErrorCode())
+				{
 /*					case 10018 :
 						System.out.println("Collaboration Id not found");
 						erb = new ErrorRequestObject();
@@ -313,20 +259,32 @@ public class CollaborationManagement {
 						erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
 						ErrResps.add(erb);
 						break; */
-					
-				case 10011 :
-					System.out.println("Whitebord with this name already Exists");
-					erb = new ErrorRequestObject();
-					erb.setError("Whiteboard already Exists with this name.");
-					erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardPost::bcn.getWhiteboards()");
-					erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-					ErrResps.add(erb);
-					break; 
+						
+					case 10011 :
+						System.out.println("Whitebord with this name already Exists");
+						erb = new ErrorRequestObject();
+						erb.setError("Whiteboard already Exists with this name.");
+						erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardPost::bcn.getWhiteboards()");
+						erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+						ErrResps.add(erb);
+						break; 
 
+				}
+	        	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
 			}
-        	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+    		
+    	}
+		//Custom code Ends
+		catch (SQLException sqe)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("SQLException:" + sqe.getCause());
+			erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardPost::getConnection");
+			erb.setProposedSolution("Get DBConnection failed. Contact Boardwalk System Administrator");
+			ErrResps.add(erb);
+			sqe.printStackTrace();
 		}
-    	finally
+		finally
 		{
 			try
 			{
@@ -340,115 +298,9 @@ public class CollaborationManagement {
 		return wbId;
 	}
 
-    // @DELETE
-    // @Path("/{collabId}/whiteboard/{whiteboardId}
-    public static void collaborationCollabIdWhiteboardWhiteboardIdDelete(int collabId, int whiteboardId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String) 
+    public static void collaborationCollabIdWhiteboardWhiteboardIdDelete(int collabId, int whiteboardId, ArrayList <ErrorRequestObject> ErrRespst) 
     {
-		ErrorRequestObject erb;
-		ArrayList <Collaboration> collabList = new ArrayList<Collaboration>();
 
-		// get the connection
-    	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int loginNhId = -1;
-		int loginMemberId = -1;
-		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return;
-		}
-
-		connection = bwcon.getConnection();
-		loginMemberId = memberNh.get(0);
-		loginNhId = memberNh.get(1);
-		loginUserId = bwcon.getUserId();
-		
-    	try
-    	{
-			//Custom Code Starts   	
-			try
-			{
-				BoardwalkCollaborationNode bcn = null;
-				bcn = BoardwalkCollaborationManager.getCollaborationTree(bwcon, collabId);
-				
-				if (bcn == null) 
-				{
-					//throw new NoSuchElementException("Collaboration Id NOT FOUND") ;
-					throw new BoardwalkException( 10018 );
-				}    		
-				System.out.println("Sucessfully fetched the collab tree from the database");
-
-				boolean wbExists = false;
-				Vector wv = bcn.getWhiteboards();
-				Iterator wvi = wv.iterator();
-				while ( wvi.hasNext())
-				{
-					BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
-					System.out.println("\tWhiteboard = " + bwn.getName());
-					
-					if(bwn.getId() == whiteboardId)
-					{
-						wbExists = true;
-						break;
-					}
-				}
-			
-				if(wbExists == false)
-				{
-			    	System.out.println("Whiteboard Id not found");
-			    	erb = new ErrorRequestObject();
-			    	erb.setError("Whiteboard ID NOT FOUND");
-			    	erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardWhiteboardIdDelete::BoardwalkCollaborationNode.getWhiteboards()");
-					erb.setProposedSolution("Provide an existing Whiteboard in the Collaboration.");
-			    	ErrResps.add(erb);
-			    	return;
-				}
-				else
-				{
-					BoardwalkCollaborationManager.deleteWhiteboard(bwcon, whiteboardId);
-					System.out.println("Whiteboard: [" + whiteboardId + "] under Collaboration:[" + collabId + "] is successfully Deleted.");
-				}
-				
-				
-				System.out.println("Whiteboard Id [" + whiteboardId +  "] Deleted Successfully");
-			}
-			catch (NoSuchElementException nse)
-			{
-				System.out.println("CollaborationId  [" + collabId +  "] does not exist.");
-				throw new BoardwalkException( 10018 );
-			}
-
-			
-			
-		}
-		//Custom code Ends
-		catch (BoardwalkException bwe)
-		{
-	    	System.out.println("Collaboration Id not found");
-	    	erb = new ErrorRequestObject();
-	    	erb.setError("Collaboration ID NOT FOUND");
-	    	erb.setPath("CollaborationManagement.collaborationCollabIdWhiteboardGet::BoardwalkCollaborationManager.getCollaborationTree");
-			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-	    	ErrResps.add(erb);
-	    	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-		}
-		finally
-		{
-			try
-			{
-				connection.close();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}    		
-		return ;
     }
 
     

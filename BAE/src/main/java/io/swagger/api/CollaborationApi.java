@@ -69,9 +69,9 @@ public class CollaborationApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Collaboration not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response collaborationCollabIdDelete(@ApiParam(value = "",required=true) @PathParam("collabId") Integer collabId
-,@Context SecurityContext securityContext,  @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.collaborationCollabIdDelete(collabId,securityContext,authBase64String);
+        return delegate.collaborationCollabIdDelete(collabId,securityContext);
     }
     @GET
     @Path("/{collabId}/whiteboard")
@@ -87,9 +87,9 @@ public class CollaborationApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Whiteboard not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response collaborationCollabIdWhiteboardGet(@ApiParam(value = "",required=true) @PathParam("collabId") Integer collabId
-,@Context SecurityContext securityContext,  @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.collaborationCollabIdWhiteboardGet(collabId,securityContext,authBase64String);
+        return delegate.collaborationCollabIdWhiteboardGet(collabId,securityContext);
     }
     @POST
     @Path("/{collabId}/whiteboard")
@@ -106,9 +106,9 @@ public class CollaborationApi  {
         @io.swagger.annotations.ApiResponse(code = 422, message = "Whiteboard not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response collaborationCollabIdWhiteboardPost(@ApiParam(value = "",required=true) @PathParam("collabId") Integer collabId
 ,@ApiParam(value = "Whiteboard creation details" ,required=true) Whiteboard wb
-,@Context SecurityContext securityContext,  @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.collaborationCollabIdWhiteboardPost(collabId,wb,securityContext,authBase64String);
+        return delegate.collaborationCollabIdWhiteboardPost(collabId,wb,securityContext);
     }
     @DELETE
     @Path("/{collabId}/whiteboard/{whiteboardId}")
@@ -125,8 +125,8 @@ public class CollaborationApi  {
         @io.swagger.annotations.ApiResponse(code = 422, message = "Whiteboard not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response collaborationCollabIdWhiteboardWhiteboardIdDelete(@ApiParam(value = "",required=true) @PathParam("collabId") Integer collabId
 ,@ApiParam(value = "",required=true) @PathParam("whiteboardId") Integer whiteboardId
-,@Context SecurityContext securityContext,  @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.collaborationCollabIdWhiteboardWhiteboardIdDelete(collabId,whiteboardId,securityContext,authBase64String);
+        return delegate.collaborationCollabIdWhiteboardWhiteboardIdDelete(collabId,whiteboardId,securityContext);
     }
 }

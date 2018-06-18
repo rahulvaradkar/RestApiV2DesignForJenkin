@@ -43,7 +43,7 @@ import javax.validation.constraints.*;
 /**
  * CellBuffer
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-23T17:17:30.780Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-11T14:19:58.049Z")
 public class CellBuffer   {
   @JsonProperty("info")
   private GridInfo info = null;

@@ -35,28 +35,16 @@ import javax.validation.constraints.*;
 /**
  * Grid
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-26T13:28:10.460Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T14:51:11.960Z")
 public class Grid   {
-  @JsonProperty("userName")
-  private String userName = null;
-
-  @JsonProperty("password")
-  private String password = null;
-
-  @JsonProperty("nhPath")
-  private String nhPath = null;
-
-  @JsonProperty("gridId")
-  private Integer gridId = null;
+  @JsonProperty("id")
+  private Integer id = null;
 
   @JsonProperty("collabId")
   private Integer collabId = null;
 
   @JsonProperty("wbId")
   private Integer wbId = null;
-
-  @JsonProperty("nhId")
-  private Integer nhId = null;
 
   @JsonProperty("memberId")
   private Integer memberId = null;
@@ -67,80 +55,23 @@ public class Grid   {
   @JsonProperty("description")
   private String description = null;
 
-  public Grid userName(String userName) {
-    this.userName = userName;
+  public Grid id(Integer id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * Get userName
-   * @return userName
+   * Get id
+   * @return id
    **/
-  @JsonProperty("userName")
+  @JsonProperty("id")
   @ApiModelProperty(value = "")
-  public String getUserName() {
-    return userName;
+  public Integer getId() {
+    return id;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
-
-  public Grid password(String password) {
-    this.password = password;
-    return this;
-  }
-
-  /**
-   * Get password
-   * @return password
-   **/
-  @JsonProperty("password")
-  @ApiModelProperty(value = "")
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public Grid nhPath(String nhPath) {
-    this.nhPath = nhPath;
-    return this;
-  }
-
-  /**
-   * Get nhPath
-   * @return nhPath
-   **/
-  @JsonProperty("nhPath")
-  @ApiModelProperty(value = "")
-  public String getNhPath() {
-    return nhPath;
-  }
-
-  public void setNhPath(String nhPath) {
-    this.nhPath = nhPath;
-  }
-
-  public Grid gridId(Integer gridId) {
-    this.gridId = gridId;
-    return this;
-  }
-
-  /**
-   * Get gridId
-   * @return gridId
-   **/
-  @JsonProperty("gridId")
-  @ApiModelProperty(value = "")
-  public Integer getGridId() {
-    return gridId;
-  }
-
-  public void setGridId(Integer gridId) {
-    this.gridId = gridId;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public Grid collabId(Integer collabId) {
@@ -179,25 +110,6 @@ public class Grid   {
 
   public void setWbId(Integer wbId) {
     this.wbId = wbId;
-  }
-
-  public Grid nhId(Integer nhId) {
-    this.nhId = nhId;
-    return this;
-  }
-
-  /**
-   * Get nhId
-   * @return nhId
-   **/
-  @JsonProperty("nhId")
-  @ApiModelProperty(value = "")
-  public Integer getNhId() {
-    return nhId;
-  }
-
-  public void setNhId(Integer nhId) {
-    this.nhId = nhId;
   }
 
   public Grid memberId(Integer memberId) {
@@ -267,13 +179,9 @@ public class Grid   {
       return false;
     }
     Grid grid = (Grid) o;
-    return Objects.equals(this.userName, grid.userName) &&
-        Objects.equals(this.password, grid.password) &&
-        Objects.equals(this.nhPath, grid.nhPath) &&
-        Objects.equals(this.gridId, grid.gridId) &&
+    return Objects.equals(this.id, grid.id) &&
         Objects.equals(this.collabId, grid.collabId) &&
         Objects.equals(this.wbId, grid.wbId) &&
-        Objects.equals(this.nhId, grid.nhId) &&
         Objects.equals(this.memberId, grid.memberId) &&
         Objects.equals(this.name, grid.name) &&
         Objects.equals(this.description, grid.description);
@@ -281,7 +189,7 @@ public class Grid   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userName, password, nhPath, gridId, collabId, wbId, nhId, memberId, name, description);
+    return Objects.hash(id, collabId, wbId, memberId, name, description);
   }
 
 
@@ -290,13 +198,9 @@ public class Grid   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Grid {\n");
     
-    sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
-    sb.append("    password: ").append(toIndentedString(password)).append("\n");
-    sb.append("    nhPath: ").append(toIndentedString(nhPath)).append("\n");
-    sb.append("    gridId: ").append(toIndentedString(gridId)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    collabId: ").append(toIndentedString(collabId)).append("\n");
     sb.append("    wbId: ").append(toIndentedString(wbId)).append("\n");
-    sb.append("    nhId: ").append(toIndentedString(nhId)).append("\n");
     sb.append("    memberId: ").append(toIndentedString(memberId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
