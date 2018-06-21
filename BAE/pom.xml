@@ -239,7 +239,7 @@
 
 </dependencies>
   <build>
-    <finalName>BAE</finalName>
+    <finalName>BAE_TEST</finalName>
 	<sourceDirectory>src\main\java</sourceDirectory>
     <testSourceDirectory>src/test</testSourceDirectory>
 	<resources>
