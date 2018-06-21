@@ -6,7 +6,11 @@ pipeline {
 	
 	   stage ('Cloning Stage') {
 
-            checkout scm 
+	   steps {
+               checkout scm 
+            }
+	   
+            
         }	
 	
 	
