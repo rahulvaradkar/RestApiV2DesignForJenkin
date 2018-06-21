@@ -249,7 +249,7 @@
 
 		<init-param>
 			<param-name>databasename</param-name>
-			<param-value>BAE_4_2</param-value>
+			<param-value>BAE_4_3_JENKINS_TEST</param-value>
 		</init-param>
 
 		<init-param>
