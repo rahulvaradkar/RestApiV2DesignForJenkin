@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>JUnit reporter for QUnit</title>
+
+	<script src="https://code.jquery.com/qunit/qunit-2.6.1.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.6.1.css">
+	<script>
+		QUnit.config.reorder = true;
+	</script>
+  	</script>
+<script src="qunit-reporter-junit.js"></script>
+	<script src="globals_local.js"></script>
+	<script src="TestUtils.js"></script>
+	<script src="UserTests.js"></script>
+	<script src="MemberTests.js"></script>
+	<script src="NeighbourhoodTest.js"></script>
+	<script src="Whiteboard.js"></script>
+	<script src="Collaboration.js"></script>
+	<script src="Relation.js"></script>
+	<script src="Grid.js"></script>
+	
+	
+	 
+	<script>
+		// New API
+		QUnit.jUnitDone(function(data) {
+			var console = window.console;
+			if (console) {
+			
+				console.log(data);
+				$('#myid').hide();
+				document.getElementById("myid").innerHTML = data.xml;
+				}			
+		});
+		
+	</script>
+	
+</head>
+<body>
+	<div id="qunit"></div>
+	<br><br><br><br>
+	<div id="myid" value="abc"></div>
+</body>
+</html>

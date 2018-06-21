@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="http://localhost:8080/BAE_4_3_REST_API_TEST_V1/scripts/rest_api_test_runner_local.html" tests="1891" failures="2" errors="0" time="3.382">
+<testsuite id="0" name="Neighbourhood" hostname="localhost" tests="14" failures="0" errors="0" time="0.672" timestamp="2018-06-18T04:23:32Z">
+<testcase name="Reading Neighborhood with ID=1" time="0.425" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+<testcase name="Posting new Neighborhood at level 2" time="0.09" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+<testcase name="Delete test case for neighborhood at level 2" time="0.057" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+<testcase name="Posting new Neighborhood at level 0" time="0.045" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+<testcase name="Delete test case for neighborhood" time="0.049" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+</testsuite>
+<testsuite id="1" name="Whiteboard" hostname="localhost" tests="9" failures="0" errors="0" time="0.196" timestamp="2018-06-18T04:23:32Z">
+<testcase name="Reading Whiteboard of Collaboration ID=1001" time="0.082" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+<testcase name="Reading Whiteboard of not existed Collaboration ID=999" time="0.056" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+<testcase name="Reading Whiteboard of not existed Collaboration with Negative ID= -999" time="0.009" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+<testcase name="Posting existed Whiteboard" time="0.047" timestamp="2018-06-18T04:23:32Z">
+</testcase>
+</testsuite>
+<testsuite id="2" name="Collaborations" hostname="localhost" tests="3" failures="0" errors="0" time="0.101" timestamp="2018-06-18T04:23:33Z">
+<testcase name="Reading Collaborations of Neighborhood ID=1" time="0.06" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Reading Collaborations of Neighborhood when collaboration are not exist" time="0.041" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+</testsuite>
+<testsuite id="3" name="Relation" hostname="localhost" tests="2" failures="0" errors="0" time="0.144" timestamp="2018-06-18T04:23:33Z">
+<testcase name="Reading Relation of Neighborhood ID=1" time="0.144" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+</testsuite>
+<testsuite id="4" name="Grid" hostname="localhost" tests="16" failures="0" errors="0" time="0.425" timestamp="2018-06-18T04:23:33Z">
+<testcase name="User having Multiple Memberships creating Grid using MEMBERSHIP-1 " time="0.085" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="User having Multiple Memberships creating Grid using MEMBERSHIP-2" time="0.051" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="InValid Collaboration ID" time="0.044" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="InValid Whiteboard ID" time="0.052" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Missing Cell element while Exporting Grid" time="0.112" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Missing Row element while Exporting Grid" time="0.04" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Missing columnArray element while Exporting Grid" time="0.038" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+</testsuite>
+<testsuite id="5" name="User" hostname="localhost" tests="43" failures="2" errors="0" time="0.406" timestamp="2018-06-18T04:23:33Z">
+<testcase name="Test Case For Single User" time="0.06" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Test Case For User With id=2" time="0.043" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Test Case For Negative user Id" time="0.01" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Test Case For zero user Id" time="0.014" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Test Case For User Not Found" time="0.045" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Test Case For Missing Authorization for user ID = 1" time="0.016" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Test Case For all Active Users" time="0.055" timestamp="2018-06-18T04:23:33Z">
+<failure type="AssertionFailedError" message="Parameters should not be null" />
+</testcase>
+<testcase name="Test Case For Missing Authorization for Active Users" time="0.029" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Test Case For all non-active Users" time="0.046" timestamp="2018-06-18T04:23:33Z">
+<failure type="AssertionFailedError" message="Parameters should not be null" />
+</testcase>
+<testcase name="Test Case For Invalid Authorization for Posting new user" time="0.035" timestamp="2018-06-18T04:23:33Z">
+</testcase>
+<testcase name="Post test cases for new User with Blank Name And Password" time="0.011" timestamp="2018-06-18T04:23:34Z">
+</testcase>
+<testcase name="Put test cases for User with Blank email, firstName, lastName" time="0.01" timestamp="2018-06-18T04:23:34Z">
+</testcase>
+<testcase name="Put test cases for User with Missing email, firstName, lastName" time="0.01" timestamp="2018-06-18T04:23:34Z">
+</testcase>
+<testcase name="Test case for Deleting User with Missing Authorization" time="0.017" timestamp="2018-06-18T04:23:34Z">
+</testcase>
+<system-out>
+<![CDATA[
+[User, Test Case For all Active Users, 2] Parameters should not be null
+Source:     at http://localhost:8080/BAE_4_3_REST_API_TEST_V1/scripts/UserTests.js:131:12
+    at l (https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js:2:29375)
+    at c (https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js:2:29677)
+[User, Test Case For all non-active Users, 1] Parameters should not be null
+Source:     at http://localhost:8080/BAE_4_3_REST_API_TEST_V1/scripts/UserTests.js:182:12
+    at l (https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js:2:29375)
+    at c (https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js:2:29677)
+]]>
+</system-out>
+</testsuite>
+<testsuite id="6" name="Member" hostname="localhost" tests="1804" failures="0" errors="0" time="1.424" timestamp="2018-06-18T04:23:34Z">
+<testcase name="Get members of neighborhood" time="1.29" timestamp="2018-06-18T04:23:34Z">
+</testcase>
+<testcase name="Get empty data for neighborhood without any members" time="0.064" timestamp="2018-06-18T04:23:35Z">
+</testcase>
+<testcase name="Get members from nhid 0 neighborhood" time="0.014" timestamp="2018-06-18T04:23:35Z">
+</testcase>
+<testcase name="Get members from nhid -1 neighborhood" time="0.012" timestamp="2018-06-18T04:23:35Z">
+</testcase>
+<testcase name="Get members from non-existing neighborhood" time="0.037" timestamp="2018-06-18T04:23:35Z">
+</testcase>
+</testsuite>
+</testsuites>

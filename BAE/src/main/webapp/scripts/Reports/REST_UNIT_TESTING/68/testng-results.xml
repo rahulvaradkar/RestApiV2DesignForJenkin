@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="3" passed="3">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Group of group Suite" duration-ms="78" started-at="2018-06-14T04:59:56Z" finished-at="2018-06-14T04:59:56Z">
+    <groups>
+    </groups>
+    <test name="Group of group Test" duration-ms="31" started-at="2018-06-14T04:59:56Z" finished-at="2018-06-14T04:59:56Z">
+      <class name="test.TestNgMavenExampleTest">
+        <test-method status="PASS" signature="exampleOfTestNgMaven()[pri:0, instance:test.TestNgMavenExampleTest@4cdbe50f]" name="exampleOfTestNgMaven" duration-ms="16" started-at="2018-06-14T04:59:56Z" finished-at="2018-06-14T04:59:56Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- exampleOfTestNgMaven -->
+        <test-method status="PASS" signature="testNullablity()[pri:1, instance:test.TestNgMavenExampleTest@4cdbe50f]" name="testNullablity" duration-ms="0" started-at="2018-06-14T04:59:56Z" finished-at="2018-06-14T04:59:56Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testNullablity -->
+      </class> <!-- test.TestNgMavenExampleTest -->
+    </test> <!-- Group of group Test -->
+    <test name="Test2" duration-ms="0" started-at="2018-06-14T04:59:56Z" finished-at="2018-06-14T04:59:56Z">
+      <class name="test.TestNgMavenExampleTest2">
+        <test-method status="PASS" signature="testEquality()[pri:0, instance:test.TestNgMavenExampleTest2@6a5fc7f7]" name="testEquality" duration-ms="0" started-at="2018-06-14T04:59:56Z" finished-at="2018-06-14T04:59:56Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testEquality -->
+      </class> <!-- test.TestNgMavenExampleTest2 -->
+    </test> <!-- Test2 -->
+  </suite> <!-- Group of group Suite -->
+</testng-results>

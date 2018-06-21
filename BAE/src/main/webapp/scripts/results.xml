@@ -1,0 +1,37 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<testsuites name="http://localhost:8080/BAE_4_3_REST_API_TEST_V1/scripts/rest_api_test_runner_local_jenkins.html" tests="2725" failures="0" errors="0" time="1.689">
+<testsuite id="0" name="User" hostname="localhost" tests="2725" failures="0" errors="0" time="1.681" timestamp="2018-06-08T11:51:25Z">
+<testcase name="Test Case For Single User" time="0.096" timestamp="2018-06-08T11:51:25Z">
+</testcase>
+<testcase name="Test Case For User With id=2" time="0.077" timestamp="2018-06-08T11:51:25Z">
+</testcase>
+<testcase name="Test Case For Negative user Id" time="0.043" timestamp="2018-06-08T11:51:25Z">
+</testcase>
+<testcase name="Test Case For zero user Id" time="0.041" timestamp="2018-06-08T11:51:25Z">
+</testcase>
+<testcase name="Test Case For User Not Found" time="0.073" timestamp="2018-06-08T11:51:25Z">
+</testcase>
+<testcase name="Test Case For Missing Authorization for user ID = 1" time="0.083" timestamp="2018-06-08T11:51:25Z">
+</testcase>
+<testcase name="Test Case For all Active Users" time="0.469" timestamp="2018-06-08T11:51:25Z">
+</testcase>
+<testcase name="Test Case For Missing Authorization for Active Users" time="0.175" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Test Case For all non-active Users" time="0.161" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Post test cases for new User" time="0.1" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Test case for Deleting User" time="0.099" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Test Case For Invalid Authorization for Posting new user" time="0.068" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Post test cases for new User with Blank Name And Password" time="0.047" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Put test cases for User with Blank email, firstName, lastName" time="0.044" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Put test cases for User with Missing email, firstName, lastName" time="0.044" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+<testcase name="Test case for Deleting User with Missing Authorization" time="0.054" timestamp="2018-06-08T11:51:26Z">
+</testcase>
+</testsuite>
+</testsuites>

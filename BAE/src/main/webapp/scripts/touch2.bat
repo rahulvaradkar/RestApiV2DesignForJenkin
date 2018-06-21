@@ -1,0 +1,3 @@
+echo *.xml
+exit
+
