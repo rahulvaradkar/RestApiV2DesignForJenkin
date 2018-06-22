@@ -33,7 +33,7 @@ import javax.validation.constraints.*;
 
 @Produces({ "application/json" })
 @io.swagger.annotations.Api(description = "the neighborhood API")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-06-09T07:13:31.207Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class NeighborhoodApi  {
    private final NeighborhoodApiService delegate;
 
@@ -68,9 +68,9 @@ public class NeighborhoodApi  {
     @io.swagger.annotations.ApiResponses(value = { 
         @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Neighborhood.class, responseContainer = "List") })
     public Response neighborhoodGet(@ApiParam(value = "regular expression of upto four level neighborhood hierarchy") @QueryParam("neighborhoodSpec") String neighborhoodSpec
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodGet(neighborhoodSpec,securityContext, authBase64String);
+        return delegate.neighborhoodGet(neighborhoodSpec,securityContext);
     }
     @GET
     @Path("/{nhId}/collaboration")
@@ -86,9 +86,9 @@ public class NeighborhoodApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Neighborhood not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdCollaborationGet(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdCollaborationGet(nhId,securityContext,authBase64String);
+        return delegate.neighborhoodNhIdCollaborationGet(nhId,securityContext);
     }
     @DELETE
     @Path("/{nhId}")
@@ -104,9 +104,9 @@ public class NeighborhoodApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Neighborhood not found, Neighborhood has dependent objects", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdDelete(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdDelete(nhId,securityContext,authBase64String);
+        return delegate.neighborhoodNhIdDelete(nhId,securityContext);
     }
     @GET
     @Path("/{nhId}")
@@ -122,9 +122,9 @@ public class NeighborhoodApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Failed to return Neighborhood Hierarchy", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdGet(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdGet(nhId,securityContext,authBase64String);
+        return delegate.neighborhoodNhIdGet(nhId,securityContext);
     }
     @GET
     @Path("/{nhId}/member")
@@ -140,9 +140,9 @@ public class NeighborhoodApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Neighborhood not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdMemberGet(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdMemberGet(nhId,securityContext,authBase64String);
+        return delegate.neighborhoodNhIdMemberGet(nhId,securityContext);
     }
     @POST
     @Path("/{nhId}/member/{memberId}/collaboration")
@@ -160,9 +160,9 @@ public class NeighborhoodApi  {
     public Response neighborhoodNhIdMemberMemberIdCollaborationPost(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
 ,@ApiParam(value = "",required=true) @PathParam("memberId") Integer memberId
 ,@ApiParam(value = "Collaboration creation details" ,required=true) Collaboration collaboration
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdMemberMemberIdCollaborationPost(nhId,memberId,collaboration,securityContext, authBase64String);
+        return delegate.neighborhoodNhIdMemberMemberIdCollaborationPost(nhId,memberId,collaboration,securityContext);
     }
     @DELETE
     @Path("/{nhId}/member/{memberId}")
@@ -179,9 +179,9 @@ public class NeighborhoodApi  {
         @io.swagger.annotations.ApiResponse(code = 422, message = "Failed to Delete Member from Neighborhood", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdMemberMemberIdDelete(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
 ,@ApiParam(value = "",required=true) @PathParam("memberId") Integer memberId
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdMemberMemberIdDelete(nhId,memberId,securityContext, authBase64String);
+        return delegate.neighborhoodNhIdMemberMemberIdDelete(nhId,memberId,securityContext);
     }
     @POST
     @Path("/{nhId}/member")
@@ -198,12 +198,10 @@ public class NeighborhoodApi  {
         @io.swagger.annotations.ApiResponse(code = 422, message = "Failed to add Member to Neighborhood", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdMemberPost(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
 ,@ApiParam(value = "Member creation details" ,required=true) Member member
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdMemberPost(nhId,member,securityContext, authBase64String);
+        return delegate.neighborhoodNhIdMemberPost(nhId,member,securityContext);
     }
-    
-    
     @DELETE
     @Path("/{nhId}/relation")
     
@@ -216,13 +214,11 @@ public class NeighborhoodApi  {
         
         @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input", response = Void.class) })
     public Response neighborhoodNhIdRelationDelete(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
-,@ApiParam(value = "",required=true) @QueryParam("relation") String relation
-,@Context SecurityContext securityContext , @HeaderParam("Authorization") String authBase64String)
+,@ApiParam(value = "",required=true) @QueryParam("relation") Integer relation
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdRelationDelete(nhId,relation,securityContext, authBase64String);
+        return delegate.neighborhoodNhIdRelationDelete(nhId,relation,securityContext);
     }
-    
-    
     @GET
     @Path("/{nhId}/relation")
     
@@ -237,11 +233,10 @@ public class NeighborhoodApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Neighborhood not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdRelationGet(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdRelationGet(nhId,securityContext, authBase64String);
+        return delegate.neighborhoodNhIdRelationGet(nhId,securityContext);
     }
-    
     @POST
     @Path("/{nhId}/relation")
     
@@ -257,9 +252,9 @@ public class NeighborhoodApi  {
         @io.swagger.annotations.ApiResponse(code = 422, message = "Neighborhood not found", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodNhIdRelationPost(@ApiParam(value = "",required=true) @PathParam("nhId") Integer nhId
 ,@ApiParam(value = "Relationship creation details" ,required=true) Relation relationship
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodNhIdRelationPost(nhId,relationship,securityContext, authBase64String);
+        return delegate.neighborhoodNhIdRelationPost(nhId,relationship,securityContext);
     }
     @POST
     
@@ -275,8 +270,8 @@ public class NeighborhoodApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Failed to Create New Neighborhood", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response neighborhoodPost(@ApiParam(value = "Neighborhood creation detail" ,required=true) Neighborhood neighborhood
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext)
     throws NotFoundException {
-        return delegate.neighborhoodPost(neighborhood,securityContext, authBase64String);
+        return delegate.neighborhoodPost(neighborhood,securityContext);
     }
 }
