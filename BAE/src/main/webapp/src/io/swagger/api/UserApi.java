@@ -30,7 +30,7 @@ import javax.validation.constraints.*;
 
 @Produces({ "application/json" })
 @io.swagger.annotations.Api(description = "the user API")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-06-09T04:12:45.675Z")
 public class UserApi  {
    private final UserApiService delegate;
 
@@ -67,9 +67,9 @@ public class UserApi  {
         
         @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response userGet(@ApiParam(value = "") @QueryParam("active") Boolean active
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.userGet(active,securityContext);
+        return delegate.userGet(active,securityContext,authBase64String);
     }
     @POST
     
@@ -85,9 +85,9 @@ public class UserApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Failed to Create New User", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response userPost(@ApiParam(value = "User creation details" ,required=true) User user
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.userPost(user,securityContext);
+        return delegate.userPost(user,securityContext,authBase64String);
     }
     @PUT
     
@@ -105,9 +105,9 @@ public class UserApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Failed to Update User Profile. Reason could be trying to create Duplicate entities", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response userPut(@ApiParam(value = "User creation details" ,required=true) User user
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.userPut(user,securityContext);
+        return delegate.userPut(user,securityContext,authBase64String);
     }
     @DELETE
     @Path("/{userId}")
@@ -123,9 +123,9 @@ public class UserApi  {
         
         @io.swagger.annotations.ApiResponse(code = 404, message = "User profile not found", response = String.class) })
     public Response userUserIdDelete(@ApiParam(value = "",required=true) @PathParam("userId") Integer userId
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.userUserIdDelete(userId,securityContext);
+        return delegate.userUserIdDelete(userId,securityContext,authBase64String);
     }
     @GET
     @Path("/{userId}")
@@ -141,8 +141,8 @@ public class UserApi  {
         
         @io.swagger.annotations.ApiResponse(code = 404, message = "User not found", response = String.class) })
     public Response userUserIdGet(@ApiParam(value = "",required=true) @PathParam("userId") Integer userId
-,@Context SecurityContext securityContext)
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.userUserIdGet(userId,securityContext);
+        return delegate.userUserIdGet(userId,securityContext,authBase64String);
     }
 }
