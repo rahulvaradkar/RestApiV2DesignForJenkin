@@ -30,20 +30,59 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 //    @DELETE
 //    @Path("/{collabId}")
     @Override
-    public Response collaborationCollabIdDelete(Integer collabId, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdDelete(Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		 
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+		 
+		System.out.println("collabId ->" + collabId);
+		if (collabId <= 0)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("collabId"); 
+			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
+			erbs.add(erb);
+		}
+		 
+	   	if (erbs.size() == 0)
+	   	{
+		  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+		  	 	CollaborationManagement.collaborationCollabIdDelete(collabId, ErrResps, authBase64String);
+		    	if (ErrResps.size() > 0)
+		    		return Response.ok().entity(ErrResps).build();   	
+		    	else
+		    		return Response.status(200).entity("Collaboration Deleted Successfully").build();
+	   	}
+	   	else
+	   	{
+	       	return Response.ok().entity(erbs).build();
+	   	}    
+//        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     
 //    @GET
 //    @Path("/{collabId}/whiteboard")
     @Override
-    public Response collaborationCollabIdWhiteboardGet(Integer collabId, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdWhiteboardGet(Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
- 		ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
-		 System.out.println("collabId ->" + collabId);
-		 if (collabId <= 0)
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		 
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+		 
+		System.out.println("collabId ->" + collabId);
+		if (collabId <= 0)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("collabId"); 
 			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
@@ -54,7 +93,7 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 	   	{
 	   			ArrayList<Collaboration> collabList;
 		  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-		  	 	collabList = CollaborationManagement.collaborationCollabIdWhiteboardGet(collabId, ErrResps);
+		  	 	collabList = CollaborationManagement.collaborationCollabIdWhiteboardGet(collabId, ErrResps, authBase64String);
 		    	
 		    	if (collabList.size() > 0)
 		        	return Response.ok().entity(collabList ).build();
@@ -71,19 +110,36 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 //    @POST
 //    @Path("/{collabId}/whiteboard")
     @Override
-    public Response collaborationCollabIdWhiteboardPost(Integer collabId, Whiteboard wb, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdWhiteboardPost(Integer collabId, Whiteboard wb, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
- 		ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
-		 System.out.println("collabId ->" + collabId);
-		 if (collabId <= 0)
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+		
+		System.out.println("collabId ->" + collabId);
+		if (collabId <= 0)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("collabId"); 
 			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
 			erbs.add(erb);
 		}
 		 
-	  	if (wb.getName().trim().equals(""))
+		String wbName = null;
+		wbName = wb.getName();
+		
+	  	if (wbName == null)
+	  	{
+			erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("Whiteboard.Name"); 
+			erb.setProposedSolution("Whiteboard Name is Missing. Enter Whiteboard Name and try again");
+			erbs.add(erb);
+	  	}
+	  	else if (wbName.trim().equals(""))
 	  	{
 			erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("Whiteboard.Name"); 
 			erb.setProposedSolution("Whiteboard Name cannot be Blank.");
@@ -92,15 +148,14 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 		 
 	   	if (erbs.size() == 0)
 	   	{
-	   			int wbId;
-		  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-		  	 	wbId = CollaborationManagement.collaborationCollabIdWhiteboardPost(collabId, wb, ErrResps);
-		    	
-		    	if (ErrResps.size() > 0)
-		    		return Response.ok().entity(ErrResps).build();   	
-		    	else
-		        	return Response.ok().entity(wbId).build();
-		    	
+			int wbId;
+	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+	  	 	wbId = CollaborationManagement.collaborationCollabIdWhiteboardPost(collabId, wb, ErrResps, authBase64String);
+	    	
+	    	if (ErrResps.size() > 0)
+	    		return Response.ok().entity(ErrResps).build();   	
+	    	else
+	        	return Response.ok().entity(wbId).build();
 	   	}
 	   	else
 	   	{
@@ -112,8 +167,47 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 //    @DELETE
 //    @Path("/{collabId}/whiteboard/{whiteboardId}")
     @Override
-    public Response collaborationCollabIdWhiteboardWhiteboardIdDelete(Integer collabId, Integer whiteboardId, SecurityContext securityContext) throws NotFoundException {
+    public Response collaborationCollabIdWhiteboardWhiteboardIdDelete(Integer collabId, Integer whiteboardId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+		
+		System.out.println("collabId ->" + collabId);
+		if (collabId <= 0)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("collabId"); 
+			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
+			erbs.add(erb);
+		}
+		 
+	  	if (whiteboardId <= 0)
+	  	{
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("whiteboardId"); 
+			erb.setProposedSolution("You must enter an Existing Whiteboard ID. It should be a Positive Number.");
+			erbs.add(erb);
+	  	}
+		 
+	   	if (erbs.size() == 0)
+	   	{
+			int wbId;
+	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+	  	 	CollaborationManagement.collaborationCollabIdWhiteboardWhiteboardIdDelete(collabId, whiteboardId, ErrResps, authBase64String);
+	    	if (ErrResps.size() > 0)
+	    		return Response.ok().entity(ErrResps).build();   	
+	    	else
+	        	return Response.status(200).entity("Whiteboard: [" + whiteboardId + "] under Collaboration:[" + collabId + "] is successfully Deleted.").build();
+	   	}
+	   	else
+	   	{
+	       	return Response.ok().entity(erbs).build();
+	   	}    
+    	//return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
 }

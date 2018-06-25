@@ -41,7 +41,7 @@ extends ExcelAuthenticationFilter
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
 
-		System.out.println("inside BWExcelAuthenticationFilter");
+		
 		// pass through request if call to authentication service
 		String rURI = req.getRequestURI();
 		
@@ -265,7 +265,7 @@ extends ExcelAuthenticationFilter
 			System.out.println("BWExcelAuthenticationFilter::browserRequest : "+browserRequest); // TODO:REMOVE
 			if (browserRequest)
 			{
-				System.out.println("BWExcelAuthenticationFilter: Sending to login page !!!!");
+				System.out.println("BWExcelAuthenticationFilter: Sending to login page");
 				try {
 					//request.setAttribute("com.boardwalk.exception.BoardwalkException", new BoardwalkException(11004));
 					filterConfig.getServletContext().getRequestDispatcher("/jsp/admin/login.jsp").forward(request, response);
