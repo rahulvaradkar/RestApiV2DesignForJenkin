@@ -172,10 +172,9 @@
 </dependency>
 <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
 <dependency>
-    <groupId>com.microsoft.sqlserver</groupId>
-    <artifactId>mssql-jdbc</artifactId>
-    <version>6.4.0.jre8</version>
-    <scope>test</scope>
+<groupId>com.microsoft.sqlserver</groupId>
+<artifactId>mssql-jdbc</artifactId>
+<version>6.4.0.jre8</version>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/net.sourceforge.jtds/jtds -->

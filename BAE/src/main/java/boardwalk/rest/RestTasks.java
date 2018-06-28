@@ -77,7 +77,7 @@ public class RestTasks {
         Connection connection = null;
         try
         {
-            DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
+            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
         }
         catch(Exception e)
         {
@@ -185,7 +185,7 @@ public class RestTasks {
         Connection connection = null;
         try
         {
-            DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
+            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
         }
         catch(Exception e)
         {
