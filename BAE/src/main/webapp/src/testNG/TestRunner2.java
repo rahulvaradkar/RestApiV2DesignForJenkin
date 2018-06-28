@@ -32,7 +32,9 @@ public class TestRunner2 {
 	    cDateTime = cDateTime + (sdf.format(date));   
 
 		
-	cDateTime = file2+"\\Reports\\Unit Test Reports"+"\\Test Report__"+cDateTime;
+	//cDateTime = file2+"\\Reports\\Unit Test Reports"+"\\Test Report__"+cDateTime;
+	
+	cDateTime = file2+"\\Reports\\Unit_Test_Reports\\";
 	
 	System.out.println("**********Test Report Location   :"+cDateTime);
 		

@@ -32,7 +32,9 @@ public class MockitoRunner2 {
 	    cDateTime = cDateTime + (sdf.format(date));   
 
 		
-	cDateTime = file2+"\\Reports\\Mockito Test Reports"+"\\Test Report__"+cDateTime;
+	//cDateTime = file2+"\\Reports\\Mockito_Test_Reports"+"\\Test Report__"+cDateTime;
+	
+	cDateTime = file2+"\\Reports\\Mockito_Test_Reports\\";
 	
 	System.out.println("**********Test Report Location   :"+cDateTime);
 		
