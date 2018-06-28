@@ -1141,7 +1141,7 @@ throws SystemException
 			cs.executeUpdate();
 			cs.close();
 			cs = null;
-			
+			lbDeleted = true;
 		}
 		catch( SQLException sql1 )
 		{

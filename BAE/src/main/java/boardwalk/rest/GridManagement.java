@@ -110,84 +110,16 @@ public class GridManagement {
     	Vector xlErrorCells = new Vector(); 
     	try
     	{
+    		
     		int userId = bwcon.getUserId();
     		
     		//System.out.println("cellBufferRequest.toString() as follows...................");
     		//System.out.println(cellBufferRequest.toString());
 
-    		//GridInfo ginfo = cellBufferRequest.getInfo();
     		GridInfo ginfo = new GridInfo();
-/*    		
-    		if (ginfo.getMode() == null)
-    		{
-    			erb = new ErrorRequestObject();
-    			erb.setError("Mode is missing in GET Request");
-    			erb.setPath("GridManagement.gridGet::GridInfo.getMode()");
-    			erb.setProposedSolution("Mode is mandetory. Provide Mode as 1 or 0 to get the Grid Status");
-    			ErrResps.add(erb);
-    			return cbfReturn;
-    		}
-    		
-    		if ((ginfo.getMode() != 0) && (ginfo.getMode() != 1))
-    		{
-    			erb = new ErrorRequestObject();
-    			erb.setError("Invalid Mode in GET Request");
-    			erb.setPath("GridManagement.gridGet::GridInfo.getMode()");
-    			erb.setProposedSolution("Valid Mode is 1 or 0 to get the Grid Status");
-    			ErrResps.add(erb);
-    			return cbfReturn;
-    		}
-    		
-    		if (ginfo.getView() == null)
-    		{
-    			erb = new ErrorRequestObject();
-    			erb.setError("View is missing in GET Request");
-    			erb.setPath("GridManagement.gridGet::GridInfo.getView()");
-    			erb.setProposedSolution("View is mandetory. Valid View values are [ MY_ROWS |LATEST | DESIGN | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ]");
-    			ErrResps.add(erb);
-    			return cbfReturn;
-    		}
-    		
-    		if (ginfo.getView().equals("MY_ROWS") || 
-    			ginfo.getView().equals("LATEST") || 
-    			ginfo.getView().equals("DESIGN") || 
-    			ginfo.getView().equals("LATEST_BY_USER") || 
-    			ginfo.getView().equals("LATEST_VIEW_OF_ALL_USERS") || 
-    			ginfo.getView().equals("LATEST_VIEW_OF_ALL_CHILDREN") || 
-    			ginfo.getView().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH") || 
-    			ginfo.getView().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH") || 
-    			ginfo.getView().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH") || 
-    			ginfo.getView().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD") || 
-    			ginfo.getView().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD") || ginfo.getView().indexOf("?") == 0 )
-    		{    			
-        		System.out.println("view : " + ginfo.getView());
-    		}
-    		else
-    		{
-    			erb = new ErrorRequestObject();
-    			erb.setError("Invalid View in GET Request");
-    			erb.setPath("GridManagement.gridGet::GridInfo.getView()");
-    			erb.setProposedSolution("Invalid View. Valid View values are [ LATEST | DESIGN | MY_ROWS | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ] ");
-    			ErrResps.add(erb);
-    			return cbfReturn;
-    		}
-
-    		if (ginfo.getBaselineId() == null)
-    		{
-    			erb = new ErrorRequestObject();
-    			erb.setError("BaselineId is missing in GET Request");
-    			erb.setPath("GridManagement.gridGet::GridInfo.getBaselineId()");
-    			erb.setProposedSolution("BaselineId is mandetory. Provide default BaselineId as -1");
-    			ErrResps.add(erb);
-    			return cbfReturn;
-			} 			*/
 
     		int wbId;
     		int collabId;
-    		//String gridName = ginfo.getName();
-    		//String view = ginfo.getView();
-    		//int baselineId = ginfo.getBaselineId();
-    		//int mode = ginfo.getMode();
     		
     		ArrayList<Integer> rowArray = new ArrayList<Integer>();
     		ArrayList<Integer> columnArray  = new ArrayList<Integer>();
@@ -243,6 +175,15 @@ public class GridManagement {
 				if(view == null)
 					view = "None";
 			}
+
+			int synch = 0;
+			
+			if (importTid > 0)
+			{
+				cbfReturn = getGridRefresh  (connection, gridId, importTid, userId, memberId, nhId,  view, mode, baselineId, synch , ErrResps);
+				return cbfReturn;
+			}
+			
 			// Check access control :: TBD
 			int raccess = 1;
 			int ACLFromDB = ftal.getACL();
@@ -691,7 +632,518 @@ public class GridManagement {
 		return cbfReturn ;
 	}
 		
-	 	
+
+	//Returns Grid Refresh CellBuffer 
+	public static CellBuffer getGridRefresh(Connection connection, int gridId, int importTid, int userId, int memberId, int nhId,  String view, int mode, int baselineId, int synch , ArrayList<ErrorRequestObject> ErrResps)
+	{
+		ErrorRequestObject erb;
+		CellBuffer cbfReturn = new CellBuffer();
+		Vector xlErrorCells = new Vector(); 
+		TransactionManager tm = null ;
+		ArrayList<Cell> gridCells = new ArrayList<Cell>();
+		ArrayList <Column> newGridCols = new ArrayList <Column>();
+		ArrayList <Row> newGridRows = new ArrayList <Row>();
+
+		ArrayList <Integer> columnArray = new ArrayList <Integer>();
+		ArrayList<Integer> rowArray = new ArrayList<Integer>();
+
+		ArrayList<Integer> deletedColumnArray = new ArrayList<Integer>();
+		ArrayList<Integer> deletedRowArray = new ArrayList<Integer>();
+		ArrayList<Column> newColumnArray = new ArrayList<Column>();
+		ArrayList<Row> newRowArray = new ArrayList<Row>();
+		
+		ArrayList<String> cellValues  = new ArrayList<String>();
+		ArrayList<String> cellfmla  = new ArrayList<String>();
+		ArrayList<Integer> colCellAccess  = new ArrayList<Integer>();
+		ArrayList <SequencedCellArray> scas = new ArrayList<SequencedCellArray>();
+		GridChangeBuffer gcb ;
+		GridInfo ginfo = new GridInfo();
+	
+    	try
+    	{
+
+			int maxTransactionId = importTid;
+			int criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId, userId);
+			System.out.println("Using criterea table id = " + criteriaTableId);
+	
+			String lsRowQuery = TableViewManager.getRowQuery(connection, gridId, userId, criteriaTableId, true, view, "TABLE");
+			
+			// Check access control :: TBD
+			TableInfo tinfo = TableManager.getTableInfo(connection, userId, gridId);
+			TableAccessList ftal = TableViewManager.getSuggestedAccess(connection, tinfo, userId, memberId, nhId);
+
+			if (view == null || view.trim().equals(""))
+			{
+				view = ftal.getSuggestedViewPreferenceBasedOnAccess();
+				System.out.println("Suggested view pref = " + view);
+				if (view == null)
+				{
+					xlErrorCells.add(new xlErrorNew(gridId, 0, 0, 10005));
+					throw new BoardwalkException(10005);
+				}
+			}
+			// Check access control :: TBD
+			int raccess = 1;
+			int ACLFromDB = ftal.getACL();
+			TableAccessRequest wAccess = new TableAccessRequest(gridId, view, true);
+			int wACL = wAccess.getACL();
+			int awACL = wACL & ACLFromDB;
+			if (awACL == wACL)
+			{
+				raccess = 2;
+				System.out.println("Rows have write access");
+			}
+			else
+			{
+				System.out.println("Rows are readonly");
+			}
+	
+			//Added to fix Refresh issue when the Column Access is applied from Template side 2016/11/16
+			int accessTableId = TableViewManager.getAccessTable(connection, gridId, userId);
+			HashSet restrColumnList = new HashSet();
+			if (accessTableId > 0)
+			{
+				System.out.println("Using access table id = " + accessTableId);
+				// read the access for the user
+				restrColumnList = TableViewManager.getRestrictedColumnsForImport(connection, gridId, accessTableId, userId);
+			}
+	
+			// Get the columns
+			Vector colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
+			HashMap colHash = new HashMap();
+			//ColObjsByColId = new HashMap();
+			Iterator ci = colv.iterator();
+			//while (ci.hasNext())
+			//{
+			//    xlColumn_import coli = (xlColumn_import)ci.next();
+			//    ColObjsByColId.put(new Integer(coli.getId()), coli);
+			//}
+			// columns
+	
+			newGridCols = new ArrayList<Column>();
+			Column gridCol;
+			int previousColId =-1;
+			int previousColSequence = -1;
+			
+			for (int c = 0; c < colv.size(); c++)
+			{
+				xlColumn_import col = (xlColumn_import)colv.elementAt(c);
+				//Added to fix Refresh issue when the Column Access is applied from Template side 2016/11/16
+				if (restrColumnList != null && restrColumnList.size() > 0)
+				{
+					if (restrColumnList.contains(new Integer(col.getId())))
+					{
+						System.out.println("Skip restricted column " + col.getName());
+						continue;
+					}
+				}
+				if (maxTransactionId < col.getCreationTid())
+				{
+					maxTransactionId = col.getCreationTid();
+				}
+	
+				if (maxTransactionId < col.getAccessTid())
+				{
+					maxTransactionId = col.getAccessTid();
+				}
+				
+				//resData.append(col.getId() + Seperator);				//USE FOR REST API BUFFER
+				//resData.append(col.getName() + Seperator);				//USE FOR REST API BUFFER
+				// Mark New Columns, or Deleted Columns
+				if (col.getCreationTid() > importTid)
+				{
+					//resData.append("N" + Seperator);					//USE FOR REST API BUFFER   NEW COLUMN
+					gridCol = new Column();
+					gridCol.setActive(true);
+					gridCol.setId(col.getId());
+					gridCol.setName(col.getName());
+					gridCol.setPreviousColumnid(previousColId);
+					gridCol.setPreviousColumnSequence(new BigDecimal(previousColSequence));
+					gridCol.setSeqNo(new BigDecimal(col.getSequenceNumber()));
+					gridCol.setTid(col.getCreationTid());
+					newGridCols.add(gridCol);
+				}
+				else if (col.getAccessTid() > importTid && col.getAccess() > 0)
+				{
+					//resData.append("N" + Seperator);					//USE FOR REST API BUFFER	NEW COLUMN
+					gridCol = new Column();
+					gridCol.setActive(true);
+					gridCol.setId(col.getId());
+					gridCol.setName(col.getName());
+					gridCol.setPreviousColumnid(previousColId);
+					gridCol.setPreviousColumnSequence(new BigDecimal(previousColSequence));
+					gridCol.setSeqNo(new BigDecimal(col.getSequenceNumber()));
+					gridCol.setTid(col.getAccessTid());
+					newGridCols.add(gridCol);
+				}
+				
+				colHash.put(new Integer(col.getId()), col);
+				previousColId = col.getId();
+				previousColSequence = Math.round(col.getSequenceNumber());
+			}
+	
+			//System.out.println(resData.toString());
+			// Get the rows
+			boolean viewIsDynamic = false;
+			if (view.indexOf("?") == 0)
+			{
+				System.out.println("View is dynamic = " + view);
+				viewIsDynamic = true;
+			}
+			TableRowInfo tbrowInfo = null;
+			if (criteriaTableId == -1 && !viewIsDynamic)
+			{
+				tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
+			}
+			//condition added ashishB
+			if (criteriaTableId > 0 && viewIsDynamic)
+			{
+				tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
+			}
+			else
+			{
+				tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
+			}
+			Vector rowv = tbrowInfo.getRowVector();
+	
+			Hashtable rowHash = tbrowInfo.getRowHash();
+	
+			// rows
+			//System.out.println("transaction start");
+			tm = new TransactionManager(connection, userId);
+			int tid = tm.startTransaction("Import changes for table id = " + gridId, "");
+			tm.commitTransaction();
+			tm = null;
+			//System.out.println("transaction commit");
+	//		stmt = connection.prepareStatement("UPDATE BW_ROW SET OWNER_TID = ? WHERE ID = ?");
+			int numNewRows = 0;
+			int numSrvrRows = 0; //Added by Jeetendra on 20171205 to fix the Issue Id: 14025
+			
+			Row gridRow = new Row();
+			newGridRows = new ArrayList <Row>();
+			
+			int previousRowid = -1;
+			int previousRowSequence = -1;
+			for (int r = 0; r < rowv.size(); r++)
+			{
+				com.boardwalk.table.Row rowObject = (com.boardwalk.table.Row) rowv.elementAt(r);
+				int rowId = rowObject.getId();
+				if (maxTransactionId < rowObject.getCreationTid())
+				{
+					maxTransactionId = rowObject.getCreationTid();
+				}
+	
+				if (maxTransactionId < rowObject.getOwnershipAssignedTid())
+				{
+					maxTransactionId = rowObject.getOwnershipAssignedTid();
+				}
+				//Modified by Jeetendra on 20171205 to fix the Issue Id: 14025 - START
+				//resData.append(rowId + Seperator);
+	
+				if (synch != 0 || importTid < rowObject.getCreationTid() || importTid < rowObject.getOwnershipAssignedTid()) {		//THIS CONDITION IS NEEDED IN REST API
+					//resData.append(rowId + Seperator);
+					//resData.append("N" + Seperator);
+					numNewRows++;
+					numSrvrRows++;
+					
+					gridRow = new Row();
+					gridRow.setCreationTid(rowObject.getCreationTid());
+					gridRow.setCreaterId(rowObject.getCreatorUserId());
+					gridRow.setOwnerName(rowObject.getOwnerName());
+					gridRow.setOwnershipAssignedTid(rowObject.getOwnershipAssignedTid());
+					gridRow.setOwnerName(rowObject.getOwnerName());
+					gridRow.setOwnerId(rowObject.getOwnerUserId());
+					gridRow.setActive((rowObject.getIsActive()== 1? true : false));
+					gridRow.setRowName(rowObject.getName()); 	
+		    		gridRow.setActive((rowObject.getIsActive() == 1? true: false)); 
+		    		gridRow.setId(rowObject.getId()); 
+		    		gridRow.setPreviousRowid(  previousRowid);
+		    		gridRow.setPreviousRowSequence(previousRowSequence); 
+		    		Float obj = new Float(rowObject.getSequenceNumber());
+		    		gridRow.setSeqNo(obj.intValue()); 
+		    		newGridRows.add(gridRow);
+					
+				}
+				else
+				{
+					//resData.append(rowId + Seperator);
+					//resData.append(Seperator);
+					numSrvrRows++;
+				}
+	    		Float obj = new Float(rowObject.getSequenceNumber());
+	    		previousRowid = rowObject.getId() ;
+	    		previousRowSequence = obj.intValue();
+			}
+	
+			//System.out.println(resData.toString());
+			// Get the cells TBD : views other than latest
+			String q = null;
+			if (synch == 0)
+			{
+				q = "{CALL BW_IMPORT_CHANGES(?,?,?,?,?,?,?)}";
+				System.out.println("Calling BW_IMPORT_CHANGES ");
+			}
+			else
+			{
+				q = "{CALL BW_IMPORT_CHANGES_ALL(?,?,?,?,?,?,?)}";
+				System.out.println("Calling BW_IMPORT_CHANGES_ALL ");
+			}
+			PreparedStatement stmt		= null;
+			//cellv = TableManager.getLatestCellsForTable(connection, m_tableid, userId, memberId, nhId, ViewPreference);
+			stmt = connection.prepareStatement(q);
+			stmt.setInt(1, gridId);
+			stmt.setInt(2, userId);
+			stmt.setInt(3, memberId);
+			stmt.setInt(4, nhId);
+			stmt.setString(5, view);
+			stmt.setInt(6, importTid);
+			stmt.setInt(7, tid);
+	
+			System.out.println("tableId = " + gridId);
+			System.out.println("userId = " + userId);
+			System.out.println("memberId = " + memberId);
+			System.out.println("nhId = " + nhId);
+			System.out.println("view = " + view);
+			System.out.println("importTid = " + importTid);
+			System.out.println("newTid = " + tid);
+			System.out.println("mode = " + mode);
+			System.out.println("synch = " + synch);
+	
+			System.out.println("before stmt.executeQuery :" + q);
+			ResultSet rs = stmt.executeQuery ();
+			System.out.println("after stmt.executeQuery :" + q);
+	
+			gridCells = new ArrayList<Cell>();
+			Cell cl;
+			
+			System.out.println("before processing rs:" );
+			while (rs.next())
+			{
+				System.out.println("inside while:" );
+				String sval = rs.getString(1);
+				String fmla = rs.getString(2);
+				int rowId = rs.getInt(3);
+				int colId = rs.getInt(4);
+				if (maxTransactionId < rs.getInt(5))
+				{
+					maxTransactionId = rs.getInt(5);
+				}
+//				if (rowHash.get(new Integer(rowId)) == null)
+//					continue;
+				xlColumn_import col = (xlColumn_import)colHash.get(new Integer(colId));
+				if (col == null)
+					continue;
+				if (fmla == null || fmla.indexOf("=") < 0 || mode == 1)
+				{
+					fmla = "";
+				}
+				else
+				{
+					fmla = fmla.trim();
+				}
+	
+				//System.out.println("Got column for id = " + colId);
+				int colAccess = col.getAccess();
+				int cellAccess = java.lang.Math.min(raccess, colAccess);
+				
+				cl = new Cell();
+				cl.setColId(colId);
+				cl.setRowId(rowId);
+				cl.setCellFormula(fmla);
+				cl.setCellValue(sval);
+				cl.setAccess(cellAccess);
+				cl.setTid(tid);
+				//cl.setActive(active);
+				//cl.setRowSequence(rowSequence);
+				//cl.setColSequence(colSequence);
+				//cl.setId(id);
+				//cl.setChangeFlag(changeFlag);
+	
+				System.out.println("colId:"+colId+"rowId:"+rowId+"Formula:"+fmla+"sval:"+sval+"tid:"+tid+"cellAccess:"+cellAccess);
+				gridCells.add(cl);
+				
+				//resData.append(rowId + Seperator + colId + Seperator + sval.trim() + Seperator + fmla + Seperator + cellAccess + Seperator);
+				System.out.println("before end block of while:" );
+			}
+			System.out.println("after processing rs:" );
+
+			//System.out.println(resData.toString());
+			//resData.replace(resData.length() - 1, resData.length(), ContentDelimeter);
+			//System.out.println(resData.toString());
+			stmt.close();
+			rs.close();
+			rs = null;
+			stmt = null;
+			//System.out.println("Time(sec) to fetch changed cells = " + getElapsedTime());
+	
+			int maxdeletedcell_tid;
+			maxdeletedcell_tid = 0;
+			ResultSet rs1 = null;
+	
+			try
+			{
+				stmt = connection.prepareStatement("SELECT MAX(BW_ROW.TX_ID) FROM BW_ROW WHERE BW_ROW.TX_ID > ? AND BW_ROW.BW_TBL_ID = ? AND BW_ROW.IS_ACTIVE = 0 UNION SELECT MAX(BW_COLUMN.TX_ID) FROM BW_COLUMN WHERE BW_COLUMN.TX_ID > ? AND BW_COLUMN.BW_TBL_ID = ? AND BW_COLUMN.IS_ACTIVE = 0");
+				stmt.setInt(1, importTid);
+				stmt.setInt(2, gridId);
+				stmt.setInt(3, importTid);
+				stmt.setInt(4, gridId);
+				rs1 = stmt.executeQuery ();
+				while( rs1.next() )
+				{
+					if(rs1.getInt(1) > maxdeletedcell_tid)
+						maxdeletedcell_tid = rs1.getInt(1);
+				}
+				rs1.close();
+				stmt.close();
+				stmt = null;
+			}
+			catch(Exception e11)
+			{	e11.printStackTrace();
+				try
+				{
+					rs1.close();
+					stmt.close();
+					stmt = null;
+				}
+				catch (Exception e12)
+				{
+					e12.printStackTrace();
+				}
+			}
+			if ( maxdeletedcell_tid > maxTransactionId )
+			{
+				maxTransactionId = maxdeletedcell_tid;
+				System.out.println("maxtid reset by cell deactivation to = " + maxTransactionId);
+			}
+	
+			//Get Deleted Rows and Deleted Columns
+			deletedColumnArray = new ArrayList<Integer>();
+			deletedRowArray = new ArrayList<Integer>();
+	
+			try
+			{
+				stmt = connection.prepareStatement("SELECT BW_ROW.ID, 'R' FROM BW_ROW WHERE BW_ROW.TX_ID > ? AND BW_ROW.BW_TBL_ID = ? AND BW_ROW.IS_ACTIVE = 0 UNION SELECT BW_COLUMN.ID, 'C'  FROM BW_COLUMN WHERE BW_COLUMN.TX_ID > ? AND BW_COLUMN.BW_TBL_ID = ? AND BW_COLUMN.IS_ACTIVE = 0");
+				stmt.setInt(1, importTid);
+				stmt.setInt(2, gridId);
+				stmt.setInt(3, importTid);
+				stmt.setInt(4, gridId);
+				rs1 = stmt.executeQuery ();
+				while( rs1.next() )
+				{
+					if(rs1.getString(2).equals("R"))
+						deletedRowArray.add(rs1.getInt(1));
+					else if(rs1.getString(2).equals("C"))
+						deletedColumnArray.add(rs1.getInt(1)); 
+				}
+				rs1.close();
+				stmt.close();
+				stmt = null;
+			}
+			catch(Exception e11)
+			{	e11.printStackTrace();
+				try
+				{
+					rs1.close();
+					stmt.close();
+					stmt = null;
+				}
+				catch (Exception e12)
+				{
+					e12.printStackTrace();
+				}
+			}
+			if ( maxdeletedcell_tid > maxTransactionId )
+			{
+				maxTransactionId = maxdeletedcell_tid;
+				System.out.println("maxtid reset by cell deactivation to = " + maxTransactionId);
+			}
+
+			ginfo.setId(gridId);
+			ginfo.setName(tinfo.getTableName());
+			ginfo.setPurpose(tinfo.getTablePurpose());
+			ginfo.setView(view);
+			ginfo.setMemberId(memberId);
+			ginfo.setUserId(userId);		
+			ginfo.setNhId(nhId);
+			ginfo.setCriteriaTableId(criteriaTableId);
+			ginfo.setMode(mode);
+			ginfo.setCollabId(tinfo.getCollaborationId());
+			ginfo.setWbId(tinfo.getWhiteboardId());
+			ginfo.setMaxTxId(maxTransactionId);
+			ginfo.setImportTid(maxTransactionId);
+
+	    }
+		catch (BoardwalkException bwe)
+		{
+	    	System.out.println("Collaboration Id not found");
+	    	erb = new ErrorRequestObject();
+	    	erb.setError("Collaboration ID NOT FOUND");
+	    	erb.setPath("GridManagement.gridPut::BoardwalkCollaborationManager.getCollaborationTree");
+			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+	    	ErrResps.add(erb);
+	    	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+		}	catch (SQLException sqe)
+		{
+			System.out.println("Exception in INSERT INTO BW_COLUMN ");
+			erb = new ErrorRequestObject();
+			erb.setError("SQLException:" + sqe.getErrorCode() + ", Cause:"+ sqe.getMessage());
+			erb.setPath("GridManagement.gridPut::stmt(INSERT INTO BW_COLUMN)");
+			erb.setProposedSolution("Column Exists Grid. Try different Column Name");
+			ErrResps.add(erb);
+			try
+			{
+				System.out.println("Rollbacking Transaction");
+				tm.rollbackTransaction();
+			}
+			catch (SQLException sqe1)
+			{
+				sqe1.printStackTrace();
+			}
+			System.out.println("After Rollback Transaction. Returning gridId:" + gridId);
+			return cbfReturn;
+		}
+		catch ( SystemException s)
+		{
+			System.out.println("SystemException thrown in GridManagement.gridGet: Possibly from getAllMemberships() OR TableManager.getTableInfo()");
+			s.printStackTrace();
+			erb = new ErrorRequestObject();
+			erb.setError("SystemException: " + s.getErrorMessage());
+			erb.setPath("GridManagement.gridGet::GridManagement.getAllMemberships OR TableManager.getTableInfo");
+			erb.setProposedSolution(s.getPotentialSolution());
+			ErrResps.add(erb);
+		}  					
+		finally
+		{
+			try
+			{
+				connection.close();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}    		 		    		
+	    	
+		gcb = new GridChangeBuffer();
+	//	gcb.setCritical(critical);
+	//	gcb.setCriticalLevel(criticalLevel);
+		gcb.setDeletedColumnArray(deletedColumnArray);	//deleted column ids
+		gcb.setDeletedRowArray(deletedRowArray);		//deleted row ids
+		gcb.setNewColumnArray( newGridCols);
+		gcb.setNewRowArray(newGridRows);
+		
+		cbfReturn.setInfo(ginfo);
+		cbfReturn.setCells( gridCells);							//changed cells
+		cbfReturn.setRowArray(rowArray);
+		cbfReturn.setColumnArray(columnArray );
+		cbfReturn.setColumnCellArrays(scas);
+		cbfReturn.setColumns(newGridCols);
+		cbfReturn.setGridChangeBuffer(gcb);
+		cbfReturn.setRows(newGridRows);
+			
+		return cbfReturn;
+	}
+	
     //@PUT
     //@Path("/{gridId}")
 	public static CellBuffer gridPut(int gridId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, String authBase64String)
@@ -734,7 +1186,7 @@ public class GridManagement {
     		ArrayList<Column> gridColumns = (ArrayList<Column>) cellBufferRequest.getColumns();
     		ArrayList<SequencedCellArray> colCellArr = (ArrayList<SequencedCellArray>) cellBufferRequest.getColumnCellArrays();
     		GridChangeBuffer gcb = cellBufferRequest.getGridChangeBuffer();
-
+    		
     		if (cellArr == null)
     		{
     			erb = new ErrorRequestObject();
@@ -1647,6 +2099,8 @@ public class GridManagement {
 				TableManager.resequenceColumns(connection, gridId);
 			}
 			
+			ArrayList<Integer> retDelColArray = new ArrayList<Integer>();
+			ArrayList<Integer> retDelRowArray = new ArrayList<Integer>();
 			
 			System.out.println("Processing delColArray: of size " + delColArray.size());
 			//Delete Columns	FOR SUBMIT STARTS
@@ -1681,6 +2135,9 @@ public class GridManagement {
 						System.out.println("Calling ColumnManager.deleteColumn : delColId :" + delColId  + ", tid:" + tid);
 						colsDeleted = ColumnManager.deleteColumn(connection, delColId, tid);
 						System.out.println("After ColumnManager.deleteColumn : colsDeleted :" + colsDeleted);
+						if (colsDeleted)
+							retDelColArray.add(delColId);
+
 					}
 					
 					if (intCritical <= 0)
@@ -1852,6 +2309,7 @@ public class GridManagement {
 			}		// end of newRowArray.size() 			END OF NEW ROWS FOR SUBMIT
 
 			// delete the rows STARTS for SUBMIT
+			System.out.println("delRowArray.size() :" + delRowArray.size() );
 			if (delRowArray.size() > 0 )
 			{
 				if (canDeleteRows == false)
@@ -1873,10 +2331,22 @@ public class GridManagement {
 				{
 					for (int drc=0; drc < delRowArray.size(); drc=drc+1  )
 					{
+						System.out.println("Adding to xlDeleteRows  :" + delRowArray.get(drc)  );
 						xlDeleteRows.addElement( delRowArray.get(drc) );
 					}
 
 					rowsDeleted = RowManager.deactivateRows( connection, xlDeleteRows, tid);
+					System.out.println("rowsDeleted  :" + rowsDeleted);
+
+					if (rowsDeleted)
+					{
+						for (int drc=0; drc < delRowArray.size(); drc=drc+1  )
+						{
+							System.out.println("Adding to retDelRowArray :" + delRowArray.get(drc));
+							retDelRowArray.add(delRowArray.get(drc));
+						}
+					}
+				
 					if (intCritical <= 0)
 					{
 						if ((intCriticalLevel & (1 << 4)) == (1 << 4))
@@ -1936,6 +2406,7 @@ public class GridManagement {
 						case 4:			//new row
 							xlRowId = ((Integer)rowIdHash.get(new Integer(xlRowIdx))).intValue();
 							xlColId = ccd.getColId();
+							//ccd.setRowId(xlRowId);
 							break;
 							
 						case 8:			//new column
@@ -1943,8 +2414,10 @@ public class GridManagement {
 							if (xlRowId == -1)			// Cell at the intersection of newly added row and column
 							{
 								xlRowId = ((Integer)rowIdHash.get(new Integer(xlRowIdx))).intValue();
+								ccd.setRowId(xlRowId);
 							}
 							xlColId = ((Integer)colIdHash.get(new Integer(xlColIdx))).intValue();
+							//ccd.setColId(xlColId);
 							break;
 							
 						case 16:		//row deleted		NOT PART OF CELL ARRAY		
@@ -2003,6 +2476,16 @@ public class GridManagement {
 						stmt.setInt(5, tid);
 						stmt.setInt(6, cellChangeFlag);
 						stmt.addBatch();
+						//Updateing cells[] in Submit Cell Buffer
+						//ccd.setRowId(xlRowId);
+						//ccd.setColId(xlColId);
+						//ccd.setTid(tid);
+
+						cellArr.get(ccdc).setRowId(xlRowId);
+						cellArr.get(ccdc).setColId(xlColId);
+						cellArr.get(ccdc).setTid(tid);
+						cellArr.get(ccdc).setAccess(ColAcess);
+						
 						numCellsChanged = numCellsChanged + 1;
 						batchCounter = batchCounter + 1;
 						if (batchCounter == batchSize)
@@ -2025,6 +2508,16 @@ public class GridManagement {
 						stmt.setInt(5, tid);
 						stmt.setInt(6, cellChangeFlag);
 						stmt.addBatch();
+						//Updateing cells[] in Submit Cell Buffer
+
+						cellArr.get(ccdc).setRowId(xlRowId);
+						cellArr.get(ccdc).setColId(xlColId);
+						cellArr.get(ccdc).setTid(tid);
+						cellArr.get(ccdc).setAccess(ColAcess);
+						//ccd.setRowId(xlRowId);
+						//ccd.setColId(xlColId);
+						//ccd.setTid(tid);
+
 						numCellsChanged = numCellsChanged + 1;
 						batchCounter = batchCounter + 1;
 						if (batchCounter == batchSize)
@@ -2175,9 +2668,11 @@ public class GridManagement {
 				// errorMessages.put( new Integer( 12011 ), new BoardwalkMessage( 12011, "TABLE UPDATE EXCEPTION", 5 ,"There are many errors",  "Please resolve errors and try again"));
 	        	erb = new ErrorRequestObject();
 	        	erb.setError("TABLE UPDATE EXCEPTION ((12011)");
-	        	erb.setPath("GridManagement.gridPut::");
+	        	erb.setPath("GridManagement.gridPut::xlErrorCells.Size()>0");
 				erb.setProposedSolution("There are many errors\",  \"Please resolve errors and try again");
 	        	ErrResps.add(erb);
+
+	        	throw new BoardwalkException(12011);
 			
 			}
 
@@ -2197,8 +2692,6 @@ public class GridManagement {
 			
 			GridChangeBuffer retGcb = new GridChangeBuffer();
 			//ArrayList<CellChangeDetails> retCellChangesArray =  new ArrayList<CellChangeDetails>();
-			ArrayList<Integer> retDelColArray = new ArrayList<Integer>();
-			ArrayList<Integer> retDelRowArray = new ArrayList<Integer>();
 			ArrayList<Column> retNewColArray = new ArrayList<Column>();
 			ArrayList<Row> retNewRowArray = new ArrayList<Row>();
 			
@@ -2215,6 +2708,9 @@ public class GridManagement {
 				}
 				retGcb.setNewColumnArray(newColArray);
 			}
+			else
+				retGcb.setNewColumnArray(newColArray);
+				
 
 			if (newRowArray.size() > 0)
 			{
@@ -2249,6 +2745,10 @@ public class GridManagement {
 				}
 				retGcb.setNewRowArray(retNewRowArray); 
 			}
+			else
+				retGcb.setNewRowArray(retNewRowArray); 
+
+			
 			retGcb.setDeletedColumnArray(retDelColArray);
 			retGcb.setDeletedRowArray(retDelRowArray);
 			
@@ -2261,16 +2761,46 @@ public class GridManagement {
 			//GenerateGridColumnAndColumnArray(connection, gridId, userId, memberId, mode, baselineId, view, ftal,  retGridColumns, retColArr,   ErrResps);
 			cbfReturn.setColumns(retGridColumns );
 			cbfReturn.setColumnArray(retColArr);
-			
+			cbfReturn.setCells(cellArr);
+			//cbfReturn.setCells(retCellArr);
 			cbfReturn.setInfo(ginfo);
 			cbfReturn.setRowArray(retRowArr);
 			cbfReturn.setColumnCellArrays(retColCellArr);
 			cbfReturn.setRows(retGridRows);
-			cbfReturn.setCells(retCellArr);
 			cbfReturn.setGridChangeBuffer(retGcb);
 			
 			////////////////
 			
+		}
+		catch (BoardwalkException bwe)
+		{
+			if (xlErrorCells.size() <= 0)
+			{
+				xlErrorCells.add(new xlErrorNew(gridId, 0, 0, bwe.getErrorCode()));
+			}
+			StringBuffer errorBuffer = new StringBuffer();
+
+			for (int errorIndex = 0; errorIndex < xlErrorCells.size(); errorIndex++)
+			{
+				xlErrorNew excelError = (xlErrorNew)(xlErrorCells.elementAt(errorIndex));
+				errorBuffer.append(excelError.buildTokenString());
+			}
+        	erb = new ErrorRequestObject();
+        	erb.setError("Error Cells causing TABLE UPDATE EXCEPTION ((12011)");
+        	erb.setPath(errorBuffer.toString());
+			erb.setProposedSolution("There are many errors\",  \"Please resolve errors and try again");
+        	ErrResps.add(erb);
+        	
+			try
+			{
+				if (tm != null)
+					tm.rollbackTransaction();
+			}
+			catch (Exception e1)
+			{
+				e1.printStackTrace();
+			}
+		
 		}
         catch (SystemException se)
 		{
@@ -2289,6 +2819,15 @@ public class GridManagement {
 			erb.setProposedSolution(sqe.getMessage() + ", " + sqe.getCause());
 			ErrResps.add(erb);
 			sqe.printStackTrace();
+			try
+			{
+				if (tm != null)
+					tm.rollbackTransaction();
+			}
+			catch (Exception e1)
+			{
+				e1.printStackTrace();
+			}
 		}
 	}
 

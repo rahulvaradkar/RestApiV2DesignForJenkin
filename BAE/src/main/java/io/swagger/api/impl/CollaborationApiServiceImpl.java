@@ -50,19 +50,19 @@ public class CollaborationApiServiceImpl extends CollaborationApiService {
 			erbs.add(erb);
 		}
 		 
-	   	if (erbs.size() == 0)
+		if (erbs.size() == 0)
 	   	{
 		  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 		  	 	CollaborationManagement.collaborationCollabIdDelete(collabId, ErrResps, authBase64String);
 		    	if (ErrResps.size() > 0)
-		    		return Response.ok().entity(ErrResps).build();   	
+		    		return Response.status(422).entity(ErrResps).build();   	
 		    	else
 		    		return Response.status(200).entity("Collaboration Deleted Successfully").build();
 	   	}
 	   	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
-	   	}    
+	       	return Response.status(400).entity(erbs).build();
+	   	}   
 //        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     
