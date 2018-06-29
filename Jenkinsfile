@@ -45,7 +45,7 @@ pipeline {
             steps {
                echo 'Building .war file'
                //cd to BAE folder and then mvn install.
-			 bat  'C:\Users\p.bhagwat\AppData\Roaming\npm\node_modules\qunit-puppeteer\bin\maveninstall.bat'
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/maveninstall.bat'
 			   
               
             }
