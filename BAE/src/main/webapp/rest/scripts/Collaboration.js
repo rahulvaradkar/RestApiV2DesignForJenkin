@@ -224,8 +224,9 @@
         var done = assert.async();
         TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/collaboration/" + collab_Id, null, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
-            if (result.status == 404 || result.status == 422) {
-                assert.ok(result.status == 404, " It seems server side error" + result.responseText);
+            if (result.status == 404 || result.status == 422 || result.status == 400) {
+                assert.ok(result.status == 400, " It seems server side error" + result.responseText);
+				
                 done();
                 return;
             }
