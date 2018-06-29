@@ -45,7 +45,7 @@ pipeline {
             steps {
                echo 'Building .war file'
                //cd to BAE folder and then mvn install.
-			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/maveninstall.bat'
+			 //bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/maveninstall.bat'
 			   
              
             }
@@ -56,8 +56,8 @@ pipeline {
             steps {
                echo 'Building .war file'
                //copy war file from jenkins workspace to webapps
-		     bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\sleep5.bat'
-				bat 'xcopy \"C:/Windows/System32/config/systemprofile/.jenkins/workspace/BAE_TEST/BAE/target/BAE_TEST.war\" \"C:/Tomcat8/webapps\" /E /H /C /R /Q /Y'
+		     //bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\sleep5.bat'
+			//	bat 'xcopy \"C:/Windows/System32/config/systemprofile/.jenkins/workspace/BAE_TEST/BAE/target/BAE_TEST.war\" \"C:/Tomcat8/webapps\" /E /H /C /R /Q /Y'
 			   
               
             }
