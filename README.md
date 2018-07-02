@@ -1,3 +1,3 @@
 # BAE-SQL-Version
 BAE SQL SERVER Edition 
-Test - trigger maven build attempt 6
+Test - trigger maven build attempt 7
