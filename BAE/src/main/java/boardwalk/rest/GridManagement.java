@@ -133,6 +133,8 @@ public class GridManagement {
     		ArrayList <Column> gridCols = new ArrayList<Column>();
     		Column gridCol ;
     		GridChangeBuffer gcb = new GridChangeBuffer();
+    		ArrayList<Integer> deletedColumnArray = new ArrayList<Integer>();
+    		ArrayList<Integer> deletedRowArray = new ArrayList<Integer>();
     		ArrayList<Cell> gridCells  = new ArrayList<Cell>();
     		Cell gridCell;
 
@@ -277,6 +279,7 @@ public class GridManagement {
 					previousColumnSequence = col.getSequenceNumber();
 					previousColumnid = col.getId();
 				}
+				gcb.setNewColumnArray( gridCols);				//gcb is part of LINK IMPORT CELL BUFFER
 	    		//cellBufferRequest.setColumns(gridCols);
 	    		//cellBufferRequest.setColumnArray(columnArray);
 	    		
@@ -344,6 +347,7 @@ public class GridManagement {
 
 		    		gridRows.add(gridRow);
 				}
+				gcb.setNewRowArray(gridRows);
 	    		//cellBufferRequest.setRows(gridRows);
 	    		//cellBufferRequest.setRowArray(rowArray);
 	    		
@@ -409,6 +413,7 @@ public class GridManagement {
 							for (int c = 0; c < colv.size(); c++) 
 							{
 								xlColumn_import col = (xlColumn_import) colv.elementAt(c);
+								
 								if (restrColumnList != null && restrColumnList.size() > 0 && restrColumnList.contains(new Integer(col.getId()))) 
 								{
 									System.out.println("Skipping data for restricted column = " + col.getId());
@@ -432,6 +437,7 @@ public class GridManagement {
 								System.out.println("Processing Rows....columnId : " + columnId + " , rowv.size():" + rowv.size());
 								for (int r = 0; r < rowv.size(); r++) 
 								{
+									com.boardwalk.table.Row rowObject = (com.boardwalk.table.Row) rowv.elementAt(r);
 									rs.next();
 									String cellval = rs.getString(1);
 									if (cellval.length() > 0) 
@@ -455,6 +461,22 @@ public class GridManagement {
 									cellValues.add(cellval);
 									cellfmla.add(cellFormula);
 									colCellAccess.add(cellAccess);
+										
+									//Adding Cells in Link Import.
+						    		//ArrayList<Cell> gridCells  = new ArrayList<Cell>();
+						    		gridCell = new Cell();
+									gridCell.setAccess(cellAccess);
+									gridCell.setActive(true );
+									gridCell.setCellFormula(cellFormula);
+									gridCell.setCellValue(cellval);
+									gridCell.setChangeFlag(0);
+									gridCell.setColId(columnId);
+									gridCell.setColSequence(colSequence);
+									//gridCell.setId(id);	NOT AVAILABLE
+									gridCell.setRowId(rowObject.getId()); 
+									gridCell.setRowSequence((int) rowObject.getSequenceNumber());
+									gridCell.setTid(celltid);
+									gridCells.add(gridCell);
 								}
 								
 								sca.setCellValues(cellValues);
@@ -577,7 +599,9 @@ public class GridManagement {
 			}
 		//}
 		
-			cbfReturn.setCells(gridCells);
+			gcb.setDeletedColumnArray(deletedColumnArray);	//gcb added in LINK IMPORT CELLBUFFER
+			gcb.setDeletedRowArray(deletedRowArray);		//gcb added in LINK IMPORT CELLBUFFER
+			cbfReturn.setCells(gridCells);					//gridCells added in LINK IMPORT CELLBUFFER
 			cbfReturn.setColumnArray(columnArray );
 			cbfReturn.setColumnCellArrays(scas);
 			cbfReturn.setColumns(gridCols);
@@ -630,7 +654,7 @@ public class GridManagement {
 		byte[] valueDecoded = Base64.decodeBase64(authBase64String);
 		System.out.println("Decoded value is " + new String(valueDecoded));		
 		return cbfReturn ;
-	}
+	}	// end of GET GRID LINK IMPORT
 		
 
 	//Returns Grid Refresh CellBuffer 
@@ -651,7 +675,11 @@ public class GridManagement {
 		ArrayList<Integer> deletedRowArray = new ArrayList<Integer>();
 		ArrayList<Column> newColumnArray = new ArrayList<Column>();
 		ArrayList<Row> newRowArray = new ArrayList<Row>();
-		
+
+		//All Rows and Columns in Grid
+		ArrayList<Column> allColumnArray = new ArrayList<Column>();
+		ArrayList<Row> allRowArray = new ArrayList<Row>();
+
 		ArrayList<String> cellValues  = new ArrayList<String>();
 		ArrayList<String> cellfmla  = new ArrayList<String>();
 		ArrayList<Integer> colCellAccess  = new ArrayList<Integer>();
@@ -659,6 +687,8 @@ public class GridManagement {
 		GridChangeBuffer gcb ;
 		GridInfo ginfo = new GridInfo();
 	
+		int rowCount;		//Number of Rows in Grid
+		int colCount;		//Number of Columns in Grid
     	try
     	{
 
@@ -722,12 +752,17 @@ public class GridManagement {
 	
 			newGridCols = new ArrayList<Column>();
 			Column gridCol;
+			Column allGridCol;
 			int previousColId =-1;
 			int previousColSequence = -1;
 			
+			colCount = colv.size();
 			for (int c = 0; c < colv.size(); c++)
 			{
 				xlColumn_import col = (xlColumn_import)colv.elementAt(c);
+
+				columnArray.add(col.getId());
+				
 				//Added to fix Refresh issue when the Column Access is applied from Template side 2016/11/16
 				if (restrColumnList != null && restrColumnList.size() > 0)
 				{
@@ -776,6 +811,17 @@ public class GridManagement {
 					gridCol.setTid(col.getAccessTid());
 					newGridCols.add(gridCol);
 				}
+
+				//For all Columns Creation TxId is used.
+				allGridCol = new Column();
+				allGridCol.setActive(true);
+				allGridCol.setId(col.getId());
+				allGridCol.setName(col.getName());
+				allGridCol.setPreviousColumnid(previousColId);
+				allGridCol.setPreviousColumnSequence(new BigDecimal(previousColSequence));
+				allGridCol.setSeqNo(new BigDecimal(col.getSequenceNumber()));
+				allGridCol.setTid(col.getCreationTid());
+				allColumnArray.add(allGridCol);
 				
 				colHash.put(new Integer(col.getId()), col);
 				previousColId = col.getId();
@@ -821,13 +867,17 @@ public class GridManagement {
 			
 			Row gridRow = new Row();
 			newGridRows = new ArrayList <Row>();
+			Row allGridRow;
 			
+			rowCount = rowv.size();
 			int previousRowid = -1;
 			int previousRowSequence = -1;
 			for (int r = 0; r < rowv.size(); r++)
 			{
 				com.boardwalk.table.Row rowObject = (com.boardwalk.table.Row) rowv.elementAt(r);
 				int rowId = rowObject.getId();
+				rowArray.add(rowId);
+			
 				if (maxTransactionId < rowObject.getCreationTid())
 				{
 					maxTransactionId = rowObject.getCreationTid();
@@ -851,30 +901,47 @@ public class GridManagement {
 					gridRow.setCreaterId(rowObject.getCreatorUserId());
 					gridRow.setOwnerName(rowObject.getOwnerName());
 					gridRow.setOwnershipAssignedTid(rowObject.getOwnershipAssignedTid());
-					gridRow.setOwnerName(rowObject.getOwnerName());
 					gridRow.setOwnerId(rowObject.getOwnerUserId());
 					gridRow.setActive((rowObject.getIsActive()== 1? true : false));
 					gridRow.setRowName(rowObject.getName()); 	
-		    		gridRow.setActive((rowObject.getIsActive() == 1? true: false)); 
 		    		gridRow.setId(rowObject.getId()); 
 		    		gridRow.setPreviousRowid(  previousRowid);
-		    		gridRow.setPreviousRowSequence(previousRowSequence); 
+		    		gridRow.setPreviousRowSequence(previousRowSequence);
+		    		gridRow.setTid((rowObject.getCreationTid() >= rowObject.getOwnershipAssignedTid())   ? rowObject.getCreationTid() : rowObject.getOwnershipAssignedTid());
 		    		Float obj = new Float(rowObject.getSequenceNumber());
 		    		gridRow.setSeqNo(obj.intValue()); 
 		    		newGridRows.add(gridRow);
-					
 				}
 				else
 				{
+					//Added for CELLBUFFER.ROWS will contain all Rows of Grid
 					//resData.append(rowId + Seperator);
 					//resData.append(Seperator);
 					numSrvrRows++;
 				}
+
+				//Adding into All Rows Array
+				allGridRow = new Row();
+				allGridRow.setCreationTid(rowObject.getCreationTid());
+				allGridRow.setCreaterId(rowObject.getCreatorUserId());
+				allGridRow.setOwnerName(rowObject.getOwnerName());
+				allGridRow.setOwnershipAssignedTid(rowObject.getOwnershipAssignedTid());
+				allGridRow.setOwnerId(rowObject.getOwnerUserId());
+				allGridRow.setActive((rowObject.getIsActive()== 1? true : false));
+				allGridRow.setRowName(rowObject.getName()); 	
+				allGridRow.setId(rowObject.getId()); 
+				allGridRow.setPreviousRowid(  previousRowid);
+				allGridRow.setPreviousRowSequence(previousRowSequence); 
+				allGridRow.setTid((rowObject.getCreationTid() >= rowObject.getOwnershipAssignedTid())   ? rowObject.getCreationTid() : rowObject.getOwnershipAssignedTid());
 	    		Float obj = new Float(rowObject.getSequenceNumber());
+	    		allGridRow.setSeqNo(obj.intValue()); 
+	    		allRowArray.add(allGridRow);
+				
+				//Float obj = new Float(rowObject.getSequenceNumber());
 	    		previousRowid = rowObject.getId() ;
 	    		previousRowSequence = obj.intValue();
 			}
-	
+
 			//System.out.println(resData.toString());
 			// Get the cells TBD : views other than latest
 			String q = null;
@@ -1071,7 +1138,9 @@ public class GridManagement {
 			ginfo.setWbId(tinfo.getWhiteboardId());
 			ginfo.setMaxTxId(maxTransactionId);
 			ginfo.setImportTid(maxTransactionId);
-
+			ginfo.setRowCount(rowCount);
+			ginfo.setColCount(colCount);
+			
 	    }
 		catch (BoardwalkException bwe)
 		{
@@ -1137,12 +1206,12 @@ public class GridManagement {
 		cbfReturn.setRowArray(rowArray);
 		cbfReturn.setColumnArray(columnArray );
 		cbfReturn.setColumnCellArrays(scas);
-		cbfReturn.setColumns(newGridCols);
+		cbfReturn.setColumns(allColumnArray);
 		cbfReturn.setGridChangeBuffer(gcb);
-		cbfReturn.setRows(newGridRows);
-			
+		cbfReturn.setRows(allRowArray);
+
 		return cbfReturn;
-	}
+	}	// end of GET GRID REFRESH
 	
     //@PUT
     //@Path("/{gridId}")
@@ -1186,6 +1255,18 @@ public class GridManagement {
     		ArrayList<Column> gridColumns = (ArrayList<Column>) cellBufferRequest.getColumns();
     		ArrayList<SequencedCellArray> colCellArr = (ArrayList<SequencedCellArray>) cellBufferRequest.getColumnCellArrays();
     		GridChangeBuffer gcb = cellBufferRequest.getGridChangeBuffer();
+    		GridInfo ginfo = cellBufferRequest.getInfo();
+
+    		if (ginfo == null)
+    		{
+    			erb = new ErrorRequestObject();
+    			erb.setError("Missing element info:{}");
+    			erb.setPath("GridManagement.gridPut::cellBufferRequest.getInfo()");
+    			erb.setProposedSolution("Add info:{} in gridPut Request");
+    			ErrResps.add(erb);
+    		    System.out.println("Missing element info:{}");
+    		    //return cbfReturn;
+    		}
     		
     		if (cellArr == null)
     		{
@@ -1253,13 +1334,23 @@ public class GridManagement {
     		    //return cbfReturn;
     		}
 
+    		if (gcb == null)
+    		{
+    			erb = new ErrorRequestObject();
+    			erb.setError("Missing element GridChangeBuffer:[]");
+    			erb.setPath("GridManagement.gridPut::cellBufferRequest.getGridChangeBuffer()");
+    			erb.setProposedSolution("Add GridChangeBuffer:[] in gridPut Request");
+    			ErrResps.add(erb);
+    		    System.out.println("Missing element GridChangeBuffer:[]");
+    		    //return cbfReturn;
+    		}
+
 	    	if (ErrResps.size() > 0) 
 	    	{
     		    return cbfReturn;
 	    	}
 
     		//cellBufferRequest.getGridChangeBuffer()   -------- need to be decided
-    		GridInfo ginfo = cellBufferRequest.getInfo();
     		
     		int importTid = ginfo.getImportTid();
     		
@@ -1374,7 +1465,25 @@ public class GridManagement {
 	    	{
     		    return cbfReturn;
 	    	}
-    							
+
+	    	
+	    	//Checking if ColumnNames are blank;	IssueId: 14288
+			for (int cni = 0; cni < numColumns; cni++)
+			{
+				cl = gridColumns.get(cni);
+				String colname = cl.getName();
+				if (colname.trim().equals(""))
+				{
+					System.out.println("Blank Column Name ");
+					erb = new ErrorRequestObject();
+					erb.setError("Column Name cannot be Blank.");
+					erb.setPath("Blank Grid Column at position:" + cni);
+					erb.setProposedSolution("Enter Unique NonEmpty Column Name.");
+					ErrResps.add(erb);
+					return cbfReturn;
+				}
+			}
+			
 			//Adding Column Start
 			if(canAdministerColumns)
 			{
@@ -1585,7 +1694,7 @@ public class GridManagement {
 			}
 		}    		 		    		
 		return cbfReturn;
-	}
+	}//End of PUT GRID for LINK EXPORT
 
 //	public static void processLinkExportColumnData(Connection connection, String cellData, String formulaData, int columnIdx, ArrayList rowIds, ArrayList columnIds, int numRows, int tid) throws SQLException 
 	public static void processLinkExportColumnData(Connection connection, ArrayList<Cell> cellArr,  SequencedCellArray sca, SequencedCellArray scaFmla, int columnIdx, ArrayList rowIds, ArrayList columnIds, int numRows, int tid) throws SQLException 
@@ -1730,7 +1839,6 @@ public class GridManagement {
 		ArrayList columnIds = null;
 		ArrayList columnNames = null;
 		
-
 		boolean colsDeleted = false;
 		boolean rowsDeleted = false;
 		boolean newRowsAdded = false;
@@ -1994,8 +2102,25 @@ public class GridManagement {
 			boolean newColsAdded = false;
 
 			System.out.println("Processing newColArray()");
-			
+
 			Column newco;
+
+	    	//Checking if ColumnNames are blank;	IssueId: 14288
+			for (int cn = 0; cn < newColArray.size(); cn = cn + 1)
+			{
+				newco = newColArray.get(cn);
+				if (newco.getName().trim().equals(""))
+				{
+					System.out.println("Blank Column Name ");
+					erb = new ErrorRequestObject();
+					erb.setError("Column Name cannot be Blank.");
+					erb.setPath("Blank Grid Column at position:" + cn);
+					erb.setProposedSolution("Enter Unique NonEmpty Column Name.");
+					ErrResps.add(erb);
+		        	return;					
+				}
+			}
+			
 			int newColid =-1;
 			String newColName = null;
 			int prevNewColId = -1;
@@ -2829,7 +2954,7 @@ public class GridManagement {
 				e1.printStackTrace();
 			}
 		}
-	}
+	}		//End of processSubmitRequest
 
 	
 	//Validate membership
