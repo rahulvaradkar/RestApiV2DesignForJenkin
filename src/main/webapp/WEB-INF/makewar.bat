@@ -1,1 +1,0 @@
-%JAVA_HOME%/bin/jar cf bw.war -C . .

@@ -1,1 +1,0 @@
-jar -cvf BAE_4_3.war *
