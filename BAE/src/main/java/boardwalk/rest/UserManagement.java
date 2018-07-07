@@ -55,8 +55,8 @@ public class UserManagement {
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
 
-		System.out.println("MemberNode -> nhId :" + nhId);
-		System.out.println("MemberNode -> memberId :" + memberId);
+		//System.out.println("MemberNode -> nhId :" + nhId);
+		//System.out.println("MemberNode -> memberId :" + memberId);
     	
         try
         {
@@ -151,8 +151,8 @@ public class UserManagement {
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
 
-		System.out.println("MemberNode -> nhId :" + nhId);
-		System.out.println("MemberNode -> memberId :" + memberId);
+		//System.out.println("MemberNode -> nhId :" + nhId);
+		//System.out.println("MemberNode -> memberId :" + memberId);
 		
 		/// CUSTOM CODE START
 		int uId = u.getId().intValue();
@@ -164,7 +164,7 @@ public class UserManagement {
 			if (bwUser != null)
 			{
 	        	BoardwalkUserManager.updateProfile( bwcon, uId ,  u.getEmail(), u.getFirstName(), u.getLastName() );
-	            System.out.println("Successfully updated profile of  = " + u.getId());
+	            //System.out.println("Successfully updated profile of  = " + u.getId());
 	            retMsg = "Successfully updated profile of  = " + u.getId();
 			}
 			else
@@ -226,8 +226,8 @@ public class UserManagement {
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
 
-		System.out.println("MemberNode -> nhId :" + nhId);
-		System.out.println("MemberNode -> memberId :" + memberId);
+		//System.out.println("MemberNode -> nhId :" + nhId);
+		//System.out.println("MemberNode -> memberId :" + memberId);
 
 		// custom logic starts
         int uId;
@@ -236,7 +236,7 @@ public class UserManagement {
         	uId = BoardwalkUserManager.createUser( bwcon, u.getEmail(), u.getExternalId() ,u.getPassword(), u.getFirstName(), u.getLastName(),  1 );
             if (uId == -1)
             {
-                System.out.println("Failed to created user with = " + u.getEmail());
+                //System.out.println("Failed to created user with = " + u.getEmail());
             	erb = new ErrorRequestObject();
             	erb.setError("Failed to created user with = " + u.getEmail());
             	erb.setPath("UserManagement.userPost::BoardwalkUserManager.createUser");
@@ -245,12 +245,12 @@ public class UserManagement {
             }
             else
             {
-                System.out.println("Successfully created user with id = " + uId);
+                //System.out.println("Successfully created user with id = " + uId);
 	            BoardwalkUser bwUser = null ;
 				bwUser  = BoardwalkUserManager.getUser(bwcon, uId );
 	
 	    		io.swagger.model.User user = new User();
-	    		System.out.println(bwUser.getFirstName() + "......" + bwUser.getLastName());
+	    		//System.out.println(bwUser.getFirstName() + "......" + bwUser.getLastName());
 	    		Integer obj = new Integer(uId);
 	    		user.setId(obj.longValue());
 	    		user.setFirstName(bwUser.getFirstName());
@@ -267,7 +267,7 @@ public class UserManagement {
         	erb.setPath("UserManagement.userPost::BoardwalkUserManager.createUser");
 			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
         	ErrResps.add(erb);
-            System.out.println("BoardwalkException Occured. Failed to created user with = " + u.getEmail() + ". ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+            //System.out.println("BoardwalkException Occured. Failed to created user with = " + u.getEmail() + ". ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
         }
         	///////// custom code ends
 	    finally
@@ -309,8 +309,8 @@ public class UserManagement {
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
 
-		System.out.println("MemberNode -> nhId :" + nhId);
-		System.out.println("MemberNode -> memberId :" + memberId);
+		//System.out.println("MemberNode -> nhId :" + nhId);
+		//System.out.println("MemberNode -> memberId :" + memberId);
 
         int intActive;
         intActive = (active == true ? 1 : 0);
@@ -323,7 +323,7 @@ public class UserManagement {
 			while (ui.hasNext())
 			{
 				BoardwalkUser bu = (BoardwalkUser)ui.next();
-				System.out.println(bu.getId() + ":" + bu.getUserName() + ":" + bu.getFirstName() + ":" + bu.getLastName());
+				//System.out.println(bu.getId() + ":" + bu.getUserName() + ":" + bu.getFirstName() + ":" + bu.getLastName());
 				user = new User();
 				if (bu.getActive() == intActive )
 				{
@@ -387,8 +387,8 @@ public class UserManagement {
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
 
-		System.out.println("MemberNode -> nhId :" + nhId);
-		System.out.println("MemberNode -> memberId :" + memberId);
+		//System.out.println("MemberNode -> nhId :" + nhId);
+		//System.out.println("MemberNode -> memberId :" + memberId);
 
 		//Custom code starts
         BoardwalkUser bwUser = null ;
@@ -398,7 +398,7 @@ public class UserManagement {
 			if (bwUser != null)
 			{
 				user = new User();
-				System.out.println(bwUser.getFirstName() + "......" + bwUser.getLastName());
+				//System.out.println(bwUser.getFirstName() + "......" + bwUser.getLastName());
 				Integer obj = new Integer(userId);
 				user.setId(obj.longValue());
 				user.setFirstName(bwUser.getFirstName());

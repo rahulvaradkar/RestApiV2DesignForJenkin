@@ -60,9 +60,9 @@ public class bwAuthorization {
 			ErrResps.add(erb);
 		}
 		
-		System.out.println("loginName :" + loginName);		
-		System.out.println("loginPwd :" + loginPwd);		
-		System.out.println("nhPath :" + nhPath);		
+		//System.out.println("loginName :" + loginName);		
+		//System.out.println("loginPwd :" + loginPwd);		
+		//System.out.println("nhPath :" + nhPath);		
 
 
     	try
@@ -96,7 +96,7 @@ public class bwAuthorization {
         		}
 
 				Hashtable members = getAllMemberships(connection);
-				System.out.println("memberId : " + memberId);
+				//System.out.println("memberId : " + memberId);
 				MemberNode mn = (MemberNode) members.get(memberId);
 				memberNh.add(0, mn.getMemberId() );
 				memberNh.add(1, mn.getNhId()  );
@@ -169,7 +169,7 @@ public class bwAuthorization {
                 Email = rs.getString("Email_Address");
                 nhId = rs.getInt("NhId");
                 nhLevel = rs.getInt("NhLevel");
-                System.out.println("MemberNode-> memberId:" + memberId + ", userId:" + userId + ", firstName:" + firstName + ", lastName:" + lastName + ", Email:" + Email + ", nhId:" + nhId + ", nhLevel:" + nhLevel);            
+                //System.out.println("MemberNode-> memberId:" + memberId + ", userId:" + userId + ", firstName:" + firstName + ", lastName:" + lastName + ", Email:" + Email + ", nhId:" + nhId + ", nhLevel:" + nhLevel);            
                 ht.put(memberId, new MemberNode(memberId, userId, firstName, lastName, Email, nhId, nhLevel));
             }
 			System.out.println("outside while rs loop");

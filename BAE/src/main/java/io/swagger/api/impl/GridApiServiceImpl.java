@@ -46,7 +46,7 @@ public class GridApiServiceImpl extends GridApiService {
     public Response gridGridIdGet(Integer gridId,  @NotNull Integer importTid,  @NotNull String view,  @NotNull Integer mode,  @NotNull Integer baselineId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
     	
-    	System.out.println("authBase64String : " + authBase64String);
+    	//System.out.println("authBase64String : " + authBase64String);
     	ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
@@ -160,7 +160,7 @@ public class GridApiServiceImpl extends GridApiService {
 		ErrorRequestObject erb;
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-	    	System.out.println("GridApiServiceImpl::gridPost --> authBase64String : " + authBase64String);
+	    	//System.out.println("GridApiServiceImpl::gridPost --> authBase64String : " + authBase64String);
 
 	    	if (authBase64String == null)
 			{	
@@ -259,7 +259,7 @@ public class GridApiServiceImpl extends GridApiService {
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
 			System.out.println("Inside GridApiServiceImpl.gridPut --- gridId : " + gridId);
-	    	System.out.println("authBase64String : " + authBase64String);
+	    	//System.out.println("authBase64String : " + authBase64String);
 			
 		if (authBase64String == null)
 		{	

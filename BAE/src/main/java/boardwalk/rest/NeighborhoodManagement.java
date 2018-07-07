@@ -170,11 +170,11 @@ public class NeighborhoodManagement {
 			{
 				throw new NullPointerException("Membership NOT FOUND") ;
 			}
-			System.out.println("New Collaboration is created successfully using Membership : " + memberId + " of Neighborhood :" + nhId);
+			//System.out.println("New Collaboration is created successfully using Membership : " + memberId + " of Neighborhood :" + nhId);
 		}
 		catch (BoardwalkException bwe)
 		{
-        	System.out.println("Failed to create New Collaboration using Membership:" +   memberId + " of Neighborhood :" + nhId);
+        	//System.out.println("Failed to create New Collaboration using Membership:" +   memberId + " of Neighborhood :" + nhId);
         	erb = new ErrorRequestObject();
         	erb.setError("Failed to Create New Collaboration");
         	erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::CollaborationManager.createCollaboration");

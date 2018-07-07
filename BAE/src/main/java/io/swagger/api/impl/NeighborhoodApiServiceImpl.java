@@ -390,7 +390,7 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 		System.out.println("neighborhoodNhIdRelationDelete");
 		System.out.println("nhId :" + nhId);
 		System.out.println("relation :" + relation);
-		System.out.println("authBase64String :" + authBase64String);
+		//System.out.println("authBase64String :" + authBase64String);
 		
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();

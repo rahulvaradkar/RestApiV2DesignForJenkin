@@ -77,7 +77,7 @@ public class RestTasks {
         Connection connection = null;
         try
         {
-            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
+            DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
         }
         catch(Exception e)
         {
@@ -185,7 +185,7 @@ public class RestTasks {
         Connection connection = null;
         try
         {
-            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
+            DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
         }
         catch(Exception e)
         {
@@ -234,7 +234,7 @@ public class RestTasks {
 				u1.setFirstName(bu.getFirstName());
 				u1.setLastName(bu.getLastName());
 		    	uList.add(u1);
-				System.out.println(bu.getId() + ":" + bu.getUserName() + ":" + bu.getFirstName() + ":" + bu.getLastName());
+				//System.out.println(bu.getId() + ":" + bu.getUserName() + ":" + bu.getFirstName() + ":" + bu.getLastName());
 				
 				
                 Vector ml = BoardwalkUserManager.getMembershipList(bwcon, bu.getId());

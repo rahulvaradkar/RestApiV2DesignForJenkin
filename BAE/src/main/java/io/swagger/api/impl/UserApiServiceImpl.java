@@ -32,7 +32,7 @@ public class UserApiServiceImpl extends UserApiService {
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-		System.out.println("authBase64String : " + authBase64String);
+		//System.out.println("authBase64String : " + authBase64String);
 			
 		if (authBase64String == null)
 		{	
@@ -79,7 +79,7 @@ public class UserApiServiceImpl extends UserApiService {
 		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 		ErrorRequestObject erb;
 
-    	System.out.println("authBase64String : " + authBase64String);
+    	//System.out.println("authBase64String : " + authBase64String);
 		
 		if (authBase64String == null)
 		{	
@@ -188,7 +188,7 @@ public class UserApiServiceImpl extends UserApiService {
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-		System.out.println("authBase64String : " + authBase64String);
+		//System.out.println("authBase64String : " + authBase64String);
 			
 		if (authBase64String == null)
 		{	
@@ -322,7 +322,7 @@ public class UserApiServiceImpl extends UserApiService {
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-		System.out.println("authBase64String : " + authBase64String);
+		//System.out.println("authBase64String : " + authBase64String);
 		
 		if (authBase64String == null)
 		{	
@@ -363,7 +363,7 @@ public class UserApiServiceImpl extends UserApiService {
     	ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-    	System.out.println("authBase64String : " + authBase64String);
+    	//System.out.println("authBase64String : " + authBase64String);
 
     	if (authBase64String == null)
 		{	

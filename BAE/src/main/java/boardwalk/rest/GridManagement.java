@@ -104,8 +104,8 @@ public class GridManagement {
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
 
-		System.out.println("MemberNode -> nhId :" + nhId);
-		System.out.println("MemberNode -> memberId :" + memberId);
+		//System.out.println("MemberNode -> nhId :" + nhId);
+		//System.out.println("MemberNode -> memberId :" + memberId);
 		
     	Vector xlErrorCells = new Vector(); 
     	try
@@ -142,8 +142,8 @@ public class GridManagement {
     		
     		int tid = -1;
 
-    		System.out.println("GRID/PUT REST-API CALL :  memberId : " + memberId);
-    		System.out.println("GRID/PUT REST-API CALL :  gridId : " + gridId);
+    		//System.out.println("GRID/PUT REST-API CALL :  memberId : " + memberId);
+    		//System.out.println("GRID/PUT REST-API CALL :  gridId : " + gridId);
     		//System.out.println("GRID/PUT REST-API CALL :  gridName : " + gridName);
     		System.out.println("GRID/PUT REST-API CALL :  view : " + view);
 
@@ -293,7 +293,7 @@ public class GridManagement {
 				}
 				TableRowInfo tbrowInfo = null;
 				
-				System.out.println("RowManager.getTableRows....userId:" + userId + "nhId:" + nhId + "baselineId:" + baselineId + "view:"+ view);
+				//System.out.println("RowManager.getTableRows....userId:" + userId + "nhId:" + nhId + "baselineId:" + baselineId + "view:"+ view);
 				/* Condition Added By Asfak - START - 29 Jun 2014 */
 				if (criteriaTableId == -1 && !viewIsDynamic) {
 					System.out.println("RowManager.getTableRows....1");
@@ -355,7 +355,7 @@ public class GridManagement {
 				String rowQuery = null;
 				boolean results = false;
 				if (criteriaTableId == -1 && !viewIsDynamic) {
-					System.out.println("CALL BW_GET_TBL_LNK_IMPORT ---> " + gridId + "," + userId + "," + memberId + "," + nhId + "," + view);
+					//System.out.println("CALL BW_GET_TBL_LNK_IMPORT ---> " + gridId + "," + userId + "," + memberId + "," + nhId + "," + view);
 					q = "{CALL BW_GET_TBL_LNK_IMPORT(?,?,?,?,?)}";
 					stmt = connection.prepareStatement(q);
 					stmt.setInt(1, gridId);
@@ -367,7 +367,7 @@ public class GridManagement {
 				} 
 				else if (criteriaTableId > 0 && viewIsDynamic) /* Condition Added By Asfak - START - 29 Jun 2014 */ 
 				{
-					System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
+					//System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
 					q = "{CALL BW_GET_FiltredTableCELLS_DYNAMIC(?,?,?,?)}";
 					stmt = connection.prepareStatement(q);
 					stmt.setInt(1, gridId);
@@ -378,7 +378,7 @@ public class GridManagement {
 				} 
 				else 
 				{
-					System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
+					//System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
 					q = "{CALL BW_GET_FiltredTableCELLS_DYNAMIC(?,?,?,?)}";
 					stmt = connection.prepareStatement(q);
 					stmt.setInt(1, gridId);
@@ -660,10 +660,10 @@ public class GridManagement {
 //		System.out.println("cbfReturn.toString() as follows...................");
 //		System.out.println(cbfReturn.toString());
 //		System.out.println("End of PRINTING cbfReturn.toString() ...................END");
-		System.out.println("authBase64String ..................." + authBase64String);
+		//System.out.println("authBase64String ..................." + authBase64String);
 		// Decode data on other side, by processing encoded data
 		byte[] valueDecoded = Base64.decodeBase64(authBase64String);
-		System.out.println("Decoded value is " + new String(valueDecoded));		
+		//System.out.println("Decoded value is " + new String(valueDecoded));		
 		return cbfReturn ;
 	}	// end of GET GRID LINK IMPORT
 		
@@ -705,7 +705,7 @@ public class GridManagement {
 
 			int maxTransactionId = importTid;
 			int criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId, userId);
-			System.out.println("Using criterea table id = " + criteriaTableId);
+			//System.out.println("Using criterea table id = " + criteriaTableId);
 	
 			String lsRowQuery = TableViewManager.getRowQuery(connection, gridId, userId, criteriaTableId, true, view, "TABLE");
 			
@@ -744,7 +744,7 @@ public class GridManagement {
 			HashSet restrColumnList = new HashSet();
 			if (accessTableId > 0)
 			{
-				System.out.println("Using access table id = " + accessTableId);
+				//System.out.println("Using access table id = " + accessTableId);
 				// read the access for the user
 				restrColumnList = TableViewManager.getRestrictedColumnsForImport(connection, gridId, accessTableId, userId);
 			}
@@ -977,15 +977,15 @@ public class GridManagement {
 			stmt.setInt(6, importTid);
 			stmt.setInt(7, tid);
 	
-			System.out.println("tableId = " + gridId);
-			System.out.println("userId = " + userId);
-			System.out.println("memberId = " + memberId);
-			System.out.println("nhId = " + nhId);
-			System.out.println("view = " + view);
-			System.out.println("importTid = " + importTid);
-			System.out.println("newTid = " + tid);
-			System.out.println("mode = " + mode);
-			System.out.println("synch = " + synch);
+			//System.out.println("tableId = " + gridId);
+			//System.out.println("userId = " + userId);
+			//System.out.println("memberId = " + memberId);
+			//System.out.println("nhId = " + nhId);
+			//System.out.println("view = " + view);
+			//System.out.println("importTid = " + importTid);
+			//System.out.println("newTid = " + tid);
+			//System.out.println("mode = " + mode);
+			//System.out.println("synch = " + synch);
 	
 			System.out.println("before stmt.executeQuery :" + q);
 			ResultSet rs = stmt.executeQuery ();
@@ -1406,11 +1406,11 @@ public class GridManagement {
     		String view = "LATEST";
     		int tid = -1;
 
-    		System.out.println("GRID/PUT REST-API CALL :  memberId : " + memberId);
-    		System.out.println("GRID/PUT REST-API CALL :  collabId : " + collabId);
-    		System.out.println("GRID/PUT REST-API CALL :  gridId : " + gridId);
-    		System.out.println("GRID/PUT REST-API CALL :  gridName : " + gridName);
-    		System.out.println("GRID/PUT REST-API CALL :  view : " + view);
+    		//System.out.println("GRID/PUT REST-API CALL :  memberId : " + memberId);
+    		//System.out.println("GRID/PUT REST-API CALL :  collabId : " + collabId);
+    		//System.out.println("GRID/PUT REST-API CALL :  gridId : " + gridId);
+    		//System.out.println("GRID/PUT REST-API CALL :  gridName : " + gridName);
+    		//System.out.println("GRID/PUT REST-API CALL :  view : " + view);
     		
     		// Error vector to all the Exceptions
     		Vector xlErrorCells = new Vector(); //new Vector();
@@ -1757,12 +1757,12 @@ public class GridManagement {
 		int nhLevels = NhPathIds.size()-1;
 		nhpath.setLevels(nhLevels);
 
-		System.out.println("Inside getNeighborhoodPath nhLevels:" + nhLevels);
+		//System.out.println("Inside getNeighborhoodPath nhLevels:" + nhLevels);
 
 		String nhPathId = (String)NhPathIds.elementAt(0);
 		String nhpathArr[] = nhPathId.split("\\\\");
 
-		System.out.println("nhPathId : " + nhPathId);
+		//System.out.println("nhPathId : " + nhPathId);
 		
 		switch (nhLevels)
 		{
@@ -1793,11 +1793,11 @@ public class GridManagement {
 				nhpath.setNhLevel2(-1);
 				nhpath.setNhLevel3(-1);
 		}
-		System.out.println("Inside getNeighborhoodPath nhpath.getLevels:" + nhpath.getLevels());
-		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel0:" + nhpath.getNhLevel0());
-		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel1:" + nhpath.getNhLevel1());
-		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel2:" + nhpath.getNhLevel2());
-		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel3:" + nhpath.getNhLevel3());
+		//System.out.println("Inside getNeighborhoodPath nhpath.getLevels:" + nhpath.getLevels());
+		//System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel0:" + nhpath.getNhLevel0());
+		//System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel1:" + nhpath.getNhLevel1());
+		//System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel2:" + nhpath.getNhLevel2());
+		//System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel3:" + nhpath.getNhLevel3());
 
 		return nhpath;
 	}
@@ -2088,10 +2088,10 @@ public class GridManagement {
 			
 			//	Access control checks
 
-			System.out.println("Calling TableManager.getTableInfo : userId:" + userId  + ", gridId:" + gridId);
+			//System.out.println("Calling TableManager.getTableInfo : userId:" + userId  + ", gridId:" + gridId);
 			tinfo = TableManager.getTableInfo(connection, userId, gridId);
 
-			System.out.println("Calling TableViewManager.getSuggestedAccess : tinfo:" + tinfo + " userId:" + userId  + ", memberId:" + memberId  + ", nhId:" + nhId);
+			//System.out.println("Calling TableViewManager.getSuggestedAccess : tinfo:" + tinfo + " userId:" + userId  + ", memberId:" + memberId  + ", nhId:" + nhId);
 			ftal = TableViewManager.getSuggestedAccess(connection, tinfo, userId, memberId, nhId);
 			if (view == null || view.trim().equals(""))
 			{
@@ -3116,7 +3116,7 @@ public class GridManagement {
 
 			if (!members.containsKey(memberId))
 			{
-				System.out.println("members.containsKey(memberId) memberId : " + memberId + " --> is FALSE");
+				//System.out.println("members.containsKey(memberId) memberId : " + memberId + " --> is FALSE");
 	        	erb = new ErrorRequestObject();
 	        	erb.setError("Membership ID NOT FOUND");
 	        	erb.setPath("GridManagement.gridPut.validateMemberShip [SUBMIT]::GridManagement.getAllMemberships");
@@ -3349,7 +3349,7 @@ public class GridManagement {
                 Email = rs.getString("Email_Address");
                 nhId = rs.getInt("NhId");
                 nhLevel = rs.getInt("NhLevel");
-                System.out.println("MemberNode-> memberId:" + memberId + ", userId:" + userId + ", firstName:" + firstName + ", lastName:" + lastName + ", Email:" + Email + ", nhId:" + nhId + ", nhLevel:" + nhLevel);            
+                //System.out.println("MemberNode-> memberId:" + memberId + ", userId:" + userId + ", firstName:" + firstName + ", lastName:" + lastName + ", Email:" + Email + ", nhId:" + nhId + ", nhLevel:" + nhLevel);            
                 ht.put(memberId, new MemberNode(memberId, userId, firstName, lastName, Email, nhId, nhLevel));
             }
 			System.out.println("outside while rs loop");
@@ -3642,7 +3642,7 @@ public class GridManagement {
 			String rowQuery = null;
 			boolean results = false;
 			if (criteriaTableId == -1 && !viewIsDynamic) {
-				System.out.println("CALL BW_GET_TBL_LNK_IMPORT ---> " + gridId + "," + userId + "," + memberId + "," + nhId + "," + view);
+				//System.out.println("CALL BW_GET_TBL_LNK_IMPORT ---> " + gridId + "," + userId + "," + memberId + "," + nhId + "," + view);
 				q = "{CALL BW_GET_TBL_LNK_IMPORT(?,?,?,?,?)}";
 				stmt = connection.prepareStatement(q);
 				stmt.setInt(1, gridId);
@@ -3654,7 +3654,7 @@ public class GridManagement {
 			} 
 			else if (criteriaTableId > 0 && viewIsDynamic) /* Condition Added By Asfak - START - 29 Jun 2014 */ 
 			{
-				System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
+				//System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
 				q = "{CALL BW_GET_FiltredTableCELLS_DYNAMIC(?,?,?,?)}";
 				stmt = connection.prepareStatement(q);
 				stmt.setInt(1, gridId);
@@ -3665,7 +3665,7 @@ public class GridManagement {
 			} 
 			else 
 			{
-				System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
+				//System.out.println("CALL BW_GET_FiltredTableCELLS_DYNAMIC ---> " + gridId + "," + userId + "," + memberId + "," + view);
 				q = "{CALL BW_GET_FiltredTableCELLS_DYNAMIC(?,?,?,?)}";
 				stmt = connection.prepareStatement(q);
 				stmt.setInt(1, gridId);
