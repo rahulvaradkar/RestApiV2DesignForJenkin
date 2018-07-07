@@ -293,12 +293,16 @@ public class GridManagement {
 				}
 				TableRowInfo tbrowInfo = null;
 				
+				System.out.println("RowManager.getTableRows....userId:" + userId + "nhId:" + nhId + "baselineId:" + baselineId + "view:"+ view);
 				/* Condition Added By Asfak - START - 29 Jun 2014 */
 				if (criteriaTableId == -1 && !viewIsDynamic) {
+					System.out.println("RowManager.getTableRows....1");
 					tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
 				} else if (criteriaTableId > 0 && viewIsDynamic) {
+					System.out.println("RowManager.getTableRows....2");
 					tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
 				} else {
+					System.out.println("RowManager.getTableRows....3");
 					tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
 				}
 				Vector rowv = tbrowInfo.getRowVector();
@@ -311,6 +315,7 @@ public class GridManagement {
 				for (int r = 0; r < rowv.size(); r++) 
 				{
 					com.boardwalk.table.Row rowObject = (com.boardwalk.table.Row) rowv.elementAt(r);
+					rowArray.add(rowObject.getId());
 
 					gridRow = new Row();
 					gridRow.setCreationTid(rowObject.getCreationTid());
@@ -319,14 +324,8 @@ public class GridManagement {
 					gridRow.setOwnershipAssignedTid(rowObject.getOwnershipAssignedTid());
 					gridRow.setOwnerName(rowObject.getOwnerName());
 					gridRow.setOwnerId(rowObject.getOwnerUserId());
-					
 					gridRow.setActive((rowObject.getIsActive()== 1? true : false));
 					gridRow.setRowName(rowObject.getName()); 	
-					
-
-					rowArray.add(rowObject.getId());
-		    		gridRow = new Row();
-		    		gridRow.setActive((rowObject.getIsActive() == 1? true: false)); 
 		    		gridRow.setId(rowObject.getId()); 
 		    		gridRow.setPreviousRowid(  previousRowid);
 		    		gridRow.setPreviousRowSequence(previousRowSequence); 
@@ -552,6 +551,8 @@ public class GridManagement {
 				String nhPathId = (String)NhPathIds.elementAt(0);
 				String nhpathArr[] = nhPathId.split("\\\\");
 
+				System.out.println("nhPathId : " + nhPathId);
+
 				switch (nhLevels)
 				{
 					case 3:
@@ -559,18 +560,21 @@ public class GridManagement {
 						nhpath.setNhLevel1(Integer.parseInt(nhpathArr[1]) );
 						nhpath.setNhLevel2(Integer.parseInt(nhpathArr[2]) );
 						nhpath.setNhLevel3(Integer.parseInt(nhpathArr[3]) );
+						break;
 						
 					case 2:
 						nhpath.setNhLevel0(Integer.parseInt(nhpathArr[0]) );
 						nhpath.setNhLevel1(Integer.parseInt(nhpathArr[1]) );
 						nhpath.setNhLevel2(Integer.parseInt(nhpathArr[2]) );
 						nhpath.setNhLevel3(-1);
+						break;
 						
 					case 1:
 						nhpath.setNhLevel0(Integer.parseInt(nhpathArr[0]) );
 						nhpath.setNhLevel1(Integer.parseInt(nhpathArr[1]) );
 						nhpath.setNhLevel2(-1);
 						nhpath.setNhLevel3(-1);
+						break;
 						
 					case 0:
 						nhpath.setNhLevel0(Integer.parseInt(nhpathArr[0]));
@@ -590,6 +594,11 @@ public class GridManagement {
 				ginfo.setMode(mode);
 				ginfo.setCollabId(collabId);
 				ginfo.setWbId(wbId);
+				ginfo.setFilter("");
+				ginfo.setAsOfTid(maxTransactionId);
+				ginfo.setBaselineId(baselineId);
+				ginfo.setServerName("");
+				ginfo.setServerURL("");
 
 			} 	//GET TABLE BUFFER TRY ENDS
 			catch (Exception e) 
@@ -601,6 +610,8 @@ public class GridManagement {
 		
 			gcb.setDeletedColumnArray(deletedColumnArray);	//gcb added in LINK IMPORT CELLBUFFER
 			gcb.setDeletedRowArray(deletedRowArray);		//gcb added in LINK IMPORT CELLBUFFER
+			gcb.setCritical(-1);
+			gcb.setCriticalLevel(-1);
 			cbfReturn.setCells(gridCells);					//gridCells added in LINK IMPORT CELLBUFFER
 			cbfReturn.setColumnArray(columnArray );
 			cbfReturn.setColumnCellArrays(scas);
@@ -646,9 +657,9 @@ public class GridManagement {
 				e.printStackTrace();
 			}
 		}    		 		    		
-		System.out.println("cbfReturn.toString() as follows...................");
-		System.out.println(cbfReturn.toString());
-		System.out.println("End of PRINTING cbfReturn.toString() ...................END");
+//		System.out.println("cbfReturn.toString() as follows...................");
+//		System.out.println(cbfReturn.toString());
+//		System.out.println("End of PRINTING cbfReturn.toString() ...................END");
 		System.out.println("authBase64String ..................." + authBase64String);
 		// Decode data on other side, by processing encoded data
 		byte[] valueDecoded = Base64.decodeBase64(authBase64String);
@@ -1370,13 +1381,22 @@ public class GridManagement {
   			if (operType == OPERATION_SUBMIT)
 			{
     			System.out.println("This is Submit Operation");
-    			processSubmitRequest(connection, userId, memberId, nhId, gridId, cellBufferRequest, ErrResps, cbfReturn);
+    			int baselineId = -1;
+    			processSubmitRequest(connection, userId, memberId, nhId, gridId, baselineId, cellBufferRequest, ErrResps, cbfReturn);
     			return cbfReturn;
 			}	    	
+
+  			//OPERATION_LINK_EXPORT 
+    		ArrayList<Column> newColumns = (ArrayList<Column>) gcb.getNewColumnArray();
+    		ArrayList<Row> newRows = (ArrayList<Row>) gcb.getNewRowArray();
+  			
+    		//int numColumns = gridColumns.size();
+    		//int numRows = gridRows.size();
     		
-    		int numColumns = gridColumns.size();
-    		int numRows = gridRows.size();
-    		
+    		//numColumns and numRows are taken from GridChangeBuffer NewRowArray and NewColumnArray size.
+    		int numColumns = newColumns.size();
+    		int numRows = newRows.size();
+
     		System.out.println("GRID/PUT REST-API CALL :  numColumns : " + numColumns);
     		System.out.println("GRID/PUT REST-API CALL :  numRows : " + numRows);
     		Column cl;
@@ -1470,7 +1490,8 @@ public class GridManagement {
 	    	//Checking if ColumnNames are blank;	IssueId: 14288
 			for (int cni = 0; cni < numColumns; cni++)
 			{
-				cl = gridColumns.get(cni);
+				//cl = gridColumns.get(cni);
+				cl = newColumns.get(cni);
 				String colname = cl.getName();
 				if (colname.trim().equals(""))
 				{
@@ -1501,7 +1522,8 @@ public class GridManagement {
 					// Add columns...Ignoring BWID so Starting from 1. numColumns was sent from client Ignoring bwid, so adding 1 
 					for (int cni = 0; cni < numColumns; cni++)
 					{
-						cl = gridColumns.get(cni);
+						//cl = gridColumns.get(cni);
+						cl = newColumns.get(cni);
 						String colname = cl.getName();
 						float colSeq =  cl.getSeqNo().floatValue();
 						stmt.setString(1, colname);
@@ -1568,7 +1590,8 @@ public class GridManagement {
 				prevColId = resultset.getInt(1);
 				prevColSeq = resultset.getInt(3);
 				gridColumns.set(index, col);
-
+				gcb.getNewColumnArray().set(index, col);			//Refilling NewColumn Detailsin GridChangeBuffer with Ids
+			
 				System.out.println("Adding to colArr: index: " + index + " | columnId : " + columnId);
 	    		colArr.add(index, columnId);				// Recreating colArr by Adding each ColumnId into colArr
 				index += 1;
@@ -1591,6 +1614,8 @@ public class GridManagement {
 					System.out.println("columnIds : " + columnIds);
 					System.out.println("colCellArr.get(iCol) : " + colCellArr.get(iCol));
 					
+					int columnId = ((Integer)columnIds.get(iCol)).intValue();
+					colCellArr.get(iCol).setColumnId(columnId);
 					processLinkExportColumnData(connection, cellArr, colCellArr.get(iCol), colCellArr.get(iCol), iCol, rowIds, columnIds, numRows, tid);
 					//processLinkExportColumnData(connection, cellBuff, fmlaBuff, i, rowIds, columnIds, numRows, tid);
 				}
@@ -1607,12 +1632,14 @@ public class GridManagement {
 					rw.setActive(true);
 					rw.setId((Integer) rowIds.get(iRow));
 					rw.setPreviousRowid(prevRowId);
-					rw.setPreviousRowSequence(prevRowId);
+					rw.setPreviousRowSequence(prevRowSeq);
 					rw.setSeqNo(iRow+1);
 					rw.setTid(tid);
 					prevRowId = (Integer) rowIds.get(iRow);
 					prevRowSeq = iRow;
 					gridRows.set(iRow, rw);				// updating gridRows in-Place
+					
+					gcb.getNewRowArray().set(iRow, rw);			//Refilling NewRow Details in GridChangeBuffer with Ids
 					
 					System.out.println("Adding to rowArr: iRow: " + iRow + " | rowIds : " + rowIds.get(iRow));
 		    		rowArr.add(iRow,(Integer) rowIds.get(iRow));		// Recreating rowArr by Adding each id into rowArr
@@ -1638,11 +1665,35 @@ public class GridManagement {
 			tm = null;
 			// Add rows Ends here
 			
-			GridChangeBuffer gcbRet = new GridChangeBuffer();
-			
-			ginfo.setAsOfTid(tid);
-			ginfo.setExportTid(tid);
+			//GridChangeBuffer gcbRet = new GridChangeBuffer();
+			gcb.setCritical(-1);
+			gcb.setCriticalLevel(0);
 
+			ginfo.setAsOfTid(tid);
+			ginfo.setBaselineId(-1);
+			ginfo.setColCount(numColumns);
+			ginfo.setCollabId(tinfo.getCollaborationId());
+			ginfo.setCriteriaTableId(-1);
+			ginfo.setExportTid(tid);
+			ginfo.setFilter("");
+			ginfo.setId(gridId);
+			ginfo.setImportTid(tid);
+			ginfo.setMaxTxId(tid);
+			ginfo.setMemberId(memberId);
+			ginfo.setMode(1);
+			ginfo.setName(tinfo.getTableName());
+			NeighborhoodPath nhpath = new NeighborhoodPath();
+			nhpath = getNeighborhoodPath(connection, nhId);
+			ginfo.setNeighborhoodHeirarchy( nhpath);
+			ginfo.setNhId(nhId);
+			ginfo.setPurpose(tinfo.getTablePurpose());
+			ginfo.setRowCount(numRows);
+			ginfo.setServerName("");
+			ginfo.setServerURL("");
+			ginfo.setUserId(userId);
+			ginfo.setView(view);
+			ginfo.setWbId(tinfo.getWhiteboardId());
+			
     		cbfReturn.setInfo(ginfo);
     		cbfReturn.setRowArray(rowArr);
     		cbfReturn.setColumnArray(colArr);
@@ -1650,7 +1701,7 @@ public class GridManagement {
     		cbfReturn.setColumns(gridColumns);
     		cbfReturn.setRows(gridRows);
     		cbfReturn.setCells(cellArr);
-    		cbfReturn.setGridChangeBuffer(gcbRet);
+    		cbfReturn.setGridChangeBuffer(gcb);
     		//Custom code Ends
     	}
 		catch (BoardwalkException bwe)
@@ -1696,13 +1747,69 @@ public class GridManagement {
 		return cbfReturn;
 	}//End of PUT GRID for LINK EXPORT
 
+	//Returns nhPath used gridInfo.NeighborhoodHeirarchy property
+	public static  NeighborhoodPath getNeighborhoodPath(Connection connection , int nhId)
+	{
+		System.out.println("Inside getNeighborhoodPath:" + nhId);
+		Vector NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
+		
+		NeighborhoodPath nhpath = new NeighborhoodPath();
+		int nhLevels = NhPathIds.size()-1;
+		nhpath.setLevels(nhLevels);
+
+		System.out.println("Inside getNeighborhoodPath nhLevels:" + nhLevels);
+
+		String nhPathId = (String)NhPathIds.elementAt(0);
+		String nhpathArr[] = nhPathId.split("\\\\");
+
+		System.out.println("nhPathId : " + nhPathId);
+		
+		switch (nhLevels)
+		{
+			case 3:
+				nhpath.setNhLevel0(Integer.parseInt(nhpathArr[0]) );
+				nhpath.setNhLevel1(Integer.parseInt(nhpathArr[1]) );
+				nhpath.setNhLevel2(Integer.parseInt(nhpathArr[2]) );
+				nhpath.setNhLevel3(Integer.parseInt(nhpathArr[3]) );
+				break;
+				
+			case 2:
+				nhpath.setNhLevel0(Integer.parseInt(nhpathArr[0]) );
+				nhpath.setNhLevel1(Integer.parseInt(nhpathArr[1]) );
+				nhpath.setNhLevel2(Integer.parseInt(nhpathArr[2]) );
+				nhpath.setNhLevel3(-1);
+				break;
+				
+			case 1:
+				nhpath.setNhLevel0(Integer.parseInt(nhpathArr[0]) );
+				nhpath.setNhLevel1(Integer.parseInt(nhpathArr[1]) );
+				nhpath.setNhLevel2(-1);
+				nhpath.setNhLevel3(-1);
+				break;
+				
+			case 0:
+				nhpath.setNhLevel0(Integer.parseInt(nhpathArr[0]));
+				nhpath.setNhLevel1(-1);
+				nhpath.setNhLevel2(-1);
+				nhpath.setNhLevel3(-1);
+		}
+		System.out.println("Inside getNeighborhoodPath nhpath.getLevels:" + nhpath.getLevels());
+		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel0:" + nhpath.getNhLevel0());
+		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel1:" + nhpath.getNhLevel1());
+		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel2:" + nhpath.getNhLevel2());
+		System.out.println("Inside getNeighborhoodPath nhpath.getNhLevel3:" + nhpath.getNhLevel3());
+
+		return nhpath;
+	}
+	
 //	public static void processLinkExportColumnData(Connection connection, String cellData, String formulaData, int columnIdx, ArrayList rowIds, ArrayList columnIds, int numRows, int tid) throws SQLException 
 	public static void processLinkExportColumnData(Connection connection, ArrayList<Cell> cellArr,  SequencedCellArray sca, SequencedCellArray scaFmla, int columnIdx, ArrayList rowIds, ArrayList columnIds, int numRows, int tid) throws SQLException 
 	{
 		PreparedStatement stmt		= null;
 		ArrayList<String> seqColValues = (ArrayList<String>) sca.getCellValues();
-		ArrayList<String> seqColFmlas = (ArrayList<String>) scaFmla.getCellValues();
-		cellArr.clear();
+		ArrayList<String> seqColFmlas = (ArrayList<String>) scaFmla.getCellFormulas();
+		
+		//cellArr.clear();	This was storing cells of only last column. THIS WAS A BUG
 		
 		int columnId = ((Integer)columnIds.get(columnIdx)).intValue();
 	
@@ -1802,18 +1909,9 @@ public class GridManagement {
 	
 	
 	//Submit chnages using PUT GRID REST API CALL
-	public static void processSubmitRequest(Connection connection, int userId, int memberId, int nhId, int gridId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, CellBuffer cbfReturn )
+	public static void processSubmitRequest(Connection connection, int userId, int memberId, int nhId, int gridId, int baselineId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, CellBuffer cbfReturn )
 	{
 
-/*		cbfReturn.setCells(cellBufferRequest.getCells());
-		cbfReturn.setColumnArray(cellBufferRequest.getColumnArray());
-		cbfReturn.setColumnCellArrays(cellBufferRequest.getColumnCellArrays());
-		cbfReturn.setColumns(cellBufferRequest.getColumns());
-		cbfReturn.setGridChangeBuffer(cellBufferRequest.getGridChangeBuffer());
-		cbfReturn.setInfo(cellBufferRequest.getInfo());
-		cbfReturn.setRowArray(cellBufferRequest.getRowArray());
-		cbfReturn.setRows(cellBufferRequest.getRows());
-*/		
 		TransactionManager tm = null;
 		int tid = -1;
 		
@@ -1844,20 +1942,32 @@ public class GridManagement {
 		boolean newRowsAdded = false;
 		int defaultAccess = 2;
 		
-//		ArrayList<Integer> rowArr =  (ArrayList<Integer>) cellBufferRequest.getRowArray();
-//		ArrayList<Integer> colArr =  (ArrayList<Integer>) cellBufferRequest.getColumnArray(); 
 		ArrayList<Cell> cellArr = (ArrayList<Cell>) cellBufferRequest.getCells();
-		
-//		ArrayList<Row> gridRows = (ArrayList<Row>) cellBufferRequest.getRows();
-//		ArrayList<Column> gridColumns = (ArrayList<Column>) cellBufferRequest.getColumns();
-//		ArrayList<SequencedCellArray> colCellArr = (ArrayList<SequencedCellArray>) cellBufferRequest.getColumnCellArrays();
 		GridChangeBuffer gcb = cellBufferRequest.getGridChangeBuffer();
 		
-//		ArrayList<CellChangeDetails> cellChangesArray =  (ArrayList<CellChangeDetails>)  gcb.getCellChangesArray();
 		ArrayList<Integer> delColArray = (ArrayList<Integer>)  gcb.getDeletedColumnArray();
 		ArrayList<Integer> delRowArray = (ArrayList<Integer>)  gcb.getDeletedRowArray();
 		ArrayList<Column> newColArray = (ArrayList<Column>)  gcb.getNewColumnArray();
 		ArrayList<Row> newRowArray = (ArrayList<Row>) gcb.getNewRowArray();
+
+		if (cellArr == null | delColArray == null | delRowArray == null | newColArray == null | newRowArray == null )
+		{
+			erb = new ErrorRequestObject(); erb.setError("Grid Change Element Missing in the Request."); 
+			erb.setPath("newRowArray or newColumnArray or deletedRowArray or deletedColumnArray or cells is Missing."); 
+			erb.setProposedSolution("The Request must contain newRowArray, newColumnArray, deletedRowArray, deletedColumnArray, cells");
+			ErrResps.add(erb);
+			return;
+		}
+		
+		if (cellArr.isEmpty() & delColArray.isEmpty() & delRowArray.isEmpty() & newColArray.isEmpty() & newRowArray.isEmpty())
+		{
+			erb = new ErrorRequestObject(); erb.setError("The Request does not contain any Changes to Update the Grid"); 
+			erb.setPath("Empty newRowArray, newColumnArray, deletedRowArray, deletedColumnArray, cells"); 
+			erb.setProposedSolution("No Change detail Found in Request. So no changes made to the Grid on Server.");
+			ErrResps.add(erb);
+			return;
+		}
+		
 		
 		int intCritical = gcb.getCritical();
 		int intCriticalLevel = gcb.getCriticalLevel();
@@ -2513,6 +2623,11 @@ public class GridManagement {
 					xlColIdx = ccd.getColSequence();
 					xlcellval = ccd.getCellValue();
 					xlFormula = ccd.getCellFormula();
+					if (xlFormula.indexOf("=") != 0)					//Fix for IssueId: 
+					{
+						xlFormula = null;
+					}
+					
 					cellChangeFlag = ccd.getChangeFlag();
 					
 					System.out.println("Processing Cells: xlRowIdx:"+ xlRowIdx + ", xlColIdx:" + xlColIdx + ", xlcellval:" + xlcellval + ", xlFormula:" + xlFormula + ", cellChangeFlag:" + cellChangeFlag) ;
@@ -2876,12 +2991,45 @@ public class GridManagement {
 			
 			retGcb.setDeletedColumnArray(retDelColArray);
 			retGcb.setDeletedRowArray(retDelRowArray);
+			retGcb.setCritical(-1);
+			retGcb.setCriticalLevel(-1);
+
+			ftal = TableViewManager.getSuggestedAccess(connection, tinfo, userId, memberId, nhId);
+			
+			GenerateGridRowAndRowArray (connection,  gridId, userId, memberId, nhId,  baselineId, view, criteriaTableId, retGridRows, retRowArr,  ErrResps);
+			GenerateGridColumnAndColumnArray(connection, gridId, userId, memberId,  baselineId, view, ftal, retGridColumns, retColArr,  ErrResps);
+			
+//			(Connection connection, int gridId, int userId, int memberId, int nhId,  int baselineId, String view, int criteriaTableId, ArrayList <Row> gridRows, ArrayList <Integer> rowArray,  ArrayList<ErrorRequestObject> ErrResps)
 			
 			ginfo.setAsOfTid(tid);
+			
+			ginfo.setBaselineId(-1);
+			ginfo.setColCount(retColArr.size());
+			ginfo.setCollabId(tinfo.getCollaborationId());
+			ginfo.setCriteriaTableId(criteriaTableId);
 			ginfo.setExportTid(tid);
+			ginfo.setFilter("");
+			ginfo.setId(gridId);
+			ginfo.setImportTid(importTid);
+			ginfo.setMaxTxId(tid);
+			ginfo.setMemberId(memberId);
+			ginfo.setMode(1);
+			ginfo.setName(tinfo.getTableName());
+			NeighborhoodPath nhpath = new NeighborhoodPath();
+			nhpath = getNeighborhoodPath(connection, nhId);
+			ginfo.setNeighborhoodHeirarchy( nhpath);
+			ginfo.setNhId(nhId);
+			ginfo.setPurpose(tinfo.getTablePurpose());
+			ginfo.setRowCount(retRowArr.size());
+			ginfo.setServerName("");
+			ginfo.setServerURL("");
+			ginfo.setUserId(userId);
+			ginfo.setView(view);
+			ginfo.setWbId(tinfo.getWhiteboardId());
+			
 
-			int mode = ginfo.getMode();
-			int baselineId = ginfo.getBaselineId();
+//			int mode = ginfo.getMode();
+//			int baselineId = ginfo.getBaselineId();
 			//COMMENTING THIS LINE
 			//GenerateGridColumnAndColumnArray(connection, gridId, userId, memberId, mode, baselineId, view, ftal,  retGridColumns, retColArr,   ErrResps);
 			cbfReturn.setColumns(retGridColumns );
@@ -3229,7 +3377,7 @@ public class GridManagement {
     }
 
     //Generate ArrayList<Column> GridColumns. ArrayList<Integer> ColArr
-    public static void GenerateGridColumnAndColumnArray(Connection connection, int gridId, int userId, int memberId, int mode, int baselineId, String view, TableAccessList ftal, ArrayList <Column> gridCols, ArrayList <Integer> columnArray,  ArrayList<ErrorRequestObject> ErrResps)
+    public static void GenerateGridColumnAndColumnArray(Connection connection, int gridId, int userId, int memberId, int baselineId, String view, TableAccessList ftal, ArrayList <Column> gridCols, ArrayList <Integer> columnArray,  ArrayList<ErrorRequestObject> ErrResps)
     {
     	ErrorRequestObject erb ;
 		int maxTransactionId = -1;
@@ -3243,7 +3391,7 @@ public class GridManagement {
 		}
 		System.out.println("view = " + view);
 		System.out.println("baselineId = " + baselineId);
-		System.out.println("mode = " + mode);
+		//System.out.println("mode = " + mode);
 
     	try
     	{
@@ -3326,7 +3474,8 @@ public class GridManagement {
     }
     
     //Generate ArrayList<Column> GridRows. ArrayList<Integer> rowArr
-    public static void GenerateGridRowAndRowArray(Connection connection, int gridId, int userId, int memberId, int nhId, int mode, int baselineId, String view, TableAccessList ftal, int criteriaTableId, ArrayList <Row> gridRows, ArrayList <Integer> rowArray,  ArrayList<ErrorRequestObject> ErrResps)
+//    public static void GenerateGridRowAndRowArray(Connection connection, int gridId, int userId, int memberId, int nhId, int mode, int baselineId, String view, TableAccessList ftal, int criteriaTableId, ArrayList <Row> gridRows, ArrayList <Integer> rowArray,  ArrayList<ErrorRequestObject> ErrResps)
+    public static void GenerateGridRowAndRowArray(Connection connection, int gridId, int userId, int memberId, int nhId,  int baselineId, String view, int criteriaTableId, ArrayList <Row> gridRows, ArrayList <Integer> rowArray,  ArrayList<ErrorRequestObject> ErrResps)
     {
     	ErrorRequestObject erb ;
     	Row gridRow;
@@ -3370,18 +3519,15 @@ public class GridManagement {
 				gridRow.setOwnershipAssignedTid(rowObject.getOwnershipAssignedTid());
 				gridRow.setOwnerName(rowObject.getOwnerName());
 				gridRow.setOwnerId(rowObject.getOwnerUserId());
-				
 				gridRow.setActive((rowObject.getIsActive()== 1? true : false));
 				gridRow.setRowName(rowObject.getName()); 	
-	
-				rowArray.add(rowObject.getId());
-	    		gridRow = new Row();
-	    		gridRow.setActive((rowObject.getIsActive() == 1? true: false)); 
 	    		gridRow.setId(rowObject.getId()); 
 	    		gridRow.setPreviousRowid(  previousRowid);
 	    		gridRow.setPreviousRowSequence(previousRowSequence); 
 	    		Float obj = new Float(rowObject.getSequenceNumber());
 	    		gridRow.setSeqNo(obj.intValue()); 
+
+				rowArray.add(rowObject.getId());
 	    		
 	    		previousRowid = rowObject.getId() ;
 	    		previousRowSequence = obj.intValue();
