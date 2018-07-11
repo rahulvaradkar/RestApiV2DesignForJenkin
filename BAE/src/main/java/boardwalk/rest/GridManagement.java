@@ -2123,18 +2123,71 @@ public class GridManagement {
 			canDeleteRows			= ftal.canDeleteRow();
 			canAdministerColumns	= ftal.canAdministerColumn();
 
+			System.out.println("canAddRows : " + canAddRows);
+			System.out.println("canDeleteRows : " + canDeleteRows);
+			System.out.println("canAdministerColumns : " + canAdministerColumns);
+			
+			System.out.println("wACL : " + wACL);
+			System.out.println("awACL : " + awACL);
+			
 			// No Access to Table
 			if ( awACL != wACL && canAddRows == false && canDeleteRows == false && canAdministerColumns == false)
 			{
 				xlErrorCells.add( new xlErrorNew(gridId, 0, 0, 10005));
 				//throw new BoardwalkException(10005);
 	        	erb = new ErrorRequestObject();
-	        	erb.setError("ACCESS EXCEPTION (10005)");
+	        	erb.setError("ACCESS EXCEPTION (10005).  canAddRows - False, canDeleteRows - False, canAdministerColumn - False ");
 	        	erb.setPath("GridManagement.gridPut::GridManagement.TableAccessRequest");
 				erb.setProposedSolution("You dont have the priviliges to execute this action, Please contact the owner of the table to setup necessary access control");
 	        	ErrResps.add(erb);
 	        	return;
 			}
+
+			
+			if (newRowArray.size() > 0 && canAddRows == false)
+			{
+				erb = new ErrorRequestObject();
+				erb.setError("TABLE UPDATE EXCEPTION (12012): No access to Add a Row" );
+				erb.setPath("GridManagement.gridPut::canAddRows=FALSE, newRowArray.size()>0");
+				erb.setProposedSolution("You don't have access to add a new row,  Please resolve errors and try again");
+				ErrResps.add(erb);
+				System.out.println("No access to add rows");
+			}
+			
+			if (delRowArray.size() > 0 && canDeleteRows == false)
+			{
+				erb = new ErrorRequestObject();
+				erb.setError("TABLE UPDATE EXCEPTION (12010): No access to Delete a Row" );
+				erb.setPath("GridManagement.gridPut::canDeleteRows=FALSE, delRowArray.size()>0");
+				erb.setProposedSolution("You don't access to Delete a row, Please contact the owner of the Table");
+				ErrResps.add(erb);
+				System.out.println("No access to Delete rows");
+			}
+			
+			if (newColArray.size() > 0 && canAdministerColumns == false)
+			{
+				erb = new ErrorRequestObject();
+				erb.setError("TABLE UPDATE EXCEPTION (12010): No access to add a new Column" );
+				erb.setPath("GridManagement.gridPut::canAdministerColumns=FALSE, newColArray.Size()>0");
+				erb.setProposedSolution("You don't access to add a new column, Please contact the owner of the Table");
+				ErrResps.add(erb);
+				System.out.println("TABLE UPDATE EXCEPTION (12010): No access to Add a new Column");
+			}
+			
+			if (delColArray.size() > 0 && canAdministerColumns == false)
+			{
+				erb = new ErrorRequestObject();
+				erb.setError("TABLE UPDATE EXCEPTION (12010): No access to Delete a Column" );
+				erb.setPath("GridManagement.gridPut::canAdministerColumns=FALSE, delColArray.size()>0");
+				erb.setProposedSolution("You don't access to Delete a column, Please contact the owner of the Table");
+				ErrResps.add(erb);
+				System.out.println("TABLE UPDATE EXCEPTION (12010): No access to Delete a Column." );
+			}
+
+	    	if (ErrResps.size() > 0) 
+	    	{
+    		    return;
+	    	}
 			
 			// see if there is a criterea table associated with this table
 			criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId, userId);
@@ -2301,7 +2354,7 @@ public class GridManagement {
 							return;
 						}
 					}
-					else
+					/*else
 					{
 						xlErrorCells.add(new xlErrorNew(gridId, 0, prevColId, 12010));
 						erb = new ErrorRequestObject();
@@ -2310,7 +2363,7 @@ public class GridManagement {
 						erb.setProposedSolution("You don't access to add a new column, Please contact the owner of the Table");
 						ErrResps.add(erb);
 						return;
-					}
+					}*/
 				}
 				
 				if (colIdHash.get(new Integer(newColSeq)) == null)
@@ -2341,9 +2394,9 @@ public class GridManagement {
 			//Delete Columns	FOR SUBMIT STARTS
 			if (delColArray.size() > 0 ) 
 			{
-				if (canAdministerColumns == false)
+/*				if (canAdministerColumns == false)
 				{
-					for(int id = 0; id < delColArray.size()-1; id=id+1 )
+					for(int id = 0; id < delColArray.size(); id=id+1 )
 					{
 						int delColId = delColArray.get(id);
 						xlErrorCells.add(new xlErrorNew(gridId, 0, delColId, 12010));
@@ -2355,13 +2408,13 @@ public class GridManagement {
 						erb.setPath("GridManagement.gridPut::canAdministerColumns=FALSE");
 						erb.setProposedSolution("You don't access to Delete a column, Please contact the owner of the Table");
 						ErrResps.add(erb);
-						//return;
 						System.out.println("TABLE UPDATE EXCEPTION (12010): No access to Delete a Column: ClumnId :" + delColId );
+						return;
 					}
 				}
 				else
 				{
-					for(int id = 0; id < delColArray.size(); id=id+1 )
+*/					for(int id = 0; id < delColArray.size(); id=id+1 )
 					{
 						int delColId = delColArray.get(id);
 						if (colIdHash.get(new Integer(delColId)) != null)		// NOT REQUIRED AS THERE IS NO HASH OF EXISTING COLUMNS Rahul 15-JUNE-2018
@@ -2383,7 +2436,7 @@ public class GridManagement {
 							System.out.println("Transaction critical because columns deleted");
 						}
 					}
-				}
+//				}
 			}
 			// End of Columns Delete FOR SUBMITS ENDS
 
@@ -2391,7 +2444,7 @@ public class GridManagement {
 			if (newRowArray.size() > 0) 		// If new Rows exists. Send from Client array of -1s
 			{
 				// Adding New Rows
-				if (canAddRows == false)
+/*				if (canAddRows == false)
 				{
 					xlErrorCells.add(new xlErrorNew(gridId,  -1, -1, 12012));
 					ExceptionAddRows = true;
@@ -2401,11 +2454,11 @@ public class GridManagement {
 					erb.setPath("GridManagement.gridPut::canAddRows=FALSE");
 					erb.setProposedSolution("You don't have access to add a new row,  Please resolve errors and try again");
 					ErrResps.add(erb);
-					//return;
+					return;
 				}
 				else
 				{
-					int prevNewRowId = -1;
+*/					int prevNewRowId = -1;
 					int prevRowId = -1;
 					int prOffset = 1;
 					int rwSeq = -1;
@@ -2540,14 +2593,14 @@ public class GridManagement {
 							}
 						}
 					}	// End of Processing newly added Rows
-				}	// End of canAddRows=true
+			//	}	// End of canAddRows=true
 			}		// end of newRowArray.size() 			END OF NEW ROWS FOR SUBMIT
 
 			// delete the rows STARTS for SUBMIT
 			System.out.println("delRowArray.size() :" + delRowArray.size() );
 			if (delRowArray.size() > 0 )
 			{
-				if (canDeleteRows == false)
+/*				if (canDeleteRows == false)
 				{
 					for (int drc=0; drc < delRowArray.size(); drc=drc+1  )
 					{
@@ -2563,7 +2616,7 @@ public class GridManagement {
 					return;
 				}
 				else
-				{
+				{*/
 					for (int drc=0; drc < delRowArray.size(); drc=drc+1  )
 					{
 						System.out.println("Adding to xlDeleteRows  :" + delRowArray.get(drc)  );
@@ -2590,7 +2643,7 @@ public class GridManagement {
 							System.out.println("Transaction critical because rows deleted");
 						}
 					}
-				}
+//				}
 			}	// End of Delete Rows FOR SUBMIT
 			
 			// Start of Process Cells
@@ -2958,19 +3011,7 @@ public class GridManagement {
 				{
 					rw = newRowArray.get(rn);
 					int newRowId = (Integer) rowIdHash.get(rw.getSeqNo());
-
 					HashMap rowdata = (HashMap) newRowsHash.get(rw.getSeqNo());
-					
-/*					rdata.put("rowId", Integer.parseInt(rs.getString(1)));
-					rdata.put("name", rs.getString(2));
-					rdata.put("txId", rs.getString(3));
-					rdata.put("sequenceNumber", rs.getString(4));
-					rdata.put("isActive", rs.getString(5));
-					rdata.put("ownerId", rs.getString(6));
-					rdata.put("ownerTid", rs.getString(7));
-					newRowsHash.put(new Integer(ridx), rdata);
-*/					
-					
 					rw.setId(newRowId);
 					rw.setActive(  (Integer) rowdata.get("isActive") == 1 ? true : false);
 					rw.setCreaterId((Integer) rowdata.get("ownerId"));
