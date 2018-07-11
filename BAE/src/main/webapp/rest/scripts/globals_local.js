@@ -48,86 +48,233 @@ var WhiteboardInput={
 };
 
 var GridInput = {
-cells: [],
+ cells: [],
  columnArray: [-1,-1],
- columnCellArrays: [{
-       "cellValues": ["Maharashtra","Maharashtra","Gujrat","Gujrat"], 
-          "cellFormulas": ["Maharashtra","Maharashtra","Gujrat","Gujrat"], 
-       "cellAccess": [2,2,2,2], "columnId": -1 , "colSequence" : 1
-      },  
-         {
-       "cellValues": ["Pune","Mumbai","Surat","Ahmadabad"], 
-          "cellFormulas": ["Pune","Mumbai","Surat","Ahmadabad"], 
-       "cellAccess": [2,2,2,2], "columnId": -1 , "colSequence" : 2
-      }] ,
+ columnCellArrays: [
+  {
+    "cellValues": [
+   "Maharashtra",
+   "Maharashtra",
+   "Gujrat",
+   "Gujrat"
+    ],
+    "cellFormulas": [
+   "Maharashtra",
+   "Maharashtra",
+   "Gujrat",
+   "Gujrat"
+    ],
+    "cellAccess": [
+   2,
+   2,
+   2,
+   2
+    ],
+    "columnId": -1,
+    "colSequence": 1
+  },
+  {
+    "cellValues": [
+   "Pune",
+   "Mumbai",
+   "Surat",
+   "Ahmedabad"
+    ],
+    "cellFormulas": [
+   "Pune",
+   "Mumbai",
+   "Surat",
+   "Ahmedabad"
+    ],
+    "cellAccess": [
+   2,
+   2,
+   2,
+   2
+    ],
+    "columnId": -1,
+    "colSequence": 2
+  }] ,
  columns: [
-    {"seqNo": 1,"name": "state","active": true,"previousColumnid":-1,"previousColumnSequence": -1,"id": -1,"tid": -1},
-    {"seqNo": 2,"name": "city","active": true,"previousColumnid":-1,"previousColumnSequence": 1,"id": -1,"tid": -1}
-   ],
- columns_DuplicateColumns:[
-        {"seqNo": 1,"name": "state","active": true,"previousColumnid":-1,"previousColumnSequence": -1,"id": -1,"tid": -1},
-        {"seqNo": 2,"name": "state","active": true,"previousColumnid":-1,"previousColumnSequence": 1,"id": -1,"tid": -1}
-       ],
- GridChangeBuffer : {},
+  {
+   "active": true,
+   "id": -1,
+   "name": "state",
+   "previousColumnSequence": 0,
+   "previousColumnid": -1,
+   "seqNo": 1,
+   "tid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "name": "city",
+   "previousColumnSequence": 1,
+   "previousColumnid": -1,
+   "seqNo": 2,
+   "tid": -1
+    }],
+ columns_DuplicateColumns:[{
+  "active": true,
+  "id": -1,
+  "name": "state",
+  "previousColumnSequence": 0,
+  "previousColumnid": -1,
+  "seqNo": 1,
+  "tid": -1
+   },
+   {
+  "active": true,
+  "id": -1,
+  "name": "state",
+  "previousColumnSequence": 1,
+  "previousColumnid": -1,
+  "seqNo": 2,
+  "tid": -1
+   }],
+ GridChangeBuffer : {
+  "critical": 0,
+  "criticalLevel": -1,
+  "newRowArray": [
+    {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 1,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 2,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 3,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 4,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    }
+  ],
+  "deletedRowArray": [],
+  "newColumnArray": [
+    {
+   "active": true,
+   "id": -1,
+   "name": "state",
+   "previousColumnSequence": 0,
+   "previousColumnid": -1,
+   "seqNo": 1,
+   "tid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "name": "city",
+   "previousColumnSequence": 1,
+   "previousColumnid": -1,
+   "seqNo": 2,
+   "tid": -1
+    }
+  ],
+  "deletedColumnArray": []
+   },
  rowArray : [-1,-1,-1,-1],
  rows :  [
-  {  
-   "active" : true ,  
-   "id" : -1 ,  
-   "previousRowSequence" : -1 ,  
-   "previousRowid" : -1 ,  
-   "seqNo" : 1 ,  
-   "tid" : -1 ,  
-   "rowName" : " " ,  
-   "ownerId" : -1 ,  
-   "ownerName" :  " " ,  
-   "creationTid" : -1 ,  
-   "createrId" : -1 , 
-   "ownershipAssignedTid" : -1  
-  } , 
-  {  
-   "active" : true ,  
-   "id" : -1 ,  
-   "previousRowSequence" : -1 ,  
-   "previousRowid" : -1 ,  
-   "seqNo" : 2 ,  
-   "tid" : -1 ,  
-   "rowName" : " " ,  
-   "ownerId" : -1 ,  
-   "ownerName" :  " " ,  
-   "creationTid" : -1 ,  
-   "createrId" : -1 , 
-   "ownershipAssignedTid" : -1  
-  } , 
-  {  
-   "active" : true ,  
-   "id" : -1 ,  
-   "previousRowSequence" : -1 ,  
-   "previousRowid" : -1 ,  
-   "seqNo" : 3 ,  
-   "tid" : -1 ,  
-   "rowName" : " " ,  
-   "ownerId" : -1 ,  
-   "ownerName" :  " " ,  
-   "creationTid" : -1 ,  
-   "createrId" : -1 , 
-   "ownershipAssignedTid" : -1  
-  } , 
-  {  
-   "active" : true ,  
-   "id" : -1 ,  
-   "previousRowSequence" : -1 ,  
-   "previousRowid" : -1 ,  
-   "seqNo" : 4 ,  
-   "tid" : -1 ,  
-   "rowName" : " " ,  
-   "ownerId" : -1 ,  
-   "ownerName" :  " " ,  
-   "creationTid" : -1 ,  
-   "createrId" : -1 , 
-   "ownershipAssignedTid" : -1  
-   } 
-  ],  
+  {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 1,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 2,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 3,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    },
+    {
+   "active": true,
+   "id": -1,
+   "previousRowSequence": -1,
+   "previousRowid": -1,
+   "seqNo": 4,
+   "tid": -1,
+   "rowName": " ",
+   "ownerId": -1,
+   "ownerName": " ",
+   "creationTid": -1,
+   "createrId": -1,
+   "ownershipAssignedTid": -1
+    }
+  ],
   filter : "filter",
   view : "view",
   asOfTid : -1,
@@ -145,5 +292,4 @@ cells: [],
   baselineId : -1,
   importTid_1 : -1,
   cuboid_Id : 0
-  
 };
