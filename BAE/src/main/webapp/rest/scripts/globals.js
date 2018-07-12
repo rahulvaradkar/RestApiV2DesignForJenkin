@@ -293,3 +293,22 @@ var GridInput = {
   importTid_1 : -1,
   cuboid_Id : 0
 };
+
+var Access_Control = {
+	Access_Cuboid_Id : 2003326,
+	Access_Cuboid_Name : "Access_Cuboid",
+	NHID : 2127,
+	NHID_Name : "Access_Control",
+ 	Collab_Id : 1487,
+	Collab_Name : "Access_Cuboids",
+	WB_Id : 2188,
+	WB_Name : "Access_Tables",
+	Row_Access_User_1 : getAuthorization("acuser1",0,"Access_Control|Rows"),
+	User1_Id : 2762,
+	User1_Member_Id_1 : 2001,
+	Row_Access_User_2 : getAuthorization("acuser3",0,"Access_Control|Rows|R_Add_delete"),
+	User2_Member_Id_2 : 1903,
+	Row_Access_User_3 : getAuthorization("acuser4",0,"Access_Control|Rows|R_Add_delete_1"),
+	User2_Member_Id_3 : 1907
+};
+

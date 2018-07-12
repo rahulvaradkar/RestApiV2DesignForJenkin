@@ -87,7 +87,7 @@
     }
 
     QUnit.test("Submitting Grid with one cell with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         createGrid().then(function () {
             console.log("Submitting Grid with one cell");

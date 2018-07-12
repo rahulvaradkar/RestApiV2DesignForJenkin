@@ -44,10 +44,10 @@ function hasValidProperties(object, props) {
 
 var TestUtils = (function () {
     function sendRequest(URL, Data, authorization, requestType) {
+		console.log("Request Type :"+requestType+"\n");
         var Response = new $.Deferred();
         var json;
-        console.log("***********************************************************************************************");
-        console.log("Fetching :" + URL);
+        console.log("Fetching URL :" + URL + "\n");
         if (requestType.toString() == "GET") {
             $.ajax({
                 url: URL,
@@ -59,9 +59,8 @@ var TestUtils = (function () {
                 },
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result));
-                    console.log("***********************************************************************************************");
-                    console.log("\n");
+                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    
                 },
                 error: function(err){
                     console.log("inside error function");
@@ -83,8 +82,7 @@ var TestUtils = (function () {
                 async: false,
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result));
-                    console.log("***********************************************************************************************");
+                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
                     console.log("\n");
                 },
                 error: function(err){
@@ -107,9 +105,7 @@ var TestUtils = (function () {
                 },
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result));
-                    console.log("***********************************************************************************************");
-                    console.log("\n");
+                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
                 },
                 /*statusCode : {
                     500 : function() {
@@ -127,9 +123,9 @@ var TestUtils = (function () {
     }
 
     function sendPutRequest(URL, Data, authorization) {
+		console.log("Request Type : PUT\n");
         var Response = new $.Deferred();
-        console.log("***********************************************************************************************");
-        console.log("Fetching :" + URL);
+        console.log("Fetching :" + URL + "\n");
         var res = $.ajax({
             url: URL,
             type: "PUT",
@@ -142,17 +138,15 @@ var TestUtils = (function () {
             },
             async: false
         }).responseText;
-        console.log("Response  : " + res);
-        console.log("***********************************************************************************************");
-        console.log("\n");
+        console.log("Response  : " + res + "\n\n\n");
         Response.resolve(res);
         return Response.promise();;
     }
 
     function sendDeleteRequest(URL, authorization) {
-        var Response = new $.Deferred();
-        console.log("***********************************************************************************************");
-        console.log("Fetching :" + URL);
+		console.log("Request Type : DELETE\n");
+        var Response = new $.Deferred();   
+        console.log("Fetching :" + URL + "\n");
         var res = $.ajax({
             url: URL,
             type: "DELETE",
@@ -164,18 +158,16 @@ var TestUtils = (function () {
             },
             async: false
         }).responseText;
-        console.log("Response  : " + res);
-        console.log("***********************************************************************************************");
-        console.log("\n");
+        console.log("Response  : " + res + "\n\n\n");
         Response.resolve(res);
         return Response.promise();;
     }
 
     function sendRequestMissingAuthorization(URL, Data, requestType) {
+		console.log("Request Type :"+requestType+"\n");
         var Response = new $.Deferred();
         var json;
-        console.log("***********************************************************************************************");
-        console.log("Fetching :" + URL);
+        console.log("Fetching :" + URL + "\n");
         if (requestType.toString() == "GET") {
             $.ajax({
                 url: URL,
@@ -183,9 +175,8 @@ var TestUtils = (function () {
                 dataType: "json",
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result));
-                    console.log("***********************************************************************************************");
-                    console.log("\n");
+                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                   
                 },
                 error: function(err){
                     console.log("inside error function");
@@ -204,9 +195,8 @@ var TestUtils = (function () {
                 async: false,
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result));
-                    console.log("***********************************************************************************************");
-                    console.log("\n");
+                    console.log("Response  : " + JSON.stringify(result)+"\n\n\n");
+                  
                 },
                 error: function(err){
                     console.log("inside error function");
@@ -224,9 +214,8 @@ var TestUtils = (function () {
                 contentType: "application/json",
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result));
-                    console.log("***********************************************************************************************");
-                    console.log("\n");
+                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    
                 },
                 error: function(err){
                     console.log("inside error function");

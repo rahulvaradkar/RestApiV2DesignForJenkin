@@ -12,6 +12,7 @@
 	var level_2 = 0;
 	var level_3 = 0
 	QUnit.test("Reading Neighborhood with ID = " + NeighborhoodInput.NHID_1, function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/1", null, UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
@@ -42,6 +43,8 @@
 	});
 
 	QUnit.test("Posting new Neighborhood at level 0", function (assert) {
+	
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"level": "-1",
@@ -66,6 +69,7 @@
 	});
 
 	QUnit.test("Posting new Neighborhood at level 1", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"level": "2",
@@ -91,6 +95,7 @@
 
 	/******** */
 	QUnit.test("Posting new Neighborhood at level 2", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"level": "2",
@@ -115,6 +120,7 @@
 	});
 
 	QUnit.test("Posting new Neighborhood at level 3", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"level": "2",
@@ -139,6 +145,7 @@
 	});
 
 	QUnit.test("Delete test case for neighborhood at level 3", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_3, UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -158,6 +165,7 @@
 	});
 
 	QUnit.test("Delete test case for neighborhood at level 2", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_2, UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -178,6 +186,7 @@
 	/******* */
 
 	QUnit.test("Delete test case for neighborhood at level 1", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_1, UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -197,6 +206,7 @@
 	});
 
 	QUnit.test("Delete test case for neighborhood at level 0", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_0, UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -214,6 +224,7 @@
 
 
 	QUnit.test("Posting Duplicate Neighborhood at level 0", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"level": "-1",
@@ -238,6 +249,7 @@
 	});
 
 	QUnit.test("Posting new Neighborhood at level 1 with Invalid Parent id", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"level": "-1",
@@ -262,6 +274,7 @@
 	});
 
 	QUnit.test("Posting new Neighborhood at level 0 with blank name", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"level": "-1",
@@ -286,6 +299,7 @@
 	});
 
 	QUnit.test("Reading Neighborhood with InValid Id", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Invalid_Nh_Id, null, UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
@@ -300,6 +314,7 @@
 	});
 
 	QUnit.test("Missing Authorization while Reading Neighborhood", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_1, null, "GET").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
@@ -314,6 +329,7 @@
 	});
 
 	QUnit.test("Delete test case for non existing neighborhood ID", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Invalid_Nh_Id, null, UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
@@ -328,6 +344,7 @@
 	});
 
 	QUnit.test("Delete test case for negative neighborhood ID", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Negative_Nh_Id, null, UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response should not be null");

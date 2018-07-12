@@ -9,6 +9,7 @@
     module('Relation');
     var relation_Name = "";
     QUnit.test("Reading Relation of Neighborhood ID = " + NeighborhoodInput.ROOT_NhId, function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var input = $("#test-input").focus();
         var count_flag = false;
@@ -41,6 +42,7 @@
     });
 
     QUnit.test("Reading Relation of Neighborhood ID = " + NeighborhoodInput.ROOT_NhId + " with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var input = $("#test-input").focus();
         var count_flag = false;
@@ -58,6 +60,7 @@
     });
 
     QUnit.test("Reading Relation of Neighborhood ID = " + NeighborhoodInput.Negative_Nh_Id, function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var input = $("#test-input").focus();
         var count_flag = false;
@@ -75,6 +78,7 @@
     });
 
     QUnit.test("Creating Relation", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         relation_Name = "APIRelation_" + x;
@@ -95,6 +99,7 @@
     });
 
     QUnit.test("Creating Relation with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var data = {
@@ -114,6 +119,7 @@
     });
 
     QUnit.test("Creating Relation With Invalid Neighborhood", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var data = {
@@ -133,6 +139,7 @@
     });
 
     QUnit.test("Creating Relation With Invalid Neighborhood In relatedNeighborhoodId", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var data = {
@@ -153,6 +160,7 @@
     });
 
     QUnit.test("Creating existing Relation", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
             "name": relation_Name,
@@ -172,6 +180,7 @@
     });
 
     QUnit.test("Deleting Relation", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.ROOT_NhId + "/relation?relation=" + relation_Name, UserInput.authorization).then(function (result) {
             if (result.status == 500){
@@ -190,6 +199,7 @@
 
 
     QUnit.test("Deleting Relation with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.ROOT_NhId + "/relation?relation=" + relation_Name, null, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
@@ -204,6 +214,7 @@
     });
 
     QUnit.test("Deleting Relation with Invalid Neighborhood Id", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Invalid_Nh_Id + "/relation?relation=" + relation_Name, null, UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
@@ -218,6 +229,7 @@
     });
 
     QUnit.test("Deleting Relation with Negative Neighborhood Id", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Negative_Nh_Id + "/relation?relation=" + relation_Name, null, UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
@@ -232,6 +244,7 @@
     });
 
     QUnit.test("Deleting Relation with Missing Relation Name", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.ROOT_NhId + "/relation", null, UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
@@ -246,6 +259,7 @@
     });
 
     QUnit.test("Deleting Relation with Invalid Relation Name", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.ROOT_NhId + "/relation?relation=API", UserInput.authorization).then(function (result) {
             if (result.status == 500){

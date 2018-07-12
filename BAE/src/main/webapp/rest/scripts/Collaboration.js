@@ -10,6 +10,7 @@
     var collab_Id;
     
     QUnit.test("Reading Collaborations of Neighborhood ID=1", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var input = $("#test-input").focus();
         var flag = false;
@@ -46,6 +47,7 @@
     });
 
     QUnit.test("Reading Collaborations of Neighborhood when collaboration are not exist", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var count_flag = false;
 
@@ -65,6 +67,7 @@
     });
 
     QUnit.test("Posting New Collaboration", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         Collab_Name = "Collab_" + x;
@@ -86,6 +89,7 @@
     });
 
     QUnit.test("Posting Existing Collaboration", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
             "name": Collab_Name,
@@ -104,6 +108,7 @@
     });
 
     QUnit.test("Posting new Collaboration with negative nhid and negative member ID", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
             "name": Collab_Name,
@@ -123,6 +128,7 @@
     });
 
     QUnit.test("Posting New Collaboration with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -143,6 +149,7 @@
     });
 
     QUnit.test("Posting New Collaboration with Invalid Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -163,6 +170,7 @@
     });
 
     QUnit.test("Posting New Collaboration with Invalid MemberShip", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -183,6 +191,7 @@
     });
 
     QUnit.test("Posting New Collaboration with Blank Fields", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -204,6 +213,7 @@
     });
  
     QUnit.test("Deleting Collaboration", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/collaboration/" + collab_Id, UserInput.authorization).then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -221,6 +231,7 @@
     });
 
     QUnit.test("Deleting Collaboration with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/collaboration/" + collab_Id, null, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
@@ -236,6 +247,7 @@
     });
 
     QUnit.test("Deleting Collaboration with Invalid Collaboration Id", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Non_Existing_CollabId, null, UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
@@ -250,6 +262,7 @@
     });
 
     QUnit.test("Deleting Collaboration with Negative Collaboration Id", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Negative_CollabId, null, UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");

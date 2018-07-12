@@ -28,6 +28,7 @@
 
 	//GET members in Neighborhood
 	test("Get members of neighborhood", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
@@ -51,6 +52,7 @@
 	});
 
 	test("Get members of neighborhood with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", null, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
@@ -67,6 +69,7 @@
 
 	//Get empty data when no members in neighborhood
 	test("Get empty data for neighborhood without any members", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + emptyNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
@@ -86,6 +89,7 @@
 
 	//Get members from neighborhood with id 0
 	test("Get members from nhid 0 neighborhood", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + zeroNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
@@ -108,6 +112,7 @@
 
 	//Get members from neighborhood with id -1
 	test("Get members from nhid -1 neighborhood", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + negativeNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
@@ -130,6 +135,7 @@
 
 	//Get members from neighborhood which has nhId that doesn't exist in database
 	test("Get members from non-existing neighborhood", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + nonExistingNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
@@ -152,6 +158,7 @@
 
 	//Create member test
 	test("Create new membership for user", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		UserTests.createNewUser().then(function (result) {
 			user = result[0];
@@ -178,6 +185,7 @@
 	});
 
 	test("Create new membership for user with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();		
 		var membershipData = {
 			userId: user.id,
@@ -199,6 +207,7 @@
 	});
 
 	test("Create new membership for user with Invalid User", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var membershipData = {
 			userId: 99999,
@@ -219,6 +228,7 @@
 	});
 
 	test("Create new membership for existing user", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var membershipData = {
 			userId: UserInput.User_Id,
@@ -239,6 +249,7 @@
 	});
 
 	test("Create new membership for user with Invalid Neighborhood", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var membershipData = {
 			userId: user.id,
@@ -260,6 +271,7 @@
 
 	//Create membership by passing mismatching nhid
 	test("New membership for user should ignore nhid when mismatching nhid is sent in POST data", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		UserTests.createNewUser().then(function (result) {
 			var user = result[0];
@@ -286,6 +298,7 @@
 	});
 
 	test("Deleting Member", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + memberId, UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -305,6 +318,7 @@
 	});
 
 	test("Deleting Member with negative member ID", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/-" + memberId, null, UserInput.authorization, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -320,6 +334,7 @@
 	});
 
 	test("Deleting Member with invalid NHID", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + nonExistingNhId + "/member/" + memberId, null, UserInput.authorization, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -335,6 +350,7 @@
 	});
 
 	test("Deleting Member with invalid MembershipId", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + UserInput.Invalid_MemberId, null, UserInput.authorization, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
@@ -350,6 +366,7 @@
 	});
 
 	test("Deleting Member with Missing Authorization", function (assert) {
+		console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + memberId, null, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
