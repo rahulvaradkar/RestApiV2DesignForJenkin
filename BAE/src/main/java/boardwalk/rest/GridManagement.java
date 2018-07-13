@@ -772,8 +772,6 @@ public class GridManagement {
 			{
 				xlColumn_import col = (xlColumn_import)colv.elementAt(c);
 
-				columnArray.add(col.getId());
-				
 				//Added to fix Refresh issue when the Column Access is applied from Template side 2016/11/16
 				if (restrColumnList != null && restrColumnList.size() > 0)
 				{
@@ -783,6 +781,9 @@ public class GridManagement {
 						continue;
 					}
 				}
+
+				columnArray.add(col.getId());
+
 				if (maxTransactionId < col.getCreationTid())
 				{
 					maxTransactionId = col.getCreationTid();
@@ -1006,8 +1007,8 @@ public class GridManagement {
 				{
 					maxTransactionId = rs.getInt(5);
 				}
-//				if (rowHash.get(new Integer(rowId)) == null)
-//					continue;
+				if (rowHash.get(new Integer(rowId)) == null)
+					continue;
 				xlColumn_import col = (xlColumn_import)colHash.get(new Integer(colId));
 				if (col == null)
 					continue;
@@ -1031,12 +1032,11 @@ public class GridManagement {
 				cl.setCellValue(sval);
 				cl.setAccess(cellAccess);
 				cl.setTid(tid);
-				//cl.setActive(active);
+				cl.setActive(true );
 				//cl.setRowSequence(rowSequence);
-				//cl.setColSequence(colSequence);
+				//cl.setColSequence((int) col.getSequenceNumber());
 				//cl.setId(id);
-				//cl.setChangeFlag(changeFlag);
-	
+				cl.setChangeFlag(-1);
 				System.out.println("colId:"+colId+"rowId:"+rowId+"Formula:"+fmla+"sval:"+sval+"tid:"+tid+"cellAccess:"+cellAccess);
 				gridCells.add(cl);
 				
@@ -1109,9 +1109,31 @@ public class GridManagement {
 				while( rs1.next() )
 				{
 					if(rs1.getString(2).equals("R"))
-						deletedRowArray.add(rs1.getInt(1));
+					{
+						if (rowHash.get(new Integer(rs1.getInt(1))) == null)
+							deletedRowArray.add(rs1.getInt(1));
+						else
+							continue;
+					}
 					else if(rs1.getString(2).equals("C"))
-						deletedColumnArray.add(rs1.getInt(1)); 
+					{
+						
+						//Added to fix Refresh issue when the Column Access is applied from Template side 2016/11/16
+						if (restrColumnList != null && restrColumnList.size() > 0)
+						{
+							if (restrColumnList.contains(new Integer(rs1.getInt(1))))
+								System.out.println("Skip restricted column :" + rs1.getInt(1));
+							else
+								deletedColumnArray.add(rs1.getInt(1)); 
+						}
+						else
+							deletedColumnArray.add(rs1.getInt(1)); 
+/*						xlColumn_import col = (xlColumn_import)colHash.get(new Integer(rs1.getInt(1)));
+						if (col == null)
+							deletedColumnArray.add(rs1.getInt(1)); 
+						else
+							continue;  */					
+					}
 				}
 				rs1.close();
 				stmt.close();
@@ -1142,6 +1164,11 @@ public class GridManagement {
 			ginfo.setView(view);
 			ginfo.setMemberId(memberId);
 			ginfo.setUserId(userId);		
+
+			NeighborhoodPath nhpath = new NeighborhoodPath();
+			nhpath = getNeighborhoodPath(connection, nhId);
+			ginfo.setNeighborhoodHeirarchy( nhpath);
+			
 			ginfo.setNhId(nhId);
 			ginfo.setCriteriaTableId(criteriaTableId);
 			ginfo.setMode(mode);
@@ -1151,6 +1178,11 @@ public class GridManagement {
 			ginfo.setImportTid(maxTransactionId);
 			ginfo.setRowCount(rowCount);
 			ginfo.setColCount(colCount);
+			ginfo.setServerName("");
+			ginfo.setServerURL("");
+			ginfo.setFilter("");
+			ginfo.setBaselineId(-1);
+			ginfo.setAsOfTid(maxTransactionId);
 			
 	    }
 		catch (BoardwalkException bwe)
@@ -1205,8 +1237,8 @@ public class GridManagement {
 		}    		 		    		
 	    	
 		gcb = new GridChangeBuffer();
-	//	gcb.setCritical(critical);
-	//	gcb.setCriticalLevel(criticalLevel);
+		gcb.setCritical(-1);
+		gcb.setCriticalLevel(-1);
 		gcb.setDeletedColumnArray(deletedColumnArray);	//deleted column ids
 		gcb.setDeletedRowArray(deletedRowArray);		//deleted row ids
 		gcb.setNewColumnArray( newGridCols);
@@ -2947,9 +2979,10 @@ public class GridManagement {
 						//throw new BoardwalkException(12018, "Access Filter violation");
 			        	erb = new ErrorRequestObject();
 			        	erb.setError("Access Filter violation ((12018)");
-			        	erb.setPath("GridManagement.gridPut::");
-						erb.setProposedSolution("Access Filter violation, Please contact the owner of the table to setup necessary access control");
+			        	erb.setPath("GridManagement.processSubmitRequest::accessibleRowsAfterSubmit, delRowsOnServer, xlDeleteRows does not contain Rows sent by client.");
+						erb.setProposedSolution("Access Filter violation, You have either updated columns used for access filters or trying to update a row that is no longer accessible. Please contact your process admin Or the owner of the table to setup necessary access control");
 			        	ErrResps.add(erb);
+			        	return;
 					}
 				}
 			}
