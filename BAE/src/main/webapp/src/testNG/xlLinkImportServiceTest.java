@@ -137,7 +137,7 @@ public class xlLinkImportServiceTest {
 //	  		String view = requestInfo[7];
 //	  		int mode = Integer.parseInt(requestInfo[8]);		
 	
-
+/*
 
 	
 	@Test(priority = 1)
@@ -221,7 +221,7 @@ public class xlLinkImportServiceTest {
 	} 
 	
 
-	 
+*/	 
 	
 	@Test(priority = 0)
 	public void tableInfoCheck0() throws ClassNotFoundException, SQLException, SystemException, IOException 
@@ -253,17 +253,17 @@ public class xlLinkImportServiceTest {
 		for (int i = 0; i < 1; i++) {
 
 			getReqCol = sreqCol[i];
-			//System.out.println("              cath"+i+"         "+getReqCol);
+			System.out.println("              cath"+i+"         "+getReqCol);
 			reqInfo2 = getReqCol.split(Seperator);
 				
 			//System.out.println(reqInfo[0]+"  "+reqInfo[1]+"  "+reqInfo[2]+"  "+reqInfo[3]+"  "+reqInfo[4]+"  "+reqInfo[5]+"  "+reqInfo[6]+"  "+reqInfo[7]+"  "+"  "+reqInfo[8]);
 			//System.out.println(reqInfo1[0]+"  "+reqInfo1[1]+"  "+reqInfo1[2]+"  "+reqInfo1[3]+"  "+reqInfo1[4]+"  "+reqInfo1[5]+"  "+reqInfo1[6]+"  "+reqInfo1[7]+"  "+"  "+reqInfo1[8]);
 			
 			int userId = Integer.parseInt(reqInfo2[0]);
-			//System.out.println("******"+userId);
+			System.out.println("******"+userId);
 			int tableId = Integer.parseInt(reqInfo2[4]);
-			//System.out.println("******"+tableId);
-			//System.out.println("******"+conn3);
+			System.out.println("******"+tableId);
+			System.out.println("******"+conn3);
 		 
 		TableInfo tinfo = TableManager.getTableInfo(conn3, userId, tableId);
 		
@@ -286,14 +286,14 @@ public class xlLinkImportServiceTest {
 		//System.out.println("************************************************");
 				
 		
-//		String tinfocId = ""+tinfo.getCollaborationId();
-//		String tinfoCName = tinfo.getCollaborationName();
-//		String getLTime = ""+tinfo.getLockTime();
-//		String getTId = ""+tinfo.getTableId();
-//		String TName = tinfo.getTableName();
-//		String getWbId = ""+tinfo.getWhiteboardId();
-//		String tinfowbName = tinfo.getWhiteboardName();
-//		String getLockTid = ""+tinfo.lockTid(); 
+		//String tinfocId = ""+tinfo.getCollaborationId();
+		//String tinfoCName = tinfo.getCollaborationName();
+		//String getLTime = ""+tinfo.getLockTime();
+		//String getTId = ""+tinfo.getTableId();
+		//String TName = tinfo.getTableName();
+		//String getWbId = ""+tinfo.getWhiteboardId();
+		//String tinfowbName = tinfo.getWhiteboardName();
+		//String getLockTid = ""+tinfo.lockTid(); 
 		
 		
 		int tinfocId = tinfo.getCollaborationId();
@@ -312,10 +312,11 @@ public class xlLinkImportServiceTest {
 		//System.out.println(lTId[i]);
 		//System.out.println(tinfo.getTableId());
 		//System.out.println(getTableId3);
-		
+			
+			
 
 		
-		AssertJUnit.assertEquals(tinfocId, Integer.parseInt(cIdCol[i]));
+		AssertJUnit.assertEquals(tinfocId,Integer.parseInt(cIdCol[i]));
 		AssertJUnit.assertEquals(tinfoCName, cNameCol[i]);
 		AssertJUnit.assertEquals(tinfowbName, wbName[i]);
 		AssertJUnit.assertEquals(getLTime, Long.parseLong(lTime[i]));
@@ -332,7 +333,7 @@ public class xlLinkImportServiceTest {
 		for (int i = 4; i <= 7; i++) {
 
 			getReqCol = sreqCol[i];
-			//System.out.println("              cath"+i+"         "+getReqCol);
+			System.out.println("              cath"+i+"         "+getReqCol);
 			reqInfo2 = getReqCol.split(Seperator);
 				
 			//System.out.println(reqInfo[0]+"  "+reqInfo[1]+"  "+reqInfo[2]+"  "+reqInfo[3]+"  "+reqInfo[4]+"  "+reqInfo[5]+"  "+reqInfo[6]+"  "+reqInfo[7]+"  "+"  "+reqInfo[8]);
@@ -342,7 +343,7 @@ public class xlLinkImportServiceTest {
 			int tableId = Integer.parseInt(reqInfo2[4]);;
 		 
 		TableInfo tinfo = TableManager.getTableInfo(connection2, userId, tableId);
-		//System.out.println("tinfo for failure : "+tinfo);
+		System.out.println("tinfo for failure : "+tinfo);
 		AssertJUnit.assertNull(tinfo);
 			
 		}
@@ -378,7 +379,7 @@ public class xlLinkImportServiceTest {
 	
 	String sreqCol[] = ds.getRequestBufferArr();
 	
-	  for (int i = 0; i <=1; i++) {
+	  for (int i = 0; i <1; i++) {
 
 			getReqCol = sreqCol[i];
 			System.out.println("              cath"+i+"         "+getReqCol);
@@ -477,6 +478,8 @@ public class xlLinkImportServiceTest {
 	
 
 	
+
+
 	
 	@Test(priority = 3)
 	public void getNeighbourhoodIdTest3() throws SQLException, IOException, SystemException
@@ -578,7 +581,7 @@ public class xlLinkImportServiceTest {
 			String sreqCol[] = ds.getRequestBufferArr();
 			String getTableBuffer[] = ds.getTablebufferArr();
 			
-	for (int i = 0; i <=1; i++) {
+	for (int i = 0; i <1; i++) {
 
 					getReqCol = sreqCol[i];
 					//System.out.println("              cath"+i+"         "+getReqCol);

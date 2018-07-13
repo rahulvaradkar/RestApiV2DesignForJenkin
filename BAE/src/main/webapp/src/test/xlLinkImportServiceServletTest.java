@@ -95,9 +95,9 @@ public class xlLinkImportServiceServletTest {
 		String[] res=sb.toString().split(ContentDelimeter);
 		String[] res1=res[0].split(Seperator);
 		System.out.println("length "+res.length);
-		System.out.println("Res 2 :"+res[1]);
-		System.out.println("Res 3 :"+res[2]);
-		System.out.println("Res 4 :"+res[3]);
+		//System.out.println("Res 2 :"+res[1]);
+		//System.out.println("Res 3 :"+res[2]);
+		//System.out.println("Res 4 :"+res[3]);
 	
 		
 		FileInputStream in = new FileInputStream(propFileLocation);
