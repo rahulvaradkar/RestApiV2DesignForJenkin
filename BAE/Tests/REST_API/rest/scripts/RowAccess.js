@@ -24,7 +24,7 @@
     }
 
     QUnit.test("User has Access to add rows Adding Row with User1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var data = {
@@ -70,7 +70,7 @@
     });
 
     QUnit.test("User1 dont have access to delete rows trying to Delete rows using User1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var data = {
@@ -99,7 +99,7 @@
     });
 
     QUnit.test("User1 hace access to R/W trying to submit with one cell", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -137,7 +137,7 @@
     });
 
     QUnit.test("User does not has Access to add rows Adding Row with User2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+	//	console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var data = {
@@ -175,7 +175,7 @@
     });
 
     QUnit.test("User have access to delete rows trying to Delete rows using User2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var data = {
@@ -205,7 +205,7 @@
     });
 
     QUnit.test("User hace access to R/W trying to submit with one cell with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -243,7 +243,7 @@
     });
 
     QUnit.test("User does not has Access to add rows Adding Row with User3", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_3).then(function () {
             var data = {
@@ -281,7 +281,7 @@
     });
 
     QUnit.test("User dont have access to delete rows trying to Delete rows using User3", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_3).then(function () {
             var data = {
@@ -310,7 +310,7 @@
     });
 
     QUnit.test("User have access to R/W trying to submit with one cell", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_3).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -348,7 +348,7 @@
     });
 
     QUnit.test("User dont have access to add Column trying to submit with one column", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+	//	console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -386,7 +386,7 @@
     });
 
     QUnit.test("User dont have access to Delete Column trying to submit with deleting column", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -414,7 +414,7 @@
     });
 
     QUnit.test("User have access to add Column trying to submit with one column", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -457,7 +457,7 @@
     });
 
     QUnit.test("User  have access to Delete Column trying to submit with deleting column", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -486,7 +486,7 @@
     });
 
     QUnit.test("User have access to R/W trying to submit with one cell with criticalUpdate", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
     
             var x = Math.floor((Math.random() * 10000000) + 1);

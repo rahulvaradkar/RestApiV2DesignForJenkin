@@ -18,7 +18,7 @@ var UserTests = (function (module, test) {
 	var userid = 0;
 
 	QUnit.test("Test Case For Single User", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.User_Id, null, UserInput.authorization, "GET").then(function (result) {
 			var flag = false;
@@ -43,7 +43,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For Negative user Id", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Negative_UserId, null, UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
@@ -59,7 +59,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For zero user Id", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Zero_USerId, null, UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
@@ -75,7 +75,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For User Not Found", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Non_Existing_UserId, null, UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
@@ -91,7 +91,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For Missing Authorization for user ID = " + UserInput.User_Id, function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/user/" + UserInput.User_Id, null, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
@@ -107,7 +107,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For all Active Users", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();	
 		var flag = false;
 		var count_flag = false;
@@ -145,7 +145,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For Missing Authorization for Active Users", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/user?active=true", null, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
@@ -161,7 +161,7 @@ var UserTests = (function (module, test) {
 	});
 
 	test("Post test cases for new User", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		createNewUser().then(function (result) {
 			if (result.status == 500){
@@ -185,7 +185,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For Posting Duplicate user", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var x = Math.floor((Math.random() * 10000) + 1);
 		var data = {
@@ -210,7 +210,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test Case For Invalid Authorization for Posting new user", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var x = Math.floor((Math.random() * 10000) + 1);
 		var data = {
@@ -235,7 +235,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Post test cases for new User with Blank Name And Password", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"firstName": "",
@@ -269,7 +269,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Put test cases for User", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"firstName": "j",
@@ -295,7 +295,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Put test cases for User with Blank firstName, lastName", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"firstName": "",
@@ -320,7 +320,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Put test cases for User with Missing email, firstName, lastName", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		var data = {
 			"lastName": "j",
@@ -343,7 +343,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test case for Deleting User", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/user/" + userid, UserInput.authorization).then(function (result) {
 			var getResponse = result;
@@ -361,7 +361,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test case for Deleting User with Missing Authorization", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/user/" + userid, null, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
@@ -377,7 +377,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test case for Deleting Non existing User ", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Non_Existing_UserId, null, UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
@@ -393,7 +393,7 @@ var UserTests = (function (module, test) {
 	});
 
 	QUnit.test("Test case for Deleting User With Negative Userid", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
 		var done = assert.async();
 		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Negative_UserId, null, UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response Should not null");

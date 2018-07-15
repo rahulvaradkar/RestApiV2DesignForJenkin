@@ -44,10 +44,10 @@ function hasValidProperties(object, props) {
 
 var TestUtils = (function () {
     function sendRequest(URL, Data, authorization, requestType) {
-		console.log("Request Type :"+requestType+"\n");
+		//console.log("Request Type :"+requestType+"\n");
         var Response = new $.Deferred();
         var json;
-        console.log("Fetching URL :" + URL + "\n");
+        //console.log("Fetching URL :" + URL + "\n");
         if (requestType.toString() == "GET") {
             $.ajax({
                 url: URL,
@@ -59,12 +59,12 @@ var TestUtils = (function () {
                 },
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
                     
                 },
                 error: function(err){
-                    console.log("inside error function");
-                    console.log(err);
+                    //console.log("inside error function");
+                    //console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -82,12 +82,12 @@ var TestUtils = (function () {
                 async: false,
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
-                    console.log("\n");
+                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    //console.log("\n");
                 },
                 error: function(err){
-                    console.log("inside error function");
-                    console.log(err);
+                    //console.log("inside error function");
+                    //console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -105,7 +105,7 @@ var TestUtils = (function () {
                 },
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
                 },
                 /*statusCode : {
                     500 : function() {
@@ -113,8 +113,8 @@ var TestUtils = (function () {
                     }
                 }*/
                 error: function(err){
-                    console.log("inside error function");
-                    console.log(err);
+                    //console.log("inside error function");
+                    //console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -123,9 +123,9 @@ var TestUtils = (function () {
     }
 
     function sendPutRequest(URL, Data, authorization) {
-		console.log("Request Type : PUT\n");
+		//console.log("Request Type : PUT\n");
         var Response = new $.Deferred();
-        console.log("Fetching :" + URL + "\n");
+        //console.log("Fetching :" + URL + "\n");
         var res = $.ajax({
             url: URL,
             type: "PUT",
@@ -138,15 +138,15 @@ var TestUtils = (function () {
             },
             async: false
         }).responseText;
-        console.log("Response  : " + res + "\n\n\n");
+        //console.log("Response  : " + res + "\n\n\n");
         Response.resolve(res);
         return Response.promise();;
     }
 
     function sendDeleteRequest(URL, authorization) {
-		console.log("Request Type : DELETE\n");
+		//console.log("Request Type : DELETE\n");
         var Response = new $.Deferred();   
-        console.log("Fetching :" + URL + "\n");
+        //console.log("Fetching :" + URL + "\n");
         var res = $.ajax({
             url: URL,
             type: "DELETE",
@@ -158,16 +158,16 @@ var TestUtils = (function () {
             },
             async: false
         }).responseText;
-        console.log("Response  : " + res + "\n\n\n");
+        //console.log("Response  : " + res + "\n\n\n");
         Response.resolve(res);
         return Response.promise();;
     }
 
     function sendRequestMissingAuthorization(URL, Data, requestType) {
-		console.log("Request Type :"+requestType+"\n");
+		//console.log("Request Type :"+requestType+"\n");
         var Response = new $.Deferred();
         var json;
-        console.log("Fetching :" + URL + "\n");
+        //console.log("Fetching :" + URL + "\n");
         if (requestType.toString() == "GET") {
             $.ajax({
                 url: URL,
@@ -175,12 +175,12 @@ var TestUtils = (function () {
                 dataType: "json",
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
                    
                 },
                 error: function(err){
-                    console.log("inside error function");
-                    console.log(err);
+                    //console.log("inside error function");
+                    //console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -195,12 +195,12 @@ var TestUtils = (function () {
                 async: false,
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result)+"\n\n\n");
+                    //console.log("Response  : " + JSON.stringify(result)+"\n\n\n");
                   
                 },
                 error: function(err){
-                    console.log("inside error function");
-                    console.log(err);
+                    //console.log("inside error function");
+                    //console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -214,12 +214,12 @@ var TestUtils = (function () {
                 contentType: "application/json",
                 success: function (result) {
                     Response.resolve(result);
-                    console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
                     
                 },
                 error: function(err){
-                    console.log("inside error function");
-                    console.log(err);
+                    //console.log("inside error function");
+                    //console.log(err);
                     Response.resolve(err);
                 }
             });

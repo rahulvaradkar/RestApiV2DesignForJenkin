@@ -87,7 +87,7 @@
     }
 
     QUnit.test("Submitting Grid with one cell with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
+		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         createGrid().then(function () {
             console.log("Submitting Grid with one cell");
@@ -117,7 +117,7 @@
     });
 
     QUnit.test("Refreshing Cuboid With One Cell with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refresh with one cell");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -132,7 +132,7 @@
     });
 
     QUnit.test("Submitting Grid with one cell with Missing Authorization with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var x = Math.floor((Math.random() * 200) + 1);
         var data = {
@@ -153,7 +153,7 @@
     });
 
     QUnit.test("Refreshing Cuboid With One Cell with Missing Authorization with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
@@ -163,7 +163,7 @@
     });
 
     QUnit.test("Submitting Grid with one row with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var data = {
             "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
@@ -194,7 +194,7 @@
     });
 
     QUnit.test("Refreshing Cuboid With One Row with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refresh with one Row");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -213,7 +213,7 @@
 
     QUnit.test("Submitting Grid with one row at the Bottom with user1", function (assert) {
 console.log("========= " + assert.test.testName + "==============");		
-        console.log("Submitting Grid with one row at the Bottom");
+    //    console.log("Submitting Grid with one row at the Bottom");
         var done = assert.async();
         var data = {
             "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
@@ -245,7 +245,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Cuboid With One Row at the bottom with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refresh with one Row at the bottom");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -263,7 +263,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with consequative rows with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var data = {
             "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
@@ -324,7 +324,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with deleting one row with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var data = {
             "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
@@ -351,7 +351,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Cuboid With deleting Row with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Cuboid With consequative Row with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -369,7 +369,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with deleting multiple rows with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var data = {
             "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
@@ -397,7 +397,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Cuboid With deleting multiple Rows with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Cuboid With consequative Row with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -415,7 +415,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with three column and formulas with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         importGrid().then(function () {
             console.log("Submitting Grid with three column and formulas with user1");
@@ -487,7 +487,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with three column and formulas wih user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing  Grid with three column and formulas with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -505,7 +505,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with deleting columns with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var data = {
             "info": {
@@ -536,7 +536,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with deleting columns with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Grid with deleting columns with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -553,7 +553,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with deleting existing columns and Rows and adding new data with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         importGrid().then(function () {
             var data = {
@@ -599,7 +599,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with deleting existing columns and Rows and adding new data with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Grid with deleting existing columns and Rows and adding new data with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -616,7 +616,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with deleting existing row and inserting Row at same position with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         importGrid().then(function () {
             var data = {
@@ -653,7 +653,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with deleting existing row and inserting Row at same position with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Grid with deleting existing row and inserting Row at same position with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -671,7 +671,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with deleting existing Column and inserting Column at same position with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         importGrid().then(function () {
             var data = {
@@ -713,7 +713,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with deleting existing column and inserting column at same position with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Grid with deleting existing column and inserting column at same position with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -732,7 +732,7 @@ console.log("========= " + assert.test.testName + "==============");
 
 /** */
     QUnit.test("Submitting Grid with inserting Column at last position with user1", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         importGrid().then(function () {
             console.log("***/////****");
@@ -775,7 +775,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with inserting Column at last position with user2", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Grid with inserting Column at last position with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -794,7 +794,7 @@ console.log("========= " + assert.test.testName + "==============");
 
 /** */
     QUnit.test("Submitting Grid with Missing cells element", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         createGrid().then(function () {
             var x = Math.floor((Math.random() * 200) + 1);
@@ -824,7 +824,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with one cell with invalid Authorization", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         createGrid().then(function () {
             console.log("Submitting Grid with one cell");
@@ -848,7 +848,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with Missing importTid in url", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         console.log("Refreshing Grid with deleting columns with user2");
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
@@ -860,7 +860,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with view is Missing", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -870,7 +870,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with Invalid view", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST11&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -880,7 +880,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with mode is Missing", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -890,7 +890,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Refreshing Grid with Invalid mode", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=123&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -900,7 +900,7 @@ console.log("========= " + assert.test.testName + "==============");
     });
 
     QUnit.test("Submitting Grid with Missing GridChangeBuffer", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var x = Math.floor((Math.random() * 200) + 1);
         var data = {
@@ -933,7 +933,7 @@ console.log("========= " + assert.test.testName + "==============");
 	
 	
     QUnit.test("Submitting Grid with Blank column name", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var data = {
             "info": {
@@ -970,7 +970,7 @@ console.log("========= " + assert.test.testName + "==============");
 	
 	
     QUnit.test("Submitting Grid with Existing column name", function (assert) {
-		console.log("========= " + assert.test.testName + "==============");
+	//	console.log("========= " + assert.test.testName + "==============");
         var done = assert.async();
         var data = {
             "info": {

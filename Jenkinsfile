@@ -54,6 +54,21 @@ pipeline {
    
     		bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deploybae.bat'
 			   
+			   
+			 bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep30.bat'
+			 
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deployrest.bat'
+			 
+			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+			   
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deployunit.bat'
+			 
+			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+			   
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deploymockito.bat'
+			 
+			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+			   
               
             }
         }
@@ -65,7 +80,7 @@ pipeline {
                echo 'Test resources being compiled'
                //compile testNGRunner and MockitoTestRunner
 
-				bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep30.bat'
+				bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
 				
 			     bat 'C:/Tomcat8/webapps/'+"${env.JOB_NAME}"+'/src/testNG/testng_compiler.bat'
 				 
