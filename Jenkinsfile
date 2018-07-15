@@ -190,6 +190,8 @@ pipeline {
         junit 'Reports/Mockito_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
         junit 'Reports/Unit_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
         junit 'Reports/Rest_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/resultstest.xml'
+		
+	 archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
        
       
 						echo 'Report Mail sending'
