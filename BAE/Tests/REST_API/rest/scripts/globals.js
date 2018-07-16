@@ -1,6 +1,6 @@
 var Globals = {
   //change following line to match your test instance URL
-	baseURL: "https://bwrestapiqa.boardwalktech.com:8443/BAE_TEST/",
+	baseURL: "https://bwrestapiqa.boardwalktech.com:8443/BAE_4_4/",
 };
 
 var UserInput = {

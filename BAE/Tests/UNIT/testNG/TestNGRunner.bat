@@ -1,5 +1,5 @@
 @ECHO OFF
-SET INSTANCE_NAME=BAE_TEST
+SET INSTANCE_NAME=BAE_4_4
 
 chdir /d C:\Tomcat8\webapps\%INSTANCE_NAME%\src\testNG
 

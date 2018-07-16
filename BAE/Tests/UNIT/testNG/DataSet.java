@@ -27,7 +27,7 @@ public class DataSet {
 	public static String server = null;
 	public static String port = null;
     public static String jdbcConnectionString = null;
-	public static String instance_name = "BAE_TEST";
+	public static String instance_name = "BAE_4_4";
 	public static String propFileLocation = "C:\\Tomcat8\\webapps\\"+instance_name+"\\testdata.properties";
 	public static String propFileLocation2 = "C:\\Tomcat8\\webapps\\"+instance_name+"\\testdata3.properties";	
 	public static String CollabName=null;

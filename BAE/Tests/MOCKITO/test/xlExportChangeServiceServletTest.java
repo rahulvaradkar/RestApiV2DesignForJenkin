@@ -50,7 +50,7 @@ public class xlExportChangeServiceServletTest
 	
 	public final static String Seperator = new Character((char)1).toString();
 	public final static String ContentDelimeter = new Character((char)2).toString();
-	public static String propFileLocation="C:\\Tomcat8\\webapps\\BAE_TEST\\testdata.properties";
+	public static String propFileLocation="C:\\Tomcat8\\webapps\\BAE_4_4\\testdata.properties";
   
 	@BeforeClass
     public void setUp() throws Exception 

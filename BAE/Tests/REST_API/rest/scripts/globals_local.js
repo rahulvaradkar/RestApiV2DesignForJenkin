@@ -1,6 +1,6 @@
 var Globals = {
   //change following line to match your test instance URL
-	baseURL: "http://localhost:8080/BAE_TEST/",
+	baseURL: "http://localhost:8080/BAE_4_4/",
 };
 
 var UserInput = {

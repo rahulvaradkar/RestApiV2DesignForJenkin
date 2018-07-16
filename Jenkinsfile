@@ -38,7 +38,7 @@ pipeline {
             steps {
                echo 'Building .war file'
                //cd to BAE folder and then mvn install.
-			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/maveninstall.bat'
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
 			   
               
             }
@@ -49,25 +49,25 @@ pipeline {
             steps {
                echo 'Deploying .war file'
                //copy war file from jenkins workspace to webapps
-            bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+            bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
 
    
-    		bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deploybae.bat'
+    		bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/deploybae4_4.bat'
 			   
 			   
-			 bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep30.bat'
+			 bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep30.bat'
 			 
-			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deployrest.bat'
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/deployrest.bat'
 			 
-			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
 			   
-			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deployunit.bat'
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/deployunit.bat'
 			 
-			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
 			   
-			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/deploymockito.bat'
+			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/deploymockito.bat'
 			 
-			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
 			   
               
             }
@@ -80,11 +80,11 @@ pipeline {
                echo 'Test resources being compiled'
                //compile testNGRunner and MockitoTestRunner
 
-				bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+				bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
 				
-			     bat 'C:/Tomcat8/webapps/'+"${env.JOB_NAME}"+'/src/testNG/testng_compiler.bat'
+			     bat 'C:/Tomcat8/webapps/BAE_4_4/src/testNG/testng_compiler.bat'
 				 
-				 bat 'C:/Tomcat8/webapps/'+"${env.JOB_NAME}"+'/src/test/mockito_compiler.bat'
+				 bat 'C:/Tomcat8/webapps/BAE_4_4/src/test/mockito_compiler.bat'
 				 
 				 
 			   
@@ -98,9 +98,9 @@ pipeline {
 
             steps {
                echo 'Unit Test Run'
-               bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+               bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
                //running unit tests through batch file in src\\testng
-              bat 'C:/Tomcat8/webapps/'+"${env.JOB_NAME}"+'/src/testNG/TestNGRunner.bat'
+              bat 'C:/Tomcat8/webapps/BAE_4_4/src/testNG/TestNGRunner.bat'
             }
         }
 		
@@ -110,8 +110,8 @@ pipeline {
             steps {
                 //running mockito tests through batch file in src\\test foles
                 echo 'Mockito TEST Run'
-                bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
-                bat 'C:/Tomcat8/webapps/'+"${env.JOB_NAME}"+'/src/test/MockitoRunner2.bat'
+                bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
+                bat 'C:/Tomcat8/webapps/BAE_4_4/src/test/MockitoRunner2.bat'
             }
 		}
 		
@@ -119,9 +119,9 @@ pipeline {
 
             steps {
                echo 'Rest API  Test Run'
-               bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/sleep5.bat'
+               bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
 			   //running rest api test cases using batch file operating headless chrome simulation.
-			   bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/jenkinsrunnerTEST.bat'
+			   bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/jenkinsrunnerTEST_4_4.bat'
 			   
 			   
 			   
@@ -153,31 +153,31 @@ pipeline {
 	
 
 
-	bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\sleep5.bat'
+	bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\sleep5.bat'
 	
 	//Copying xml files to Jenkins path 
 	
-        bat 'copy  C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\resultstest.xml '+"${REST_PATH}"+''
+        bat 'copy  C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\resultstest4_4.xml '+"${REST_PATH}"+''
 	
-    	bat 'xcopy \"C:/Tomcat8/webapps/BAE_TEST/Reports/Unit_Test_Reports/junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
+    	bat 'xcopy \"C:/Tomcat8/webapps/BAE_4_4/Reports/Unit_Test_Reports/junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
     
-		bat 'xcopy \"C:/Tomcat8/webapps/BAE_TEST/Reports/Mockito_Test_Reports/junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy \"C:/Tomcat8/webapps/BAE_4_4/Reports/Mockito_Test_Reports/junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
 	
     //	bat 'xcopy  \"C:/Windows/System32/config/systemprofile/.jenkins/userContent/BAE_TEST/Mockito_Reports/report\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
     
-        bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\sleep5.bat'
+        bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\sleep5.bat'
 		
 	//Copying Report folders to UserContent
 
-		bat 'copy  C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\resultstest.xml '+"${REST_REPORT_PATH}"+''
+		bat 'copy  C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
 	
-	    bat 'xcopy \"C:/Tomcat8/webapps/BAE_TEST/Reports/Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+	    bat 'xcopy \"C:/Tomcat8/webapps/BAE_4_4/Reports/Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
 		
-		bat 'xcopy \"C:/Tomcat8/webapps/BAE_TEST/Reports/Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy \"C:/Tomcat8/webapps/BAE_4_4/Reports/Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
     
     //	bat 'xcopy  \"C:/Windows/System32/config/systemprofile/.jenkins/userContent/BAE_4_3_JENKINS_AUTOMATION/Mockito_Reports/report\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
 	
-		bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\sleep5.bat'
+		bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\sleep5.bat'
         
     //Copying Report folder to webapps    
         
@@ -189,7 +189,7 @@ pipeline {
 
         junit 'Reports/Mockito_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
         junit 'Reports/Unit_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
-        junit 'Reports/Rest_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/resultstest.xml'
+        junit 'Reports/Rest_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/resultstest4_4.xml'
 		
 	 archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
        
