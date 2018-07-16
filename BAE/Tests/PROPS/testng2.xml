@@ -65,18 +65,10 @@
   </test> <!-- Test --> 
  
  
-  <test thread-count="5" name="xlExportChangeServiceServletTest Test">
-    <classes>
-      <class name="test.xlExportChangeServiceServletTest"/>
-    </classes>
-  </test> <!-- Test --> 
+
   
   
-    <test thread-count="5" name="xlGetQueryListServletTest Test">
-    <classes>
-      <class name="test.xlGetQueryListServletTest"/>
-    </classes>
-  </test> <!-- Test --> 
+ 
   
   
   

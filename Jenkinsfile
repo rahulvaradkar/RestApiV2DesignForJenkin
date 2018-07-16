@@ -57,6 +57,10 @@ pipeline {
 			   
 			 bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep30.bat'
 			 
+			  bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/deployprops.bat'
+			 
+			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
+			 
 			 bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/deployrest.bat'
 			 
 			  bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/sleep5.bat'
