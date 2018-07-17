@@ -19,6 +19,7 @@ pipeline {
 	REST_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\Rest_Reports\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}"
     UNIT_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\Unit_Reports\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}"
     MOCKITO_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\Mockito_Reports\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}"
+	ZIP_STORAGE_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\ZIPS\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}" 
 	
 	
 	REST_REPORT_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\userContent\\"+"${env.JOB_NAME}"+"\\Rest_Reports\\"+"${env.BUILD_NUMBER}"
@@ -132,6 +133,18 @@ pipeline {
             }
         }
 		
+		stage ('Documentation Zipping Stage') {
+
+            steps {
+               echo 'Documents zip creation started'
+               
+			   bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/zip_docs_creation.bat'
+			   
+			   
+			   
+            }
+        }
+		
 		
     }
 	
@@ -147,7 +160,9 @@ pipeline {
 	
 	bat 'mkdir '+"${REST_PATH}"
 	bat 'mkdir '+"${UNIT_PATH}"
-	bat 'mkdir '+"${MOCKITO_PATH}"	
+	bat 'mkdir '+"${MOCKITO_PATH}"
+	bat 'mkdir '+"${ZIP_STORAGE_PATH}"
+	
 	
 	//creating report storage folders for unit,mockito for rest api testing.
 	
@@ -170,7 +185,17 @@ pipeline {
     //	bat 'xcopy  \"C:/Windows/System32/config/systemprofile/.jenkins/userContent/BAE_TEST/Mockito_Reports/report\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
     
         bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\sleep5.bat'
-		
+	
+	//Copying zip files folders to Reports folder
+	
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_REPORT_PATH}"+''
+	
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\Documents.zip '+"${ZIP_REPORT_PATH}"+''
+	
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\SQLScripts.zip '+"${ZIP_REPORT_PATH}"+''
+	
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\Templates.zip '+"${ZIP_REPORT_PATH}"+''
+	
 	//Copying Report folders to UserContent
 
 		bat 'copy  C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
@@ -179,15 +204,9 @@ pipeline {
 		
 		bat 'xcopy \"C:/Tomcat8/webapps/BAE_4_4/Reports/Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
     
-    //	bat 'xcopy  \"C:/Windows/System32/config/systemprofile/.jenkins/userContent/BAE_4_3_JENKINS_AUTOMATION/Mockito_Reports/report\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
-	
 		bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\sleep5.bat'
         
-    //Copying Report folder to webapps    
-        
-       // step([$class: 'JUnitResultArchiver', testResults: '**results2.xml'])
-        
-      //  step([$class: 'JUnitResultArchiver', testResults: 'Mockito_Reports/BAE_4_3_JENKINS_AUTOMATION/24/TEST-*.xml'])
+	
 
 
 
@@ -195,7 +214,13 @@ pipeline {
         junit 'Reports/Unit_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
         junit 'Reports/Rest_Reports/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/resultstest4_4.xml'
 		
-	 archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
+		//archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/BAE_4_4.war', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Documents.zip', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/SQLScripts.zip', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Templates.zip', fingerprint: true
+		
+		
        
       
 						echo 'Report Mail sending'
