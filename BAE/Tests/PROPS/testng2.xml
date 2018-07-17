@@ -46,11 +46,6 @@
     </classes>
   </test> <!-- Test --> 
   
-      <test thread-count="5" name="xlCollaborationservletTest Test">
-    <classes>
-      <class name="test.xlCollaborationservletTest"/>
-    </classes>
-  </test> <!-- Test --> 
   
        <test thread-count="5" name="xlLinkImportServiceServletTest Test">
     <classes>
