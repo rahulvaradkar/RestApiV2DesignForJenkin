@@ -188,13 +188,13 @@ pipeline {
 	
 	//Copying zip files folders to Reports folder
 	
-	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_REPORT_PATH}"+''
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\Documents.zip '+"${ZIP_REPORT_PATH}"+''
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\Documents.zip '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\SQLScripts.zip '+"${ZIP_REPORT_PATH}"+''
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\SQLScripts.zip '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\Templates.zip '+"${ZIP_REPORT_PATH}"+''
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\Templates.zip '+"${ZIP_STORAGE_PATH}"+''
 	
 	//Copying Report folders to UserContent
 
