@@ -169,7 +169,7 @@ pipeline {
 	bat 'mkdir '+"${REST_PATH}"
 	bat 'mkdir '+"${UNIT_PATH}"
 	bat 'mkdir '+"${MOCKITO_PATH}"
-	bat 'mkdir '+"${ZIP_STORAGE_PATH}"
+	//bat 'mkdir '+"${ZIP_STORAGE_PATH}"
 	
 	
 	//creating report storage folders for unit,mockito for rest api testing.
