@@ -27,7 +27,7 @@ pipeline {
 	UNIT_REPORT_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\userContent\\"+"${env.JOB_NAME}"+"\\Unit_Reports\\"+"${env.BUILD_NUMBER}"
 	MOCKITO_REPORT_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\userContent\\"+"${env.JOB_NAME}"+"\\Mockito_Reports\\"+"${env.BUILD_NUMBER}"
 	
-	MOCKITO_REPORT_PATH2 = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\userContent\\"+"${env.JOB_NAME}"+"\\Mockito_Reports\\report"
+	//MOCKITO_REPORT_PATH2 = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\userContent\\"+"${env.JOB_NAME}"+"\\Mockito_Reports\\report"
     
 	WAR_BUILD_PATH = "C:\\Tomcat8\\webapps"
 
@@ -41,11 +41,11 @@ pipeline {
                echo 'Building .war file'
                //cd to BAE folder and then mvn install.
 			 
-			bat 'mkdir '+"${ZIP_STORAGE_PATH2}"  
-			bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
-			bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
+			//bat 'mkdir '+"${ZIP_STORAGE_PATH2}"  
+			//bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
+			//bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 			 
-			bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\copysrc.bat'
+			//bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\copysrc.bat'
 			 
 			bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
 			   
@@ -169,7 +169,7 @@ pipeline {
 	bat 'mkdir '+"${REST_PATH}"
 	bat 'mkdir '+"${UNIT_PATH}"
 	bat 'mkdir '+"${MOCKITO_PATH}"
-	//bat 'mkdir '+"${ZIP_STORAGE_PATH}"
+	bat 'mkdir '+"${ZIP_STORAGE_PATH}"
 	
 	
 	//creating report storage folders for unit,mockito for rest api testing.
@@ -224,7 +224,7 @@ pipeline {
 		
 		//archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/BAE_4_4.war', fingerprint: true
-		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/nonsrc/BAE_4_4.war', fingerprint: true
+		//archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/nonsrc/BAE_4_4.war', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Templates.zip', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Documents.zip', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/SQLScripts.zip', fingerprint: true
