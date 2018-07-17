@@ -20,7 +20,7 @@ pipeline {
     UNIT_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\Unit_Reports\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}"
     MOCKITO_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\Mockito_Reports\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}"
 	ZIP_STORAGE_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\ZIPS\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}" 
-	ZIP_STORAGE_PATH2 = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\ZIPS\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}"+"\\nonsrc" 
+	//ZIP_STORAGE_PATH2 = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\"+"${env.JOB_NAME}"+"\\Reports\\ZIPS\\"+"${env.JOB_NAME}"+"\\"+"${env.BUILD_NUMBER}"+"\\nonsrc" 
 	
 	
 	REST_REPORT_PATH = "C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\userContent\\"+"${env.JOB_NAME}"+"\\Rest_Reports\\"+"${env.BUILD_NUMBER}"
@@ -41,9 +41,9 @@ pipeline {
                echo 'Building .war file'
                //cd to BAE folder and then mvn install.
 			 
-			bat 'mkdir '+"${ZIP_STORAGE_PATH2}"  
-			bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
-			bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
+			//bat 'mkdir '+"${ZIP_STORAGE_PATH2}"  
+			//bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
+			//bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 			 
 			bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\copysrc.bat'
 			 
@@ -224,7 +224,6 @@ pipeline {
 		
 		//archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/BAE_4_4.war', fingerprint: true
-		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/nonsrc/BAE_4_4.war', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Templates.zip', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Documents.zip', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/SQLScripts.zip', fingerprint: true
