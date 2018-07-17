@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>BAE REST API TESTING</title>
+	<link rel="stylesheet" href="qunit.css">
+	<script src="https://code.jquery.com/qunit/qunit-2.6.1.js"></script>  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+		QUnit.config.reorder = false;
+	</script>
+ 	<script src="scripts/b64EncodeDecode.js"></script>
+	<script src="scripts/globals.js"></script>
+	<script src="scripts/TestUtils.js"></script>		
+	<script src="scripts/UserTests.js"></script>
+<script src="scripts/MemberTests.js"></script>
+	<script src="scripts/NeighbourhoodTest.js"></script>
+	<script src="scripts/Relation.js"></script>
+	<script src="scripts/Whiteboard.js"></script>
+	<script src="scripts/Collaboration.js"></script>	
+	<script src="scripts/Grid.js"></script> 
+	<script src="scripts/Submit.js"></script>
+	<script src="scripts/RowAccess.js"></script>	
+	
+	<!--
+	
+	-->
+	
+	<script>
+
+		// New API
+		setTimeout(function() {
+		QUnit.jUnitDone(function(data) {
+   			var console = window.console;
+   			if (console) {
+   
+    		console.log(data.xml);
+    		$('#myid').hide();
+    		document.getElementById('myid').innerHTML = data.xml;
+    	}   
+  		})
+		},2000);
+	</script>
+  <script src="qunit-reporter-junit.js"></script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <div id="myid"></div>
+</body>
+</html>

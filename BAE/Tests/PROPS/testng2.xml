@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Mockito Test Suite">
+  <test thread-count="5" name="http_vb_login Test">
+    <classes>
+      <class name="test.httpt_vb_login_test"/>
+    </classes>
+  </test> <!-- Test -->
+  <test thread-count="5" name="xlLoginServiceTest Test">
+    <classes>
+      <class name="test.xlLoginServiceTest"/>
+    </classes>
+  </test> <!-- Test -->
+    <test thread-count="5" name="xlSqlQueryServletTest Test">
+    <classes>
+      <class name="test.xlLoginServiceTest"/>
+    </classes>
+  </test> <!-- Test -->
+  <test thread-count="5" name="xlLogoutServiceServletTest Test">
+    <classes>
+      <class name="test.xlLogoutServiceServletTest"/>
+    </classes>
+  </test> <!-- Test --> 
+  
+    <test thread-count="5" name="Get_Boardwalk_Template_PropServletTest Test">
+    <classes>
+      <class name="test.Get_Boardwalk_Template_PropServletTest"/>
+    </classes>
+  </test> <!-- Test --> 
+  
+     <test thread-count="5" name="AddUserServletTest Test">
+    <classes>
+      <class name="test.AddUserServletTest"/>
+    </classes>
+  </test> <!-- Test --> 
+  
+      <test thread-count="5" name="AggreagationServiceServletTest Test">
+    <classes>
+      <class name="test.AggreagationServiceServletTest"/>
+    </classes>
+  </test> <!-- Test --> 
+  
+      <test thread-count="5" name="Bw_Get_Objects_ServletTest Test">
+    <classes>
+      <class name="test.Bw_Get_Objects_ServletTest"/>
+    </classes>
+  </test> <!-- Test --> 
+  
+  
+       <test thread-count="5" name="xlLinkImportServiceServletTest Test">
+    <classes>
+      <class name="test.xlLinkImportServiceServletTest"/>
+    </classes>
+  </test> <!-- Test --> 
+  
+    <test thread-count="5" name="LoginSevletTest Test">
+    <classes>
+      <class name="test.LoginSevletTest"/>
+    </classes>
+  </test> <!-- Test --> 
+ 
+ 
+
+  
+  
+ 
+  
+  
+  
+  
+  
+  
+</suite> <!-- Suite -->

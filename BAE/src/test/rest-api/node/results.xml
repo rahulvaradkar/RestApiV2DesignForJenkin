@@ -1,0 +1,27 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<testsuites name="http://localhost:8080/BAE/node/index.html" tests="6" failures="2" errors="0" time="0.103">
+<testsuite id="0" name="Module 1" hostname="localhost" tests="6" failures="2" errors="0" time="0.096" timestamp="2018-05-21T15:16:08Z">
+<testcase name="test 1" time="0.005" timestamp="2018-05-21T15:16:08Z">
+<failure type="AssertionFailedError" message="Assert fail 1 = 2">
+<actual value="1">
+<expected value="2">
+</expected></actual></failure>
+</testcase>
+<testcase name="test 2" time="0" timestamp="2018-05-21T15:16:08Z">
+<failure type="AssertionFailedError" message="Assert fail 1 = 2">
+<actual value="1">
+<expected value="2">
+</expected></actual></failure>
+</testcase>
+<testcase name="Getting the REST API" time="0.089" timestamp="2018-05-21T15:16:08Z">
+</testcase>
+<system-out>
+<!--[CDATA[
+[Module 1, test 1, 2] Assert fail 1 = 2
+Source: http://localhost:8080/BAE/node/Agent.js:8:15
+[Module 1, test 2, 2] Assert fail 1 = 2
+Source: http://localhost:8080/BAE/node/Agent.js:14:15
+]]-->
+</system-out>
+</testsuite>
+</testsuites>
