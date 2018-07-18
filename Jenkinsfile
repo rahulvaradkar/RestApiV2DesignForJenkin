@@ -45,11 +45,11 @@ pipeline {
 			//bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
 			//bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 			 
-			//bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\copysrc.bat'
+			bat 'C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4\\copysrc.bat'
 			 
 			bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
 			
-			 bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/repackage.bat'
+			//bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/repackage.bat'
 			   
               
             }
