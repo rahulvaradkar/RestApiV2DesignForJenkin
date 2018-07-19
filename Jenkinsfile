@@ -49,7 +49,7 @@ pipeline {
 			 
 			bat  'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/maveninstall.bat'
 			
-			//bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/repackage.bat'
+			
 			   
               
             }
@@ -172,6 +172,7 @@ pipeline {
 	bat 'mkdir '+"${UNIT_PATH}"
 	bat 'mkdir '+"${MOCKITO_PATH}"
 	bat 'mkdir '+"${ZIP_STORAGE_PATH}"
+	bat 'mkdir '+"${ZIP_STORAGE_PATH2}"
 	
 	
 	//creating report storage folders for unit,mockito for rest api testing.
@@ -200,6 +201,10 @@ pipeline {
 	
 	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
 	
+	bat 'C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4/repackage.bat'
+	
+	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
+	
 	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\Documents.zip '+"${ZIP_STORAGE_PATH}"+''
 	
 	bat 'copy  C:\\Windows\\System32\\config\\systemprofile\\.jenkins\\workspace\\BAE_TEST\\BAE\\target\\SQLScripts.zip '+"${ZIP_STORAGE_PATH}"+''
@@ -226,7 +231,7 @@ pipeline {
 		
 		//archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/BAE_4_4.war', fingerprint: true
-		//archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/nonsrc/BAE_4_4.war', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/nonsrc/BAE_4_4.war', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Templates.zip', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/Documents.zip', fingerprint: true
 		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${env.JOB_NAME}"+'/'+"${env.BUILD_NUMBER}"+'/SQLScripts.zip', fingerprint: true
