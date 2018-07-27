@@ -74,9 +74,9 @@ pipeline {
 					
 			script{
 			
-						"${TRIGGER_CAUSE}" = ""+"${currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)}"
+						TRIGGER_CAUSE = ""+"${currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)}"
 					
-						if("${TRIGGER_CAUSE}".indexOf("UserIdCause") >= 0){
+						if(TRIGGER_CAUSE.indexOf("UserIdCause") >= 0){
 							"${CODE_EDIT}" = "change"
 							"${DOC_EDIT}" = "change"
 																}
