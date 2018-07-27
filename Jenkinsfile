@@ -24,17 +24,17 @@ pipeline {
 	GIT_BRANCH = "${env.GIT_BRANCH}" 
 	
 	JJOB_NAME = "BAE_4_4"
-		
-	REST_PATH = "${env.WORKSPACE}"+"\\Reports\\Rest_Reports\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"	
-    UNIT_PATH = "${env.WORKSPACE}"+"\\Reports\\Unit_Reports\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"
-    MOCKITO_PATH = "${env.WORKSPACE}"+"\\Reports\\Mockito_Reports\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"
+
+	REST_PATH = "${env.WORKSPACE}"+"\\Reports\\Rest_Reports\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"	
+    UNIT_PATH = "${env.WORKSPACE}"+"\\Reports\\Unit_Reports\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"
+    MOCKITO_PATH = "${env.WORKSPACE}"+"\\Reports\\Mockito_Reports\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"
 	
-	ZIP_STORAGE_PATH = "${env.WORKSPACE}"+"\\Reports\\ZIPS\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}" 
-	ZIP_STORAGE_PATH2 = "${env.WORKSPACE}"+"\\Reports\\ZIPS\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"+"\\nonsrc" 
+	ZIP_STORAGE_PATH = "${env.WORKSPACE}"+"\\Reports\\ZIPS\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}" 
+	ZIP_STORAGE_PATH2 = "${env.WORKSPACE}"+"\\Reports\\ZIPS\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"+"\\nonsrc" 
 	
-	REST_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Rest_Reports\\"+"${env.BUILD_NUMBER}"
-	UNIT_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Unit_Reports\\"+"${env.BUILD_NUMBER}"
-	MOCKITO_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Mockito_Reports\\"+"${env.BUILD_NUMBER}"
+	REST_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\Rest_Reports\\"+"${env.BUILD_NUMBER}"
+	UNIT_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\Unit_Reports\\"+"${env.BUILD_NUMBER}"
+	MOCKITO_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\Mockito_Reports\\"+"${env.BUILD_NUMBER}"
     
 	WEBAPPS_PATH = "C:/Tomcat8/webapps"
 	WEBAPP_INSTANCE_NAME = "BAE_4_4"
@@ -347,22 +347,22 @@ pipeline {
 		bat  ''+ BATCH_PATH + 'sleep5.bat'
         
 
-        junit 'Reports/Mockito_Reports/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
-        junit 'Reports/Unit_Reports/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
-        junit 'Reports/Rest_Reports/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/resultstest4_4.xml'
+        junit 'Reports/Mockito_Reports/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
+        junit 'Reports/Unit_Reports/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
+        junit 'Reports/Rest_Reports/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/resultstest4_4.xml'
 		
 	  //archiveArtifacts artifacts: 'BAE/target/*.war', fingerprint: true
-		archiveArtifacts artifacts: 'Reports/ZIPS/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/BAE_4_4.war', fingerprint: true
-		archiveArtifacts artifacts: 'Reports/ZIPS/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/nonsrc/BAE_4_4.war', fingerprint: true
-		archiveArtifacts artifacts: 'Reports/ZIPS/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/Templates.zip', fingerprint: true
-		archiveArtifacts artifacts: 'Reports/ZIPS/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/Documents.zip', fingerprint: true
-		archiveArtifacts artifacts: 'Reports/ZIPS/'+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/SQLScripts.zip', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/BAE_4_4.war', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/nonsrc/BAE_4_4.war', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/Templates.zip', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/Documents.zip', fingerprint: true
+		archiveArtifacts artifacts: 'Reports/ZIPS/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/SQLScripts.zip', fingerprint: true
 		      
 						echo 'Report Mail sending'
             script {
                     emailext subject: '$DEFAULT_SUBJECT'+ ' for - '+ JOB_NAME,    
 			
-			body: "Click the link below to show REST API Testing Results for your current build :  \n"+JENKINS_URL+"blue/organizations/jenkins/"+JJOB_NAME+"/detail/"+GIT_BRANCH+"/activity/"+"\n\n\n Click the link below to show Mockito TestNG Results for your current build :  \n"+JENKINS_URL+"/userContent/"+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+"/Mockito_Reports/"+ENV_BUILD_NO+"/index.html" +"\n\n\n Click the link below to show Unit Testing Results for your current build :  \n"+JENKINS_URL+"/userContent/"+JJOB_NAME+'-'+"${env.GIT_BRANCH}"+"/Unit_Reports/"+ENV_BUILD_NO+"/index.html" ,
+			body: "Click the link below to show REST API Testing Results for your current build :  \n"+JENKINS_URL+"blue/organizations/jenkins/"+"${JJOB_NAME}"+"/detail/"+GIT_BRANCH+"/activity/"+"\n\n\n Click the link below to show Mockito TestNG Results for your current build :  \n"+JENKINS_URL+"/userContent/"+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+"/Mockito_Reports/"+ENV_BUILD_NO+"/index.html" +"\n\n\n Click the link below to show Unit Testing Results for your current build :  \n"+JENKINS_URL+"/userContent/"+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+"/Unit_Reports/"+ENV_BUILD_NO+"/index.html" ,
                         attachLog: true,
                         replyTo: '$DEFAULT_REPLYTO',
                         to: 'pranav@techvision.net.in'          	
