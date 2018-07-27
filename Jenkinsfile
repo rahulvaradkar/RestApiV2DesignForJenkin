@@ -40,7 +40,8 @@ pipeline {
 	WEBAPP_INSTANCE_NAME = "BAE_4_4"
 	WEBAPP_INSTANCE_PATH = "${WEBAPPS_PATH}" + "/" + "${WEBAPP_INSTANCE_NAME}" 
 	
-	BATCH_PATH = "C:\\Usersp.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4_multi\\"
+	BATCH_PATH = "C:/Usersp.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4_multi/"
+	BATCH_PATH2 = "C:\Usersp.bhagwat\AppData\Roaming\npm\node_modules\qunit-puppeteer\bin\BAE_4_4_multi\"
 	
 	CODE_EDIT = "nochange"
 	DOC_EDIT = "nochange"
@@ -308,7 +309,7 @@ pipeline {
 	
 	//Copying xml files to Jenkins path 
 	
-        bat   'copy '+ "${BATCH_PATH}" + 'resultstest4_4.xml '+"${REST_PATH}"+''
+        bat   'copy '+ "${BATCH_PATH2}" + 'resultstest4_4.xml '+"${REST_PATH}"+''
 	
     	bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Unit_Test_Reports/junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
     
@@ -334,7 +335,7 @@ pipeline {
 	
 		//Copying Report folders to UserContent
 
-		bat 'copy '+ "${BATCH_PATH}" + 'resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
+		bat 'copy '+ "${BATCH_PATH2}" + 'resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
 	
 	    bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
 		
