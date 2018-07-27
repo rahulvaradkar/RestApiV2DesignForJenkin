@@ -40,8 +40,8 @@ pipeline {
 	WEBAPP_INSTANCE_NAME = "BAE_4_4"
 	WEBAPP_INSTANCE_PATH = "${WEBAPPS_PATH}" + "/" + "${WEBAPP_INSTANCE_NAME}" 
 	
-	BATCH_PATH = "C:/Usersp.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4_multi/"
-	BATCH_PATH2 = "C:\Usersp.bhagwat\AppData\Roaming\npm\node_modules\qunit-puppeteer\bin\BAE_4_4_multi\"
+	BATCH_PATH = "C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4_multi/"
+	BATCH_PATH2 = "C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4_multi\\"
 	
 	CODE_EDIT = "nochange"
 	DOC_EDIT = "nochange"
