@@ -58,15 +58,11 @@ pipeline {
 				steps { 
 					echo 'changed data       '+currentBuild.changeSets
 					echo 'Env build number   ' +"${ENV_BUILD_NO}"
-					echo 'BUILD_URL          ' +BUILD_URL
-					echo 'BUILD_ID           ' +BUILD_ID 
 					echo 'Jenkins URL        ' +"${JENKINS_URL}"
 					echo 'JOB NAME   		 ' +"${JOB_NAME}"
-					echo 'JOB BAE NAME    	 ' +JOB_BASE_NAME
 					echo 'JENKINS HOME   	 ' +"${JENKINS_HOME}"
-					echo 'JOB_URL  			 ' +JOB_URL
 					echo 'GIT BRANCH   		 ' +"${GIT_BRANCH}"
-					echo 'WORKSPACE   		 ' +WORKSPACE 
+					echo 'WORKSPACE   		 ' +"${WORKSPACE}" 
 					
 					
 					bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
@@ -77,8 +73,8 @@ pipeline {
 						TRIGGER_CAUSE = ""+"${currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)}"
 					
 						if(TRIGGER_CAUSE.indexOf("UserIdCause") >= 0){
-							"${CODE_EDIT}" = "change"
-							"${DOC_EDIT}" = "change"
+							CODE_EDIT = "change"
+							DOC_EDIT = "change"
 																}
 			
 			
@@ -102,21 +98,21 @@ pipeline {
 
 					
 					if (changes.indexOf("Jenkinsfile") >= 0) {
-						"${DOC_EDIT}" = "change"
-						"${CODE_EDIT}" = "change"			
+						DOC_EDIT = "change"
+						CODE_EDIT = "change"			
 							} 
 					
 					
 					if ((changes.indexOf("Documents/") >= 0) || (changes.indexOf("SQLScripts/") >= 0)  || (changes.indexOf("Templates/") >= 0) ) {
-						"${DOC_EDIT}" = "change"
+						DOC_EDIT = "change"
 							} 
 							
 					if (changes.indexOf("BAE/") >= 0) {
-						"${CODE_EDIT}" = "change"
+						CODE_EDIT = "change"
 							} 
 
-						echo "${CODE_EDIT}"
-						echo "${DOC_EDIT}"
+						echo CODE_EDIT
+						echo DOC_EDIT
 			}				
 						}
 										}
@@ -126,7 +122,7 @@ pipeline {
 		        stage ('War Build Stage') {
 				
 			when {   	  expression {
-			return "${CODE_EDIT}" == 'change';}
+			return CODE_EDIT == 'change';}
 					
 			 }
 
@@ -151,7 +147,7 @@ pipeline {
 		        stage ('War Deployment Stage') {
 				
 				 when {   	  expression {
-									return "${CODE_EDIT}" == 'change';
+									return CODE_EDIT == 'change';
 									}
 					
 			 }
@@ -190,7 +186,7 @@ pipeline {
 				stage ('Test Resources compilation Stage') {
 
 				 when {   	  expression {
-									return "${CODE_EDIT}" == 'change';
+									return CODE_EDIT == 'change';
 									}
 					
 			 }
@@ -214,7 +210,7 @@ pipeline {
         stage ('Unit Testing Stage') {
 		
 		 when {   	  expression {
-									return "${CODE_EDIT}" == 'change';
+									return CODE_EDIT == 'change';
 									}
 					
 			 }
@@ -231,7 +227,7 @@ pipeline {
 		stage ('Mockito Testing Stage') {
 		
 		when {   	  expression {
-									return "${CODE_EDIT}" == 'change';
+									return CODE_EDIT == 'change';
 									}		
 			 }
 
@@ -246,7 +242,7 @@ pipeline {
 		stage ('Rest API Testing Stage') {
 		
 		when {   	  expression {
-									return "${CODE_EDIT}" == 'change';
+									return CODE_EDIT == 'change';
 									}
 					
 			 }
@@ -265,7 +261,7 @@ pipeline {
 		stage ('Resource Packaging Stage') {
 		
 		when {   	  expression {
-									return "${DOC_EDIT}" == 'change';
+									return DOC_EDIT == 'change';
 									}
 					
 			 }
