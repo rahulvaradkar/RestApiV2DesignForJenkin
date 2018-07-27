@@ -324,7 +324,7 @@ pipeline {
 	
 	//Copying zip files folders to Reports folder
 	
-	bat 'copy ' +"${env.JENKINS_HOME}"+'\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.WORKSPACE}"+'\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
 	
 	bat  ''+ "${BATCH_PATH}" + 'repackage.bat ' + "${env.WORKSPACE}" + ''
 	
