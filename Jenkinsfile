@@ -314,9 +314,9 @@ pipeline {
 	
         bat   'copy '+ "${BATCH_PATH2}" + 'resultstest4_4.xml '+"${REST_PATH}"+''
 	
-    	bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports\\junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
+    	bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports\\junitreports '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
     
-		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Mockito_Test_Reports\\junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Mockito_Test_Reports\\junitreports '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
 	
     //	bat 'xcopy '+ "${env.JENKINS_HOME}"+'/userContent/BAE_TEST/Mockito_Reports/report\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
     
@@ -340,9 +340,9 @@ pipeline {
 
 		bat 'copy '+ "${BATCH_PATH2}" + 'resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
 	
-	    bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+	    bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
 		
-		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Mockito_Test_Reports '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
     
 		bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
         
