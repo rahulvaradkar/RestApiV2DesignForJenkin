@@ -37,8 +37,11 @@ pipeline {
 	MOCKITO_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+"${JJOB_NAME}"+"-"+"${env.GIT_BRANCH}"+"\\Mockito_Reports\\"+"${env.BUILD_NUMBER}"
     
 	WEBAPPS_PATH = "C:/Tomcat8/webapps"
+	WEBAPPS_PATH2 = "C:\\Tomcat8\\webapps"
 	WEBAPP_INSTANCE_NAME = "BAE_4_4"
-	WEBAPP_INSTANCE_PATH = "${WEBAPPS_PATH}" + "/" + "${WEBAPP_INSTANCE_NAME}" 
+	WEBAPP_INSTANCE_PATH = "${WEBAPPS_PATH}" + "/" + "${WEBAPP_INSTANCE_NAME}"
+	WEBAPP_INSTANCE_PATH2 = "${WEBAPPS_PATH2}" + "\\" + "${WEBAPP_INSTANCE_NAME}"
+	
 	
 	BATCH_PATH = "C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4_multi/"
 	BATCH_PATH2 = "C:\\Users\\p.bhagwat\\AppData\\Roaming\\npm\\node_modules\\qunit-puppeteer\\bin\\BAE_4_4_multi\\"
@@ -311,9 +314,9 @@ pipeline {
 	
         bat   'copy '+ "${BATCH_PATH2}" + 'resultstest4_4.xml '+"${REST_PATH}"+''
 	
-    	bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Unit_Test_Reports/junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
+    	bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports\\junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
     
-		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Mockito_Test_Reports/junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Mockito_Test_Reports\\junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
 	
     //	bat 'xcopy '+ "${env.JENKINS_HOME}"+'/userContent/BAE_TEST/Mockito_Reports/report\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
     
@@ -337,9 +340,9 @@ pipeline {
 
 		bat 'copy '+ "${BATCH_PATH2}" + 'resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
 	
-	    bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+	    bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
 		
-		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
     
 		bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
         
