@@ -32,9 +32,9 @@ pipeline {
 	ZIP_STORAGE_PATH = "${env.WORKSPACE}"+"\\Reports\\ZIPS\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}" 
 	ZIP_STORAGE_PATH2 = "${env.WORKSPACE}"+"\\Reports\\ZIPS\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\"+"${env.BUILD_NUMBER}"+"\\nonsrc" 
 	
-	REST_REPORT_PATH = "${env.JENKINS HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Rest_Reports\\"+"${env.BUILD_NUMBER}"
-	UNIT_REPORT_PATH = "${env.JENKINS HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Unit_Reports\\"+"${env.BUILD_NUMBER}"
-	MOCKITO_REPORT_PATH = "${env.JENKINS HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Mockito_Reports\\"+"${env.BUILD_NUMBER}"
+	REST_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Rest_Reports\\"+"${env.BUILD_NUMBER}"
+	UNIT_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Unit_Reports\\"+"${env.BUILD_NUMBER}"
+	MOCKITO_REPORT_PATH = "${env.JENKINS_HOME}"+"\\userContent\\"+JJOB_NAME+"-"+"${env.GIT_BRANCH}"+"\\Mockito_Reports\\"+"${env.BUILD_NUMBER}"
     
 	WEBAPPS_PATH = "C:/Tomcat8/webapps"
 	WEBAPP_INSTANCE_NAME = "BAE_4_4"
@@ -318,23 +318,23 @@ pipeline {
     
 		bat 'xcopy '+ WEBAPP_INSTANCE_PATH +'/Reports/Mockito_Test_Reports/junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
 	
-    //	bat 'xcopy '+ "${env.JENKINS HOME}"+'/userContent/BAE_TEST/Mockito_Reports/report\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
+    //	bat 'xcopy '+ "${env.JENKINS_HOME}"+'/userContent/BAE_TEST/Mockito_Reports/report\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
     
         bat  ''+ BATCH_PATH + 'sleep5.bat'
 	
 	//Copying zip files folders to Reports folder
 	
-	bat 'copy ' +"${env.JENKINS HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
 	
 	bat  ''+ BATCH_PATH + 'repackage.bat ' + "${env.WORKSPACE}" + ''
 	
-	bat 'copy ' +"${env.JENKINS HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 	
-	bat 'copy ' +"${env.JENKINS HOME}"+'/BAE/target/Documents.zip '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/Documents.zip '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat 'copy ' +"${env.JENKINS HOME}"+'/BAE/target/SQLScripts.zip '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/SQLScripts.zip '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat 'copy ' +"${env.JENKINS HOME}"+'/BAE/target/Templates.zip '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/Templates.zip '+"${ZIP_STORAGE_PATH}"+''
 	
 		//Copying Report folders to UserContent
 
