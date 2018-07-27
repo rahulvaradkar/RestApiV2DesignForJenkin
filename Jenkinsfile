@@ -312,7 +312,7 @@ pipeline {
 	
 	//Copying xml files to Jenkins path 
 	
-        bat   'copy /b '+ "${BATCH_PATH2}" + 'resultstest4_4.xml + '+"${REST_PATH}"+''
+        bat   'copy /b '+ "${BATCH_PATH2}" + 'resultstest4_4.xml+ '+"${REST_PATH}"+''
 	
     	bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports\\junitreports '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
     
@@ -338,7 +338,7 @@ pipeline {
 	
 		//Copying Report folders to UserContent
 
-		bat 'copy /b '+ "${BATCH_PATH2}" + 'resultstest4_4.xml + '+"${REST_REPORT_PATH}"+''
+		bat 'copy /b '+ "${BATCH_PATH2}" + 'resultstest4_4.xml+ '+"${REST_REPORT_PATH}"+''
 	
 	    bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH2}" +'\\Reports\\Unit_Test_Reports '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
 		
