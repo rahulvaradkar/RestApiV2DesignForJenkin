@@ -369,7 +369,7 @@ pipeline {
 			body: "Click the link below to show REST API Testing Results for your current build :  \n"+"${JENKINS_URL}"+"blue/organizations/jenkins/"+"${JJOB_NAME}"+"/detail/"+"${GIT_BRANCH}"+"/activity/"+"\n\n\n Click the link below to show Mockito TestNG Results for your current build :  \n"+"${JENKINS_URL}"+"/userContent/"+"${JJOB_NAME}"+'-'+"${GIT_BRANCH}"+"/Mockito_Reports/"+"${ENV_BUILD_NO}"+"/index.html" +"\n\n\n Click the link below to show Unit Testing Results for your current build :  \n"+"${JENKINS_URL}"+"/userContent/"+"${JJOB_NAME}"+'-'+"${GIT_BRANCH}"+"/Unit_Reports/"+"${ENV_BUILD_NO}"+"/index.html" ,
                         attachLog: true,
                         replyTo: '$DEFAULT_REPLYTO',
-                        to: 'pranav@techvision.net.in'          	
+                        to: '$DEFAULT_RECIPIENTS'          	
             }
         }
     }
