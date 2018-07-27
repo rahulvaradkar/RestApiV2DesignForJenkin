@@ -38,7 +38,7 @@ pipeline {
     
 	WEBAPPS_PATH = "C:/Tomcat8/webapps"
 	WEBAPP_INSTANCE_NAME = "BAE_4_4"
-	WEBAPP_INSTANCE_PATH = WEBAPPS_PATH + "/" + WEBAPP_INSTANCE_NAME 
+	WEBAPP_INSTANCE_PATH = "${WEBAPPS_PATH}" + "/" + "${WEBAPP_INSTANCE_NAME}" 
 	
 	BATCH_PATH = "C:/Users/p.bhagwat/AppData/Roaming/npm/node_modules/qunit-puppeteer/bin/BAE_4_4_multi/"
 	
@@ -57,28 +57,28 @@ pipeline {
           
 				steps { 
 					echo 'changed data       '+currentBuild.changeSets
-					echo 'Env build number   ' +ENV_BUILD_NO
+					echo 'Env build number   ' +"${ENV_BUILD_NO}"
 					echo 'BUILD_URL          ' +BUILD_URL
 					echo 'BUILD_ID           ' +BUILD_ID 
-					echo 'Jenkins URL        ' +JENKINS_URL
-					echo 'JOB NAME   		 ' +JOB_NAME
+					echo 'Jenkins URL        ' +"${JENKINS_URL}"
+					echo 'JOB NAME   		 ' +"${JOB_NAME}"
 					echo 'JOB BAE NAME    	 ' +JOB_BASE_NAME
-					echo 'JENKINS HOME   	 ' +JENKINS_HOME
+					echo 'JENKINS HOME   	 ' +"${JENKINS_HOME}"
 					echo 'JOB_URL  			 ' +JOB_URL
-					echo 'GIT BRANCH   		 ' +GIT_BRANCH
+					echo 'GIT BRANCH   		 ' +"${GIT_BRANCH}"
 					echo 'WORKSPACE   		 ' +WORKSPACE 
 					
 					
-					bat  ''+ BATCH_PATH + 'sleep5.bat'
+					bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 					
 					
 			script{
 			
-						TRIGGER_CAUSE = ""+"${currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)}"
+						"${TRIGGER_CAUSE}" = ""+"${currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)}"
 					
-						if(TRIGGER_CAUSE.indexOf("UserIdCause") >= 0){
-							CODE_EDIT = "change"
-							DOC_EDIT = "change"
+						if("${TRIGGER_CAUSE}".indexOf("UserIdCause") >= 0){
+							"${CODE_EDIT}" = "change"
+							"${DOC_EDIT}" = "change"
 																}
 			
 			
@@ -102,21 +102,21 @@ pipeline {
 
 					
 					if (changes.indexOf("Jenkinsfile") >= 0) {
-						DOC_EDIT = "change"
-						CODE_EDIT = "change"			
+						"${DOC_EDIT}" = "change"
+						"${CODE_EDIT}" = "change"			
 							} 
 					
 					
 					if ((changes.indexOf("Documents/") >= 0) || (changes.indexOf("SQLScripts/") >= 0)  || (changes.indexOf("Templates/") >= 0) ) {
-						DOC_EDIT = "change"
+						"${DOC_EDIT}" = "change"
 							} 
 							
 					if (changes.indexOf("BAE/") >= 0) {
-						CODE_EDIT = "change"
+						"${CODE_EDIT}" = "change"
 							} 
 
-						echo CODE_EDIT
-						echo DOC_EDIT
+						echo "${CODE_EDIT}"
+						echo "${DOC_EDIT}"
 			}				
 						}
 										}
@@ -126,7 +126,7 @@ pipeline {
 		        stage ('War Build Stage') {
 				
 			when {   	  expression {
-			return CODE_EDIT == 'change';}
+			return "${CODE_EDIT}" == 'change';}
 					
 			 }
 
@@ -137,10 +137,10 @@ pipeline {
               
 
 			//copying latest source to file to webapps 
-			bat  ''+ BATCH_PATH + 'copysrc.bat ' + "${env.WORKSPACE}" + ''
+			bat  ''+ "${BATCH_PATH}" + 'copysrc.bat ' + "${env.WORKSPACE}" + ''
 			
 			 //cd to BAE folder and then mvn install.	
-			bat  ''+ BATCH_PATH + 'maveninstall.bat ' + "${env.WORKSPACE}" + ''
+			bat  ''+ "${BATCH_PATH}" + 'maveninstall.bat ' + "${env.WORKSPACE}" + ''
 			
 			
 			   
@@ -151,7 +151,7 @@ pipeline {
 		        stage ('War Deployment Stage') {
 				
 				 when {   	  expression {
-									return CODE_EDIT == 'change';
+									return "${CODE_EDIT}" == 'change';
 									}
 					
 			 }
@@ -160,27 +160,27 @@ pipeline {
                echo 'Deploying .war file'
                //copy war file from jenkins workspace to webapps
             
-			 bat  ''+ BATCH_PATH + 'sleep5.bat'
+			 bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 
-    		 bat  ''+ BATCH_PATH + 'deploybae4_4.bat ' + "${env.WORKSPACE}" + ''
+    		 bat  ''+ "${BATCH_PATH}" + 'deploybae4_4.bat ' + "${env.WORKSPACE}" + ''
 			      
-			 bat  ''+ BATCH_PATH + 'sleep30.bat'
+			 bat  ''+ "${BATCH_PATH}" + 'sleep30.bat'
 			 
-			 bat  ''+ BATCH_PATH + 'deployprops.bat ' + "${env.WORKSPACE}" + ''
+			 bat  ''+ "${BATCH_PATH}" + 'deployprops.bat ' + "${env.WORKSPACE}" + ''
 			 
-			 bat  ''+ BATCH_PATH + 'sleep5.bat'
+			 bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 			 
-			 bat  ''+ BATCH_PATH + 'deployrest.bat ' + "${env.WORKSPACE}" + ''
+			 bat  ''+ "${BATCH_PATH}" + 'deployrest.bat ' + "${env.WORKSPACE}" + ''
 			 
-			 bat  ''+ BATCH_PATH + 'sleep5.bat'
+			 bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 			   
-			 bat  ''+ BATCH_PATH + 'deployunit.bat ' + "${env.WORKSPACE}" + ''
+			 bat  ''+ "${BATCH_PATH}" + 'deployunit.bat ' + "${env.WORKSPACE}" + ''
 			 
-			 bat  ''+ BATCH_PATH + 'sleep5.bat'
+			 bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 			   
-			 bat  ''+ BATCH_PATH + 'deploymockito.bat ' + "${env.WORKSPACE}" + ''
+			 bat  ''+ "${BATCH_PATH}" + 'deploymockito.bat ' + "${env.WORKSPACE}" + ''
 			 
-			 bat  ''+ BATCH_PATH + 'sleep5.bat'
+			 bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 			   
               
             }
@@ -190,7 +190,7 @@ pipeline {
 				stage ('Test Resources compilation Stage') {
 
 				 when {   	  expression {
-									return CODE_EDIT == 'change';
+									return "${CODE_EDIT}" == 'change';
 									}
 					
 			 }
@@ -200,11 +200,11 @@ pipeline {
                echo 'Test resources being compiled'
                //compile testNGRunner and MockitoTestRunner
 
-				bat  ''+ BATCH_PATH + 'sleep5.bat'
+				bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 				
-			     bat '' + WEBAPP_INSTANCE_PATH +'/src/testNG/testng_compiler.bat'
+			     bat '' + "${WEBAPP_INSTANCE_PATH}" +'/src/testNG/testng_compiler.bat'
 				 
-				 bat '' + WEBAPP_INSTANCE_PATH +'/src/test/mockito_compiler.bat'
+				 bat '' + "${WEBAPP_INSTANCE_PATH}" +'/src/test/mockito_compiler.bat'
 				   
             }
         }
@@ -214,16 +214,16 @@ pipeline {
         stage ('Unit Testing Stage') {
 		
 		 when {   	  expression {
-									return CODE_EDIT == 'change';
+									return "${CODE_EDIT}" == 'change';
 									}
 					
 			 }
 
             steps {
                echo 'Unit Test Run'
-               bat  ''+ BATCH_PATH + 'sleep5.bat'
+               bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
                //running unit tests through batch file in src\\testng
-               bat '' + WEBAPP_INSTANCE_PATH +'/src/testNG/TestNGRunner.bat'
+               bat '' + "${WEBAPP_INSTANCE_PATH}" +'/src/testNG/TestNGRunner.bat'
             }
         }
 		
@@ -231,31 +231,31 @@ pipeline {
 		stage ('Mockito Testing Stage') {
 		
 		when {   	  expression {
-									return CODE_EDIT == 'change';
+									return "${CODE_EDIT}" == 'change';
 									}		
 			 }
 
             steps {
                 //running mockito tests through batch file in src\\test foles
                 echo 'Mockito TEST Run'
-                bat  ''+ BATCH_PATH + 'sleep5.bat'
-                bat '' + WEBAPP_INSTANCE_PATH +'/src/test/MockitoRunner2.bat'
+                bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
+                bat '' + "${WEBAPP_INSTANCE_PATH}" +'/src/test/MockitoRunner2.bat'
             }
 		}
 		
 		stage ('Rest API Testing Stage') {
 		
 		when {   	  expression {
-									return CODE_EDIT == 'change';
+									return "${CODE_EDIT}" == 'change';
 									}
 					
 			 }
 
             steps {
                echo 'Rest API  Test Run'
-               bat  ''+ BATCH_PATH + 'sleep5.bat'
+               bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 			   //running rest api test cases using batch file operating headless chrome simulation.
-			   bat  ''+ BATCH_PATH + 'jenkinsrunnerTEST_4_4.bat'
+			   bat  ''+ "${BATCH_PATH}" + 'jenkinsrunnerTEST_4_4.bat'
 			   
 			   
 			   
@@ -265,7 +265,7 @@ pipeline {
 		stage ('Resource Packaging Stage') {
 		
 		when {   	  expression {
-									return DOC_EDIT == 'change';
+									return "${DOC_EDIT}" == 'change';
 									}
 					
 			 }
@@ -308,25 +308,25 @@ pipeline {
 	
 
 
-	 bat  ''+ BATCH_PATH + 'sleep5.bat'
+	 bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 	
 	//Copying xml files to Jenkins path 
 	
-        bat   'copy '+ BATCH_PATH + 'resultstest4_4.xml '+"${REST_PATH}"+''
+        bat   'copy '+ "${BATCH_PATH}" + 'resultstest4_4.xml '+"${REST_PATH}"+''
 	
-    	bat 'xcopy '+ WEBAPP_INSTANCE_PATH +'/Reports/Unit_Test_Reports/junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
+    	bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Unit_Test_Reports/junitreports\" '+"${UNIT_PATH}"+' /E /H /C /R /Q /Y'
     
-		bat 'xcopy '+ WEBAPP_INSTANCE_PATH +'/Reports/Mockito_Test_Reports/junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Mockito_Test_Reports/junitreports\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
 	
     //	bat 'xcopy '+ "${env.JENKINS_HOME}"+'/userContent/BAE_TEST/Mockito_Reports/report\" '+"${MOCKITO_PATH}"+' /E /H /C /R /Q /Y'
     
-        bat  ''+ BATCH_PATH + 'sleep5.bat'
+        bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
 	
 	//Copying zip files folders to Reports folder
 	
 	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat  ''+ BATCH_PATH + 'repackage.bat ' + "${env.WORKSPACE}" + ''
+	bat  ''+ "${BATCH_PATH}" + 'repackage.bat ' + "${env.WORKSPACE}" + ''
 	
 	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 	
@@ -338,13 +338,13 @@ pipeline {
 	
 		//Copying Report folders to UserContent
 
-		bat 'copy '+ BATCH_PATH + 'resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
+		bat 'copy '+ "${BATCH_PATH}" + 'resultstest4_4.xml '+"${REST_REPORT_PATH}"+''
 	
-	    bat 'xcopy '+ WEBAPP_INSTANCE_PATH +'/Reports/Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+	    bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Unit_Test_Reports\" '+"${UNIT_REPORT_PATH}"+' /E /H /C /R /Q /Y'
 		
-		bat 'xcopy '+ WEBAPP_INSTANCE_PATH +'/Reports/Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
+		bat 'xcopy '+ "${WEBAPP_INSTANCE_PATH}" +'/Reports/Mockito_Test_Reports\" '+"${MOCKITO_REPORT_PATH}"+' /E /H /C /R /Q /Y'
     
-		bat  ''+ BATCH_PATH + 'sleep5.bat'
+		bat  ''+ "${BATCH_PATH}" + 'sleep5.bat'
         
 
         junit 'Reports/Mockito_Reports/'+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+'/'+"${env.BUILD_NUMBER}"+'/TEST-*.xml'
@@ -360,9 +360,9 @@ pipeline {
 		      
 						echo 'Report Mail sending'
             script {
-                    emailext subject: '$DEFAULT_SUBJECT'+ ' for - '+ JOB_NAME,    
+                    emailext subject: '$DEFAULT_SUBJECT'+ ' for - '+ "${JOB_NAME}",    
 			
-			body: "Click the link below to show REST API Testing Results for your current build :  \n"+JENKINS_URL+"blue/organizations/jenkins/"+"${JJOB_NAME}"+"/detail/"+GIT_BRANCH+"/activity/"+"\n\n\n Click the link below to show Mockito TestNG Results for your current build :  \n"+JENKINS_URL+"/userContent/"+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+"/Mockito_Reports/"+ENV_BUILD_NO+"/index.html" +"\n\n\n Click the link below to show Unit Testing Results for your current build :  \n"+JENKINS_URL+"/userContent/"+"${JJOB_NAME}"+'-'+"${env.GIT_BRANCH}"+"/Unit_Reports/"+ENV_BUILD_NO+"/index.html" ,
+			body: "Click the link below to show REST API Testing Results for your current build :  \n"+"${JENKINS_URL}"+"blue/organizations/jenkins/"+"${JJOB_NAME}"+"/detail/"+"${GIT_BRANCH}"+"/activity/"+"\n\n\n Click the link below to show Mockito TestNG Results for your current build :  \n"+"${JENKINS_URL}"+"/userContent/"+"${JJOB_NAME}"+'-'+"${GIT_BRANCH}"+"/Mockito_Reports/"+"${ENV_BUILD_NO}"+"/index.html" +"\n\n\n Click the link below to show Unit Testing Results for your current build :  \n"+"${JENKINS_URL}"+"/userContent/"+"${JJOB_NAME}"+'-'+"${GIT_BRANCH}"+"/Unit_Reports/"+"${ENV_BUILD_NO}"+"/index.html" ,
                         attachLog: true,
                         replyTo: '$DEFAULT_REPLYTO',
                         to: 'pranav@techvision.net.in'          	
