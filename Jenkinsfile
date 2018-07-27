@@ -324,17 +324,17 @@ pipeline {
 	
 	//Copying zip files folders to Reports folder
 	
-	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH}"+''
 	
 	bat  ''+ "${BATCH_PATH}" + 'repackage.bat ' + "${env.WORKSPACE}" + ''
 	
-	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 	
-	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/Documents.zip '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'\\BAE\\target\\Documents.zip '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/SQLScripts.zip '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'\\BAE\\target\\SQLScripts.zip '+"${ZIP_STORAGE_PATH}"+''
 	
-	bat 'copy ' +"${env.JENKINS_HOME}"+'/BAE/target/Templates.zip '+"${ZIP_STORAGE_PATH}"+''
+	bat 'copy ' +"${env.JENKINS_HOME}"+'\\BAE\\target\\Templates.zip '+"${ZIP_STORAGE_PATH}"+''
 	
 		//Copying Report folders to UserContent
 
