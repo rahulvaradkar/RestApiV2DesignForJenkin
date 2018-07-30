@@ -332,11 +332,8 @@ pipeline {
 	
 	bat 'copy ' +"${env.WORKSPACE}"+'\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 	
-	bat 'copy ' +"${env.WORKSPACE}"+'\\BAE\\target\\Documents.zip '+"${ZIP_STORAGE_PATH}"+''
+	bat 'xcopy '+ "${env.WORKSPACE}" +'\\BAE\\target\\Documents '+"${ZIP_STORAGE_PATH}"+' /E /H /C /R /Q /Y'
 	
-	bat 'copy ' +"${env.WORKSPACE}"+'\\BAE\\target\\SQLScripts.zip '+"${ZIP_STORAGE_PATH}"+''
-	
-	bat 'copy ' +"${env.WORKSPACE}"+'\\BAE\\target\\Templates.zip '+"${ZIP_STORAGE_PATH}"+''
 	
 		//Copying Report folders to UserContent
 
