@@ -22,9 +22,9 @@ var NeighborhoodInput = {
 	ROOT_NhId : 1,
 	NHID_1 : 2,
 	NHID_1_Name : "nh1",
-	NHID_2 : 685,
+	NHID_2 : 2788,
 	NHID_2_Name : "nh2",
-	NHID_3 : 22,   // should not contain any collaboration
+	NHID_3 : 2788,   // should not contain any collaboration
 	InvalidParent_Id : 99999,
 	Invalid_Nh_Id : 99999,
 	Invalid_Nh_Id_1 : 85693,
