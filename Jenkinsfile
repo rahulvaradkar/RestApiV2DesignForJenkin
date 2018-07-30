@@ -330,7 +330,7 @@ pipeline {
 	
 	bat  ''+ "${BATCH_PATH}" + 'repackage.bat ' + "${env.WORKSPACE}" + ''
 	
-	bat 'xcopy '+ "${env.WORKSPACE}" +'\\BAE\\target\\Documents '+"${ZIP_STORAGE_PATH2}"+' /E /H /C /R /Q /Y'
+	bat 'xcopy '+ "${env.WORKSPACE}" +'\\BAE\\target\\Documents '+"${ZIP_STORAGE_PATH}"+' /E /H /C /R /Q /Y'
 	
 	bat 'copy ' +"${env.WORKSPACE}"+'\\BAE\\target\\BAE_4_4.war '+"${ZIP_STORAGE_PATH2}"+''
 	
