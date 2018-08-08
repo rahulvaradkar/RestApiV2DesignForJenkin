@@ -3,8 +3,12 @@ package io.swagger.api.impl;
 import io.swagger.api.*;
 import io.swagger.model.*;
 
+import io.swagger.model.Collaboration;
 import io.swagger.model.ErrorRequestObject;
+import io.swagger.model.GridInfo;
+import io.swagger.model.Membership;
 import io.swagger.model.User;
+import io.swagger.model.Whiteboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,33 @@ import boardwalk.rest.UserManagement;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-06-09T04:12:45.675Z")
 public class UserApiServiceImpl extends UserApiService {
+	
+    @Override
+    public Response userEmailMembershipGet(String email, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+        // do some magic!
+        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    }
+    @Override
+    public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardGet(String email, String nhPath, Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+        // do some magic!
+        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    }
+    @Override
+    public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGet(String email, String nhPath, Integer collabId, Integer whiteboardId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+        // do some magic!
+        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    }
+    @Override
+    public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGridIdGet(String email, String nhPath, Integer collabId, Integer whiteboardId, Integer gridId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+        // do some magic!
+        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    }
+    @Override
+    public Response userEmailNeighborhoodNhPathCollaborationGet(String email, String nhPath, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+        // do some magic!
+        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    }
+
     @Override
     public Response userGet( Boolean active, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	System.out.println("active : " + active);

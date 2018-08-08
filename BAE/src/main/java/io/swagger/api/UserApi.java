@@ -55,6 +55,106 @@ public class UserApi  {
       this.delegate = delegate;
    }
 
+
+
+   @GET
+   @Path("/{email}/membership")
+   
+   @Produces({ "application/json" })
+   @io.swagger.annotations.ApiOperation(value = "Get all user memberships in the system", notes = "Gets all user memberships in the system. User can Get only his/her memberships details. So {email} and user in Authrization must match.", response = Membership.class, responseContainer = "List", authorizations = {
+       @io.swagger.annotations.Authorization(value = "bwAuth")
+   }, tags={ "Get list of user memberships", })
+   @io.swagger.annotations.ApiResponses(value = { 
+       @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Membership.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input", response = ErrorRequestObject.class, responseContainer = "List") })
+   public Response userEmailMembershipGet(@ApiParam(value = "",required=true) @PathParam("email") String email
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+   throws NotFoundException {
+       return delegate.userEmailMembershipGet(email,securityContext, authBase64String);
+   }
+   @GET
+   @Path("/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard")
+   
+   @Produces({ "application/json" })
+   @io.swagger.annotations.ApiOperation(value = "Get the list of all Whiteboards present in the Collaboration in Neighborhood that user can access using his/her Neighborhood memberships.", notes = "User can GET the list of Whiteboards present in the Collaboration using his/her memberships details for that Neighborhood. So {email} and user in Authrization must match. Also {nhPath} and nhPath in Authorization should match.", response = Whiteboard.class, responseContainer = "List", authorizations = {
+       @io.swagger.annotations.Authorization(value = "bwAuth")
+   }, tags={ "Get list of Whiteboard present in Collaboration that user can access", })
+   @io.swagger.annotations.ApiResponses(value = { 
+       @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Whiteboard.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 422, message = "Email not found. Authorization Failed. Neighborhood Path doesnot exists. Collaboration Id not found. Unauthorized Access.", response = ErrorRequestObject.class, responseContainer = "List") })
+   public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardGet(@ApiParam(value = "",required=true) @PathParam("email") String email
+,@ApiParam(value = "",required=true) @PathParam("nhPath") String nhPath
+,@ApiParam(value = "",required=true) @PathParam("collabId") Integer collabId
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+   throws NotFoundException {
+       return delegate.userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardGet(email,nhPath,collabId,securityContext, authBase64String);
+   }
+   @GET
+   @Path("/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grid")
+   
+   @Produces({ "application/json" })
+   @io.swagger.annotations.ApiOperation(value = "Get the list of all Grids present in the Whiteboard of the Collaboration in Neighborhood that user can access using his/her Neighborhood memberships.", notes = "User can GET the list of Grids present in the Whiteboard of the Collaboration using his/her memberships details for that Neighborhood. So {email} and user in Authrization must match. Also {nhPath} and nhPath in Authorization should match.", response = GridInfo.class, responseContainer = "List", authorizations = {
+       @io.swagger.annotations.Authorization(value = "bwAuth")
+   }, tags={ "Get list of Grids present in the Whiteboard of Collaboration that user can access", })
+   @io.swagger.annotations.ApiResponses(value = { 
+       @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = GridInfo.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 422, message = "Email not found. Authorization Failed. Neighborhood Path doesnot exists. Unauthorized Access.", response = ErrorRequestObject.class, responseContainer = "List") })
+   public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGet(@ApiParam(value = "",required=true) @PathParam("email") String email
+,@ApiParam(value = "",required=true) @PathParam("nhPath") String nhPath
+,@ApiParam(value = "",required=true) @PathParam("collabId") Integer collabId
+,@ApiParam(value = "",required=true) @PathParam("whiteboardId") Integer whiteboardId
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+   throws NotFoundException {
+       return delegate.userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGet(email,nhPath,collabId,whiteboardId,securityContext, authBase64String);
+   }
+   @GET
+   @Path("/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grid/{gridId}")
+   
+   @Produces({ "application/json" })
+   @io.swagger.annotations.ApiOperation(value = "Get the Grid Details of teh Grid present in the Whiteboard of the Collaboration in Neighborhood that user can access using his/her Neighborhood memberships.", notes = "User can GET the Grid Information of the Grid present in the Whiteboard of the Collaboration using his/her memberships details for that Neighborhood. So {email} and user in Authrization must match. Also {nhPath} and nhPath in Authorization should match. The Grid information will have Column Names, sequence Number, Active/inactive & Access Control ( R/W ), Column Count, Row Count, Access Control for Add Row, Delete Row, Insert Column, Delete Column, Edit Data, Cuboid Properties. If user is the Owner then Accesss Control Cuboid information.", response = GridInfo.class, responseContainer = "List", authorizations = {
+       @io.swagger.annotations.Authorization(value = "bwAuth")
+   }, tags={ "Get Grid Information.", })
+   @io.swagger.annotations.ApiResponses(value = { 
+       @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = GridInfo.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 422, message = "Email not found. Authorization Failed. Neighborhood Path doesnot exists. Unauthorized Access.", response = ErrorRequestObject.class, responseContainer = "List") })
+   public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGridIdGet(@ApiParam(value = "",required=true) @PathParam("email") String email
+,@ApiParam(value = "",required=true) @PathParam("nhPath") String nhPath
+,@ApiParam(value = "",required=true) @PathParam("collabId") Integer collabId
+,@ApiParam(value = "",required=true) @PathParam("whiteboardId") Integer whiteboardId
+,@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+   throws NotFoundException {
+       return delegate.userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGridIdGet(email,nhPath,collabId,whiteboardId,gridId,securityContext, authBase64String);
+   }
+   @GET
+   @Path("/{email}/neighborhood/{nhPath}/collaboration")
+   
+   @Produces({ "application/json" })
+   @io.swagger.annotations.ApiOperation(value = "Get all Collaborations in Neighborhood that user can access using his/her Neighborhood memberships.", notes = "User can GET Collaboration using his/her memberships details for that Neighborhood. So {email} and user in Authrization must match. Also {nhPath} and nhPath in Authorization should match.", response = Collaboration.class, responseContainer = "List", authorizations = {
+       @io.swagger.annotations.Authorization(value = "bwAuth")
+   }, tags={ "Get list of collaborations that user can access", })
+   @io.swagger.annotations.ApiResponses(value = { 
+       @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Collaboration.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List"),
+       
+       @io.swagger.annotations.ApiResponse(code = 422, message = "Email not found. Authorization Failed. Neighborhood Path doesnot exists. Unauthorized Access.", response = ErrorRequestObject.class, responseContainer = "List") })
+   public Response userEmailNeighborhoodNhPathCollaborationGet(@ApiParam(value = "",required=true) @PathParam("email") String email
+,@ApiParam(value = "",required=true) @PathParam("nhPath") String nhPath
+,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+   throws NotFoundException {
+       return delegate.userEmailNeighborhoodNhPathCollaborationGet(email,nhPath,securityContext, authBase64String);
+   }
     @GET
     
     
