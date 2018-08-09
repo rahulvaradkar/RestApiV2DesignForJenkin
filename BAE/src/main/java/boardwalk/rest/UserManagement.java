@@ -1,11 +1,15 @@
 package boardwalk.rest;
 
 import io.swagger.model.ErrorRequestObject;
+import io.swagger.model.Membership;
+import io.swagger.model.NeighborhoodPath;
 import io.swagger.model.User;
 //import io.swagger.model.UserList;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 //import java.util.Iterator;
 //import java.lang.*;
@@ -25,10 +29,152 @@ import com.boardwalk.database.*;
 
 public class UserManagement {
 
+    private static String CALL_BW_GET_ALL_MEMBERSHIPS_INFO = "{CALL BW_GET_ALL_MEMBERSHIPS_INFO}";
+
 	public UserManagement()
 	{	
 	}
 
+	//GET	..../user/{email}/memberships
+	public static ArrayList<Membership> userGetMemberships(String email, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	{
+
+		String retMsg = null;
+        // get the connection
+    	ErrorRequestObject erb;
+
+		// get the connection
+    	Connection connection = null;
+		BoardwalkConnection bwcon = null;
+		
+		int nhId = -1;
+		int memberId = -1;
+		int userId = -1;
+		int nhLevel = -1;
+		
+		ArrayList<Membership> ml = new ArrayList<Membership>();
+		
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+				
+		if (!ErrResps.isEmpty())
+		{
+			return ml;
+		}
+
+		if  (!bwcon.getUserName().equals(email))
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("Email does not match with the Authorization.");
+			erb.setPath("UserManagement.userGetMemberships::getUserName!=email");
+			erb.setProposedSolution("The login in Authorization is different than email. The Email must be same as Aughorization UserNname.");
+			ErrResps.add(erb);
+			System.out.println("The Email must be same as Aughorization UserNname.");				
+            //retMsg = "The Email must be same as Aughorization UserNname:" + email;
+			return ml;
+		}
+		
+		connection = bwcon.getConnection();
+		memberId = memberNh.get(0);
+		nhId = memberNh.get(1);
+		userId = bwcon.getUserId();
+		
+    	Hashtable ht = new Hashtable();
+        ResultSet rs = null;
+        CallableStatement cs  = null;
+
+        try
+        {
+			cs = connection.prepareCall(CALL_BW_GET_ALL_MEMBERSHIPS_INFO);
+
+			System.out.println("before calling CALL_BW_GET_ALL_MEMBERSHIPS_INFO i.e. "  + CALL_BW_GET_ALL_MEMBERSHIPS_INFO);
+			cs.execute();
+            rs = cs.getResultSet();
+			System.out.println("after calling CALL_BW_GET_ALL_MEMBERSHIPS_INFO");
+
+			//int memberId, userId, nhId, nhLevel;
+			String firstName, lastName, Email;
+
+			//System.out.println("before while rs loop");
+			Membership ms;
+			//NeighborhoodPath np;
+			
+            while ( rs.next() )
+            {
+            	if (rs.getInt("UserId") == userId)
+            	{
+            	//System.out.println("inside while rs loop");
+                memberId = rs.getInt("MemberId");
+                userId = rs.getInt("UserId");
+                firstName = rs.getString("FirstName");
+                lastName = rs.getString("LastName");
+                Email = rs.getString("Email_Address");
+                nhId = rs.getInt("NhId");
+                nhLevel = rs.getInt("NhLevel");
+                //System.out.println("MemberNode-> memberId:" + memberId + ", userId:" + userId + ", firstName:" + firstName + ", lastName:" + lastName + ", Email:" + Email + ", nhId:" + nhId + ", nhLevel:" + nhLevel);            
+                //ht.put(memberId, new MemberNode(memberId, userId, firstName, lastName, Email, nhId, nhLevel));
+
+                
+				Vector NhPaths = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths( connection , nhId );
+				System.out.println("NhPaths.size() -->" + NhPaths.size());
+//				for ( int n = 0; n < NhPaths.size(); n++ )
+//				{
+//					String nhPath = (String)NhPaths.elementAt(n);
+//					System.out.println("nhPath ->" + nhPath);
+//				}
+				String nhName  = (String)NhPaths.elementAt(NhPaths.size()-1);
+				String nhPath = (String)NhPaths.elementAt(0);
+				System.out.println("1. nhPath:" + nhPath);
+				System.out.println("2. nhName:" + nhName);
+				
+//    			np = GridManagement.getNeighborhoodPath(connection, nhId );
+//    			
+//
+//    			System.out.println("Inside getNeighborhoodPath:" + nhId);
+//    			Vector NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
+//    			com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths(connection, nhid)
+//    			NeighborhoodPath nhpath = new NeighborhoodPath();
+//    			int nhLevels = NhPathIds.size()-1;
+//    			nhpath.setLevels(nhLevels);
+
+    			ms = new Membership();
+    			ms.setEmail(Email);
+    			ms.setMemberId( (long) memberId);
+    			ms.setNhId( (long) nhId);
+    			//ms.setNhIdPath(np.toString());
+    			ms.setNhName(nhName);
+    			ms.setNhNamePath(nhPath);
+    			ms.setUserId((long)userId);
+                
+                ml.add(ms);
+            	}
+            }
+			System.out.println("outside while rs loop");
+        }
+        catch(SQLException sqlexception)
+        {
+			System.out.println(sqlexception.toString());
+            //throw new SystemException(sqlexception);
+        }
+        finally
+        {
+            try
+            {
+				if ( rs != null )
+					rs.close();
+				if ( cs != null )
+					cs.close();
+            }
+            catch(SQLException sqlexception1) {
+				System.out.println("throwing  sqlexception1");
+               // throw new SystemException(sqlexception1);
+            }
+        }
+        return ml;
+	
+	}
+	
+	
 	//DELETE	....DONE ACORDING TO TEMPLATE
 	public static String userUserIdDelete(int userId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
 	{

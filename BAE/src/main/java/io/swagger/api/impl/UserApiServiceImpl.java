@@ -33,8 +33,61 @@ public class UserApiServiceImpl extends UserApiService {
     @Override
     public Response userEmailMembershipGet(String email, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    	
+       	System.out.println("email : " + email);
+
+    		ErrorRequestObject erb;
+    		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+    		//System.out.println("authBase64String : " + authBase64String);
+    			
+    		if (authBase64String == null)
+    		{	
+    			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+    			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+    			erbs.add(erb);
+    		}
+
+    		if (email == null)
+    		{
+        		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
+        		erb.setProposedSolution("Enter Email");
+        		erbs.add(erb);
+    		}
+    		else if (email.trim().equals(""))
+        	{	
+        		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
+        		erb.setProposedSolution("Enter Email");
+        		erbs.add(erb);
+        	}
+    		    		
+        	if (erbs.size() == 0)
+        	{
+           	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+
+        		ArrayList<Membership> ml;
+            	ml = UserManagement.userGetMemberships(email, ErrResps, authBase64String);
+           	 	
+            	System.out.println("ml.size :"+ ml.size());
+            	System.out.println("ErrResps.size :"+ ErrResps.size());
+            	
+            	if (ml.size() > 0)
+            		return Response.ok().entity(ml).build();
+        		else
+        		{
+        			return Response.ok().entity(ErrResps).build();
+        			//return Response.status(500).entity(ErrResps).build();
+        		}
+        	}
+        	else
+        	{
+            	return Response.ok().entity(erbs).build();
+        	}
+    		    	
+        //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
+    
+    
     @Override
     public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardGet(String email, String nhPath, Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!

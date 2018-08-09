@@ -43,9 +43,6 @@ public class Membership   {
   @JsonProperty("nhNamePath")
   private String nhNamePath = null;
 
-  @JsonProperty("nhIdPath")
-  private String nhIdPath = null;
-
   public Membership userId(Long userId) {
     this.userId = userId;
     return this;
@@ -160,25 +157,6 @@ public class Membership   {
     this.nhNamePath = nhNamePath;
   }
 
-  public Membership nhIdPath(String nhIdPath) {
-    this.nhIdPath = nhIdPath;
-    return this;
-  }
-
-  /**
-   * Get nhIdPath
-   * @return nhIdPath
-   **/
-  @JsonProperty("nhIdPath")
-  @ApiModelProperty(value = "")
-  public String getNhIdPath() {
-    return nhIdPath;
-  }
-
-  public void setNhIdPath(String nhIdPath) {
-    this.nhIdPath = nhIdPath;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -194,13 +172,12 @@ public class Membership   {
         Objects.equals(this.email, membership.email) &&
         Objects.equals(this.nhId, membership.nhId) &&
         Objects.equals(this.nhName, membership.nhName) &&
-        Objects.equals(this.nhNamePath, membership.nhNamePath) &&
-        Objects.equals(this.nhIdPath, membership.nhIdPath);
+        Objects.equals(this.nhNamePath, membership.nhNamePath);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId, memberId, email, nhId, nhName, nhNamePath, nhIdPath);
+    return Objects.hash(userId, memberId, email, nhId, nhName, nhNamePath);
   }
 
 
@@ -215,7 +192,6 @@ public class Membership   {
     sb.append("    nhId: ").append(toIndentedString(nhId)).append("\n");
     sb.append("    nhName: ").append(toIndentedString(nhName)).append("\n");
     sb.append("    nhNamePath: ").append(toIndentedString(nhNamePath)).append("\n");
-    sb.append("    nhIdPath: ").append(toIndentedString(nhIdPath)).append("\n");
     sb.append("}");
     return sb.toString();
   }
