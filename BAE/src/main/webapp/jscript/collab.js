@@ -90,7 +90,7 @@ function switchCurrentMembership(memberId)
 function popupAboutUs()
 {
 
-	alert( "Boardwalk Application Engine \nVersion 4.1 \nCopyright Boardwalktech, Inc \nAll Rights Reserved \n \nFor additional information, please contact: \ninfo@boardwalktech.com \n \nFor support issues, please contact \nsupport@boardwalktech.com");
+	alert( "Boardwalk Application Engine \nVersion 4.5 \nCopyright Boardwalktech, Inc \nAll Rights Reserved \n \nFor additional information, please contact: \ninfo@boardwalktech.com \n \nFor support issues, please contact \nsupport@boardwalktech.com");
 }
 
 function invokeInvitationManager()

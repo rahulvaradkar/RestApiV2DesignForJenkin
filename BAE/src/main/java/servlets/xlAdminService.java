@@ -1027,7 +1027,7 @@ public class xlAdminService extends xlService implements SingleThreadModel
             rs = cs.getResultSet();
 			System.out.println("after calling CALL_BW_GET_ALL_MEMBERSHIPS_INFO");
 
-			int memberId, userId, nhId, nhLevel;
+			int memberId, userId, nhId, nhLevel, active; //Modified by Lakshman on 20180329 to fix the Issue Id: 14264
 			String firstName, lastName, emailAddress;
 			StringBuffer sb = new StringBuffer();
 
@@ -1043,7 +1043,9 @@ public class xlAdminService extends xlService implements SingleThreadModel
                 emailAddress = rs.getString("Email_Address");
                 nhId = rs.getInt("NhId");
                 nhLevel = rs.getInt("NhLevel");
-				sb.append(memberId + Seperator + userId + Seperator + firstName + Seperator + lastName + Seperator + emailAddress + Seperator + nhId + Seperator + nhLevel + "\n");
+				active = rs.getInt("active"); //Modified by Lakshman on 20180329 to fix the Issue Id: 14264
+
+				sb.append(memberId + Seperator + userId + Seperator + firstName + Seperator + lastName + Seperator + emailAddress + Seperator + nhId + Seperator + nhLevel + Seperator + active + "\n"); //Modified by Lakshman on 20180329 to fix the Issue Id: 14264
 				//System.out.println("sb: " + sb.toString());
 			}
 			System.out.println("outside while rs loop");

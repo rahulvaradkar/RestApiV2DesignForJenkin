@@ -74,13 +74,15 @@ public class BoardwalkMessages {
 			errorMessages.put( new Integer( 11005 ), new BoardwalkMessage( 11005, "LOGIN EXCEPTION", 5, "Membership is not valid", "This might be because you are working with local data fetched by another user or using another membership"));
 			errorMessages.put( new Integer( 11007 ), new BoardwalkMessage( 11007, "LOGIN EXCEPTION", 5, "Membership or Neighborhood Hierarchy is not valid", "This might be because the membership or Neighborhood Hierarchy is not valid"));
 
-			errorMessages.put( new Integer( 11011 ), new BoardwalkMessage( 11011, "LOGIN EXCEPTION", 5 ,"Incorrect Password",  "Please login with correct credentials."));
+			errorMessages.put( new Integer( 11011 ), new BoardwalkMessage( 11011, "LOGIN EXCEPTION", 5 ,"Incorrect User Id or Password",  "User Id or Password is incorrect. Please try again.")); //Modified by Lakshman on 20180227 to fix the Issue Id: 14242
 			errorMessages.put( new Integer( 11012 ), new BoardwalkMessage( 11012, "LOGIN EXCEPTION", 5 ,"User is Unavailable",  "You are not a valid user. Please contact your Boardwalk Administrator."));
 			errorMessages.put( new Integer( 11013 ), new BoardwalkMessage( 11013, "LOGIN EXCEPTION", 5 ,"User is Inactive",  "Your account is not active. Please contact your Boardwalk Administrator."));
 			errorMessages.put( new Integer( 11014 ), new BoardwalkMessage( 11014, "LOGIN EXCEPTION", 5 ,"Password Expired",  "Your password is expired. Please change your password to login."));
 			errorMessages.put( new Integer( 11015 ), new BoardwalkMessage( 11015, "LOGIN EXCEPTION", 5 ,"Account Locked Permanently",  "Your account is locked. Please contact your Boardwalk Administrator."));
-			errorMessages.put( new Integer( 11016 ), new BoardwalkMessage( 11016, "LOGIN EXCEPTION", 5 ,"Account Locked Tempororly",  "Your account is locked. Please try after sometime."));
+			errorMessages.put( new Integer( 11016 ), new BoardwalkMessage( 11016, "LOGIN EXCEPTION", 5 ,"Account Locked Temporarily",  "Your account is locked. Please try after sometime."));
 			errorMessages.put( new Integer( 11017 ), new BoardwalkMessage( 11017, "LOGIN EXCEPTION", 5 ,"Password Should be Changed",  "You are not allowed to use this password. Please change your password to login."));
+			
+			errorMessages.put( new Integer( 11021 ), new BoardwalkMessage( 11021, "PASSWORD EXCEPTION", 5 ,"Password Update Failed",  "The password is not updated as it is matching with one of your previous passwords. Please try again with a new password.")); //Added by Lakshman on 20180323 to fix the Issue Id: 14248
 
 			/* SYSTEM ERRORS */
 			errorMessages.put( new Integer( 13001 ), new BoardwalkMessage( 13001, "SYSTEM EXCEPTION", 5 ,"The server is busy",  "Please try later"));

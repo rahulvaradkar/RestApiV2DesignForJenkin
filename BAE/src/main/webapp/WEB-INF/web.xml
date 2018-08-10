@@ -72,17 +72,17 @@
 
 		<init-param>
 			<param-name>propertiespath</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_4\\props\\sampo.properties</param-value>
+			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_5\\props\\sampo.properties</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>sourcexml</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_4\\plugins\\bwinvitation.xml</param-value>
+			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_5\\plugins\\bwinvitation.xml</param-value>
 		</init-param> 
 
 		<init-param>
 			<param-name>targetxml</param-name>
-			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_4\\plugins\\bwinvitationTarget.xml</param-value>
+			<param-value>Z:\\Tomcat8.5_new\\webapps\\BAE_4_5\\plugins\\bwinvitationTarget.xml</param-value>
 		</init-param> 
 
 		<init-param>
@@ -234,12 +234,12 @@
 
 		<init-param>
 			<param-name>sourcexml</param-name>
-			<param-value>d:\\tomcat7\\webapps\\BAE_4_4\\plugins\\bwtraining.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_5\\plugins\\bwtraining.xml</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>targetxml</param-name>
-			<param-value>d:\\tomcat7\\webapps\\BAE_4_4\\plugins\\bwtrainingTarget.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_5\\plugins\\bwtrainingTarget.xml</param-value>
 		</init-param>
 	</servlet>
 
@@ -249,7 +249,7 @@
 
 		<init-param>
 			<param-name>databasename</param-name>
-			<param-value>BAE_4_3_JENKINS_TEST</param-value>
+			<param-value>BAE_4_5</param-value>
 		</init-param>
 
 		<init-param>
@@ -284,22 +284,22 @@
 
 		<init-param>
 			<param-name>sqlpath</param-name>
-			<param-value>d:\\tomcat7\\webapps\\BAE_4_4\\sql\\</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_5\\sql\\</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>templatedir</param-name>
-			<param-value>d:\\tomcat7\\webapps\\BAE_4_4\\templates</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_5\\templates</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>sourcexml</param-name>
-			<param-value>d:\\tomcat7\\webapps\\BAE_4_4\\plugins\\bwtraining.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_5\\plugins\\bwtraining.xml</param-value>
 		</init-param>
 
 		<init-param>
 			<param-name>targetxml</param-name>
-			<param-value>d:\\tomcat7\\webapps\\BAE_4_4\\plugins\\bwtrainingTarget.xml</param-value>
+			<param-value>d:\\tomcat7\\webapps\\BAE_4_5\\plugins\\bwtrainingTarget.xml</param-value>
 		</init-param>
 
 		<load-on-startup>1</load-on-startup>
@@ -733,6 +733,11 @@
 
 	<session-config>
 		<session-timeout>30</session-timeout>
+
+		<cookie-config>
+			<http-only>false</http-only>
+			<secure>false</secure>
+		</cookie-config>
 	</session-config>
 
 	<mime-mapping>

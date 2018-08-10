@@ -43,6 +43,9 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 
 		// Get the database connection
 		Connection connection = null;
+		TransactionManager tm = null;
+		int tid = -1;
+
 		try
 		{
 			//Modified by Tekvision on 20180207 for Clear Text Password(Issue Id: 14241) - START
@@ -138,13 +141,30 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 				throw new BoardwalkException(11005);
 			}
 
+			//Added by Lakshman on 20180613 to fix Issue Id: 14284
+			tm = new TransactionManager(connection, userId);
+			tid = tm.startTransaction("Link Import table id = " + tableId, "");
+
 			// get the tableBuffer
 			responseBuffer = TableViewManager.getTableBuffer(connection, tableId, userId, memberId, nhId, baselineId, view, mode);
-//System.out.println Time to getTableBuffer
+			//System.out.println Time to getTableBuffer
 			System.out.println("Time to getTableBuffer  = " + getElapsedTime());
+
+			tm.commitTransaction(); //Added by Lakshman on 20180613 to fix Issue Id: 14284
 		}
 		catch (BoardwalkException bwe)
 		{
+			//Added by Lakshman on 20180613 to fix Issue Id: 14284
+			try
+			{
+				if (tm != null)
+					tm.rollbackTransaction();
+			}
+			catch (Exception e1)
+			{
+				e1.printStackTrace();
+			}
+
 			if( xlErrorCells.size() > 0 )
 			{
 				StringBuffer  errorBuffer  = new StringBuffer();
@@ -161,6 +181,17 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 		}
 		catch (Exception e)
 		{
+			//Added by Lakshman on 20180613 to fix Issue Id: 14284
+			try
+			{
+				if (tm != null)
+					tm.rollbackTransaction();
+			}
+			catch (Exception e1)
+			{
+				e1.printStackTrace();
+			}
+
 			e.printStackTrace();
 		}
 		finally
@@ -199,6 +230,7 @@ public class xlLinkImportService extends xlService implements SingleThreadModel
 				System.out.println("Time to prepare response = " + getElapsedTime());
 			}
 
+			tm = null; //Added by Lakshman on 20180613 to fix Issue Id: 14284
 			responseBuffer = null;
 		}
 	}

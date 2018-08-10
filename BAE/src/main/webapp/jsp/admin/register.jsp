@@ -3,24 +3,30 @@
 
 <%
 request.setAttribute("heading", "User Registration");
-String username =(String) request.getAttribute("username");
-String fname = (String)request.getAttribute("fname");
-String lname =(String) request.getAttribute("lname");
-int selNhid = -1;
-boolean check_access = false;
 
-Connection	connectionJsp = null;
+HashMap<String,String>	result			= new HashMap<String,String>();
+String 					username		= (String)request.getAttribute("username");
+String 					fname			= (String)request.getAttribute("fname");
+String 					lname			= (String)request.getAttribute("lname");
+int 					selNhid			= -1;
+boolean 				check_access	= false;
+Connection				connectionJsp	= null;
 
 try
 {
+	System.out.println("Inside register.jsp");
+
 	DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
 	connectionJsp = databaseloader.getConnection();
-	check_access = UserManager.isUserAccessPresent(connectionJsp);
+	
+	check_access	= UserManager.isUserAccessPresent(connectionJsp);
+	result			= UserManager.getSystemConfiguration(connectionJsp);
 }
 catch(Exception e)
 {
 	e.printStackTrace();
 }
+
 if(check_access)
 {
 	selNhid = Integer.parseInt(request.getParameter("selNhid"));
@@ -65,6 +71,77 @@ function CommitUser(action)
 	}
 	else
 	{
+		var emailAddress				= FormObj.username.value;
+		var newPassword					= FormObj.password.value;
+		
+		var minimumPasswordLength		= "<%=result.get("Minimum Password Length")%>";
+		var specialCharacterRequired	= "<%=result.get("Special Character Required")%>";
+		var numberRequired				= "<%=result.get("Number Required")%>";
+		var upperCaseRequired			= "<%=result.get("Upper Case Required")%>";
+		var lowerCaseRequired			= "<%=result.get("Lower Case Required")%>";
+		var restrictRepeatCharacters	= "<%=result.get("Restrict Repeat Characters")%>";
+		var allowUserNameInPassword		= "<%=result.get("Allow User Name in Password")%>";
+
+		//Check for Minimum Length
+		if (minimumPasswordLength > 0){
+			if (newPassword.length < minimumPasswordLength){
+				alert("The length of new password must be atleast " + minimumPasswordLength + ". Please try again.");
+				return;
+			}
+		}
+
+		//Check for Special Characters
+		if (specialCharacterRequired == "Y"){
+			var pattern = new RegExp(/[~.`!@#$%\^&*+=_\-\[\]\\';,/{}|\\":<>\?]/);
+
+			if (!pattern.test(newPassword)) {
+				alert("There must be at least one Special Character in the new password. Please try again.");
+				return;
+			}
+		}
+		
+		//Check for Numeric Characters
+		if (numberRequired == "Y"){
+			if (newPassword.match(/\d+/g) == null){
+				alert("There must be at least one Numeric Character in the new password. Please try again.");
+				return;
+			}
+		}
+		
+		//Check for Upper Case Characters
+		if (upperCaseRequired == "Y"){
+			if (newPassword.match(/[A-Z]/) == null){
+				alert("There must be at least one Upper Case Character in the new password. Please try again.");
+				return;
+			}
+		}
+
+		//Check for Lower Case Characters
+		if (lowerCaseRequired == "Y"){
+			if (newPassword.match(/[a-z]/) == null){
+				alert("There must be at least one Lower Case Character in the new password. Please try again.");
+				return;
+			}
+		}
+		
+		//Check for Repeated Characters
+		if (restrictRepeatCharacters == "Y"){
+			for (var i=0; i<newPassword.length-1; i++){
+				if(newPassword.charAt(i) == newPassword.charAt(i+1)){
+					alert("Repeated Characters are not allowed in the new password. Please try again.");
+					return;
+				}
+			}
+		}
+		
+		//Check if Password is Matching with User Name
+		if (allowUserNameInPassword == "N"){
+			if(emailAddress.includes(newPassword)){
+				alert("Any part of your User Name is not allowed in the new password. Please try again.");
+				return;
+			}
+		}
+
 		FormObj.action.value = action;
 		FormObj.submit();
 	}

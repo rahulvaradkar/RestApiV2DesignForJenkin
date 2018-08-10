@@ -1,10 +1,26 @@
 <%@ page isThreadSafe="false" %>
-<%@ page import ="java.lang.Integer, com.boardwalk.user.NewUser, java.io.*, java.util.*" %>
+<%@ page import ="java.lang.Integer, com.boardwalk.user.NewUser, java.io.*, java.util.*,com.boardwalk.exception.*,com.boardwalk.user.*,com.boardwalk.database.*,java.sql.*" %>
 
 <%
 	request.setAttribute("heading", "Password Change");
-%>
 
+	Connection				connectionJsp	= null;	
+	String					emailAddress	= request.getParameter("emailAddress");
+	HashMap<String,String>	result			= new HashMap<String,String>();
+
+	try
+	{
+		System.out.println("Inside change_password.jsp");
+
+		DatabaseLoader databaseloader = new DatabaseLoader(new Properties());
+		connectionJsp = databaseloader.getConnection();
+	    result = UserManager.getSystemConfiguration(connectionJsp);
+	}
+	catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+%>
 
 <%@include file='/jsp/common/header.jsp' %>
 <%@include file='/jsp/common/menubar.jsp' %>
@@ -14,14 +30,86 @@
 <script>
 	function commitPassword()
 	{
-		if (document.forms[0].newPassword.value == document.forms[0].retypeNewPassword.value)
+		var newPassword = document.forms[0].newPassword.value;
+		//alert("Password entered is : " + newPassword);
+
+		if (newPassword == document.forms[0].retypeNewPassword.value)
 		{
+			var minimumPasswordLength		= "<%=result.get("Minimum Password Length")%>";
+			var specialCharacterRequired	= "<%=result.get("Special Character Required")%>";
+			var numberRequired				= "<%=result.get("Number Required")%>";
+			var upperCaseRequired			= "<%=result.get("Upper Case Required")%>";
+			var lowerCaseRequired			= "<%=result.get("Lower Case Required")%>";
+			var restrictRepeatCharacters	= "<%=result.get("Restrict Repeat Characters")%>";
+			var allowUserNameInPassword		= "<%=result.get("Allow User Name in Password")%>";
+			var emailAddress				= "<%=request.getParameter("emailAddress")%>";
+
+			//Check for Minimum Length
+			if (minimumPasswordLength > 0){
+				if (newPassword.length < minimumPasswordLength){
+					alert("The length of new password must be atleast " + minimumPasswordLength + ". Please try again.");
+					return;
+				}
+			}
+			
+			//Check for Special Characters
+			if (specialCharacterRequired == "Y"){
+				var pattern = new RegExp(/[~.`!@#$%\^&*+=_\-\[\]\\';,/{}|\\":<>\?]/);
+
+				if (!pattern.test(newPassword)) {
+					alert("There must be at least one Special Character in the new password. Please try again.");
+					return;
+				}
+			}
+			
+			//Check for Numeric Characters
+			if (numberRequired == "Y"){
+				if (newPassword.match(/\d+/g) == null){
+					alert("There must be at least one Numeric Character in the new password. Please try again.");
+					return;
+				}
+			}
+			
+			//Check for Upper Case Characters
+			if (upperCaseRequired == "Y"){
+				if (newPassword.match(/[A-Z]/) == null){
+					alert("There must be at least one Upper Case Character in the new password. Please try again.");
+					return;
+				}
+			}
+
+			//Check for Lower Case Characters
+			if (lowerCaseRequired == "Y"){
+				if (newPassword.match(/[a-z]/) == null){
+					alert("There must be at least one Lower Case Character in the new password. Please try again.");
+					return;
+				}
+			}
+			
+			//Check for Repeated Characters
+			if (restrictRepeatCharacters == "Y"){
+				for (var i=0; i<newPassword.length-1; i++){
+					if(newPassword.charAt(i) == newPassword.charAt(i+1)){
+						alert("Repeated Characters are not allowed in the new password. Please try again.");
+						return;
+					}
+				}
+			}
+			
+			//Check if Password is Matching with User Name
+			if (allowUserNameInPassword == "N"){
+				if(emailAddress.includes(newPassword)){
+					alert("Any part of your User Name is not allowed in the new password. Please try again.");
+					return;
+				}
+			}
+
 			document.forms[0].action.value="commitPassword";
 			document.forms[0].submit();
 		}
 		else
 		{
-			alert(" The retyped password does not match the new password you entered");
+			alert(" The retyped password does not match the new password you entered.");
 		}
 	}
 </script>
@@ -108,6 +196,3 @@
 
 <br>
 <%@include file='/jsp/common/footer.jsp' %>
-
-
-

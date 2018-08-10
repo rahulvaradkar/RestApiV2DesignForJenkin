@@ -59,7 +59,7 @@ extends ExcelAuthenticationFilter
 				e.printStackTrace();
 			} 
 		}
-		else if(rURI.contains("/rest/") || rURI.contains("xlLogoutService") || rURI.contains("forgotPassword") || rURI.endsWith("jsp") || rURI.contains("logo-boardwalk.gif") || rURI.contains("scripts")   )// to bypass filter for jsp in weblogic deployment
+		else if(rURI.contains("xlLogoutService") || rURI.contains("forgotPassword") || rURI.endsWith("jsp") || rURI.contains("logo-boardwalk.gif") || rURI.contains("/rest/") || rURI.contains("scripts"))// to bypass filter for jsp in weblogic deployment
 		{
 			try {
 				chain.doFilter(request, response);
@@ -134,11 +134,11 @@ extends ExcelAuthenticationFilter
 					String Message = "";
 					// block the request
 					//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - START
-					if (userId == -1)
+					if(userId == -1 || userId == -2) //Modified by Lakshman on 20180227 to fix the Issue Id: 14242
 					{
 						if (browserRequest == false)
 						{
-							Message = " failure " + xlService.ContentDelimeter+ " Incorrect Password " ;
+							Message = " failure " + xlService.ContentDelimeter+ " Incorrect User Id or Password " ; //Modified by Lakshman on 20180227 to fix the Issue Id: 14242
 							commitResponseBuffer(Message, response);
 						}
 						else{
@@ -146,9 +146,10 @@ extends ExcelAuthenticationFilter
 							filterConfig.getServletContext().getRequestDispatcher("/jsp/admin/login.jsp").forward(request, response);
 						}
 					}
+					//Commented by Lakshman on 20180227 to fix the Issue Id: 14242
+					/*
 					else if(userId == -2)
 					{
-						
 						if (browserRequest == false)
 						{
 							Message = " failure " + xlService.ContentDelimeter+ " User is Unavailable " ;
@@ -159,7 +160,7 @@ extends ExcelAuthenticationFilter
 							filterConfig.getServletContext().getRequestDispatcher("/jsp/admin/login.jsp").forward(request, response);
 						}
 					}
-					
+					*/
 					else if(userId == -3)
 					{
 						if (browserRequest == false)

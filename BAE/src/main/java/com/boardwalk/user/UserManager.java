@@ -41,7 +41,10 @@ public class UserManager
 	private static String CALL_BW_UPD_USER_LOGIN_SUCCESS = "{CALL BW_UPD_USER_LOGIN_SUCCESS(?)}";
 	private static String CALL_BW_UPD_USER_ACC_LOCK = "{CALL BW_UPD_USER_ACC_LOCK(?,?)}";
 	private static String FORCE_CHANGE_PASSWORD = "UPDATE BW_USER SET PASSWORD_CHANGED_ON = CREATED_ON WHERE ID = ?";
-	
+	private static String BW_GET_SYSTEM_CONFIGURATION = "{CALL BW_GET_SYSTEM_CONFIGURATION(?)}"; //Changes related to Login Enhancements for Password Complexity and User Authentication on 20180323
+	private static String CALL_BW_CREATE_PASSWORD_HISTORY = "{CALL BW_CREATE_PASSWORD_HISTORY(?)}"; //Added by Lakshman on 20180323 to fix the Issue Id: 14248
+	private static String CALL_BW_GET_PASSWORD_HISTORY = "{CALL BW_GET_PASSWORD_HISTORY(?)}"; //Added by Lakshman on 20180323 to fix the Issue Id: 14248
+
 	///////////////////////////////////////////////////////////////////////////////
 	///// Authenticate User and member
 	///////////////////////////////////////////////////////////////////////////////
@@ -346,42 +349,46 @@ public class UserManager
 
     }
 
-//////////////////////////////////////////////////////////////////////////////////////
-// change the password
-/////////////////////////////////////////////////////////////////////////////////////
-	static public void updatePassword( Connection a_connection,
+	//////////////////////////////////////////////////////////////////////////////////////
+	// Change the Password
+	/////////////////////////////////////////////////////////////////////////////////////
+	static public void updatePassword(	Connection a_connection,
 										int userId,
 										String oldPassword,
 										String newPassword)
 	throws BoardwalkException
 	{
-		int m_user_id = -1;
-		String m_encrypted_pwd = null;
-		CallableStatement callablestatement = null;
-		PreparedStatement preparedstatement = null;
-		ResultSet rs = null;
-		PasswordService ps = PasswordService.getInstance();
+		int					m_user_id					= -1;
+		String				m_encrypted_pwd				= null;
+		CallableStatement	callablestatement			= null;
+		PreparedStatement	preparedstatement			= null;
+		PreparedStatement	preparedStatementHistory	= null;
+		ResultSet			rs							= null;
+		ResultSet			rsHistory					= null;
+		String				encryptedHistoryPassword	= "";
+		boolean				matchPasswordHistory		= false;
+		PasswordService		ps							= PasswordService.getInstance();
 
 		try
 		{
-			// first authenticate the old password for the user
+			//First Authenticate the Old Password for the User
 			preparedstatement = a_connection.prepareStatement(BW_AUTHENTICATE_PASSWORD);
-
 			preparedstatement.setInt(1,userId);
-			// commented for PBKDF2 encryption - shirish 20150724
+
+			//Commented for PBKDF2 Encryption - Shirish 20150724
 			//String encryptedOldPassword = ps.encrypt(oldPassword );
 			//preparedstatement.setString(2,encryptedOldPassword);
 			rs = preparedstatement.executeQuery();
-			if ( rs.next() )
+			
+			if (rs.next())
 			{
-				m_user_id = rs.getInt("ID");
-				// added for PBKDF2 encryption - shirish 20150724
-				m_encrypted_pwd = rs.getString("PASSWORD");
+				m_user_id		= rs.getInt("ID");
+				m_encrypted_pwd	= rs.getString("PASSWORD"); //Added for PBKDF2 Encryption - Shirish 20150724
 			}
 			preparedstatement.close();
 			preparedstatement = null;
 			
-			// added for PBKDF2 encryption - shirish 20150724
+			//Added for PBKDF2 Encryption - Shirish 20150724
 			if(!ps.validatePassword(oldPassword, m_encrypted_pwd))
 				m_user_id = -1;
 		}
@@ -396,7 +403,6 @@ public class UserManager
 			}
 		}
 
-
 		try
 		{
 			if (m_user_id == -1)
@@ -404,15 +410,43 @@ public class UserManager
 				System.out.println("UserManager::updatePassword()->The Old Password is not correct");
 				throw new BoardwalkException(10009);
 			}
+			//Modified by Lakshman on 20180323 to fix Issue Id: 14248 - START
 			else
 			{
-				// then update the user with the new password
-				callablestatement = a_connection.prepareCall(CALL_BW_UPD_USER_PASSWORD);
-				callablestatement.setInt(1, userId);
-				String encryptedNewPassword = ps.encrypt(newPassword );
-				callablestatement.setString(2, encryptedNewPassword);
-				int l = callablestatement.executeUpdate();
+				preparedStatementHistory = a_connection.prepareStatement(CALL_BW_GET_PASSWORD_HISTORY);
+				preparedStatementHistory.setInt(1,userId);
+				rsHistory = preparedStatementHistory.executeQuery();
+
+				while (rsHistory.next())
+				{
+					encryptedHistoryPassword = rsHistory.getString("PASSWORD");
+
+					if(ps.validatePassword(newPassword, encryptedHistoryPassword))
+					{
+						matchPasswordHistory = true;
+						break;
+					}
+				}
+
+				if(matchPasswordHistory)
+				{
+					System.out.println("UserManager:updatePassword: New Password Matched with One of the Old Passwords");
+					throw new BoardwalkException(11021);
+				}
+				else
+				{
+					//Update the New Password
+					callablestatement = a_connection.prepareCall(CALL_BW_UPD_USER_PASSWORD);
+					callablestatement.setInt(1, userId);
+					String encryptedNewPassword = ps.encrypt(newPassword);
+					callablestatement.setString(2, encryptedNewPassword);
+					int l = callablestatement.executeUpdate();
+				}
+
+				preparedStatementHistory.close();
+				preparedStatementHistory = null;
 			}
+			//Modified by Lakshman on 20180323 to fix Issue Id: 14248 - END
 
 			callablestatement.close();
 			callablestatement = null;
@@ -442,6 +476,11 @@ public class UserManager
 				{
 					preparedstatement.close();
 				}
+
+				if (preparedStatementHistory != null)
+				{
+					preparedStatementHistory.close();
+				}
 			}
 			catch( SQLException sql )
 			{
@@ -450,7 +489,7 @@ public class UserManager
 		}
     }
 //////////////////////////////////////////////////////////////////////////////////////
-// change the password if user has forgot the passord
+// change the password if user has forgot the password
 /////////////////////////////////////////////////////////////////////////////////////
 	static public boolean updatePassword( Connection a_connection,
 										String userName,
@@ -744,7 +783,7 @@ public class UserManager
 				}
 				encryptedPassword =  rs.getString("PASSWORD");
 			}
-			
+
 			// call PasswordService to validate the password set userid= -1 if incorrect password 			- shirish 20150724
 			//Changes related to Login Enhancements for Password Complexity and User Authentication on 20170524 - START
 			if (!encryptedPassword.equals("Invalid User"))
@@ -1087,6 +1126,7 @@ public class UserManager
         int m_user_id = -1;
 		//System.out.println("<<<<<<<<<<<<<<<values inside create User>>>>>>>>>>"+nu.getAddress()+"values "+nu.getEncryptedPassword()+"value" +nu.getAddress()+"values" +nu.getFirstName()+"values" +nu.getLastName());
         CallableStatement callablestatement = null;
+		PreparedStatement preparedstatement = null; //Added by Lakshman on 20180323 to fix the Issue Id: 14248
 
         try {
             callablestatement = a_connection.prepareCall(CALL_BW_CR_USER);
@@ -1100,7 +1140,15 @@ public class UserManager
             callablestatement.registerOutParameter(7,java.sql.Types.INTEGER);
             int l = callablestatement.executeUpdate();
             m_user_id = callablestatement.getInt(7);
-        }
+
+			//Added by Lakshman on 20180323 to fix the Issue Id: 14248
+			if (m_user_id > -1 )
+			{
+				preparedstatement = a_connection.prepareStatement(CALL_BW_CREATE_PASSWORD_HISTORY);
+				preparedstatement.setInt(1,m_user_id);
+				preparedstatement.execute();
+			}
+		}
         catch( SQLException e ) {
 		            return -1;
         }
@@ -1112,6 +1160,7 @@ public class UserManager
             try
             {
                 callablestatement.close();
+				preparedstatement.close();
             }
             catch( SQLException sql )
             {
@@ -1375,5 +1424,43 @@ public class UserManager
 		}
 
 		return rv;
+    }
+
+	//Changes related to Login Enhancements for Password Complexity and User Authentication on 20180323
+	public static HashMap<String,String> getSystemConfiguration(Connection connection) 
+	{
+		System.out.println("Inside UserManager:getSystemConfiguration");
+		PreparedStatement		preparedstatement	= null;
+		ResultSet				rs					= null;
+		HashMap<String,String>	result				= new HashMap<String,String>();
+
+		try 
+		{
+			preparedstatement = connection.prepareStatement(BW_GET_SYSTEM_CONFIGURATION);
+			preparedstatement.setString(1,"SECURITY");
+			rs = preparedstatement.executeQuery();
+			
+			while (rs.next())
+			{
+				result.put(rs.getString(2),rs.getString(3));
+			}
+		}
+
+		catch( Exception e ) 
+		{
+			e.printStackTrace();
+		}
+
+		finally 
+		{
+			try
+			{
+				preparedstatement.close();
+			}
+				catch( Exception sql ) {
+				sql.printStackTrace();
+			}
+		}
+		return result;
     }
 };

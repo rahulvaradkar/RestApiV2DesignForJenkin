@@ -253,6 +253,9 @@ public class xlImportChangesService extends xlService implements SingleThreadMod
 			tm = null;
 			//System.out.println("transaction commit");
 			stmt = connection.prepareStatement("UPDATE BW_ROW SET OWNER_TID = ? WHERE ID = ?");
+			
+			stmt = connection.prepareStatement("INSERT INTO BW_IMPORT_CHG_ROWS (USER_ID , TX_ID , BW_ROW_ID ) VALUES (?,?,?) "); //Added by Jeetendra on 20180412 to fix the Issue Id: 14268
+
 			int numNewRows = 0;
 			int numSrvrRows = 0; //Added by Jeetendra on 20171205 to fix the Issue Id: 14025
 			for (int r = 0; r < rowv.size(); r++)
@@ -282,12 +285,18 @@ public class xlImportChangesService extends xlService implements SingleThreadMod
 					stmt.addBatch();
 					numNewRows++;
 */
-					if (synch != 0 || importTid < rowObject.getCreationTid() || importTid < rowObject.getOwnershipAssignedTid()) {
+					//Modified by Jeetendra on 20180412 to fix the Issue Id: 14268 - START
+					//if (synch != 0 || importTid < rowObject.getCreationTid() || importTid < rowObject.getOwnershipAssignedTid()) {
 						resData.append(rowId + Seperator);
 						resData.append("N" + Seperator);
+						stmt.setInt(1, userId);
+						stmt.setInt(2, tid);
+						stmt.setInt(3, rowId);
+						stmt.addBatch();
 						numNewRows++;
 						numSrvrRows++;
-					}
+					//}
+					//Modified by Jeetendra on 20180412 to fix the Issue Id: 14268 - END
 				}
 				else
 				{
@@ -299,8 +308,9 @@ public class xlImportChangesService extends xlService implements SingleThreadMod
 			resData.replace(resData.length() - 1, resData.length(), ContentDelimeter);
 			if (numNewRows > 0)
 			{
-				//stmt.executeBatch();
-				//stmt.clearBatch();
+				//Modified by Jeetendra on 20180412 to fix the Issue Id: 14268
+				stmt.executeBatch();
+				stmt.clearBatch();
 			}
 			//Modified by Jeetendra on 20171205 to fix the Issue Id: 14025 - START
 			stmt.close();

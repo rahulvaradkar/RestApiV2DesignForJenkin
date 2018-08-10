@@ -174,14 +174,18 @@ static public void  activateUser(Connection connection, int userId)
         throws SystemException
         {
 			System.out.println("nhid = " + nhid );
-            String query = "   select EMAIL_ADDRESS, EXTERNAL_USER_ID,ID "+
-                           "   from "+
-                           "   BW_USER "+
-                           "   where ID NOT IN" +
-                           "   ( SELECT USER_ID FROM BW_MEMBER where bw_member.neighborhood_id = ?)" +
-                           " and Id > 1 " +
-                           "  order by BW_USER.EMAIL_ADDRESS " ;
-            Vector vt = new Vector();
+			//Modified by Lakshman on 20180329 to fix the Issue Id: 14264 - START
+            String query = "SELECT	EMAIL_ADDRESS, EXTERNAL_USER_ID, ID "+
+                           "FROM	BW_USER "+
+                           "WHERE	ID NOT IN( " +
+                           "	SELECT	[USER_ID] " +
+						   "	FROM	BW_MEMBER " +
+                           "	WHERE	BW_MEMBER.NEIGHBORHOOD_ID	= ? " +
+						   "	AND		IS_ACTIVE					= 1) " +
+						   "AND		ID > 1 " +
+                           "ORDER	BY BW_USER.EMAIL_ADDRESS " ;
+			//Modified by Lakshman on 20180329 to fix the Issue Id: 14264 - END
+			Vector vt = new Vector();
             ResultSet resultset = null;
             PreparedStatement preparedstatement = null;
             try {
@@ -231,6 +235,7 @@ static public void  activateUser(Connection connection, int userId)
                        " where "+
                        "   NH.ID = MEMBER.NEIGHBORHOOD_ID "+
                        "   and BW_USER.ID = MEMBER.USER_ID "+
+					   "   and MEMBER.IS_ACTIVE = 1 "+ //Modified by Lakshman on 20180329 to fix the Issue Id: 14264
                        "   and MEMBER.NEIGHBORHOOD_ID = ? ";
         Hashtable ht = new Hashtable();
         ResultSet resultset = null;
