@@ -7,25 +7,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 //import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Properties;
+import java.util.TimeZone;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.SecurityContext;
-
 import org.apache.commons.codec.binary.Base64;
 
-import com.boardwalk.database.DatabaseLoader;
+import com.boardwalk.database.Transaction;
 import com.boardwalk.database.TransactionManager;
 import com.boardwalk.excel.newXLRow;
 import com.boardwalk.excel.xlColumn_import;
@@ -43,28 +40,21 @@ import com.boardwalk.table.TableInfo;
 import com.boardwalk.table.TableManager;
 import com.boardwalk.table.TableRowInfo;
 import com.boardwalk.table.TableViewManager;
-import com.boardwalk.user.UserManager;
 
 import boardwalk.collaboration.BoardwalkCollaborationManager;
 import boardwalk.collaboration.BoardwalkCollaborationNode;
 import boardwalk.collaboration.BoardwalkWhiteboardNode;
 import boardwalk.connection.BoardwalkConnection;
-import boardwalk.connection.BoardwalkConnectionManager;
-import io.swagger.api.NotFoundException;
 import io.swagger.model.Cell;
 import io.swagger.model.CellBuffer;
-import io.swagger.model.CellChangeDetails;
 import io.swagger.model.Column;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.Grid;
 import io.swagger.model.GridChangeBuffer;
 import io.swagger.model.GridInfo;
-import io.swagger.model.LoginInfo;
 import io.swagger.model.NeighborhoodPath;
 import io.swagger.model.Row;
 import io.swagger.model.SequencedCellArray;
-import io.swagger.model.Whiteboard;
-import io.swagger.models.Info;
 
 public class GridManagement {
 
@@ -77,6 +67,7 @@ public class GridManagement {
 	{	
 	}
 
+		
     //@GET
     //@Path("/{gridId}")
 	public static CellBuffer gridGridIdGet(int gridId, int importTid, String view, int mode, int baselineId , ArrayList<ErrorRequestObject> ErrResps, String authBase64String)
@@ -3871,5 +3862,180 @@ public class GridManagement {
         	ErrResps.add(erb);
     	}  					
 
+	}
+
+
+
+    //@GET
+    //@Path("/{gridId}/transactions")
+    public static ArrayList<io.swagger.model.Transaction> gridGridIdTransactionsGet(Integer gridId, Long startTid, Long endTid,
+			long startDate, long endDate, long local_offset, ArrayList<ErrorRequestObject> ErrResps, String authBase64String) 
+    {
+
+    	
+    	long difference_in_MiliSec;
+
+		Calendar cal_GMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		long server_Millis = cal_GMT.getTimeInMillis();
+		difference_in_MiliSec = local_offset - server_Millis;
+		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
+		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
+    	
+    	// TODO Auto-generated method stub
+		ErrorRequestObject erb;
+   		
+		ArrayList<io.swagger.model.Transaction> txs = new ArrayList<io.swagger.model.Transaction>();
+		io.swagger.model.Transaction tx ;
+		
+		// get the connection
+    	Connection connection = null;
+		BoardwalkConnection bwcon = null;
+		
+		int nhId = -1;
+		int memberId = -1;
+		
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+				
+		if (!ErrResps.isEmpty())
+		{
+			return txs;
+		}
+		connection = bwcon.getConnection();
+		memberId = memberNh.get(0);
+		nhId = memberNh.get(1);
+		int userId = bwcon.getUserId();
+		String viewPref = "LATEST";
+
+	    com.boardwalk.database.Transaction ts, t;
+		
+		//long endDate = startTime - difference_in_MiliSec;
+		//long startDate = Long.parseLong(endTime) - difference_in_MiliSec;
+		try
+		{
+		
+			Hashtable transactionList = TableManager.getTransactionList(connection,
+				      gridId,
+				      startTid.intValue() ,
+				      endTid.intValue(),
+				      startDate,
+				      endDate,
+				      userId,
+				      nhId,
+				      viewPref,
+				      true);
+
+			System.out.println("Number of transactions = " + transactionList.size());
+			//req.setAttribute("transactionList", transactionList);
+			System.out.println("stid = " + startTid);
+			System.out.println("etid = " + endTid);
+
+			Vector tvec = new Vector(transactionList.keySet());
+			Collections.sort(tvec);
+		    Iterator i = tvec.iterator();
+		    String descr;
+		    
+		    while (i.hasNext())
+			{
+		    	Integer tid = (Integer)i.next();
+		    	System.out.println("TransactionList..ID" + tid);
+
+			    Vector  vt = (Vector)transactionList.get(tid);
+			    t = (Transaction)vt.elementAt(0);
+/*			    String rowadd = "";
+			    String rowdel = "";
+			    String coladd = "";
+			    String cellupd = "";
+			    String frmupd = "";
+			    String blnadd = "";
+*/			    Iterator j = vt.iterator();
+			    String checkImage = "";
+			    while (j.hasNext())
+			    {
+			    	ts = (Transaction)j.next();
+			    	descr = ts.getDescription();
+			    	//System.out.println("descr=" + descr);
+
+			    	
+/*			    	if (descr.toUpperCase().startsWith("ROWADD"))
+			    	{
+			    		rowadd = "Y";
+			    		//System.out.println("rowadd set to true");
+			    	}
+			    	else if (descr.toUpperCase().startsWith("ROWDEL"))
+			    	{
+			    		rowdel = "Y";
+			    		//System.out.println("rowdel set to true");
+			    	}
+			    	else if (descr.toUpperCase().startsWith("COLADD"))
+			    	{
+			    		coladd = "Y";
+			    		//System.out.println("coladd set to true");
+			    	}
+			    	else if (descr.toUpperCase().startsWith("CELLUPD"))
+			    	{
+			    		cellupd = "Y";
+			    		//System.out.println("cellupd set to true");
+			    	}
+			    	else if (descr.toUpperCase().startsWith("FRMUPD"))
+			    	{
+			    		frmupd = "Y";
+			    		//System.out.println("frmupd set to true");
+			    	}
+			    	else if (descr.toUpperCase().startsWith("BLNADD"))
+			    	{
+			    		blnadd = "Y";
+			    		//System.out.println("blnadd set to true");
+			    	}
+*/			 
+			    
+				    long id = (long) t.getId();
+				    String updatedBy = t.getCreatedByUserAddress();
+					long transactionTime = t.getCreatedOnTime() + difference_in_MiliSec;
+				    //String updatedOn = t.getCreatedOn();
+				    //String descr = t.getDescription();
+				    String comment = t.getComment();
+	
+					tx = new io.swagger.model.Transaction();
+
+					System.out.println("Setting tx.id : " + id);
+					System.out.println("Setting tx.CreatedOn : " + BigDecimal.valueOf(transactionTime));
+					System.out.println("Setting tx.description : " + descr);
+					System.out.println("Setting tx.keyword : " + comment);
+					System.out.println("Setting tx.userid : " + t.getCreatedByUserId());
+					System.out.println("Setting tx.username : " + updatedBy);
+
+					tx.setId(id);
+					tx.setCreatedOn( BigDecimal.valueOf(transactionTime));
+					tx.setDescription(descr);
+					tx.setKeyword(comment);
+					tx.setUserId((long) t.getCreatedByUserId());
+					tx.setUserName(updatedBy);		
+					txs.add(tx);
+			    }
+				System.out.println("End of vt.iterator");
+			}
+			System.out.println("End of tvec.iterator");
+
+		}
+		catch (SQLException sql)
+		{
+			sql.printStackTrace();
+
+		}
+		finally
+		{
+		  try
+		  {
+			if ( connection != null )
+				connection.close();
+		  }
+		  catch ( SQLException sql )
+		  {
+			sql.printStackTrace();
+		  }
+		}
+		
+    	return txs;
 	}
 }

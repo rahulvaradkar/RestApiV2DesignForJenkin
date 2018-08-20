@@ -15,6 +15,7 @@ import io.swagger.model.ErrorDeleteRows;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.ErrorUpdateObject;
 import io.swagger.model.Grid;
+import io.swagger.model.ResponseInfo;
 import io.swagger.model.Transaction;
 
 import java.util.Map;
@@ -32,12 +33,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.*;
 import javax.validation.constraints.*;
-
-
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/grid")
@@ -105,7 +100,68 @@ public class GridApi  {
 ,@ApiParam(value = "",required=true) @QueryParam("baselineId") Integer baselineId
 ,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String )
     throws NotFoundException {
-        return delegate.gridGridIdGet(gridId,importTid,view,mode,baselineId,securityContext, authBase64String);
+        return delegate.gridGridIdGet(gridId,importTid,view,mode,baselineId,securityContext,authBase64String );
+    }
+    @GET
+    @Path("/{gridId}/{transactionId}/changes")
+    
+    @Produces({ "application/json" })
+    @io.swagger.annotations.ApiOperation(value = "Get changes for given transaction Id", notes = "", response = CellBuffer.class, authorizations = {
+        @io.swagger.annotations.Authorization(value = "bwAuth")
+    }, tags={ "grid", })
+    @io.swagger.annotations.ApiResponses(value = { 
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = CellBuffer.class),
+        
+        @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ResponseInfo.class),
+        
+        @io.swagger.annotations.ApiResponse(code = 422, message = "Authorization Failed. GridId Nout foun, Neighborhood Path doesnot exists. Unauthorized Access.", response = ResponseInfo.class) })
+    public Response gridGridIdTransactionIdChangesGet(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
+,@ApiParam(value = "",required=true) @PathParam("transactionId") Integer transactionId
+,@Context SecurityContext securityContext,  @HeaderParam("Authorization") String authBase64String)
+    throws NotFoundException {
+    	return delegate.gridGridIdTransactionIdChangesGet(gridId,transactionId,securityContext, authBase64String);
+    }
+    @GET
+    @Path("/{gridId}/transactionsBetweenTids")
+    
+    @Produces({ "application/json" })
+    @io.swagger.annotations.ApiOperation(value = "", notes = "", response = Transaction.class, responseContainer = "List", authorizations = {
+        @io.swagger.annotations.Authorization(value = "bwAuth")
+    }, tags={ "grid summary:actions between two t GridId Nout foun,ransactions", })
+    @io.swagger.annotations.ApiResponses(value = { 
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Transaction.class, responseContainer = "List"),
+        
+        @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ResponseInfo.class),
+        
+        @io.swagger.annotations.ApiResponse(code = 422, message = "Authorization Failed. GridId Nout foun, Neighborhood Path doesnot exists. Unauthorized Access.", response = ResponseInfo.class) })
+    public Response gridGridIdTransactionsBetweenTidsGet(@ApiParam(value = "",required=true) @PathParam("gridId") Long gridId
+,@ApiParam(value = "",required=true) @QueryParam("startTid") Long startTid
+,@ApiParam(value = "",required=true) @QueryParam("endTid") Long endTid
+,@Context SecurityContext securityContext ,  @HeaderParam("Authorization") String authBase64String )
+    throws NotFoundException {
+        return delegate.gridGridIdTransactionsBetweenTidsGet(gridId,startTid,endTid,securityContext,authBase64String);
+    }
+    @GET
+    @Path("/{gridId}/transactions")
+    
+    @Produces({ "application/json" })
+    @io.swagger.annotations.ApiOperation(value = "Get cuboid transactions for time interval for a given specification", notes = "", response = Transaction.class, responseContainer = "List", authorizations = {
+        @io.swagger.annotations.Authorization(value = "bwAuth")
+    }, tags={ "grid", })
+    @io.swagger.annotations.ApiResponses(value = { 
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Transaction.class, responseContainer = "List"),
+        
+        @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ResponseInfo.class),
+        
+        @io.swagger.annotations.ApiResponse(code = 422, message = "Authorization Failed. GridId Nout foun, Neighborhood Path doesnot exists. Unauthorized Access.", response = ResponseInfo.class) })
+    public Response gridGridIdTransactionsGet(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId,@ApiParam(value = "",required=true) @QueryParam("localTimeAfter_1_11970") String localTimeAfter111970
+    		,@ApiParam(value = "") @QueryParam("startTid") Long startTid
+,@ApiParam(value = "") @QueryParam("endTid") Long endTid
+,@ApiParam(value = "") @QueryParam("startTime") String  startTime
+,@ApiParam(value = "") @QueryParam("endTime") String  endTime
+,@Context SecurityContext securityContext , @HeaderParam("Authorization") String authBase64String)
+    throws NotFoundException {
+        return delegate.gridGridIdTransactionsGet(gridId, localTimeAfter111970, startTid,endTid,startTime,endTime,securityContext,authBase64String);
     }
     @POST
     
@@ -144,58 +200,8 @@ public class GridApi  {
         @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List") })
     public Response gridPut(@ApiParam(value = "",required=true) @QueryParam("gridId") Integer gridId
 ,@ApiParam(value = "Cell buffer details" ,required=true) CellBuffer cellBufferRequest
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
+,@Context SecurityContext securityContext , @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-        return delegate.gridPut(gridId,cellBufferRequest,securityContext, authBase64String);
-    }
-    @GET
-    @Path("/{tableId}/{transactionId}/changes")
-    
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Get changes for given transaction Id", notes = "", response = CellBuffer.class, authorizations = {
-        @io.swagger.annotations.Authorization(value = "bwAuth")
-    }, tags={ "grid", })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = CellBuffer.class) })
-    public Response gridTableIdTransactionIdChangesGet(@ApiParam(value = "",required=true) @PathParam("tableId") Integer tableId
-,@ApiParam(value = "",required=true) @PathParam("transactionId") Integer transactionId
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
-    throws NotFoundException {
-        return delegate.gridTableIdTransactionIdChangesGet(tableId,transactionId,securityContext, authBase64String);
-    }
-    @GET
-    @Path("/{tableId}/transactionsBetweenTids")
-    
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Get cuboid transactions between two transactions", notes = "", response = Transaction.class, responseContainer = "List", authorizations = {
-        @io.swagger.annotations.Authorization(value = "bwAuth")
-    }, tags={ "grid", })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Transaction.class, responseContainer = "List") })
-    public Response gridTableIdTransactionsBetweenTidsGet(@ApiParam(value = "",required=true) @PathParam("tableId") Long tableId
-,@ApiParam(value = "",required=true) @QueryParam("startTid") Long startTid
-,@ApiParam(value = "",required=true) @QueryParam("endTid") Long endTid
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
-    throws NotFoundException {
-        return delegate.gridTableIdTransactionsBetweenTidsGet(tableId,startTid,endTid,securityContext, authBase64String);
-    }
-    @GET
-    @Path("/{tableId}/transactions")
-    
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Get cuboid transactions for time interval for a given specification", notes = "", response = Transaction.class, responseContainer = "List", authorizations = {
-        @io.swagger.annotations.Authorization(value = "bwAuth")
-    }, tags={ "grid", })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Transaction.class, responseContainer = "List") })
-    public Response gridTableIdTransactionsGet(@ApiParam(value = "",required=true) @PathParam("tableId") Integer tableId
-,@ApiParam(value = "") @QueryParam("startTid") Long startTid
-,@ApiParam(value = "") @QueryParam("endTid") Long endTid
-,@ApiParam(value = "") @QueryParam("startTime") Date startTime
-,@ApiParam(value = "") @QueryParam("endTime") Date endTime
-,@ApiParam(value = "limits transactions to a cell, row, column or a specification" ) CellBuffer cellBufferRequest
-,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
-    throws NotFoundException {
-        return delegate.gridTableIdTransactionsGet(tableId,startTid,endTid,startTime,endTime,cellBufferRequest,securityContext, authBase64String);
+    	return delegate.gridPut(gridId, cellBufferRequest, securityContext, authBase64String);
     }
 }

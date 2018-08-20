@@ -5,8 +5,10 @@ import io.swagger.model.*;
 
 import io.swagger.model.Collaboration;
 import io.swagger.model.ErrorRequestObject;
+import io.swagger.model.GridChain;
 import io.swagger.model.GridInfo;
 import io.swagger.model.Membership;
+import io.swagger.model.ResponseInfo;
 import io.swagger.model.User;
 import io.swagger.model.Whiteboard;
 
@@ -30,8 +32,9 @@ import boardwalk.rest.UserManagement;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-06-09T04:12:45.675Z")
 public class UserApiServiceImpl extends UserApiService {
 	
+	//  /user/{email}/membership
     @Override
-    public Response userEmailMembershipGet(String email, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+    public Response userEmailMembershipsGet(String email, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
     	
        	System.out.println("email : " + email);
@@ -88,25 +91,351 @@ public class UserApiServiceImpl extends UserApiService {
     }
     
     
+    
+    //GET  ....../user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboards
     @Override
-    public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardGet(String email, String nhPath, Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+    public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardsGet(String email, String nhPath, Integer collabId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    	
+    	System.out.println("email : " + email);
+      	System.out.println("nhPath : " + nhPath);
+      	System.out.println("collabId : " + collabId);
+
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+		//System.out.println("authBase64String : " + authBase64String);
+			
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+
+		if (email == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+		}
+		else if (email.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+    	}
+
+		if (nhPath == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.nhPath");
+    		erb.setProposedSolution("Enter nhPath");
+    		erbs.add(erb);
+		}
+		else if (nhPath.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.nhPath");
+    		erb.setProposedSolution("Enter nhPath");
+    		erbs.add(erb);
+    	}
+
+		if (collabId <= 0)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("collabId"); 
+			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
+			erbs.add(erb);
+		}
+		 		
+
+    	if (erbs.size() == 0)
+    	{
+       	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+
+    		ArrayList<Whiteboard> wbs;
+        	wbs = UserManagement.userGetNeighborhoodCollaborationWhiteboards(email, nhPath, collabId, ErrResps, authBase64String);
+       	 	
+        	System.out.println("wbs.size :"+ wbs.size());
+        	System.out.println("ErrResps.size :"+ ErrResps.size());
+        	
+        	if (wbs.size() > 0)
+        		return Response.ok().entity(wbs).build();
+    		else
+    		{
+    			return Response.ok().entity(ErrResps).build();
+    			//return Response.status(500).entity(ErrResps).build();
+    		}
+    	}
+    	else
+    	{
+        	return Response.ok().entity(erbs).build();
+    	}    	
+    	    	
+        //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
+
+    
+    
+    //GET  /user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grids
     @Override
-    public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGet(String email, String nhPath, Integer collabId, Integer whiteboardId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
-        // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
-    }
-    @Override
+	public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridsGet(String email, String nhPath, Integer collabId, Integer whiteboardId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+		// TODO Auto-generated method stub
+
+    	System.out.println("email : " + email);
+      	System.out.println("nhPath : " + nhPath);
+      	System.out.println("collabId : " + collabId);
+      	System.out.println("whiteboardId : " + whiteboardId);
+
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+		//System.out.println("authBase64String : " + authBase64String);
+			
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+
+		if (email == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+		}
+		else if (email.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+    	}
+
+		if (nhPath == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.nhPath");
+    		erb.setProposedSolution("Enter nhPath");
+    		erbs.add(erb);
+		}
+		else if (nhPath.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.nhPath");
+    		erb.setProposedSolution("Enter nhPath");
+    		erbs.add(erb);
+    	}
+
+		if (collabId <= 0)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("collabId"); 
+			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
+			erbs.add(erb);
+		}
+		 		
+		if (whiteboardId <= 0)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("whiteboardId"); 
+			erb.setProposedSolution("You must enter an Existing Whiteboard ID. It should be a Positive Number.");
+			erbs.add(erb);
+		}
+
+    	if (erbs.size() == 0)
+    	{
+       	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+
+    		ArrayList<GridNames> grids;
+        	grids = UserManagement.userGetNeighborhoodCollaborationWhiteboardGrids(email, nhPath, collabId, whiteboardId,  ErrResps, authBase64String);
+       	 	
+        	System.out.println("wbs.size :"+ grids.size());
+        	System.out.println("ErrResps.size :"+ ErrResps.size());
+        	
+        	if (grids.size() > 0)
+        		return Response.ok().entity(grids).build();
+    		else
+    		{
+    			return Response.ok().entity(ErrResps).build();
+    			//return Response.status(500).entity(ErrResps).build();
+    		}
+    	}
+    	else
+    	{
+        	return Response.ok().entity(erbs).build();
+    	}    	
+    	    	
+    	
+    	//return null;
+	}
+
+    //GET	......../user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grid/{gridId}
+     @Override
     public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGridIdGet(String email, String nhPath, Integer collabId, Integer whiteboardId, Integer gridId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
-        // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+       	System.out.println("email : " + email);
+       	System.out.println("nhPath : " + nhPath);
+       	System.out.println("collabId : " + collabId);
+       	System.out.println("whiteboardId : " + whiteboardId);
+       	System.out.println("gridId : " + gridId);
+
+ 		ErrorRequestObject erb;
+ 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+ 		//System.out.println("authBase64String : " + authBase64String);
+ 			
+ 		if (authBase64String == null)
+ 		{	
+ 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+ 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+ 			erbs.add(erb);
+ 		}
+
+ 		if (email == null)
+ 		{
+     		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
+     		erb.setProposedSolution("Enter Email");
+     		erbs.add(erb);
+ 		}
+ 		else if (email.trim().equals(""))
+     	{	
+     		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
+     		erb.setProposedSolution("Enter Email");
+     		erbs.add(erb);
+     	}
+
+ 		if (nhPath == null)
+ 		{
+     		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.nhPath");
+     		erb.setProposedSolution("Enter nhPath");
+     		erbs.add(erb);
+ 		}
+ 		else if (nhPath.trim().equals(""))
+     	{	
+     		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.nhPath");
+     		erb.setProposedSolution("Enter nhPath");
+     		erbs.add(erb);
+     	}
+
+ 		if (collabId <= 0)
+ 		{	
+ 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("collabId"); 
+ 			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
+ 			erbs.add(erb);
+ 		}
+
+ 		if (whiteboardId <= 0)
+ 		{	
+ 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("whiteboardId"); 
+ 			erb.setProposedSolution("You must enter an Existing Whiteboard ID. It should be a Positive Number.");
+ 			erbs.add(erb);
+ 		}
+ 		
+ 		if (gridId <= 0)
+ 		{	
+ 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
+ 			erb.setProposedSolution("You must enter an Existing Grid ID. It should be a Positive Number.");
+ 			erbs.add(erb);
+ 		}
+ 		
+     	if (erbs.size() == 0)
+     	{
+    	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+
+     		GridInfo gi;
+         	gi = UserManagement.userGetNeighborhoodCollaborationWhiteboardGrid(email, nhPath, collabId, whiteboardId, gridId, ErrResps, authBase64String);
+        	 	
+         	System.out.println("gi.name :"+ gi.getName() );
+         	System.out.println("ErrResps.size :"+ ErrResps.size());
+         	
+         	if (gi != null)
+         		return Response.ok().entity(gi).build();
+     		else
+     		{
+     			return Response.ok().entity(ErrResps).build();
+     			//return Response.status(500).entity(ErrResps).build();
+     		}
+     	}
+     	else
+     	{
+         	return Response.ok().entity(erbs).build();
+     	}    	        
+     	// do some magic!
+     	// return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
+
+     
+     //GET.....  /user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/gridchain/{gridId}
+     @Override
+     public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridchainGridIdGet(String email, String nhPath, Integer collabId, Integer whiteboardId, Integer gridId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+         // do some magic!
+         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+     }
+     
+    //	/user/{email}/neighborhood/{nhPath}/collaborations
     @Override
-    public Response userEmailNeighborhoodNhPathCollaborationGet(String email, String nhPath, SecurityContext securityContext, String authBase64String) throws NotFoundException {
+    public Response userEmailNeighborhoodNhPathCollaborationsGet(String email, String nhPath, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    	
+      	System.out.println("email : " + email);
+      	System.out.println("nhPath : " + nhPath);
+
+		ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+
+		//System.out.println("authBase64String : " + authBase64String);
+			
+		if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+		}
+
+		if (email == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+		}
+		else if (email.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
+    		erb.setProposedSolution("Enter Email");
+    		erbs.add(erb);
+    	}
+
+		if (nhPath == null)
+		{
+    		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.nhPath");
+    		erb.setProposedSolution("Enter nhPath");
+    		erbs.add(erb);
+		}
+		else if (nhPath.trim().equals(""))
+    	{	
+    		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.nhPath");
+    		erb.setProposedSolution("Enter nhPath");
+    		erbs.add(erb);
+    	}
+		
+    	if (erbs.size() == 0)
+    	{
+       	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+
+    		ArrayList<Collaboration> cl;
+        	cl = UserManagement.userGetNeighborhoodCollaborations(email, nhPath, ErrResps, authBase64String);
+       	 	
+        	System.out.println("cl.size :"+ cl.size());
+        	System.out.println("ErrResps.size :"+ ErrResps.size());
+        	
+        	if (cl.size() > 0)
+        		return Response.ok().entity(cl).build();
+    		else
+    		{
+    			return Response.ok().entity(ErrResps).build();
+    			//return Response.status(500).entity(ErrResps).build();
+    		}
+    	}
+    	else
+    	{
+        	return Response.ok().entity(erbs).build();
+    	}    	
+    	
+        //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
 
     @Override
@@ -478,4 +807,18 @@ public class UserApiServiceImpl extends UserApiService {
         	return Response.ok().entity(erbs).build();
     	}
     }
+
+
+
+
+
+
+
+/*	@Override
+	public Response userEmailNeighborhoodNhPathCollaborationCollabIdWhiteboardWhiteboardIdGridGridIdGet(String email,
+			String nhPath, Integer collabId, Integer whiteboardId, Integer gridId, SecurityContext securityContext,
+			String authBase64String) throws NotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
 }

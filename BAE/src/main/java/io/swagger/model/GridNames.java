@@ -18,26 +18,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.GridNames;
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.constraints.*;
 
 /**
- * Whiteboard
+ * GridNames
  */
 
-public class Whiteboard   {
+public class GridNames   {
   @JsonProperty("id")
-  private Long id = null;
+  private Integer id = null;
 
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("gridList")
-  private List<GridNames> gridList = null;
+  @JsonProperty("purpose")
+  private String purpose = null;
 
-  public Whiteboard id(Long id) {
+  public GridNames id(Integer id) {
     this.id = id;
     return this;
   }
@@ -48,15 +45,15 @@ public class Whiteboard   {
    **/
   @JsonProperty("id")
   @ApiModelProperty(value = "")
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
-  public Whiteboard name(String name) {
+  public GridNames name(String name) {
     this.name = name;
     return this;
   }
@@ -75,31 +72,23 @@ public class Whiteboard   {
     this.name = name;
   }
 
-  public Whiteboard gridList(List<GridNames> gridList) {
-    this.gridList = gridList;
-    return this;
-  }
-
-  public Whiteboard addGridListItem(GridNames gridListItem) {
-    if (this.gridList == null) {
-      this.gridList = new ArrayList<GridNames>();
-    }
-    this.gridList.add(gridListItem);
+  public GridNames purpose(String purpose) {
+    this.purpose = purpose;
     return this;
   }
 
   /**
-   * Get gridList
-   * @return gridList
+   * Get purpose
+   * @return purpose
    **/
-  @JsonProperty("gridList")
+  @JsonProperty("purpose")
   @ApiModelProperty(value = "")
-  public List<GridNames> getGridList() {
-    return gridList;
+  public String getPurpose() {
+    return purpose;
   }
 
-  public void setGridList(List<GridNames> gridList) {
-    this.gridList = gridList;
+  public void setPurpose(String purpose) {
+    this.purpose = purpose;
   }
 
 
@@ -111,26 +100,26 @@ public class Whiteboard   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Whiteboard whiteboard = (Whiteboard) o;
-    return Objects.equals(this.id, whiteboard.id) &&
-        Objects.equals(this.name, whiteboard.name) &&
-        Objects.equals(this.gridList, whiteboard.gridList);
+    GridNames gridNames = (GridNames) o;
+    return Objects.equals(this.id, gridNames.id) &&
+        Objects.equals(this.name, gridNames.name) &&
+        Objects.equals(this.purpose, gridNames.purpose);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, gridList);
+    return Objects.hash(id, name, purpose);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Whiteboard {\n");
+    sb.append("class GridNames {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    gridList: ").append(toIndentedString(gridList)).append("\n");
+    sb.append("    purpose: ").append(toIndentedString(purpose)).append("\n");
     sb.append("}");
     return sb.toString();
   }

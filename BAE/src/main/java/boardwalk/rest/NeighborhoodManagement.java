@@ -42,6 +42,7 @@ import io.swagger.api.NotFoundException;
 import io.swagger.model.Collaboration;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.GridInfo;
+import io.swagger.model.GridNames;
 import io.swagger.model.User;
 import io.swagger.model.Whiteboard;
 import io.swagger.model.Neighborhood;
@@ -1334,7 +1335,8 @@ public class NeighborhoodManagement {
 	{
         ArrayList <Collaboration> collabList = new ArrayList <Collaboration>() ;
         ArrayList <Whiteboard> wbList ;
-        ArrayList <GridInfo> giList ;
+        //ArrayList <GridInfo> giList ;
+        ArrayList <GridNames> giList ;
         ErrorRequestObject erb;
 		
         // get the connection
@@ -1372,7 +1374,8 @@ public class NeighborhoodManagement {
 
 			Collaboration collab;
 			Whiteboard wb ;
-			GridInfo gi;
+			//GridInfo gi;
+			GridNames gi;
 			
 			Vector cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon,nhId);
 			Iterator cli = cl.iterator();
@@ -1405,15 +1408,18 @@ public class NeighborhoodManagement {
 					
 					Vector tv = bwn.getTables();
 					Iterator tvi = tv.iterator();
-					giList = new ArrayList<GridInfo>();
+					//giList = new ArrayList<GridInfo>();
+					giList = new ArrayList<GridNames>();
 					while (tvi.hasNext())
 					{
-						gi = new GridInfo();
+						//gi = new GridInfo();
+						gi = new GridNames();
 						BoardwalkTableNode btn = (BoardwalkTableNode)tvi.next();
 						System.out.println("\t\tTable = " + btn.getName());
 
 						gi.setId(btn.getId());
 						gi.setName(btn.getName());
+						gi.setPurpose(btn.getDescription());
 						giList.add(gi);
 					}
 					wb.setGridList(giList);

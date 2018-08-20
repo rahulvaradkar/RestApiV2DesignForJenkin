@@ -18,26 +18,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.GridNames;
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.constraints.*;
 
 /**
- * Whiteboard
+ * StringValuesStrValueFormula
  */
 
-public class Whiteboard   {
+public class StringValuesStrValueFormula   {
   @JsonProperty("id")
-  private Long id = null;
+  private Integer id = null;
 
-  @JsonProperty("name")
-  private String name = null;
+  @JsonProperty("stringValueId")
+  private Integer stringValueId = null;
 
-  @JsonProperty("gridList")
-  private List<GridNames> gridList = null;
+  @JsonProperty("formulaId")
+  private Integer formulaId = null;
 
-  public Whiteboard id(Long id) {
+  public StringValuesStrValueFormula id(Integer id) {
     this.id = id;
     return this;
   }
@@ -48,58 +45,50 @@ public class Whiteboard   {
    **/
   @JsonProperty("id")
   @ApiModelProperty(value = "")
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
-  public Whiteboard name(String name) {
-    this.name = name;
+  public StringValuesStrValueFormula stringValueId(Integer stringValueId) {
+    this.stringValueId = stringValueId;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Get stringValueId
+   * @return stringValueId
    **/
-  @JsonProperty("name")
+  @JsonProperty("stringValueId")
   @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
+  public Integer getStringValueId() {
+    return stringValueId;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setStringValueId(Integer stringValueId) {
+    this.stringValueId = stringValueId;
   }
 
-  public Whiteboard gridList(List<GridNames> gridList) {
-    this.gridList = gridList;
-    return this;
-  }
-
-  public Whiteboard addGridListItem(GridNames gridListItem) {
-    if (this.gridList == null) {
-      this.gridList = new ArrayList<GridNames>();
-    }
-    this.gridList.add(gridListItem);
+  public StringValuesStrValueFormula formulaId(Integer formulaId) {
+    this.formulaId = formulaId;
     return this;
   }
 
   /**
-   * Get gridList
-   * @return gridList
+   * Get formulaId
+   * @return formulaId
    **/
-  @JsonProperty("gridList")
+  @JsonProperty("formulaId")
   @ApiModelProperty(value = "")
-  public List<GridNames> getGridList() {
-    return gridList;
+  public Integer getFormulaId() {
+    return formulaId;
   }
 
-  public void setGridList(List<GridNames> gridList) {
-    this.gridList = gridList;
+  public void setFormulaId(Integer formulaId) {
+    this.formulaId = formulaId;
   }
 
 
@@ -111,26 +100,26 @@ public class Whiteboard   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Whiteboard whiteboard = (Whiteboard) o;
-    return Objects.equals(this.id, whiteboard.id) &&
-        Objects.equals(this.name, whiteboard.name) &&
-        Objects.equals(this.gridList, whiteboard.gridList);
+    StringValuesStrValueFormula stringValuesStrValueFormula = (StringValuesStrValueFormula) o;
+    return Objects.equals(this.id, stringValuesStrValueFormula.id) &&
+        Objects.equals(this.stringValueId, stringValuesStrValueFormula.stringValueId) &&
+        Objects.equals(this.formulaId, stringValuesStrValueFormula.formulaId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, gridList);
+    return Objects.hash(id, stringValueId, formulaId);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Whiteboard {\n");
+    sb.append("class StringValuesStrValueFormula {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    gridList: ").append(toIndentedString(gridList)).append("\n");
+    sb.append("    stringValueId: ").append(toIndentedString(stringValueId)).append("\n");
+    sb.append("    formulaId: ").append(toIndentedString(formulaId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
