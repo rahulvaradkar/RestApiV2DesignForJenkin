@@ -13,7 +13,7 @@
 
     function importGrid(authorization) {
         var promise = new $.Deferred();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + Access_Control.Access_Cuboid_Id + "?importTid=-1&view=LATEST&mode=1&baselineId=-1", null, authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(Globals.baseURL + "rest/grid/" + Access_Control.Access_Cuboid_Id + "?importTid=-1&view=LATEST&mode=1&baselineId=-1", null, authorization, "GET").then(function (result) {
             importTid_ = result.info.importTid;
             exportTid_ = result.info.exportTid;
             columnArray_ = result.columnArray;
@@ -24,7 +24,6 @@
     }
 
     QUnit.test("User has Access to add rows Adding Row with User1", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var data = {
@@ -53,7 +52,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data,Access_Control.Row_Access_User_1, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data,Access_Control.Row_Access_User_1, "PUT").then(function (result) {
                 var resultJSON = result;               
                 SubmitRefreshUtils.assertInfo(result, assert);
                 assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -70,7 +69,6 @@
     });
 
     QUnit.test("User1 dont have access to delete rows trying to Delete rows using User1", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var data = {
@@ -90,7 +88,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "TABLE UPDATE EXCEPTION (12010): No access to Delete a Row", "User can't delete Rows");
                 done();
@@ -99,7 +97,6 @@
     });
 
     QUnit.test("User1 hace access to R/W trying to submit with one cell", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -122,7 +119,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.ok(exportTid_ < result.info.exportTid, "exportTid should be larger than the previous Submit operation.");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -137,7 +134,6 @@
     });
 
     QUnit.test("User does not has Access to add rows Adding Row with User2", function (assert) {
-	//	console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var data = {
@@ -166,7 +162,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data,Access_Control.Row_Access_User_2, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data,Access_Control.Row_Access_User_2, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "TABLE UPDATE EXCEPTION (12012): No access to Add a Row", "User can't Add Rows");
                 done();
@@ -175,7 +171,6 @@
     });
 
     QUnit.test("User have access to delete rows trying to Delete rows using User2", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var data = {
@@ -195,7 +190,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.ok(result.GridChangeBuffer.deletedRowArray != null , "deletedRowArray should not be null");
                 assert.ok(Array.isArray(result.GridChangeBuffer.deletedRowArray),"deletedRowArray should be Array");
@@ -205,7 +200,6 @@
     });
 
     QUnit.test("User hace access to R/W trying to submit with one cell with user2", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -228,7 +222,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.ok(exportTid_ < result.info.exportTid, "exportTid should be larger than the previous Submit operation.");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -243,7 +237,6 @@
     });
 
     QUnit.test("User does not has Access to add rows Adding Row with User3", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_3).then(function () {
             var data = {
@@ -272,7 +265,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data,Access_Control.Row_Access_User_3, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data,Access_Control.Row_Access_User_3, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "TABLE UPDATE EXCEPTION (12012): No access to Add a Row", "User can't Add Rows");
                 done();
@@ -281,7 +274,6 @@
     });
 
     QUnit.test("User dont have access to delete rows trying to Delete rows using User3", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_3).then(function () {
             var data = {
@@ -301,7 +293,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_3, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_3, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "TABLE UPDATE EXCEPTION (12010): No access to Delete a Row", "User can't delete Rows");
                 done();
@@ -309,8 +301,7 @@
         });
     });
 
-    QUnit.test("User have access to R/W trying to submit with one cell", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
+    QUnit.test("User hace access to R/W trying to submit with one cell", function (assert) {
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_3).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -333,7 +324,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_3, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_3, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.ok(exportTid_ < result.info.exportTid, "exportTid should be larger than the previous Submit operation.");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -348,7 +339,6 @@
     });
 
     QUnit.test("User dont have access to add Column trying to submit with one column", function (assert) {
-	//	console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -377,7 +367,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "TABLE UPDATE EXCEPTION (12010): No access to add a new Column", "User can't Add Column");
                 done();
@@ -386,7 +376,6 @@
     });
 
     QUnit.test("User dont have access to Delete Column trying to submit with deleting column", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_1).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -405,7 +394,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_1, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "TABLE UPDATE EXCEPTION (12010): No access to Delete a Column", "User can't Delete Column");
                 done();
@@ -413,8 +402,7 @@
         });
     });
 
-    QUnit.test("User have access to add Column trying to submit with one column", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
+    QUnit.test("User dont have access to add Column trying to submit with one column", function (assert) {
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -443,7 +431,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");                
                 SubmitRefreshUtils.assertInfo(result, assert);
                 assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -457,7 +445,6 @@
     });
 
     QUnit.test("User  have access to Delete Column trying to submit with deleting column", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done=assert.async();
         importGrid(Access_Control.Row_Access_User_2).then(function () {
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -476,7 +463,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_2, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.ok(result.GridChangeBuffer.deletedColumnArray != null,"deletedColumnArray should not be null");
                 assert.ok(Array.isArray(result.GridChangeBuffer.deletedColumnArray),"deletedColumnArray should be Array");
@@ -485,8 +472,7 @@
         });
     });
 
-    QUnit.test("User have access to R/W trying to submit with one cell with criticalUpdate", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
+    QUnit.test("User hace access to R/W trying to submit with one cell with criticalUpdate", function (assert) {
         var done=assert.async();
     
             var x = Math.floor((Math.random() * 10000000) + 1);
@@ -509,7 +495,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_3, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + Access_Control.Access_Cuboid_Id, data, Access_Control.Row_Access_User_3, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                assert.equal(result[0].error, "TABLE UPDATE EXCEPTION ((12017)","CriticalUpdate is there. Please refresh");
                 done();
@@ -543,7 +529,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_Id, data, UserInput.authorization_1, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + cuboid_Id, data, UserInput.authorization_1, "PUT").then(function (result) {
                 var resultJSON = result;               
                 assert.equal(result.error, "Access Filter violation ((12018)", "user Trying to submit unaccessible values");
                 done();
@@ -579,7 +565,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_Id, data, UserInput.authorization_1, "PUT").then(function (result) {
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + cuboid_Id, data, UserInput.authorization_1, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.ok(exportTid_ < result.info.exportTid, "exportTid should be larger than the previous Submit operation.");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -617,7 +603,7 @@
                 "rowArray": []
             }
 
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_Id, data, UserInput.authorization_1, "PUT").then(function (result) {             
+            TestUtils.sendRequest(Globals.baseURL + "rest/grid?gridId=" + cuboid_Id, data, UserInput.authorization_1, "PUT").then(function (result) {             
                 assert.ok(result[0].error, "TABLE UPDATE EXCEPTION (12016): You are trying to update a cell for which you do not have access", "User is Inserting Value in Read only column which is not accessible");               
                 done();
             });

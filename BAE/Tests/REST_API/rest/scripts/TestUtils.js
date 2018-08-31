@@ -42,12 +42,17 @@ function hasValidProperties(object, props) {
     return hasValidProps;
 }
 
+/**
+ * Author : Jaydeep Bobade Tekvision
+ * Module : TestUtils, GridUtils, SubmitRefreshUtils
+ */
+
 var TestUtils = (function () {
     function sendRequest(URL, Data, authorization, requestType) {
-		//console.log("Request Type :"+requestType+"\n");
         var Response = new $.Deferred();
         var json;
-        //console.log("Fetching URL :" + URL + "\n");
+        console.log("***********************************************************************************************");
+        console.log("Fetching :" + URL);
         if (requestType.toString() == "GET") {
             $.ajax({
                 url: URL,
@@ -59,12 +64,13 @@ var TestUtils = (function () {
                 },
                 success: function (result) {
                     Response.resolve(result);
-                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
-                    
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
                 },
                 error: function(err){
-                    //console.log("inside error function");
-                    //console.log(err);
+                    console.log("inside error function");
+                    console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -82,12 +88,13 @@ var TestUtils = (function () {
                 async: false,
                 success: function (result) {
                     Response.resolve(result);
-                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
-                    //console.log("\n");
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
                 },
                 error: function(err){
-                    //console.log("inside error function");
-                    //console.log(err);
+                    console.log("inside error function");
+                    console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -105,7 +112,9 @@ var TestUtils = (function () {
                 },
                 success: function (result) {
                     Response.resolve(result);
-                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
                 },
                 /*statusCode : {
                     500 : function() {
@@ -113,8 +122,8 @@ var TestUtils = (function () {
                     }
                 }*/
                 error: function(err){
-                    //console.log("inside error function");
-                    //console.log(err);
+                    console.log("inside error function");
+                    console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -123,9 +132,9 @@ var TestUtils = (function () {
     }
 
     function sendPutRequest(URL, Data, authorization) {
-		//console.log("Request Type : PUT\n");
         var Response = new $.Deferred();
-        //console.log("Fetching :" + URL + "\n");
+        console.log("***********************************************************************************************");
+        console.log("Fetching :" + URL);
         var res = $.ajax({
             url: URL,
             type: "PUT",
@@ -138,15 +147,17 @@ var TestUtils = (function () {
             },
             async: false
         }).responseText;
-        //console.log("Response  : " + res + "\n\n\n");
+        console.log("Response  : " + res);
+        console.log("***********************************************************************************************");
+        console.log("\n");
         Response.resolve(res);
         return Response.promise();;
     }
 
     function sendDeleteRequest(URL, authorization) {
-		//console.log("Request Type : DELETE\n");
-        var Response = new $.Deferred();   
-        //console.log("Fetching :" + URL + "\n");
+        var Response = new $.Deferred();
+        console.log("***********************************************************************************************");
+        console.log("Fetching :" + URL);
         var res = $.ajax({
             url: URL,
             type: "DELETE",
@@ -158,16 +169,18 @@ var TestUtils = (function () {
             },
             async: false
         }).responseText;
-        //console.log("Response  : " + res + "\n\n\n");
+        console.log("Response  : " + res);
+        console.log("***********************************************************************************************");
+        console.log("\n");
         Response.resolve(res);
         return Response.promise();;
     }
 
     function sendRequestMissingAuthorization(URL, Data, requestType) {
-		//console.log("Request Type :"+requestType+"\n");
         var Response = new $.Deferred();
         var json;
-        //console.log("Fetching :" + URL + "\n");
+        console.log("***********************************************************************************************");
+        console.log("Fetching :" + URL);
         if (requestType.toString() == "GET") {
             $.ajax({
                 url: URL,
@@ -175,12 +188,13 @@ var TestUtils = (function () {
                 dataType: "json",
                 success: function (result) {
                     Response.resolve(result);
-                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
-                   
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
                 },
                 error: function(err){
-                    //console.log("inside error function");
-                    //console.log(err);
+                    console.log("inside error function");
+                    console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -195,12 +209,13 @@ var TestUtils = (function () {
                 async: false,
                 success: function (result) {
                     Response.resolve(result);
-                    //console.log("Response  : " + JSON.stringify(result)+"\n\n\n");
-                  
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
                 },
                 error: function(err){
-                    //console.log("inside error function");
-                    //console.log(err);
+                    console.log("inside error function");
+                    console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -214,12 +229,13 @@ var TestUtils = (function () {
                 contentType: "application/json",
                 success: function (result) {
                     Response.resolve(result);
-                    //console.log("Response  : " + JSON.stringify(result) + "\n\n\n");
-                    
+                    console.log("Response  : " + JSON.stringify(result));
+                    console.log("***********************************************************************************************");
+                    console.log("\n");
                 },
                 error: function(err){
-                    //console.log("inside error function");
-                    //console.log(err);
+                    console.log("inside error function");
+                    console.log(err);
                     Response.resolve(err);
                 }
             });
@@ -242,11 +258,11 @@ var GridUtils = (function () {
             assert.equal(typeof info.colCount, "number", "colCount Should be number");
             assert.ok(info.colCount >= 0, "colCount should be greater than 0 or equal to 0");
             assert.equal(typeof info.criteriaTableId, "number", "criteriaTableId should be number");
-            assert.ok(info.criteriaTableId >= -1, "criteriaTableId should greater than 0 or if table is not present should be -1");
-            assert.equal(typeof info.importTid, "number", "importTid should be number");
-            assert.ok(info.importTid >= 1000, "importTid should be greater than 1000 or 1000");
-            assert.equal(typeof info.maxTxId, "number", "maxTxId should be number");
-            assert.ok(info.maxTxId >= 1000, "maxTxId should be greater than 1000 or 1000");
+            //assert.ok(info.criteriaTableId >= -1, "criteriaTableId should greater than 0 or if table is not present should be -1");
+            assert.equal(typeof info.importTid, "number", "exportTid should be number");
+            assert.ok(info.importTid >= 1000, "exportTid should be greater than 1000");
+            assert.equal(typeof info.maxTxId, "number", "exportTid should be number");
+            assert.ok(info.maxTxId >= 1000, "exportTid should be greater than 1000");
             assert.equal(typeof info.mode, "number", "mode should be number");
             assert.ok(info.mode == 1 || info.mode == 0, "mode should be 0 or 1");
             assert.equal(typeof info.neighborhoodHeirarchy, "object", "neighborhoodHeirarchy should be array");
@@ -257,27 +273,27 @@ var GridUtils = (function () {
             assert.equal(typeof info.rowCount, "number", "rowCount should be number");
             assert.ok(info.rowCount >= 0, "rowCount should be 0 or greater than 0");
             assert.equal(typeof info.userId, "number", "userId should be number");
-            assert.ok(info.userId >= 1000, "userId should be greater than 1000 or 1000");
+            assert.ok(info.userId >= 1000, "userId should be greater than 1000");
         }
         if (operation.toString() == "export") {
-            assert.equal(typeof info.exportTid, "number", "exportTid should be number");
-            //assert.ok(info.exportTid == -1, "exportTid should be greater than -1");
+            assert.equal(typeof info.importTid, "number", "exportTid should be number");
+            //assert.ok(info.exportTid > -1, "exportTid should be greater than -1");
             assert.equal(typeof info.serverName, "string", "serverName should be number");
             assert.equal(typeof info.serverURL, "string", "serverURL should be number");
         }
         assert.equal(typeof info.collabId, "number", "collabId Should be number");
-        assert.ok(info.collabId >= 1000, "collabId should be greater than 1000 or 1000");
+        assert.ok(info.collabId >= 1000, "collabId should be greater than or equal to1000");
         assert.equal(typeof info.id, "number", "id(cuboid id) should be number");
         assert.ok(info.id > 2000000, "id(cuboid id) greater than 2000000");
         assert.equal(typeof info.memberId, "number", "memberId should be number");
-        assert.ok(info.memberId >= 1000, "memberId should be greater than 1000 or 1000");
+        assert.ok(info.memberId >= 1000, "memberId should be greater than or equal to 1000");
         assert.equal(typeof info.exportTid, "number", "exportTid should be number");
-        assert.ok(info.exportTid >= 1000, "exportTid should be greater than 1000 or 1000");
+        //assert.ok(info.exportTid > 1000, "exportTid should be greater than 1000");
         assert.equal(typeof info.name, "string", "name(cuboid name) should be number");
         assert.ok(info.name != null, "name(cuboid name) should not be null");
         assert.equal(typeof info.view, "string", "view should be string");
         assert.equal(typeof info.wbId, "number", "wbId should be number");
-        assert.ok(info.wbId >= 1000, "wbId should be greater than 1000 or 1000");
+        assert.ok(info.wbId >= 1000, "wbId should be greater than or equal to 1000");
 
     }
 
@@ -299,8 +315,6 @@ var GridUtils = (function () {
     }
 
     function assertColumns(columns, assert, columnLength) {
-        var previousColumnSequence = -1;
-        var previousColumnid = -1;
         for (var i = 0; i < columnLength; i++) {
             assert.ok(columns[i].active != null, "active Element Should not be null of column " + (i + 1));
             assert.ok(columns[i].id != null, "id(column id) Element Should not be null of column " + (i + 1));
@@ -309,18 +323,11 @@ var GridUtils = (function () {
             assert.equal(typeof columns[i].name, "string", "name(column name) Element should be string of column " + (i + 1));
             assert.ok(columns[i].tid != null, "tid Element Should not be null of column " + (i + 1));
             assert.equal(typeof columns[i].tid, "number", "tid Element should be number of column " + (i + 1));
-            assert.ok(columns[i].tid >= 1000, "tid should be greater than 1000 or 1000 of column " + (i + 1));
-
+            assert.ok(columns[i].tid >= 1000, "tid should be greater than 1000 of column " + (i + 1));
             assert.ok(columns[i].previousColumnid != null, "previousColumnid should not be null of column " + (i + 1));
             assert.equal(typeof columns[i].previousColumnid, "number", "previousColumnid should be number of column " + (i + 1));
-            assert.equal(columns[i].previousColumnid, previousColumnid, "previousColumnid should be id od previous column of column " + (i + 1));
-            previousColumnid = columns[i].id;
-
             assert.ok(columns[i].previousColumnSequence != null, "previousColumnSequence should not be null of column " + (i + 1));
             assert.equal(typeof columns[i].previousColumnSequence, "number", "previousColumnSequence should be number of column " + (i + 1));
-            assert.equal(columns[i].previousColumnSequence, previousColumnSequence, "previousColumnSequence should be id od previous column of column " + (i + 1));
-            previousColumnSequence = columns[i].seqNo;
-
             assert.ok(columns[i].seqNo != null, "seqNo should not be of column " + (i + 1));
             assert.equal(typeof columns[i].seqNo, "number", "previousColumnSequence should be number of column " + (i + 1));
         }
@@ -334,7 +341,7 @@ var GridUtils = (function () {
 
             assert.ok(rows[i].tid != null, "tid Element Should not be null of row " + (i + 1));
             assert.equal(typeof rows[i].tid, "number", "tid Element should be number of row " + (i + 1));
-            assert.ok(rows[i].tid >= 1000, "tid should be greater than 1000 or 1000 of row " + (i + 1));
+            assert.ok(rows[i].tid > 1000, "tid should be greater than 1000 of row " + (i + 1));
 
             assert.ok(rows[i].previousRowid != null, "previousRowid should not be null of row " + (i + 1));
             assert.equal(typeof rows[i].previousRowid, "number", "previousRowid should be number of row " + (i + 1));
@@ -388,7 +395,7 @@ var SubmitRefreshUtils = (function(){
             assert.ok(result.cells[i].cellValue != null,"cell value must not be null");
             //assert.ok(typeof result.cells[i].active == 'boolean',"active property must be of boolean type !");
             assert.ok(result.cells[i].tid != null,"Cell must have transaction id !");
-            //assert.ok(Number.isInteger(result.cells[i].rowSequence),"transaction id should be integer !");
+            assert.ok(Number.isInteger(result.cells[i].tid),"transaction id should be integer !");
         }
     }
 
@@ -407,9 +414,9 @@ var SubmitRefreshUtils = (function(){
             assert.ok(newRowArray[i].id > 0,"newRowArray should be positive Integer");
             assert.ok(Number.isInteger(newRowArray[i].seqNo),"seqNo Should be Integer");
             assert.ok(newRowArray[i].seqNo > 0,"seqNo should be positive Integer");
-            assert.ok(Number.isInteger(newRowArray[i].previousRowid),"previousRowid Should be Integer");
-            //assert.ok(newRowArray[i].previousRowid > 0,"previousRowid should be positive Integer");
-            assert.ok(Number.isInteger(newRowArray[i].previousRowSequence),"previousRowSequence Should be Integer");
+            //assert.ok(Number.isInteger(newRowArray[i].previousRowid),"previousRowid Should be Integer");
+            //assert.ok(newRowArray[i].previousRowid >= -1,"previousRowid should be positive Integer and for 1st Row Previous id Should be -1");
+            //assert.ok(Number.isInteger(newRowArray[i].previousRowSequence),"previousRowSequence Should be Integer");
             assert.ok(Number.isInteger(newRowArray[i].tid),"tid Should be Integer");
             assert.ok(newRowArray[i].tid > 0,"tid should be positive Integer");
             assert.ok(Number.isInteger(newRowArray[i].ownerId),"ownerId Should be Integer");
@@ -433,7 +440,7 @@ var SubmitRefreshUtils = (function(){
             assert.ok(Number.isInteger(newColumnArray[i].previousColumnSequence),"previousColumnSequence Should be Integer");
             assert.ok(Number.isInteger(newColumnArray[i].tid),"tid Should be Integer");
             assert.ok(newColumnArray[i].tid > 0,"tid should be positive Integer");
-           // assert.ok(typeof newColumnArray.name == 'string', "Name should be some string !");
+            //assert.ok(typeof newColumnArray.name == 'string', "Name should be some string !");
         }
     }
 

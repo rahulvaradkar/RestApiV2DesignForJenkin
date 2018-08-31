@@ -16,13 +16,14 @@
         var done = assert.async();
         var x = Math.floor((Math.random() * 1000000000) + 1);
         cuboid_name = "GOOD_CUBOID_" + x;
-        var data = {
-            "name": "GOOD_CUBOID_" + x,
-            "description": "CHECK FOR SUCCESS",
-            "wbId": WhiteboardInput.WB_Id,
-            "collabId": CollaborationInput.Collab_Id_1,
-            "memberId": UserInput.Member_Id_1,
-        }
+        var data =  {
+            "name":"GOOD_CUBOID_"+x,  
+            "description": "CHECK FOR SUCCESS",  
+            "wbId": WhiteboardInput.WB_Id,  
+            "collabId":CollaborationInput.Collab_Id_1,  
+            "memberId": UserInput.Member_Id_1,  
+            "gridId": 0
+            }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -36,26 +37,24 @@
                 flag = true;
             }            
             assert.equal(typeof result.collabId, "number", "Collab Id should be number");
-            assert.ok(result.collabId >= 1000, "Collab should greater than 1000");
+            assert.ok(result.collabId >= 1000, "Collab should greater than or equal to 1000");
             assert.equal(typeof result.gridId, "number", "Grid Id Id should be number");
             assert.ok(result.gridId > 2000000, "Grid Id should greater than 2000000");
             assert.equal(typeof result.memberId, "number", "Member should be number");
-            assert.ok(result.memberId >= 1000, "Member Id should greater than 1000 or 1000");
+            assert.ok(result.memberId >= 1000, "Member Id should greater than or equal to 1000");
             assert.equal(typeof result.wbId, "number", "Whiteboard Id should be number");
-            assert.ok(result.wbId >= 1000, "Whiteboard Id should greater than 1000 or 100");
+            assert.ok(result.wbId >= 1000, "Whiteboard Id should greater than or equal to 1000");
             assert.equal(typeof result.description, "string", "description should be String");
             assert.equal(typeof result.name, "string", "Name should be String");
-
             assert.ok(flag, "Should have 6 Properties or should not have any Property Null");
             done();
         })
     });
 
     QUnit.test("Grid already exists", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-            "name": "GOOD_CUBOID",
+            "name": cuboid_name,
             "description": "CHECK FOR SUCCESS",
             "wbId": WhiteboardInput.WB_Id,
             "collabId": CollaborationInput.Collab_Id_1,
@@ -74,7 +73,6 @@
     });
 
     QUnit.test("User having Multiple Memberships creating Grid using MEMBERSHIP-2", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 100000) + 1);
         cuboid_name_ = "GOOD_CUBOID_" + x;
@@ -104,7 +102,6 @@
     });
 
     QUnit.test("Invalid Input Checks. Negative Numbers and Blank Values in required fields", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 100000) + 1);
         var data = {
@@ -130,7 +127,6 @@
     });
 
     QUnit.test("InValid Collaboration ID", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 100000) + 1);
         var data = {
@@ -153,7 +149,6 @@
     });
 
     QUnit.test("InValid Whiteboard ID", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 100000) + 1);
         var data = {
@@ -176,22 +171,23 @@
     });
 
     QUnit.test("Exporting Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "cells": GridInput.cells,
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         Cuboid_Submit = cuboid_id;
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -225,22 +221,23 @@
     });
 
     QUnit.test("Exporting Grid with Missing Authorization", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "cells": GridInput.cells,
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -254,22 +251,23 @@
     });
 
     QUnit.test("Exporting Grid with Invalid Authorization", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "cells": GridInput.cells,
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.invalidAuthorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -277,28 +275,29 @@
                 done();
                 return;
             }
-            assert.equal(result[0].error, "Authentication_Connection_Failure", "Authentication_Connection_Failure");
+            assert.equal(result[0].error, "Invalid Authorization. User is not a member of Neighborhood Path.", "Invalid Authorization. User is not a member of Neighborhood Path.");
             done();
         });
     });
 
     QUnit.test("Exporting Grid with Duplicate Column names", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns_DuplicateColumns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "cells": GridInput.cells,
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns_DuplicateColumns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -306,27 +305,28 @@
                 done();
                 return;
             }
-            assert.equal(result[0].error, "SQLException:2627, Cause:Violation of UNIQUE KEY constraint 'UQ_NC_BW_COLUMN'. Cannot insert duplicate key in object 'dbo.BW_COLUMN'. The duplicate key value is (" + cuboid_id + ", state).", "Duplicate Column Names");
+            assert.equal(result[0].error, "SQLException:2627, Cause:Violation of UNIQUE KEY constraint 'UQ_NC_BW_COLUMN'. Cannot insert duplicate key in object 'dbo.BW_COLUMN'.", "Duplicate Column Names");
             done();
         });
     });
 
     QUnit.test("Missing columns element while Exporting Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,                
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "cells": GridInput.cells,
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -340,21 +340,22 @@
     });
 
     QUnit.test("Missing Cell element while Exporting Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -368,21 +369,22 @@
     });
 
     QUnit.test("Missing rows element while Exporting Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "cells": GridInput.cells,
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
 
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -397,21 +399,22 @@
     });
 
     QUnit.test("Missing rowArray while Exporting Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,                
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+            "cells": GridInput.cells,
+            "columnArray": GridInput.columnArray,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -425,21 +428,22 @@
     });
 
     QUnit.test("Missing columnArray element while Exporting Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
-        var data ={
-                "cells": GridInput.cells,                
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+        var data = {
+            "cells": GridInput.cells,
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rowArray": GridInput.rowArray,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -453,19 +457,20 @@
     });
 
     QUnit.test("Missing cells, rowArray and columnArray element while Exporting Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
-        var data = {                              
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,                
-                "rows": GridInput.rows,
-                "info": {
-                    "exportTid": GridInput.exportTid,
-                    "importTid": GridInput.importTid, "collabId": CollaborationInput.Collab_Id_1,
-                    "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1
-                }
+        var data = {
+            "columnCellArrays": GridInput.columnCellArrays,
+            "columns": GridInput.columns,
+            "GridChangeBuffer": GridInput.GridChangeBuffer,
+            "rows": GridInput.rows,
+            "info": {               
+                "exportTid": GridInput.exportTid,            
+                "importTid": GridInput.importTid,
+                "collabId": CollaborationInput.Collab_Id_1,
+                "wbId": WhiteboardInput.WB_Id,
+                "memberId": UserInput.Member_Id_1           
             }
+        }
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
@@ -481,7 +486,6 @@
     });
 
     QUnit.test("Importing Grid", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
@@ -500,12 +504,15 @@
             assert.ok(result.rowArray != null, "rowArray Element Should not be null");
             GridUtils.assertRows(result.rows, assert, result.rowArray.length);
             assert.ok(result.rows != null, "rows Element Should not be null");
+            assert.ok(result.GridChangeBuffer.newRowArray != null, "rows Element Should not be null");
+            SubmitRefreshUtils.assertNewRowArray(result.GridChangeBuffer.newRowArray, assert);
+            assert.ok(result.GridChangeBuffer.newColumnArray != null, "rows Element Should not be null");
+            SubmitRefreshUtils.assertNewColumnArray(result.GridChangeBuffer.newColumnArray, assert);
             done();
         });
     });
 
     QUnit.test("Importing Grid with Invalid Authorization", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.invalidAuthorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -514,13 +521,12 @@
                 done();
                 return;
             }
-            assert.equal(result[0].error, "Authentication_Connection_Failure", "Authentication_Connection_Failure");
+            assert.equal(result[0].error, "Invalid Authorization. User is not a member of Neighborhood Path.", "Invalid Authorization. User is not a member of Neighborhood Path.");
             done();
         });
     });
 
     QUnit.test("Importing Grid with Missing Authorization", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -535,7 +541,6 @@
     });
 
     QUnit.test("Importing Grid with ImportTid is Missing", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -550,7 +555,6 @@
     });
 
     QUnit.test("Importing Grid with view is Missing", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -565,7 +569,6 @@
     });
 
     QUnit.test("Importing Grid with Invalid view", function (assert) {
-		console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST11&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -580,7 +583,6 @@
     });
 
     QUnit.test("Importing Grid with mode is Missing", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -595,7 +597,6 @@
     });
 
     QUnit.test("Importing Grid with Invalid mode", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=123&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -610,7 +611,6 @@
     });
 
     QUnit.test("Importing Grid with BaselineId is Missing", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1", null, UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -625,7 +625,6 @@
     });
 
     QUnit.test("Importing Grid with Wrong username and wrong Password", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, getAuthorization("nhj", 8, "JSAddin"), "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -640,7 +639,6 @@
     });
 
     QUnit.test("Importing Grid with Wrong authorization format", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, getAuthorization("j", 0, ""), "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");

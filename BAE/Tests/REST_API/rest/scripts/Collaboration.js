@@ -10,7 +10,6 @@
     var collab_Id;
     
     QUnit.test("Reading Collaborations of Neighborhood ID=1", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var input = $("#test-input").focus();
         var flag = false;
@@ -47,7 +46,6 @@
     });
 
     QUnit.test("Reading Collaborations of Neighborhood when collaboration are not exist", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var count_flag = false;
 
@@ -67,7 +65,6 @@
     });
 
     QUnit.test("Posting New Collaboration", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         Collab_Name = "Collab_" + x;
@@ -89,7 +86,6 @@
     });
 
     QUnit.test("Posting Existing Collaboration", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
             "name": Collab_Name,
@@ -108,7 +104,6 @@
     });
 
     QUnit.test("Posting new Collaboration with negative nhid and negative member ID", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var data = {
             "name": Collab_Name,
@@ -128,7 +123,6 @@
     });
 
     QUnit.test("Posting New Collaboration with Missing Authorization", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -136,7 +130,7 @@
             "name": collab_name,
             "purpose": "Test"
         }
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_1 + "/collaboration", data, "POST").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -149,7 +143,6 @@
     });
 
     QUnit.test("Posting New Collaboration with Invalid Authorization", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -157,20 +150,19 @@
             "name": collab_name,
             "purpose": "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_1 + "/collaboration", data, UserInput.invalidAuthorization, "POST").then(function (result) {
+        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.invalidAuthorization, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
                 done();
                 return;
             }
-            assert.equal(result[0].error, "Authentication_Connection_Failure", "Invalid Authorization");
+            assert.equal(result[0].error, "Invalid Authorization. User is not a member of Neighborhood Path.", "Invalid Authorization. User is not a member of Neighborhood Path.");
             done();
         });
     });
 
     QUnit.test("Posting New Collaboration with Invalid MemberShip", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -191,7 +183,6 @@
     });
 
     QUnit.test("Posting New Collaboration with Blank Fields", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         var x = Math.floor((Math.random() * 10000) + 1);
         var collab_name = "Collab_" + x;
@@ -199,7 +190,7 @@
             "name": "",
             "purpose": ""
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/3/member/" + UserInput.Member_Id_1 + "/collaboration", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/3/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -213,7 +204,6 @@
     });
  
     QUnit.test("Deleting Collaboration", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/collaboration/" + collab_Id, UserInput.authorization).then(function (result) {
             assert.ok(result != null, "Response should not be null");
@@ -231,13 +221,13 @@
     });
 
     QUnit.test("Deleting Collaboration with Missing Authorization", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/collaboration/" + collab_Id, null, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
-            if (result.status == 404 || result.status == 422 || result.status == 400) {
-                assert.ok(result.status == 400, " It seems server side error" + result.responseText);
-				
+            if (result.status == 400) {
+                assert.ok(result.status == 400, " Missing Authorization in header ");
+               // alert(JSON.stringify(result.responseText));
+               // assert.equal(result[0].responseText, "Missing Authorization in Header", "Missing Authorization in header");
                 done();
                 return;
             }
@@ -247,12 +237,11 @@
     });
 
     QUnit.test("Deleting Collaboration with Invalid Collaboration Id", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Non_Existing_CollabId, null, UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
-            if (result.status == 400 || result.status == 422) {
-                assert.ok(result.status == 422, " It seems server side error" + result.responseText);
+            if (result.status == 422) {
+                assert.ok(result.status == 422, " Invalid Collaboration ID");
                 done();
                 return;
             }
@@ -262,12 +251,11 @@
     });
 
     QUnit.test("Deleting Collaboration with Negative Collaboration Id", function (assert) {
-		//console.log("========= " + assert.test.testName + "==============\n");
         var done = assert.async();
         TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Negative_CollabId, null, UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
-            if (result.status == 400 || result.status == 422) {
-                assert.ok(result.status == 400, " It seems server side error" + result.responseText);
+            if (result.status == 400) {
+                assert.ok(result.status == 400, "Negative collab ID");
                 done();
                 return;
             }
