@@ -23,11 +23,14 @@ public class GridchainApiServiceImpl extends GridchainApiService {
     public Response gridchainGridIdGet(Integer gridId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
 
+    	StringBuffer invReqMsg = new StringBuffer(500);
+    	StringBuffer invResMsg = new StringBuffer(500);
+    		
     	ArrayList <ErrorRequestObject> erbs  = new ArrayList<ErrorRequestObject>();
     	ErrorRequestObject erb;
 
     	ArrayList <RequestErrorInfo> reqeis = new ArrayList<RequestErrorInfo>();
-    	RequestErrorInfo reqei;
+    	RequestErrorInfo reqei = new RequestErrorInfo();
 
     	ArrayList <ResponseErrorInfo> reseis = new ArrayList<ResponseErrorInfo>();
     	ResponseErrorInfo resei ;
@@ -36,12 +39,16 @@ public class GridchainApiServiceImpl extends GridchainApiService {
     	
  		if (authBase64String == null)
 		{	
+ 			erbs  = new ArrayList<ErrorRequestObject>();
+ 			
 			erb = new ErrorRequestObject(); 
 			erb.setError("Missing Authorization in Header"); 
 			erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
 
+			invReqMsg.append("Authorization in Header not Found. ");
+			
 			reqei = new RequestErrorInfo();
 			reqei.setErrorMessage("Authorization in Header not Found");
 			reqei.setErrorDetails( erbs);
@@ -50,10 +57,14 @@ public class GridchainApiServiceImpl extends GridchainApiService {
 
 		if (gridId <= 0)	
 		{	
+			erbs  = new ArrayList<ErrorRequestObject>();
+			
 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
 			erb.setProposedSolution("You must enter an Existing Grid ID. It should be a Positive Number.");
 			erbs.add(erb);
 
+			invReqMsg.append("Negative GridId. ");
+			
 			reqei = new RequestErrorInfo();
 			reqei.setErrorMessage("Negative GridId");
 			reqei.setErrorDetails( erbs);
@@ -86,6 +97,7 @@ public class GridchainApiServiceImpl extends GridchainApiService {
 		{
 	    	ResponseInfo ri = new ResponseInfo();
 	    	ri.setStatus("Invalid Request");
+	    	ri.setMessage(invReqMsg.toString().trim());
 	    	ri.setInvalidRequestDetails(reqeis);
 	        return Response.status(400).entity(ri).build();
 		}

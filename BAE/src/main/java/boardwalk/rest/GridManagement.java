@@ -3,6 +3,7 @@ package boardwalk.rest;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -3938,7 +3939,7 @@ public class GridManagement {
 		    while (i.hasNext())
 			{
 		    	Integer tid = (Integer)i.next();
-		    	System.out.println("TransactionList..ID" + tid);
+		    	System.out.println("TransactionList..ID : " + tid);
 
 			    Vector  vt = (Vector)transactionList.get(tid);
 			    t = (Transaction)vt.elementAt(0);
@@ -3991,7 +3992,18 @@ public class GridManagement {
 			    
 				    long id = (long) t.getId();
 				    String updatedBy = t.getCreatedByUserAddress();
+				    double dtransactionTime = (double) t.getCreatedOnTime();
+					System.out.println("Setting double dtransactionTime : " + dtransactionTime);
+					long myLong = difference_in_MiliSec + ((long) (dtransactionTime * 1000));
+					System.out.println(myLong);
+
+					Date itemDate = new Date(myLong);
+					System.out.println("Setting itemDate : " + itemDate);
+
+
 					long transactionTime = t.getCreatedOnTime() + difference_in_MiliSec;
+					
+					Date tran_date =new Date(transactionTime);
 				    //String updatedOn = t.getCreatedOn();
 				    //String descr = t.getDescription();
 				    String comment = t.getComment();
@@ -3999,15 +4011,16 @@ public class GridManagement {
 					tx = new io.swagger.model.Transaction();
 
 					System.out.println("Setting tx.id : " + id);
+					System.out.println("Setting transactionTime : " + transactionTime);
 					System.out.println("Setting tx.CreatedOn : " + BigDecimal.valueOf(transactionTime));
-					System.out.println("Setting tx.description : " + descr);
+					System.out.println("Setting tx.description : " + descr + "....tran_date: " + tran_date);
 					System.out.println("Setting tx.keyword : " + comment);
 					System.out.println("Setting tx.userid : " + t.getCreatedByUserId());
 					System.out.println("Setting tx.username : " + updatedBy);
 
 					tx.setId(id);
 					tx.setCreatedOn( BigDecimal.valueOf(transactionTime));
-					tx.setDescription(descr);
+					tx.setDescription(descr + "....tran_date: " + tran_date);
 					tx.setKeyword(comment);
 					tx.setUserId((long) t.getCreatedByUserId());
 					tx.setUserName(updatedBy);		
