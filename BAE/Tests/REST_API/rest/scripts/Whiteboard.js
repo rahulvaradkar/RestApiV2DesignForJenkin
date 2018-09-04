@@ -3,13 +3,13 @@
     module('Whiteboard');
     var wb_Id = 0;
     var wb_name;
-    QUnit.test("Reading Whiteboard of Collaboration ID=1001", function (assert) {
+    QUnit.test("Reading Whiteboard of Collaboration ID = 1000", function (assert) {
         var done = assert.async();
         var input = $("#test-input").focus();
         var flag = false;
         var count_flag = false;
 
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_1 + "/whiteboard", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_1 + "/whiteboard", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
                 done();
@@ -41,7 +41,7 @@
 
     QUnit.test("Reading Whiteboard of not existed Collaboration ID=999", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Non_Existing_CollabId + "/whiteboard", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Non_Existing_CollabId + "/whiteboard", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -57,7 +57,7 @@
     QUnit.test("Reading Whiteboard of Collaboration with Negative ID= -999", function (assert) {
         var done = assert.async();
         var input = $("#test-input").focus();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Negative_CollabId + "/whiteboard", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Negative_CollabId + "/whiteboard", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -76,7 +76,7 @@
         var data = {
             "name": wb_name
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_2 + "/whiteboard", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_2 + "/whiteboard", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             wb_Id = result;
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -96,7 +96,7 @@
         var data = {
             "name": "ApiTest" + x
         }
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_2 + "/whiteboard", data, "POST").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_2 + "/whiteboard", data, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -113,7 +113,7 @@
         var data = {
             "name": wb_name
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_2 + "/whiteboard", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_2 + "/whiteboard", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -130,7 +130,7 @@
         var data = {
             "name": ""
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_2 + "/whiteboard", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_2 + "/whiteboard", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -147,7 +147,7 @@
         var data = {
             "name": "APii"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Non_Existing_CollabId + "/whiteboard", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Non_Existing_CollabId + "/whiteboard", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -161,7 +161,7 @@
 
     QUnit.test("Deleting Whiteboard", function (assert) {
         var done = assert.async();
-        TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_2 + "/whiteboard/" + wb_Id, UserInput.authorization).then(function (result) {
+        TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_2 + "/whiteboard/" + wb_Id, GlobalData.UserInput.authorization).then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -178,7 +178,7 @@
 
     QUnit.test("Deleting Whiteboard with Missing authorization", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_2 + "/whiteboard/" + wb_Id, null, "DELETE").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_2 + "/whiteboard/" + wb_Id, null, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -192,7 +192,7 @@
 
     QUnit.test("Deleting Whiteboard with non existing collaboration Id", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Non_Existing_CollabId + "/whiteboard/" + wb_Id, null, UserInput.authorization, "DELETE").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Non_Existing_CollabId + "/whiteboard/" + wb_Id, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -206,7 +206,7 @@
 
     QUnit.test("Deleting Whiteboard with non existing whiteboard Id", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Collab_Id_2 + "/whiteboard/" + WhiteboardInput.Invalid_WbId, null, UserInput.authorization, "DELETE").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Collab_Id_2 + "/whiteboard/" + GlobalData.WhiteboardInput.Invalid_WbId, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -220,7 +220,7 @@
 
     QUnit.test("Deleting Whiteboard with negative collaboration Id and Whiteboard Id", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Negative_CollabId + "/whiteboard/" + WhiteboardInput.Negative_WbId, null, UserInput.authorization, "DELETE").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Negative_CollabId + "/whiteboard/" + GlobalData.WhiteboardInput.Negative_WbId, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500){
                 assert.ok(result.status == 500 ," It seems server side error" + result.responseText);

@@ -1,5 +1,5 @@
 function undecidedAssertEqual(assert, value, forNow, neat, message) {
-    if (Globals.assertHow == "forNow")
+    if (GlobalData.Globals.assertHow == "forNow")
         assert.equal(value, forNow, message);
     else
         assert.equal(value, neat, message);

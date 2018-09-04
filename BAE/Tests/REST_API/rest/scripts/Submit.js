@@ -24,30 +24,30 @@
         var data = {
             "name": cuboid_name,
             "description": "CHECK FOR SUCCESS",
-            "wbId": WhiteboardInput.WB_Id,
-            "collabId": CollaborationInput.Collab_Id_1,
-            "memberId": UserInput.Member_Id_1,
+            "wbId": GlobalData.WhiteboardInput.WB_Id,
+            "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+            "memberId": GlobalData.UserInput.Member_Id_1,
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             cuboid_id = result.gridId;
             var data = {
-                "cells": GridInput.cells,
-                "columnArray": GridInput.columnArray,
-                "columnCellArrays": GridInput.columnCellArrays,
-                "columns": GridInput.columns,
-                "GridChangeBuffer": GridInput.GridChangeBuffer,
-                "rowArray": GridInput.rowArray,
-                "rows": GridInput.rows,
-                "info": {   "collabId": CollaborationInput.Collab_Id_1, 
-                            "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1 , "importTid": -1, "exportTid": -1}                
+                "cells": GlobalData.GridInput.cells,
+                "columnArray": GlobalData.GridInput.columnArray,
+                "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+                "columns": GlobalData.GridInput.columns,
+                "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+                "rowArray": GlobalData.GridInput.rowArray,
+                "rows": GlobalData.GridInput.rows,
+                "info": {   "collabId": GlobalData.CollaborationInput.Collab_Id_1, 
+                            "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1 , "importTid": -1, "exportTid": -1}                
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
-                TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
+                TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
                     importTid_ = result.info.importTid;
                     exportTid_ = result.info.exportTid;
                     columnArray_ = result.columnArray;
                     rowArray_ = result.rowArray;
-                    TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+                    TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
                         importTid_1 = result.info.importTid;
                         exportTid_1 = result.info.exportTid;
                         columnArray_1 = result.columnArray;
@@ -62,12 +62,12 @@
 
     function importGrid() {
         var promise = new $.Deferred();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             importTid_ = result.info.importTid;
             exportTid_ = result.info.exportTid;
             columnArray_ = result.columnArray;
             rowArray_ = result.rowArray;
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
                 importTid_1 = result.info.importTid;
                 exportTid_1 = result.info.exportTid;
                 columnArray_1 = result.columnArray;
@@ -84,7 +84,7 @@
             console.log("Submitting Grid with one cell");
             var x = Math.floor((Math.random() * 200) + 1);
             var data = {
-                "info": { "wbId": WhiteboardInput.WB_Id, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+                "info": { "wbId": GlobalData.WhiteboardInput.WB_Id, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
                 "cells": [{ "id": -1, "rowId": rowArray_[2], "colId": columnArray_[1], "rowSequence": 3, "colSequence": 2, "cellValue": "Sabarmati_", "cellFormula": "Sabarmati_", "active": true, "tid": -1, "changeFlag": 1, "access": -1 }],
                 "columnArray": [], "columnCellArrays": [], "columns": [], "rows": [],
                 "GridChangeBuffer": {
@@ -93,7 +93,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.ok(exportTid_ < result.info.exportTid, "exportTid should be larger than the previous Submit operation.");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -110,7 +110,7 @@
     QUnit.test("Refreshing Cuboid With One Cell with user2", function (assert) {
         var done = assert.async();
         console.log("Refresh with one cell");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -131,7 +131,7 @@
         var done = assert.async();
         var x = Math.floor((Math.random() * 200) + 1);
         var data = {
-            "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+            "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
             "cells": [{ "id": -1, "rowId": rowArray_[2], "colId": columnArray_[1], "rowSequence": 3, "colSequence": 2, "cellValue": "Sabarmati_", "cellFormula": "Sabarmati_", "active": true, "tid": -1, "changeFlag": 1, "access": -1 }],
             "columnArray": [], "columnCellArrays": [], "columns": [], "rows": [],
             "GridChangeBuffer": {
@@ -140,7 +140,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, "PUT").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             assert.equal(result[0].error, "Missing Authorization in Header", "Missing Authorization in header");
             done();
@@ -149,7 +149,7 @@
 
     QUnit.test("Refreshing Cuboid With One Cell with Missing Authorization with user2", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             assert.equal(result[0].error, "Missing Authorization in Header", "Missing Authorization in header");
             done();
@@ -159,7 +159,7 @@
     QUnit.test("Submitting Grid with one row with user1", function (assert) {
         var done = assert.async();
         var data = {
-            "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+            "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
             "cells": [{ "id": -1, "rowId": -1, "colId": columnArray_[0], "rowSequence": 2, "colSequence": 0, "cellValue": "Maharashtra", "cellFormula": "Maharashtra", "active": true, "tid": -1, "changeFlag": 4, "access": -1 },
             { "id": -1, "rowId": -1, "colId": columnArray_[1], "rowSequence": 2, "colSequence": 1, "cellValue": "Satara", "cellFormula": "Satara", "active": true, "tid": -1, "changeFlag": 4, "access": -1 }],
 
@@ -171,7 +171,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -189,7 +189,7 @@
     QUnit.test("Refreshing Cuboid With One Row with user2", function (assert) {
         var done = assert.async();
         console.log("Refresh with one Row");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -213,7 +213,7 @@
         console.log("Submitting Grid with one row at the Bottom");
         var done = assert.async();
         var data = {
-            "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+            "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
 
             "cells": [
                 { "id": -1, "rowId": -1, "colId": columnArray_[0], "rowSequence": 6, "colSequence": 0, "cellValue": "Gujrat", "cellFormula": "", "active": true, "tid": -1, "changeFlag": 4, "access": -1 },
@@ -226,7 +226,7 @@
                 "deletedRowArray": [], "newColumnArray": [], "deletedColumnArray": [], "criticalLevel": 1, "critical": 0
             }, "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -244,7 +244,7 @@
     QUnit.test("Refreshing Cuboid With One Row at the bottom with user2", function (assert) {
         var done = assert.async();
         console.log("Refresh with one Row at the bottom");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -267,7 +267,7 @@
     QUnit.test("Submitting Grid with consequative rows with user1", function (assert) {
         var done = assert.async();
         var data = {
-            "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+            "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
 
             "cells": [{ "id": -1, "rowId": -1, "colId": columnArray_[0], "rowSequence": 1, "colSequence": 1, "cellValue": "Maharashtra", "cellFormula": "Maharashtra", "active": true, "tid": -1, "changeFlag": 4, "access": -1 },
             { "id": -1, "rowId": -1, "colId": columnArray_[0], "rowSequence": 2, "colSequence": 1, "cellValue": "Maharashtra", "cellFormula": "Maharashtra", "active": true, "tid": -1, "changeFlag": 4, "access": -1 },
@@ -291,7 +291,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
@@ -309,7 +309,7 @@
     QUnit.test("Refreshing Cuboid With consequative Row with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Cuboid With consequative Row with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -332,7 +332,7 @@
     QUnit.test("Submitting Grid with deleting one row with user1", function (assert) {
         var done = assert.async();
         var data = {
-            "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+            "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
             "cells": [], "columnArray": [], "columnCellArrays": [], "columns": [], "rows": [],
             "GridChangeBuffer": {
                 "newRowArray": [], "deletedRowArray": [rowArray_[0]],
@@ -340,7 +340,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
@@ -356,7 +356,7 @@
     QUnit.test("Refreshing Cuboid With deleting Row with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Cuboid With consequative Row with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -379,7 +379,7 @@
     QUnit.test("Submitting Grid with deleting multiple rows with user1", function (assert) {
         var done = assert.async();
         var data = {
-            "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+            "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
 
             "cells": [], "columnArray": [], "columnCellArrays": [], "columns": [], "rows": [],
 
@@ -390,7 +390,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
@@ -406,7 +406,7 @@
     QUnit.test("Refreshing Cuboid With deleting multiple Rows with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Cuboid With consequative Row with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -433,7 +433,7 @@
             var x = Math.floor((Math.random() * 200) + 1);
             var data = {
                 "info": {
-                    "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,
+                    "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,
                     "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,
                     "view": "LATEST", "mode": 0
                 },
@@ -466,7 +466,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 var resultJSON = result;
                 importTid_ = result.info.importTid;
                 exportTid_ = result.info.exportTid;
@@ -485,7 +485,7 @@
     QUnit.test("Refreshing Grid with three column and formulas wih user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing  Grid with three column and formulas with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -509,7 +509,7 @@
         var done = assert.async();
         var data = {
             "info": {
-                "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,
                 "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,
                 "view": "LATEST", "mode": 0
             },
@@ -522,7 +522,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
@@ -538,7 +538,7 @@
     QUnit.test("Refreshing Grid with deleting columns with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Grid with deleting columns with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -561,7 +561,7 @@
         var done = assert.async();
         importGrid().then(function () {
             var data = {
-                "info": {"collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
+                "info": {"collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
 
                 "cells": [
                     { "id": -1, "rowId": -1, "colId": -1, "rowSequence": 0, "colSequence": 1, "cellValue": "India", "cellFormula": "", "active": true, "tid": -1, "changeFlag": 8, "access": -1 },
@@ -588,7 +588,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 var resultJSON = result;
                 assert.ok(result != null, "Response Should not be null");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -605,7 +605,7 @@
     QUnit.test("Refreshing Grid with deleting existing columns and Rows and adding new data with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Grid with deleting existing columns and Rows and adding new data with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -628,7 +628,7 @@
         var done = assert.async();
         importGrid().then(function () {
             var data = {
-                "info": {"collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
+                "info": {"collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
 
                 "cells": [
                     { "id": -1, "rowId": -1, "colId": columnArray_[0], "rowSequence": 2, "colSequence": 1, "cellValue": "Maharashtra", "cellFormula": "", "active": true, "tid": -1, "changeFlag": 4, "access": -1 },
@@ -645,7 +645,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 var resultJSON = result;
                 assert.ok(result != null, "Response Should not be null");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -662,7 +662,7 @@
     QUnit.test("Refreshing Grid with deleting existing row and inserting Row at same position with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Grid with deleting existing row and inserting Row at same position with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -686,7 +686,7 @@
         var done = assert.async();
         importGrid().then(function () {
             var data = {
-                "info": {"collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
+                "info": {"collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
 
                 "cells": [
                     { "id": -1, "rowId": rowArray_[0], "colId": -1, "rowSequence": 0, "colSequence": 1, "cellValue": "121", "cellFormula": "", "active": true, "tid": -1, "changeFlag": 8, "access": -1 },
@@ -704,7 +704,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 var resultJSON = result;
                 assert.ok(result != null, "Response Should not be null");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -722,7 +722,7 @@
     QUnit.test("Refreshing Grid with deleting existing column and inserting column at same position with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Grid with deleting existing column and inserting column at same position with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -746,7 +746,7 @@
         var done = assert.async();
         importGrid().then(function () {
             var data = {
-                "info": {"collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
+                "info": {"collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,"importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,"view": "LATEST", "mode": 0},
 
                 "cells": [
                     { "id": -1, "rowId": rowArray_[0], "colId": -1, "rowSequence": 0, "colSequence": 3, "cellValue": "10000", "cellFormula": "", "active": true, "tid": -1, "changeFlag": 8, "access": -1 },
@@ -764,7 +764,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 var resultJSON = result;
                 assert.ok(result != null, "Response Should not be null");
                 SubmitRefreshUtils.assertInfo(result, assert);
@@ -782,7 +782,7 @@
     QUnit.test("Refreshing Grid with inserting Column at last position with user2", function (assert) {
         var done = assert.async();
         console.log("Refreshing Grid with inserting Column at last position with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             SubmitRefreshUtils.assertInfo(result, assert);
             assert.ok(Array.isArray(result.cells), "cells should be an array of objects !");
@@ -808,7 +808,7 @@
             var x = Math.floor((Math.random() * 200) + 1);
             var data = {
                 "info": {
-                    "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,
+                    "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,
                     "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,
                     "view": "LATEST", "mode": 0
                 },
@@ -822,7 +822,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 var resultJSON = result;
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "Missing element cells:[]", "cells element is not present in Request");
@@ -837,7 +837,7 @@
             console.log("Submitting Grid with one cell with old sheet check error");
             var x = Math.floor((Math.random() * 200) + 1);
             var data = {
-                "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": (exportTid_ - 20), "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+                "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": (exportTid_ - 20), "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
                 "cells": [{ "id": -1, "rowId": rowArray_[2], "colId": columnArray_[1], "rowSequence": 3, "colSequence": 2, "cellValue": "Sabarmati_", "cellFormula": "Sabarmati_", "active": true, "tid": -1, "changeFlag": 1, "access": -1 }],
                 "columnArray": [], "columnCellArrays": [], "columns": [], "rows": [],
                 "GridChangeBuffer": {
@@ -846,7 +846,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result.error, "Old sheet Check error", "Old sheet Check error");
                 done();
@@ -860,7 +860,7 @@
             console.log("Submitting Grid with one cell");
             var x = Math.floor((Math.random() * 200) + 1);
             var data = {
-                "info": { "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
+                "info": { "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1, "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST", "mode": 0 },
                 "cells": [{ "id": -1, "rowId": rowArray_[2], "colId": columnArray_[1], "rowSequence": 3, "colSequence": 2, "cellValue": "Sabarmati_", "cellFormula": "Sabarmati_", "active": true, "tid": -1, "changeFlag": 1, "access": -1 }],
                 "columnArray": [], "columnCellArrays": [], "columns": [], "rows": [],
                 "GridChangeBuffer": {
@@ -869,7 +869,7 @@
                 },
                 "rowArray": []
             }
-            TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.invalidAuthorization, "PUT").then(function (result) {
+            TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.invalidAuthorization, "PUT").then(function (result) {
                 assert.ok(result != null, "Response Should not be null");
                 assert.equal(result[0].error, "Invalid Authorization. User is not a member of Neighborhood Path.", "Invalid Authorization");
                 done();
@@ -880,7 +880,7 @@
     QUnit.test("Refreshing Grid with Missing importTid in url", function (assert) {
         var done = assert.async();
         console.log("Refreshing Grid with deleting columns with user2");
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization_1, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization_1, "GET").then(function (result) {
             var resultJSON = result;
             assert.ok(result != null, "Response Should not be null");
             assert.equal(result[0].error, "importTid is missing in GET Request", "importTid is missing in GET Request");
@@ -890,7 +890,7 @@
 
     QUnit.test("Refreshing Grid with view is Missing", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             assert.equal(result[0].error, "View is missing in GET Request", "View is missing in GET Request");
             done();
@@ -899,7 +899,7 @@
 
     QUnit.test("Refreshing Grid with Invalid view", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST11&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST11&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             assert.equal(result[0].error, "Invalid View in GET Request", "Invalid View in GET Request");
             done();
@@ -908,7 +908,7 @@
 
     QUnit.test("Refreshing Grid with mode is Missing", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             assert.equal(result[0].error, "Mode is missing in GET Request", "Mode is missing in GET Request");
             done();
@@ -917,7 +917,7 @@
 
     QUnit.test("Refreshing Grid with Invalid mode", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=123&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + importTid_1 + "&view=LATEST&mode=123&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             assert.equal(result[0].error, "Invalid Mode in GET Request", "Invalid Mode in GET Request");
             done();
@@ -929,7 +929,7 @@
         var x = Math.floor((Math.random() * 200) + 1);
         var data = {
             "info": {
-                "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,
                 "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1,
                 "view": "LATEST", "mode": 0
             },
@@ -940,7 +940,7 @@
                 { "id": -1, "rowId": rowArray_[3], "colId": -1, "rowSequence": 3, "colSequence": 1, "cellValue": "abc", "cellFormula": "abc", "active": true, "tid": -1, "changeFlag": 8, "access": -1 }],
             "columnArray": [], "columnCellArrays": [], "columns": [], "rows": [], "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -957,7 +957,7 @@
         var done = assert.async();
         var data = {
             "info": {
-                "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,
                 "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST",
                 "mode": 0
             },
@@ -976,7 +976,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             assert.ok(result != null, "Response Should not be null");
             assert.equal(result[0].error, "TABLE UPDATE EXCEPTION : Unique Column violation", "Column Name already Exists");
@@ -988,7 +988,7 @@
         var done = assert.async();
         var data = {
             "info": {
-                "collabId": CollaborationInput.Collab_Id_1, "wbId": WhiteboardInput.WB_Id, "memberId": UserInput.Member_Id_1,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1, "wbId": GlobalData.WhiteboardInput.WB_Id, "memberId": GlobalData.UserInput.Member_Id_1,
                 "importTid": importTid_, "exportTid": exportTid_, "baselineId": -1, "criteriaTableId": -1, "view": "LATEST",
                 "mode": 0
             },
@@ -1007,7 +1007,7 @@
             },
             "rowArray": []
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             var resultJSON = result;
             assert.ok(result != null, "Response Should not be null");
             assert.equal(result[0].error, "Column Name cannot be Blank.", "Column Name is Blank");

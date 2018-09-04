@@ -3,12 +3,12 @@
 
 	//Data needed for tests in this module
 	var validMemberAttributes = ["id", "nhid", "userId"];
-	var rootNhId = NeighborhoodInput.ROOT_NhId;
-	var emptyNhId = NeighborhoodInput.NHID_3;
+	var rootNhId = GlobalData.NeighborhoodInput.ROOT_NhId;
+	var emptyNhId = GlobalData.NeighborhoodInput.NHID_3;
 	var errorAttributes = ["error", "path", "proposedSolution"];
 	var zeroNhId = 0;
-	var negativeNhId = NeighborhoodInput.Negative_Nh_Id;
-	var nonExistingNhId = NeighborhoodInput.Invalid_Nh_Id;
+	var negativeNhId = GlobalData.NeighborhoodInput.Negative_Nh_Id;
+	var nonExistingNhId = GlobalData.NeighborhoodInput.Invalid_Nh_Id;
 	var validAttributesForCreatedMember = ["active", "id", "nhid", "userId"];
 	var memberId = 0;
 	var user;
@@ -29,7 +29,7 @@
 	//GET members in Neighborhood
 	test("Get members of neighborhood", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + 2 + "/member", null, UserInput.authorization, "GET").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + 2 + "/member", null, GlobalData.UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -52,7 +52,7 @@
 
 	test("Get members of neighborhood with Missing Authorization", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", null, "GET").then(function (data) {
+		TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", null, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + res.responseText);
@@ -68,7 +68,7 @@
 	//Get empty data when no members in neighborhood
 	test("Get empty data for neighborhood without any members", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + emptyNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + emptyNhId + "/member", null, GlobalData.UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -87,7 +87,7 @@
 	//Get members from neighborhood with id 0
 	test("Get members from nhid 0 neighborhood", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + zeroNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + zeroNhId + "/member", null, GlobalData.UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -109,7 +109,7 @@
 	//Get members from neighborhood with id -1
 	test("Get members from nhid -1 neighborhood", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + negativeNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + negativeNhId + "/member", null, GlobalData.UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -131,7 +131,7 @@
 	//Get members from neighborhood which has nhId that doesn't exist in database
 	test("Get members from non-existing neighborhood", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + nonExistingNhId + "/member", null, UserInput.authorization, "GET").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + nonExistingNhId + "/member", null, GlobalData.UserInput.authorization, "GET").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -160,7 +160,7 @@
 				nhid: rootNhId,
 				id: 0
 			};
-			TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, UserInput.authorization, "POST").then(function (data) {
+			TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, GlobalData.UserInput.authorization, "POST").then(function (data) {
 				assert.ok(data != null, "Response should not be null");
 				if (data.status == 500) {
 					assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -184,7 +184,7 @@
 			nhid: rootNhId,
 			id: 0
 		};
-		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, "POST").then(function (data) {
+		TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, "POST").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -205,7 +205,7 @@
 			nhid: rootNhId,
 			id: 0
 		};
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, UserInput.authorization, "POST").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, GlobalData.UserInput.authorization, "POST").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -221,11 +221,11 @@
 	test("Create new membership for existing user", function (assert) {
 		var done = assert.async();
 		var membershipData = {
-			userId: UserInput.User_Id,
-			nhid: NeighborhoodInput.NHID_1,
+			userId: GlobalData.UserInput.User_Id,
+			nhid: GlobalData.NeighborhoodInput.NHID_1,
 			id: 0
 		};
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_1 + "/member", membershipData, UserInput.authorization, "POST").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_1 + "/member", membershipData, GlobalData.UserInput.authorization, "POST").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -245,7 +245,7 @@
 			nhid: 99999,
 			id: 0
 		};
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/99999/member", membershipData, UserInput.authorization, "POST").then(function (data) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/99999/member", membershipData, GlobalData.UserInput.authorization, "POST").then(function (data) {
 			assert.ok(data != null, "Response should not be null");
             if (data.status == 500) {
                 assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -268,7 +268,7 @@
 				nhid: emptyNhId,
 				id: 0
 			};
-			TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, UserInput.authorization, "POST").then(function (data) {
+			TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member", membershipData, GlobalData.UserInput.authorization, "POST").then(function (data) {
 				assert.ok(data != null, "Response should not be null");
             	if (data.status == 500) {
              		assert.ok(data.status == 500, " It seems server side error" + data.responseText);
@@ -287,7 +287,7 @@
 
 	test("Deleting Member", function (assert) {
 		var done = assert.async();
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + memberId, UserInput.authorization).then(function (res) {
+		TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + memberId, GlobalData.UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
             if (res.status == 500) {
                 assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -306,7 +306,7 @@
 
 	test("Deleting Member with negative member ID", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/-" + memberId, null, UserInput.authorization, "DELETE").then(function (res) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/-" + memberId, null, GlobalData.UserInput.authorization, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
             if (res.status == 500) {
                 assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -321,7 +321,7 @@
 
 	test("Deleting Member with invalid NHID", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + nonExistingNhId + "/member/" + memberId, null, UserInput.authorization, "DELETE").then(function (res) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + nonExistingNhId + "/member/" + memberId, null, GlobalData.UserInput.authorization, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
             if (res.status == 500) {
                 assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -336,7 +336,7 @@
 
 	test("Deleting Member with invalid MembershipId", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + UserInput.Invalid_MemberId, null, UserInput.authorization, "DELETE").then(function (res) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + GlobalData.UserInput.Invalid_MemberId, null, GlobalData.UserInput.authorization, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
             if (res.status == 500) {
                 assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -351,7 +351,7 @@
 
 	test("Deleting Member with Missing Authorization", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + memberId, null, "DELETE").then(function (res) {
+		TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + rootNhId + "/member/" + memberId, null, "DELETE").then(function (res) {
 			assert.ok(res != null, "Response should not be null");
             if (res.status == 500) {
                 assert.ok(res.status == 500, " It seems server side error" + res.responseText);

@@ -15,7 +15,7 @@
         var flag = false;
         var count_flag = false;
 
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.ROOT_NhId + "/collaboration", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.ROOT_NhId + "/collaboration", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -49,7 +49,7 @@
         var done = assert.async();
         var count_flag = false;
 
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_3 + "/collaboration", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_3 + "/collaboration", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -72,7 +72,7 @@
             "name": Collab_Name,
             "purpose": "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_1 + "/member/" + UserInput.Member_Id_1 + "/collaboration", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_1 + "/member/" + GlobalData.UserInput.Member_Id_1 + "/collaboration", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -91,7 +91,7 @@
             "name": Collab_Name,
             "purpose": "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_1 + "/member/" + UserInput.Member_Id_1 + "/collaboration", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_1 + "/member/" + GlobalData.UserInput.Member_Id_1 + "/collaboration", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -109,7 +109,7 @@
             "name": Collab_Name,
             "purpose": "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Negative_Nh_Id + "/member/-1001/collaboration", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.Negative_Nh_Id + "/member/-1001/collaboration", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -130,7 +130,7 @@
             "name": collab_name,
             "purpose": "Test"
         }
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, "POST").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_2 + "/member/" + GlobalData.UserInput.Member_Id_2 + "/collaboration", data, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -150,7 +150,7 @@
             "name": collab_name,
             "purpose": "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.invalidAuthorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_2 + "/member/" + GlobalData.UserInput.Member_Id_2 + "/collaboration", data, GlobalData.UserInput.invalidAuthorization, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -170,7 +170,7 @@
             "name": collab_name,
             "purpose": "Test"
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_2 + "/member/" + UserInput.Invalid_MemberId + "/collaboration", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_2 + "/member/" + GlobalData.UserInput.Invalid_MemberId + "/collaboration", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -190,7 +190,7 @@
             "name": "",
             "purpose": ""
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/3/member/" + UserInput.Member_Id_2 + "/collaboration", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/3/member/" + GlobalData.UserInput.Member_Id_2 + "/collaboration", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -205,7 +205,7 @@
  
     QUnit.test("Deleting Collaboration", function (assert) {
         var done = assert.async();
-        TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/collaboration/" + collab_Id, UserInput.authorization).then(function (result) {
+        TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + collab_Id, GlobalData.UserInput.authorization).then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -222,7 +222,7 @@
 
     QUnit.test("Deleting Collaboration with Missing Authorization", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/collaboration/" + collab_Id, null, "DELETE").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + collab_Id, null, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             if (result.status == 400) {
                 assert.ok(result.status == 400, " Missing Authorization in header ");
@@ -238,7 +238,7 @@
 
     QUnit.test("Deleting Collaboration with Invalid Collaboration Id", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Non_Existing_CollabId, null, UserInput.authorization, "DELETE").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Non_Existing_CollabId, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             if (result.status == 422) {
                 assert.ok(result.status == 422, " Invalid Collaboration ID");
@@ -252,7 +252,7 @@
 
     QUnit.test("Deleting Collaboration with Negative Collaboration Id", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/collaboration/" + CollaborationInput.Negative_CollabId, null, UserInput.authorization, "DELETE").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/collaboration/" + GlobalData.CollaborationInput.Negative_CollabId, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
             assert.ok(result != null, "Response should not be null !");
             if (result.status == 400) {
                 assert.ok(result.status == 400, "Negative collab ID");

@@ -11,7 +11,7 @@ var UserTests = (function (module, test) {
 			"externalId": "rest" + x,
 			"id": "0"
 		}
-		return TestUtils.sendRequest(Globals.baseURL + "rest/v1/user", data, UserInput.authorization, "POST");
+		return TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user", data, GlobalData.UserInput.authorization, "POST");
 	}
 
 	module('User');
@@ -20,14 +20,16 @@ var UserTests = (function (module, test) {
 	QUnit.test("Creating Database", function (assert) {
 		var done = assert.async();
 		Create_Data.createDatabase().then(function(){
-			assert.equal(1,1);
-			done();
+			GlobalData.buildData()
+				assert.equal(1,1);
+				done();
 		});
 	});
 
 	QUnit.test("Test Case For Single User", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.User_Id, null, UserInput.authorization, "GET").then(function (result) {
+		debugger;
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user/" + GlobalData.UserInput.User_Id, null, GlobalData.UserInput.authorization, "GET").then(function (result) {
 			var flag = false;
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -51,7 +53,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test Case For Negative user Id", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Negative_UserId, null, UserInput.authorization, "GET").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user/" + GlobalData.UserInput.Negative_UserId, null, GlobalData.UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -67,7 +69,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test Case For zero user Id", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Zero_USerId, null, UserInput.authorization, "GET").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user/" + GlobalData.UserInput.Zero_USerId, null, GlobalData.UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -82,7 +84,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test Case For User Not Found", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Non_Existing_UserId, null, UserInput.authorization, "GET").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user/" + GlobalData.UserInput.Non_Existing_UserId, null, GlobalData.UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -95,9 +97,9 @@ var UserTests = (function (module, test) {
 		});
 	});
 
-	QUnit.test("Test Case For Missing Authorization for user ID = " + UserInput.User_Id, function (assert) {
+	QUnit.test("Test Case For Missing Authorization for user ID = " + GlobalData.UserInput.User_Id, function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/user/" + UserInput.User_Id, null, "GET").then(function (result) {
+		TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/user/" + GlobalData.UserInput.User_Id, null, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -114,7 +116,7 @@ var UserTests = (function (module, test) {
 		var done = assert.async();	
 		var flag = false;
 		var count_flag = false;
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user?active=true", null, UserInput.authorization, "GET").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user?active=true", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
 				done();
@@ -149,7 +151,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test Case For Missing Authorization for Active Users", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/user?active=true", null, "GET").then(function (result) {
+		TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/user?active=true", null, "GET").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -192,18 +194,18 @@ var UserTests = (function (module, test) {
 			"firstName": "j",
 			"lastName": "j",
 			"password": "0",
-			"email": UserInput.email,
+			"email": GlobalData.UserInput.email,
 			"externalId": "j",
 			"id": "0"
 		};
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
 				done();
 				return ;
 			}
-			assert.equal(result[0].error, "Failed to created user with = " + UserInput.email, "Duplicate User");
+			assert.equal(result[0].error, "Failed to created user with = " + GlobalData.UserInput.email, "Duplicate User");
 			assert.equal(result[0].proposedSolution, "Status: 422. Check User Details Posted.", "Status: 422. Check User Details Posted.");
 			done();
 		});
@@ -220,7 +222,7 @@ var UserTests = (function (module, test) {
 			"externalId": "u",
 			"id": "0"
 		};
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user", data, UserInput.invalidAuthorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user", data, GlobalData.UserInput.invalidAuthorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -243,7 +245,7 @@ var UserTests = (function (module, test) {
 			"externalId": "sauravg",
 			"id": "0"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
 				done();
@@ -271,11 +273,11 @@ var UserTests = (function (module, test) {
 			"firstName": "j",
 			"lastName": "jp",
 			"password": 0,
-			"email": UserInput.email,
+			"email": GlobalData.UserInput.email,
 			"externalId": "j",
-			"id": UserInput.User_Id
+			"id": GlobalData.UserInput.User_Id
 		}
-		TestUtils.sendPutRequest(Globals.baseURL + "rest/v1/user", data, UserInput.authorization).then(function (result) {
+		TestUtils.sendPutRequest(GlobalData.Globals.baseURL + "rest/v1/user", data, GlobalData.UserInput.authorization).then(function (result) {
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
 				done();
@@ -300,7 +302,7 @@ var UserTests = (function (module, test) {
 			"externalId": "j",
 			"id": "1001"
 		}
-		TestUtils.sendPutRequest(Globals.baseURL + "rest/v1/user", data, UserInput.authorization).then(function (result) {
+		TestUtils.sendPutRequest(GlobalData.Globals.baseURL + "rest/v1/user", data, GlobalData.UserInput.authorization).then(function (result) {
 			var json = JSON.parse(result);
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500){
@@ -322,7 +324,7 @@ var UserTests = (function (module, test) {
 			"externalId": "j",
 			"id": "1001"
 		}
-		TestUtils.sendPutRequest(Globals.baseURL + "rest/v1/user", data, UserInput.authorization).then(function (result) {
+		TestUtils.sendPutRequest(GlobalData.Globals.baseURL + "rest/v1/user", data, GlobalData.UserInput.authorization).then(function (result) {
 			var json = JSON.parse(result);
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500){
@@ -338,7 +340,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test case for Deleting User", function (assert) {
 		var done = assert.async();
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/user/" + userid, UserInput.authorization).then(function (result) {
+		TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/user/" + userid, GlobalData.UserInput.authorization).then(function (result) {
 			var getResponse = result;
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -355,7 +357,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test case for Deleting User with Missing Authorization", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/user/" + userid, null, "DELETE").then(function (result) {
+		TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/user/" + userid, null, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -370,7 +372,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test case for Deleting Non existing User ", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Non_Existing_UserId, null, UserInput.authorization, "DELETE").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user/" + GlobalData.UserInput.Non_Existing_UserId, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);
@@ -385,7 +387,7 @@ var UserTests = (function (module, test) {
 
 	QUnit.test("Test case for Deleting User With Negative Userid", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/user/" + UserInput.Negative_UserId, null, UserInput.authorization, "DELETE").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/user/" + GlobalData.UserInput.Negative_UserId, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response Should not null");
 			if (result.status == 500){
 				assert.ok(result.status == 500 ," It seems server side error" + result.responseText);

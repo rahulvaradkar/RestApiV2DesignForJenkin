@@ -11,9 +11,9 @@
 	var level_1 = 0;
 	var level_2 = 0;
 	var level_3 = 0
-	QUnit.test("Reading Neighborhood with ID = " + NeighborhoodInput.NHID_1, function (assert) {
+	QUnit.test("Reading Neighborhood with ID = " + GlobalData.NeighborhoodInput.NHID_1, function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/1", null, UserInput.authorization, "GET").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -50,7 +50,7 @@
 			"parentId": "-1",
 			"secure": "false"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -74,7 +74,7 @@
 			"parentId": level_0,
 			"secure": "true"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -99,7 +99,7 @@
 			"parentId": level_1,
 			"secure": "true"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -123,7 +123,7 @@
 			"parentId": level_2,
 			"secure": "true"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -140,7 +140,7 @@
 
 	QUnit.test("Delete test case for neighborhood at level 3", function (assert) {
 		var done = assert.async();
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_3, UserInput.authorization).then(function (res) {
+		TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + level_3, GlobalData.UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
 			if (res.status == 500) {
 				assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -159,7 +159,7 @@
 
 	QUnit.test("Delete test case for neighborhood at level 2", function (assert) {
 		var done = assert.async();
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_2, UserInput.authorization).then(function (res) {
+		TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + level_2, GlobalData.UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
 			if (res.status == 500) {
 				assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -179,7 +179,7 @@
 
 	QUnit.test("Delete test case for neighborhood at level 1", function (assert) {
 		var done = assert.async();
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_1, UserInput.authorization).then(function (res) {
+		TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + level_1, GlobalData.UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
 			if (res.status == 500) {
 				assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -198,7 +198,7 @@
 
 	QUnit.test("Delete test case for neighborhood at level 0", function (assert) {
 		var done = assert.async();
-		TestUtils.sendDeleteRequest(Globals.baseURL + "rest/v1/neighborhood/" + level_0, UserInput.authorization).then(function (res) {
+		TestUtils.sendDeleteRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + level_0, GlobalData.UserInput.authorization).then(function (res) {
 			assert.ok(res != null, "Response should not be null");
 			if (res.status == 500) {
 				assert.ok(res.status == 500, " It seems server side error" + res.responseText);
@@ -217,12 +217,12 @@
 		var done = assert.async();
 		var data = {
 			"level": "-1",
-			"name": NeighborhoodInput.Existing_NhName,
+			"name": GlobalData.NeighborhoodInput.Existing_NhName,
 			"id": "0",
 			"parentId": "-1",
 			"secure": "false"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -231,7 +231,7 @@
 			}
 			level_0 = result[0].id;
 			assert.notEqual(result.length, 0, "object should not be empty !");
-			assert.equal(result[0].error, "Failed to Create Neighbornood:" + NeighborhoodInput.Existing_NhName + ",  Error Msg:null, Cause:null", "Trying to create duplicate neighborhood at level 0");
+			assert.equal(result[0].error, "Failed to Create Neighbornood:" + GlobalData.NeighborhoodInput.Existing_NhName + ",  Error Msg:null, Cause:null", "Trying to create duplicate neighborhood at level 0");
 			assert.equal(Object.keys(result[0]).length, 3, "neighborhood should have 3 properties !");
 			done();
 		});
@@ -243,10 +243,10 @@
 			"level": "-1",
 			"name": "LEVEL_11",
 			"id": "0",
-			"parentId": NeighborhoodInput.InvalidParent_Id,
+			"parentId": GlobalData.NeighborhoodInput.InvalidParent_Id,
 			"secure": "false"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -270,7 +270,7 @@
 			"parentId": "-1",
 			"secure": "false"
 		}
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood", data, UserInput.authorization, "POST").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -287,7 +287,7 @@
 
 	QUnit.test("Reading Neighborhood with InValid Id", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Invalid_Nh_Id, null, UserInput.authorization, "GET").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.Invalid_Nh_Id, null, GlobalData.UserInput.authorization, "GET").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -301,7 +301,7 @@
 
 	QUnit.test("Missing Authorization while Reading Neighborhood", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.NHID_1, null, "GET").then(function (result) {
+		TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.NHID_1, null, "GET").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -315,7 +315,7 @@
 
 	QUnit.test("Delete test case for non existing neighborhood ID", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Invalid_Nh_Id, null, UserInput.authorization, "DELETE").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.Invalid_Nh_Id, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -329,7 +329,7 @@
 
 	QUnit.test("Delete test case for negative neighborhood ID", function (assert) {
 		var done = assert.async();
-		TestUtils.sendRequest(Globals.baseURL + "rest/v1/neighborhood/" + NeighborhoodInput.Negative_Nh_Id, null, UserInput.authorization, "DELETE").then(function (result) {
+		TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/neighborhood/" + GlobalData.NeighborhoodInput.Negative_Nh_Id, null, GlobalData.UserInput.authorization, "DELETE").then(function (result) {
 			assert.ok(result != null, "Response should not be null");
 			if (result.status == 500) {
 				assert.ok(result.status == 500, " It seems server side error" + result.responseText);

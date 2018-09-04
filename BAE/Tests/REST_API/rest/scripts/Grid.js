@@ -10,8 +10,6 @@
     var cuboid_name = "";
     var cuboid_id_ = 0;
     var cuboid_name_ = "";
-
-    var columnArray_Submit;
     QUnit.test("Creating Grid", function (assert) {
         var done = assert.async();
         var x = Math.floor((Math.random() * 1000000000) + 1);
@@ -19,12 +17,12 @@
         var data =  {
             "name":"GOOD_CUBOID_"+x,  
             "description": "CHECK FOR SUCCESS",  
-            "wbId": WhiteboardInput.WB_Id,  
-            "collabId":CollaborationInput.Collab_Id_1,  
-            "memberId": UserInput.Member_Id_1,  
+            "wbId": GlobalData.WhiteboardInput.WB_Id,  
+            "collabId":GlobalData.CollaborationInput.Collab_Id_1,  
+            "memberId": GlobalData.UserInput.Member_Id_1,  
             "gridId": 0
             }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -56,11 +54,11 @@
         var data = {
             "name": cuboid_name,
             "description": "CHECK FOR SUCCESS",
-            "wbId": WhiteboardInput.WB_Id,
-            "collabId": CollaborationInput.Collab_Id_1,
-            "memberId": UserInput.Member_Id_1
+            "wbId": GlobalData.WhiteboardInput.WB_Id,
+            "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+            "memberId": GlobalData.UserInput.Member_Id_1
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -79,11 +77,11 @@
         var data = {
             "name": cuboid_name_,
             "description": "CHECK FOR SUCCESS",
-            "wbId": WhiteboardInput.WB_Id,
-            "collabId": CollaborationInput.Collab_Id_1,
-            "memberId": UserInput.Member_Id_2
+            "wbId": GlobalData.WhiteboardInput.WB_Id,
+            "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+            "memberId": GlobalData.UserInput.Member_Id_2
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -107,11 +105,11 @@
         var data = {
             "name": "",
             "description": "",
-            "wbId": WhiteboardInput.Negative_WbId,
-            "collabId": CollaborationInput.Negative_CollabId,
-            "memberId": UserInput.Negative_MemberId
+            "wbId": GlobalData.WhiteboardInput.Negative_WbId,
+            "collabId": GlobalData.CollaborationInput.Negative_CollabId,
+            "memberId": GlobalData.UserInput.Negative_MemberId
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -132,11 +130,11 @@
         var data = {
             "name": "GOOD_CUBOID_" + x,
             "description": "CHECK FOR SUCCESS",
-            "wbId": WhiteboardInput.WB_Id,
+            "wbId": GlobalData.WhiteboardInput.WB_Id,
             "collabId": 9999,
-            "memberId": UserInput.Member_Id_1
+            "memberId": GlobalData.UserInput.Member_Id_1
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -155,10 +153,10 @@
             "name": "GOOD_CUBOID_" + x,
             "description": "CHECK FOR SUCCESS",
             "wbId": 9999,
-            "collabId": CollaborationInput.Collab_Id_1,
-            "memberId": UserInput.Member_Id_1
+            "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+            "memberId": GlobalData.UserInput.Member_Id_1
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid", data, UserInput.authorization, "POST").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid", data, GlobalData.UserInput.authorization, "POST").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -173,23 +171,23 @@
     QUnit.test("Exporting Grid", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
-            "rows": GridInput.rows,
+            "cells": GlobalData.GridInput.cells,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
         Cuboid_Submit = cuboid_id;
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -223,22 +221,22 @@
     QUnit.test("Exporting Grid with Missing Authorization", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
-            "rows": GridInput.rows,
+            "cells": GlobalData.GridInput.cells,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, "PUT").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -253,22 +251,22 @@
     QUnit.test("Exporting Grid with Invalid Authorization", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
-            "rows": GridInput.rows,
+            "cells": GlobalData.GridInput.cells,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.invalidAuthorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.invalidAuthorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -283,22 +281,22 @@
     QUnit.test("Exporting Grid with Duplicate Column names", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns_DuplicateColumns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
-            "rows": GridInput.rows,
+            "cells": GlobalData.GridInput.cells,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns_DuplicateColumns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -313,21 +311,21 @@
     QUnit.test("Missing columns element while Exporting Grid", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
-            "rows": GridInput.rows,
+            "cells": GlobalData.GridInput.cells,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -342,21 +340,21 @@
     QUnit.test("Missing Cell element while Exporting Grid", function (assert) {
         var done = assert.async();
         var data = {
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
-            "rows": GridInput.rows,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -371,22 +369,22 @@
     QUnit.test("Missing rows element while Exporting Grid", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
+            "cells": GlobalData.GridInput.cells,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
 
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -401,21 +399,21 @@
     QUnit.test("Missing rowArray while Exporting Grid", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnArray": GridInput.columnArray,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rows": GridInput.rows,
+            "cells": GlobalData.GridInput.cells,
+            "columnArray": GlobalData.GridInput.columnArray,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -430,21 +428,21 @@
     QUnit.test("Missing columnArray element while Exporting Grid", function (assert) {
         var done = assert.async();
         var data = {
-            "cells": GridInput.cells,
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rowArray": GridInput.rowArray,
-            "rows": GridInput.rows,
+            "cells": GlobalData.GridInput.cells,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rowArray": GlobalData.GridInput.rowArray,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -459,19 +457,19 @@
     QUnit.test("Missing cells, rowArray and columnArray element while Exporting Grid", function (assert) {
         var done = assert.async();
         var data = {
-            "columnCellArrays": GridInput.columnCellArrays,
-            "columns": GridInput.columns,
-            "GridChangeBuffer": GridInput.GridChangeBuffer,
-            "rows": GridInput.rows,
+            "columnCellArrays": GlobalData.GridInput.columnCellArrays,
+            "columns": GlobalData.GridInput.columns,
+            "GridChangeBuffer": GlobalData.GridInput.GridChangeBuffer,
+            "rows": GlobalData.GridInput.rows,
             "info": {               
-                "exportTid": GridInput.exportTid,            
-                "importTid": GridInput.importTid,
-                "collabId": CollaborationInput.Collab_Id_1,
-                "wbId": WhiteboardInput.WB_Id,
-                "memberId": UserInput.Member_Id_1           
+                "exportTid": GlobalData.GridInput.exportTid,            
+                "importTid": GlobalData.GridInput.importTid,
+                "collabId": GlobalData.CollaborationInput.Collab_Id_1,
+                "wbId": GlobalData.WhiteboardInput.WB_Id,
+                "memberId": GlobalData.UserInput.Member_Id_1           
             }
         }
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, UserInput.authorization, "PUT").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid?gridId=" + cuboid_id_, data, GlobalData.UserInput.authorization, "PUT").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -487,7 +485,7 @@
 
     QUnit.test("Importing Grid", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response Should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -514,7 +512,7 @@
 
     QUnit.test("Importing Grid with Invalid Authorization", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, UserInput.invalidAuthorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.invalidAuthorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -528,7 +526,7 @@
 
     QUnit.test("Importing Grid with Missing Authorization", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequestMissingAuthorization(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function (result) {
+        TestUtils.sendRequestMissingAuthorization(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -542,7 +540,7 @@
 
     QUnit.test("Importing Grid with ImportTid is Missing", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?view=LATEST&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?view=LATEST&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -556,7 +554,7 @@
 
     QUnit.test("Importing Grid with view is Missing", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -570,7 +568,7 @@
 
     QUnit.test("Importing Grid with Invalid view", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST11&mode=1&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST11&mode=1&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -584,7 +582,7 @@
 
     QUnit.test("Importing Grid with mode is Missing", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -598,7 +596,7 @@
 
     QUnit.test("Importing Grid with Invalid mode", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=123&baselineId=-1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=123&baselineId=-1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -612,7 +610,7 @@
 
     QUnit.test("Importing Grid with BaselineId is Missing", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1", null, UserInput.authorization, "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1", null, GlobalData.UserInput.authorization, "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -626,7 +624,7 @@
 
     QUnit.test("Importing Grid with Wrong username and wrong Password", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, getAuthorization("nhj", 8, "JSAddin"), "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, getAuthorization("nhj", 8, "JSAddin"), "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
@@ -640,7 +638,7 @@
 
     QUnit.test("Importing Grid with Wrong authorization format", function (assert) {
         var done = assert.async();
-        TestUtils.sendRequest(Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, getAuthorization("j", 0, ""), "GET").then(function (result) {
+        TestUtils.sendRequest(GlobalData.Globals.baseURL + "rest/v1/grid/" + cuboid_id + "?importTid=" + GlobalData.GridInput.importTid + "&view=LATEST&mode=1&baselineId=-1", null, getAuthorization("j", 0, ""), "GET").then(function (result) {
             assert.ok(result != null, "Response should not be null");
             if (result.status == 500) {
                 assert.ok(result.status == 500, " It seems server side error" + result.responseText);
