@@ -71,9 +71,11 @@ public class UserApi  {
        @io.swagger.annotations.Authorization(value = "bwAuth")
    }, tags={ "Get list of user memberships", })
    @io.swagger.annotations.ApiResponses(value = { 
-       @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Membership.class, responseContainer = "List"),
-       
-       @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input", response = ErrorRequestObject.class, responseContainer = "List") })
+	        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Membership.class, responseContainer = "List"),
+	        
+	        @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ResponseInfo.class),
+	        
+	        @io.swagger.annotations.ApiResponse(code = 401, message = "Authorization Failed. or Missing authorization or Neighborhood Path doesnot exists. Unauthorized Access.", response = ResponseInfo.class) })
    public Response userEmailMembershipGet(@ApiParam(value = "",required=true) @PathParam("email") String email
 ,@Context SecurityContext securityContext, @HeaderParam("Authorization") String authBase64String)
    throws NotFoundException {

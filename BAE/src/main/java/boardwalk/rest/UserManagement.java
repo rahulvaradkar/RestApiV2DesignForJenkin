@@ -791,7 +791,7 @@ public class UserManagement {
 	}
 	
 	//DELETE	....DONE ACORDING TO TEMPLATE
-	public static String userUserIdDelete(int userId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static String userUserIdDelete(int userId, ArrayList <ErrorRequestObject> ErrResps, BoardwalkConnection bwcon)
 	{
 		String retMsg = null;
         // get the connection
@@ -799,26 +799,8 @@ public class UserManagement {
 
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int nhId = -1;
-		int memberId = -1;
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return retMsg;
-		}
-
 		connection = bwcon.getConnection();
-		memberId = memberNh.get(0);
-		nhId = memberNh.get(1);
 
-		//System.out.println("MemberNode -> nhId :" + nhId);
-		//System.out.println("MemberNode -> memberId :" + memberId);
-    	
         try
         {
             BoardwalkUser bwUser = null ;
@@ -885,35 +867,12 @@ public class UserManagement {
 	}
 	
 	//PUT		....DONE ACORDING TO TEMPLATE
-//	public static String userPut(User u, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
-	public static String userPut(User u, ArrayList<Object> sections, String authBase64String)
+	public static String userPut(User u, ArrayList <ErrorRequestObject> ErrResps, BoardwalkConnection bwcon)
 	{
 		String retMsg = null;
 		ErrorRequestObject erb;
 		Connection connection = null;
-		BoardwalkConnection bwcon = null;
-
-		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-		
-		int nhId = -1;
-		int memberId = -1;
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			sections.add(401);				//UNAUTHORIZED: The request has not been applied because it lacks valid authentication credentials for the target resource.
-			sections.addAll(ErrResps);
-			return retMsg;
-		}
-
 		connection = bwcon.getConnection();
-		memberId = memberNh.get(0);
-		nhId = memberNh.get(1);
-
-		//System.out.println("MemberNode -> nhId :" + nhId);
-		//System.out.println("MemberNode -> memberId :" + memberId);
 		
 		/// CUSTOM CODE START
 		int uId = u.getId().intValue();
@@ -964,32 +923,13 @@ public class UserManagement {
 	}
 	
 	//POST		....DONE ACORDING TO TEMPLATE
-	public static ArrayList<User> userPost(User u, ArrayList <ErrorRequestObject> ErrResps, String authBase64String )
+	public static ArrayList<User> userPost(User u, ArrayList <ErrorRequestObject> ErrResps, BoardwalkConnection bwcon )
 	{
         ArrayList <User> uList = new ArrayList<User>();
         ErrorRequestObject erb;
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int nhId = -1;
-		int memberId = -1;
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return uList;
-		}
-
 		connection = bwcon.getConnection();
-		memberId = memberNh.get(0);
-		nhId = memberNh.get(1);
-
-		//System.out.println("MemberNode -> nhId :" + nhId);
-		//System.out.println("MemberNode -> memberId :" + memberId);
-
 		// custom logic starts
         int uId;
         try
@@ -1001,7 +941,7 @@ public class UserManagement {
             	erb = new ErrorRequestObject();
             	erb.setError("Failed to created user with = " + u.getEmail());
             	erb.setPath("UserManagement.userPost::BoardwalkUserManager.createUser");
-            	erb.setProposedSolution("Status: 422. Check User Details Posted.");
+            	erb.setProposedSolution("Check User Details Posted and Submit again");
             	ErrResps.add(erb);
             }
             else
@@ -1046,32 +986,14 @@ public class UserManagement {
 	}
 	
 	//GET		....DONE ACORDING TO TEMPLATE
-	public static ArrayList<User> userGet(boolean active, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static ArrayList<User> userGet(boolean active, ArrayList <ErrorRequestObject> ErrResps, BoardwalkConnection bwcon)
 	{
         ArrayList <User> uList = new ArrayList<User>();
         ErrorRequestObject erb;
         
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int nhId = -1;
-		int memberId = -1;
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return uList;
-		}
-
 		connection = bwcon.getConnection();
-		memberId = memberNh.get(0);
-		nhId = memberNh.get(1);
-
-		//System.out.println("MemberNode -> nhId :" + nhId);
-		//System.out.println("MemberNode -> memberId :" + memberId);
 
         int intActive;
         intActive = (active == true ? 1 : 0);
@@ -1124,33 +1046,13 @@ public class UserManagement {
 	}
 	
 	//GET       ....DONE ACORDING TO TEMPLATE
-	public static User userUserIdGet(int userId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static User userUserIdGet(int userId, ArrayList <ErrorRequestObject> ErrResps, BoardwalkConnection bwcon)
 	{
 		io.swagger.model.User user = null;
 		ErrorRequestObject erb;
-		
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int nhId = -1;
-		int memberId = -1;
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return user;
-		}
-
 		connection = bwcon.getConnection();
-		memberId = memberNh.get(0);
-		nhId = memberNh.get(1);
-
-		//System.out.println("MemberNode -> nhId :" + nhId);
-		//System.out.println("MemberNode -> memberId :" + memberId);
-
 		//Custom code starts
         BoardwalkUser bwUser = null ;
 		try

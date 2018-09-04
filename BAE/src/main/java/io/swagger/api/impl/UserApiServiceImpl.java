@@ -3,20 +3,12 @@ package io.swagger.api.impl;
 import io.swagger.api.*;
 import io.swagger.model.*;
 
-import io.swagger.model.Collaboration;
-import io.swagger.model.ErrorRequestObject;
-import io.swagger.model.GridChain;
-import io.swagger.model.GridInfo;
-import io.swagger.model.Membership;
-import io.swagger.model.ResponseInfo;
-import io.swagger.model.User;
-import io.swagger.model.Whiteboard;
-
 import java.util.ArrayList;
 import java.util.List;
 import io.swagger.api.NotFoundException;
 
 import java.io.InputStream;
+import java.sql.Connection;
 
 import org.glassfish.jersey.client.authentication.ResponseAuthenticationException;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -27,7 +19,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
 
+import boardwalk.connection.BoardwalkConnection;
 import boardwalk.rest.UserManagement;
+import boardwalk.rest.bwAuthorization;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-06-09T04:12:45.675Z")
 public class UserApiServiceImpl extends UserApiService {
@@ -36,36 +30,84 @@ public class UserApiServiceImpl extends UserApiService {
     @Override
     public Response userEmailMembershipsGet(String email, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-    	
+    		
        	System.out.println("email : " + email);
 
-    		ErrorRequestObject erb;
-    		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+    	StringBuffer invReqMsg = new StringBuffer(500);
+    	StringBuffer invResMsg = new StringBuffer(500);
+
+    	ArrayList <ErrorRequestObject> erbs  = new ArrayList<ErrorRequestObject>();
+    	ErrorRequestObject erb;
+
+    	ArrayList <RequestErrorInfo> reqeis = new ArrayList<RequestErrorInfo>();
+    	RequestErrorInfo reqei = new RequestErrorInfo();
+
+    	ArrayList <ResponseErrorInfo> reseis = new ArrayList<ResponseErrorInfo>();
+    	ResponseErrorInfo resei ;
+    	
+    		//ErrorRequestObject erb;
+    		//ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
     		//System.out.println("authBase64String : " + authBase64String);
     			
     		if (authBase64String == null)
     		{	
-    			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+     			erbs  = new ArrayList<ErrorRequestObject>();
+     			
+    			erb = new ErrorRequestObject(); 
+    			erb.setError("Missing Authorization in Header"); 
+    			erb.setPath("Header:Authorization"); 
     			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
     			erbs.add(erb);
+
+    			invReqMsg.append("Authorization in Header not Found. ");
+    			
+    			reqei = new RequestErrorInfo();
+    			reqei.setErrorMessage("Authorization in Header not Found");
+    			reqei.setErrorDetails( erbs);
+    			reqeis.add(reqei);
+
+     	    	ResponseInfo ri = new ResponseInfo();
+    	    	ri.setStatus("Authorization Failed.");
+    	    	ri.setMessage(invReqMsg.toString().trim());
+    	    	ri.setInvalidRequestDetails(reqeis);
+    	        return Response.status(401).entity(ri).build();    			
     		}
 
     		if (email == null)
     		{
-        		erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email");
-        		erb.setProposedSolution("Enter Email");
-        		erbs.add(erb);
+    			
+    			erbs  = new ArrayList<ErrorRequestObject>();
+    			
+    			erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email"); 
+    			erb.setProposedSolution("Enter Email");
+    			erbs.add(erb);
+
+    			invReqMsg.append("Missing Email. ");
+    			
+    			reqei = new RequestErrorInfo();
+    			reqei.setErrorMessage("Missing Email.");
+    			reqei.setErrorDetails( erbs);
+    			reqeis.add(reqei);
     		}
     		else if (email.trim().equals(""))
         	{	
-        		erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email");
-        		erb.setProposedSolution("Enter Email");
-        		erbs.add(erb);
+    			erbs  = new ArrayList<ErrorRequestObject>();
+    			
+    			erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email"); 
+    			erb.setProposedSolution("Enter Email");
+    			erbs.add(erb);
+
+    			invReqMsg.append("Blank Email. ");
+    			
+    			reqei = new RequestErrorInfo();
+    			reqei.setErrorMessage("Blank Email.");
+    			reqei.setErrorDetails( erbs);
+    			reqeis.add(reqei);
         	}
     		    		
-        	if (erbs.size() == 0)
-        	{
+    		if (reqeis.size() == 0)
+    		{
            	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 
         		ArrayList<Membership> ml;
@@ -78,13 +120,24 @@ public class UserApiServiceImpl extends UserApiService {
             		return Response.ok().entity(ml).build();
         		else
         		{
-        			return Response.ok().entity(ErrResps).build();
-        			//return Response.status(500).entity(ErrResps).build();
-        		}
+    		    	resei = new ResponseErrorInfo();		    	
+    		    	resei.setErrorMessage("Errors on Server");
+    		    	resei.setErrorDetails(ErrResps);
+    		    	reseis.add(resei);
+    		    	
+    		    	ResponseInfo ri = new ResponseInfo();
+    		    	ri.setStatus("Failure");
+    		    	ri.setFailureDetails(reseis);
+    	    		return Response.status(422).entity(ri).build();  
+    	    	}
         	}
         	else
         	{
-            	return Response.ok().entity(erbs).build();
+    	    	ResponseInfo ri = new ResponseInfo();
+    	    	ri.setStatus("Invalid Request");
+    	    	ri.setMessage(invReqMsg.toString().trim());
+    	    	ri.setInvalidRequestDetails(reqeis);
+    	        return Response.status(400).entity(ri).build();
         	}
     		    	
         //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
@@ -442,6 +495,7 @@ public class UserApiServiceImpl extends UserApiService {
     public Response userGet( Boolean active, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	System.out.println("active : " + active);
 
+    	BoardwalkConnection bwcon = null;
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
@@ -452,29 +506,41 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
 		}
-
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
+		
     	if (erbs.size() == 0)
     	{
        	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 
     		ArrayList<User> ul;
-        	ul = UserManagement.userGet(active, ErrResps, authBase64String);
+        	ul = UserManagement.userGet(active, ErrResps, bwcon);
        	 	
         	System.out.println("ul.size :"+ ul.size());
         	System.out.println("ErrResps.size :"+ ErrResps.size());
         	
         	if (ul.size() > 0)
-        		return Response.ok().entity(ul).build();
+        		return Response.status(200).entity(ul).build();				// success list of active/inactive users
     		else
     		{
-    			return Response.ok().entity(ErrResps).build();
-    			//return Response.status(500).entity(ErrResps).build();
+    			return Response.status(500).entity(ErrResps).build();		// something has gone wrong on the website's server, but the server could not be more specific on what the exact problem is.
     		}
     	}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();
     	}
 		
   //      return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
@@ -482,14 +548,9 @@ public class UserApiServiceImpl extends UserApiService {
     @Override
     public Response userPost(User user, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	
-/*    	System.out.println("user.getEmail()->" + user.getEmail());
-    	System.out.println("user.getExternalId()->" + user.getExternalId() );
-    	System.out.println("user.getFirstName()->" + user.getFirstName() );
-    	System.out.println("user.getLastName()->" + user.getLastName() );
-    	System.out.println("user.getPassword()->" + user.getPassword());
-    	System.out.println("user.getId()->" + user.getId());
-*/    	
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+    	BoardwalkConnection bwcon = null;
+    	
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 		ErrorRequestObject erb;
 
     	//System.out.println("authBase64String : " + authBase64String);
@@ -499,7 +560,20 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
 
 		String Email = user.getEmail();
 		String ExternalId = user.getExternalId();
@@ -575,22 +649,21 @@ public class UserApiServiceImpl extends UserApiService {
     	if (erbs.size() == 0)
     	{
        	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-       	 
     		ArrayList<User> ul;
-        	ul = UserManagement.userPost(user, ErrResps, authBase64String);
+        	ul = UserManagement.userPost(user, ErrResps, bwcon);
         	System.out.println("ul.size :"+ ul.size());
         	System.out.println("ErrResps.size :"+ ErrResps.size());
         	
         	if (ul.size() > 0)
-        		return Response.ok().entity(ul).build();
+        		return Response.status(200).entity(ul).build();		//Successfully created user
     		else
     		{
-    			return Response.ok().entity(ErrResps).build();
+    			return Response.status(409).entity(ErrResps).build();	//409 Conflict. The request could not be completed due to a conflict with the current state of the target resource. This code is used in situations where the user might be able to resolve the conflict and resubmit the request.
     		}
     	}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();
     	}
     }
 
@@ -598,6 +671,7 @@ public class UserApiServiceImpl extends UserApiService {
     @Override
     public Response userPut(User user, SecurityContext securityContext, String authBase64String) throws NotFoundException {
     	
+    	BoardwalkConnection bwcon = null;
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
@@ -608,7 +682,20 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
 
 		String Email = user.getEmail();
 		String ExternalId = user.getExternalId();
@@ -681,45 +768,17 @@ public class UserApiServiceImpl extends UserApiService {
     		erbs.add(erb);
     	}
 
-	    //@io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = String.class),
-	    //@io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ErrorRequestObject.class, responseContainer = "List"),
-	    //@io.swagger.annotations.ApiResponse(code = 404, message = "User profile not found", response = String.class),
-	    //@io.swagger.annotations.ApiResponse(code = 422, message = "Failed to Update User Profile. Reason could be trying to create Duplicate entities", response = ErrorRequestObject.class, responseContainer = "List") })
-		
     	if (erbs.size() == 0)
     	{
-    		ArrayList<Object> sections = new ArrayList <Object>();
-//    		sections.add(500);
-  //  		sections.add(ErrRsps);
-	//        return Response.status(sections.get(0) ).entity(sections.get(1)).build();
-    		
-    		
-	   	 	//ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();	// ORIGNAL WORKING
+	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 			String o;
-			//o = UserManagement.userPut(user, ErrResps, authBase64String);		// Original	WORKING
-			
-			
-			o = UserManagement.userPut(user, sections, authBase64String);
-
-  			if (sections.size() > 0)
-    			return Response.status((Integer)sections.get(0)).entity(sections.get(1)).build();
-    		else
-    		{
-		        return Response.status(200).entity(o).build();
-    		}
-			
-			/*        	ORIGINAL CODE ---- WORKING00
-			
-        	System.out.println("After calling UserManagement.userPut o:"+ o);
-        	System.out.println("ErrResps.size :"+ ErrResps.size());
-
+			o = UserManagement.userPut(user, ErrResps, bwcon);
   			if (ErrResps.size() > 0)
-    			return Response.ok().entity(ErrResps).build();
+  				return Response.status(409).entity(ErrResps).build();   	//The request could not be completed due to a conflict with the current state of the target resource. This code is used in situations where the user might be able to resolve the conflict and resubmit the request.
     		else
     		{
 		        return Response.status(200).entity(o).build();
     		}
-*/    	
 		}
     	else
     	{
@@ -732,6 +791,8 @@ public class UserApiServiceImpl extends UserApiService {
     @Override
     public Response userUserIdDelete(Integer userId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
+    	BoardwalkConnection bwcon = null;
+    	
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
@@ -742,9 +803,22 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
 		}
-
-		 if (userId <= 0)
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
+		
+		if (userId <= 0)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("IsNegativeOrZero"); erb.setPath("userId"); 
 			erb.setProposedSolution("UserId must be Positive Integer");
@@ -755,24 +829,24 @@ public class UserApiServiceImpl extends UserApiService {
     	{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	    	String o;
-			o = UserManagement.userUserIdDelete(userId, ErrResps, authBase64String);
+			o = UserManagement.userUserIdDelete(userId, ErrResps, bwcon);
 
 	    	if (ErrResps.size() == 0)
-	        	return Response.ok().entity(o).build();
+	        	return Response.status(200).entity(o).build();				//successfully de-activated user
 	    	else
-	    		return Response.ok().entity(ErrResps).build();   	
+	    		return Response.status(404).entity(ErrResps).build();   	//user not found
     	}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();				//bad request
     	}
     }
     
     @Override
     public Response userUserIdGet(Integer userId, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-//    	UserManagement um = new UserManagement();
 
+    	BoardwalkConnection bwcon = null;
     	ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
@@ -783,9 +857,23 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
 		 
-		 if (userId <= 0)
+		
+    	if (userId <= 0)
     	{	
     		erb = new ErrorRequestObject(); erb.setError("IsNegativeOrZero"); erb.setPath("userId"); 
     		erb.setProposedSolution("UserId must be Positive Integer");
@@ -795,16 +883,16 @@ public class UserApiServiceImpl extends UserApiService {
     	if (erbs.size() == 0)
     	{
 	 	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-	    	User user = UserManagement.userUserIdGet(userId, ErrResps, authBase64String);
+	    	User user = UserManagement.userUserIdGet(userId, ErrResps, bwcon);
 	    	
 	    	if (user != null)
-	        	return Response.ok().entity(user).build();
+	        	return Response.status(200).entity(user).build();
 	    	else
-	    		return Response.ok().entity(ErrResps).build();   	
+	    		return Response.status(404).entity(ErrResps).build();   	
     	}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();
     	}
     }
 
