@@ -26,8 +26,10 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
 
+import boardwalk.connection.BoardwalkConnection;
 import boardwalk.rest.NeighborhoodManagement;
-import boardwalk.rest.UserManagement; 
+import boardwalk.rest.UserManagement;
+import boardwalk.rest.bwAuthorization; 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     @Override
@@ -560,15 +562,30 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
     @Override
     public Response neighborhoodPost(Neighborhood neighborhood, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
+    	BoardwalkConnection bwcon = null;
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
 		if (authBase64String == null)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();			//401: Missing Authorization
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();		//401: Authorization Failed
+    		}
+    	}
 		 
 		String nhName = neighborhood.getName();
 		Long objL = new Long(neighborhood.getParentId());
@@ -595,17 +612,20 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 	   	{
    			ArrayList<Neighborhood> nhList;
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-	    	nhList = NeighborhoodManagement.neighborhoodPost(nhName, parentNhId, secure, ErrResps, authBase64String);
+	    	nhList = NeighborhoodManagement.neighborhoodPost(nhName, parentNhId, secure, ErrResps, authBase64String, bwcon, memberNh, statusCode );
 	    	
 	    	if (nhList.size() > 0)
-	        	return Response.ok().entity(nhList ).build();
+	        	return Response.status(200).entity(nhList ).build();	//Success: list of Neighborhood
 	    	else
-	    		return Response.ok().entity(ErrResps).build();   	
-	   	}
+	    	{
+    			int scode = statusCode.get(0);
+    			return Response.status(scode).entity(ErrResps).build();		//409: Conflict. NnName not Unique etc. 404: ParentNhId Not found. 
+	    	}
+	    }
 	   	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
+	       	return Response.status(400).entity(erbs).build();			//Bad Request: missing nhName, Negative parentNhId
 	   	}    
-       //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+
 	}
 }

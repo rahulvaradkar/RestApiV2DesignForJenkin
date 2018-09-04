@@ -114,16 +114,16 @@ public class NeighborhoodManagement {
 		try
 		{
 			int userId = -1;
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
 			}    		
 
 			boolean memberValid = false;
-			Vector mList = BoardwalkNeighborhoodManager.getMemberList(bwcon, nhId);
+			Vector<?> mList = BoardwalkNeighborhoodManager.getMemberList(bwcon, nhId);
 			System.out.println("Successfully fetched membership list for nh");
-			Iterator mi = mList.iterator();
+			Iterator<?> mi = mList.iterator();
 			while (mi.hasNext())
 			{
 				BoardwalkMember bm = (BoardwalkMember)mi.next();
@@ -248,7 +248,7 @@ public class NeighborhoodManagement {
 		//Custom Code Starts
 		try 
 		{
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
@@ -260,10 +260,10 @@ public class NeighborhoodManagement {
 			
 			ArrayList<Integer> level_parent;
 			
-			Hashtable  relationships = NeighborhoodManager.getNeighborhoodRelationships(connection ,nhId );
-			Enumeration relationKeys = relationships.keys();
+			Hashtable<?, ?>  relationships = NeighborhoodManager.getNeighborhoodRelationships(connection ,nhId );
+			Enumeration<?> relationKeys = relationships.keys();
 			NeighborhoodId nid;
-			Vector v ;
+			Vector<?> v ;
 			int intLevel;
 			int intParentNh;
 			
@@ -278,7 +278,7 @@ public class NeighborhoodManagement {
 					
 					relNh = new ArrayList <Neighborhood>();
 					
-					v = (Vector) relationships.get(relationship);
+					v = (Vector<?>) relationships.get(relationship);
 
 					for(int vsize=0; vsize < v.size(); vsize+=1)
 					{
@@ -352,7 +352,7 @@ public class NeighborhoodManagement {
 	
 	public static void GetNhLevelAndParent(Connection connection, int nhId, ArrayList<Integer> level_parent) 
 	{
-		Vector NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
+		Vector<?> NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
 		System.out.println("NhPathIds.size() -->" + NhPathIds.size());
 		for ( int n = 0; n < NhPathIds.size(); n++ )
 		{
@@ -420,7 +420,7 @@ public class NeighborhoodManagement {
 		try
 		{
 			
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
@@ -429,7 +429,7 @@ public class NeighborhoodManagement {
 			String relation = relationship.getName();
 			List <Neighborhood> nhList = relationship.getRelatedNeighborhoodId();
 			Neighborhood nh;
-            Vector targetNeighborhoods = new Vector();
+            Vector<Integer> targetNeighborhoods = new Vector<Integer>();
 
             int r_nhCount = nhList.size();
             Long obj ;
@@ -569,7 +569,7 @@ public class NeighborhoodManagement {
 		try 
 		{
 
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
@@ -581,7 +581,7 @@ public class NeighborhoodManagement {
 			
 			ArrayList<Integer> level_parent;
 			
-			Hashtable relationships = new Hashtable();
+			Hashtable<?, ?> relationships = new Hashtable<Object, Object>();
 			try 
 			{
 				relationships = NeighborhoodManager.getNeighborhoodRelationships(connection, nhId );
@@ -591,7 +591,7 @@ public class NeighborhoodManagement {
 				e.printStackTrace();
 			}
 			
-			Enumeration relationKeys = relationships.keys();
+			Enumeration<?> relationKeys = relationships.keys();
 			
 			if (relationships.containsKey(relation))
 			{
@@ -671,16 +671,16 @@ public class NeighborhoodManagement {
 		//Custom Code Starts
 		try
 		{
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
 			}    		
 
 			boolean memberValid = false;
-			Vector mList = BoardwalkNeighborhoodManager.getMemberList(bwcon, nhId);
+			Vector<?> mList = BoardwalkNeighborhoodManager.getMemberList(bwcon, nhId);
 			System.out.println("Successfully fetched membership list for nh");
-			Iterator mi = mList.iterator();
+			Iterator<?> mi = mList.iterator();
 			while (mi.hasNext())
 			{
 				BoardwalkMember bm = (BoardwalkMember)mi.next();
@@ -777,7 +777,7 @@ public class NeighborhoodManagement {
 		//Custom Code Starts
 		try
 		{
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
@@ -886,7 +886,7 @@ public class NeighborhoodManagement {
 		boolean retVal = true;
 		try
 		{
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
@@ -959,16 +959,16 @@ public class NeighborhoodManagement {
 		//Custom Code Starts
 		try
 		{
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
 			}    			
 			Integer obj;
 			io.swagger.model.Member mem ;
-			Vector mList = BoardwalkNeighborhoodManager.getMemberList(bwcon, nhId);
+			Vector<?> mList = BoardwalkNeighborhoodManager.getMemberList(bwcon, nhId);
 			System.out.println("Successfully fetched membership list for nh");
-			Iterator mi = mList.iterator();
+			Iterator<?> mi = mList.iterator();
 			while (mi.hasNext())
 			{
 				BoardwalkMember bm = (BoardwalkMember)mi.next();
@@ -1051,26 +1051,26 @@ public class NeighborhoodManagement {
 
 			if (nhId != -1)
 			{
-    			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+    			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
     			if (nh0v.isEmpty()) 
     			{
 					throw new NoSuchElementException("Parent Neighborhood NOT FOUND") ;
     			}
     			else
     			{
-        			Iterator nh0i = nh0v.iterator();
+        			Iterator<?> nh0i = nh0v.iterator();
         			while (nh0i.hasNext())
         			{
         				BoardwalkNeighborhoodNode bnn = (BoardwalkNeighborhoodNode)nh0i.next();
         				
-        				Vector NhPaths = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths( connection , nhId );
+        				Vector<?> NhPaths = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths( connection , nhId );
 						System.out.println("NhPaths.size() -->" + NhPaths.size());
         				for ( int n = 0; n < NhPaths.size(); n++ )
 						{
 							String nhPath = (String)NhPaths.elementAt(n);
 							System.out.println("nhPath ->" + nhPath);
 						}
-        				Vector NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
+        				Vector<?> NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
 						System.out.println("NhPathIds.size() -->" + NhPathIds.size());
         				for ( int n = 0; n < NhPathIds.size(); n++ )
 						{
@@ -1160,8 +1160,8 @@ public class NeighborhoodManagement {
 		System.out.println(bnn.getNeighborhood().getName() + " id=" + bnn.getNeighborhood().getId());
 //		sb.append(bnn.getNeighborhood().getName() + "|" + bnn.getNeighborhood().getId() + "|"+ parent + "|"+ level + "\n" );
 
-		Vector children = bnn.getChildren();
-		Iterator ci = children.iterator();
+		Vector<?> children = bnn.getChildren();
+		Iterator<?> ci = children.iterator();
 		while (ci.hasNext())
 		{
 			BoardwalkNeighborhoodNode bnnc = (BoardwalkNeighborhoodNode)ci.next();
@@ -1185,8 +1185,8 @@ public class NeighborhoodManagement {
 		System.out.println(bnn.getNeighborhood().getName() + " id=" + bnn.getNeighborhood().getId());
 //		sb.append(bnn.getNeighborhood().getName() + "|" + bnn.getNeighborhood().getId() + "|"+ parent + "|"+ level + "\n" );
 
-		Vector children = bnn.getChildren();
-		Iterator ci = children.iterator();
+		Vector<?> children = bnn.getChildren();
+		Iterator<?> ci = children.iterator();
 		while (ci.hasNext())
 		{
 			BoardwalkNeighborhoodNode bnnc = (BoardwalkNeighborhoodNode)ci.next();
@@ -1196,28 +1196,14 @@ public class NeighborhoodManagement {
 
 	
     //@POST	-- AUTHORIZATION DONE
-	public static ArrayList<Neighborhood>  neighborhoodPost(String nhName, int parentNhId, boolean isSecure,  ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static ArrayList<Neighborhood>  neighborhoodPost(String nhName, int parentNhId, boolean isSecure,  ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode )
 	{
         ArrayList <Neighborhood> nhList = new ArrayList<Neighborhood>();
         ErrorRequestObject erb;
 
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
-		int memberNhId = -1;
-		int memberId = -1;
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-		 
-		if (!ErrResps.isEmpty())
-		{
-			return nhList;
-		}
 		connection = bwcon.getConnection();
-		memberId = memberNh.get(0);
-		memberNhId = memberNh.get(1);
 
 		try 
 		{
@@ -1225,13 +1211,13 @@ public class NeighborhoodManagement {
 			//Check if Parent NeighborhoodId Exists. If exists then get Nh Level.
 			if (parentNhId != -1)
 			{
-    			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, parentNhId);
+    			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, parentNhId);
     			if (nh0v.isEmpty()) 
     			{
 					throw new NoSuchElementException("Parent Neighborhood NOT FOUND") ;
     			}
     			else {
-        			Iterator nh0i = nh0v.iterator();
+        			Iterator<?> nh0i = nh0v.iterator();
     				BoardwalkNeighborhoodNode bnn = (BoardwalkNeighborhoodNode)nh0i.next();
     				level = bnn.getNeighborhood().getLevel();
     			}
@@ -1287,6 +1273,7 @@ public class NeighborhoodManagement {
 		}
 		catch (BoardwalkException bwe)
 		{
+        	statusCode.add(409);			//Conflict 
         	erb = new ErrorRequestObject();
         	erb.setError("createNeighborhood Failed");
         	erb.setPath("NeighborhoodManagement.neighborhoodPost::NeighborhoodManagement.createNeighborhood");
@@ -1297,6 +1284,7 @@ public class NeighborhoodManagement {
 		}
         catch (NullPointerException npe)
         {
+        	statusCode.add(409);			//Conflict 
             System.out.println("Failed to create Nh : " + nhName + ". Neighborhood name must be Unique under the Parent. You are trying to create a Duplicate Neighborhood");
 			erb = new ErrorRequestObject();
 			erb.setError("Failed to Create Neighbornood:" + nhName + ",  Error Msg:" + npe.getMessage()  + ", Cause:" + npe.getCause());
@@ -1306,6 +1294,7 @@ public class NeighborhoodManagement {
         }
         catch (NoSuchElementException nse)
         {
+        	statusCode.add(404);			//ParentNhid NOT FOUND
             System.out.println("The Parent Neighborhood Not Found");
 			erb = new ErrorRequestObject();
 			erb.setError("Failed to Create Neighbornood: Parent NeighborhoodId NOT FOUND ");
@@ -1363,7 +1352,7 @@ public class NeighborhoodManagement {
 		try
 		{
 
-			Vector nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
 			if (nh0v.isEmpty()) 
 			{
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
@@ -1377,8 +1366,8 @@ public class NeighborhoodManagement {
 			//GridInfo gi;
 			GridNames gi;
 			
-			Vector cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon,nhId);
-			Iterator cli = cl.iterator();
+			Vector<?> cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon,nhId);
+			Iterator<?> cli = cl.iterator();
 			while (cli.hasNext())
 			{
 				collab = new Collaboration();
@@ -1395,8 +1384,8 @@ public class NeighborhoodManagement {
 				System.out.println("Collaboration = " + bcn.getName());
 
 				wbList = new ArrayList<Whiteboard>();
-				Vector wv = bcn.getWhiteboards();
-				Iterator wvi = wv.iterator();
+				Vector<?> wv = bcn.getWhiteboards();
+				Iterator<?> wvi = wv.iterator();
 				while ( wvi.hasNext())
 				{
 					BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
@@ -1406,8 +1395,8 @@ public class NeighborhoodManagement {
 					wb.setId(obj.longValue());
 					wb.setName(bwn.getName());
 					
-					Vector tv = bwn.getTables();
-					Iterator tvi = tv.iterator();
+					Vector<?> tv = bwn.getTables();
+					Iterator<?> tvi = tv.iterator();
 					//giList = new ArrayList<GridInfo>();
 					giList = new ArrayList<GridNames>();
 					while (tvi.hasNext())

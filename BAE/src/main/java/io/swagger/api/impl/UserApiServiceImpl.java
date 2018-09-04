@@ -4,21 +4,10 @@ import io.swagger.api.*;
 import io.swagger.model.*;
 
 import java.util.ArrayList;
-import java.util.List;
 import io.swagger.api.NotFoundException;
-
-import java.io.InputStream;
-import java.sql.Connection;
-
-import org.glassfish.jersey.client.authentication.ResponseAuthenticationException;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-
-import com.sun.mail.imap.protocol.Status;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import javax.validation.constraints.*;
-
 import boardwalk.connection.BoardwalkConnection;
 import boardwalk.rest.UserManagement;
 import boardwalk.rest.bwAuthorization;
@@ -33,8 +22,10 @@ public class UserApiServiceImpl extends UserApiService {
     		
        	System.out.println("email : " + email);
 
+    	BoardwalkConnection bwcon = null;
     	StringBuffer invReqMsg = new StringBuffer(500);
-    	StringBuffer invResMsg = new StringBuffer(500);
+    	ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
     	ArrayList <ErrorRequestObject> erbs  = new ArrayList<ErrorRequestObject>();
     	ErrorRequestObject erb;
@@ -44,101 +35,120 @@ public class UserApiServiceImpl extends UserApiService {
 
     	ArrayList <ResponseErrorInfo> reseis = new ArrayList<ResponseErrorInfo>();
     	ResponseErrorInfo resei ;
-    	
-    		//ErrorRequestObject erb;
-    		//ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+			
+		if (authBase64String == null)
+		{	
+ 			erbs  = new ArrayList<ErrorRequestObject>();
+ 			
+			erb = new ErrorRequestObject(); 
+			erb.setError("Missing Authorization in Header"); 
+			erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
 
-    		//System.out.println("authBase64String : " + authBase64String);
-    			
-    		if (authBase64String == null)
-    		{	
-     			erbs  = new ArrayList<ErrorRequestObject>();
-     			
-    			erb = new ErrorRequestObject(); 
-    			erb.setError("Missing Authorization in Header"); 
-    			erb.setPath("Header:Authorization"); 
-    			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
-    			erbs.add(erb);
+			invReqMsg.append("Authorization in Header not Found. ");
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Authorization in Header not Found");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);
 
-    			invReqMsg.append("Authorization in Header not Found. ");
-    			
+ 	    	ResponseInfo ri = new ResponseInfo();
+	    	ri.setStatus("Authorization Failed.");
+	    	ri.setMessage(invReqMsg.toString().trim());
+	    	ri.setInvalidRequestDetails(reqeis);
+	        return Response.status(401).entity(ri).build();    			//Authorization missing
+		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+
     			reqei = new RequestErrorInfo();
-    			reqei.setErrorMessage("Authorization in Header not Found");
-    			reqei.setErrorDetails( erbs);
+    			reqei.setErrorMessage("Authorization Failed");
+    			reqei.setErrorDetails( ErrResps);
     			reqeis.add(reqei);
-
+    			
      	    	ResponseInfo ri = new ResponseInfo();
-    	    	ri.setStatus("Authorization Failed.");
-    	    	ri.setMessage(invReqMsg.toString().trim());
-    	    	ri.setInvalidRequestDetails(reqeis);
-    	        return Response.status(401).entity(ri).build();    			
+    	    	ri.setStatus("Authorization Failure");
+    	    	ri.setMessage("Authorization Failed");
+    	    	ri.setInvalidRequestDetails(  reqeis);
+    			
+    			return Response.status(401).entity(ri).build();			//Authorization failure
     		}
+    	}
 
-    		if (email == null)
+		if (email == null)
+		{
+			erbs  = new ArrayList<ErrorRequestObject>();
+			
+			erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email"); 
+			erb.setProposedSolution("Enter Email");
+			erbs.add(erb);
+
+			invReqMsg.append("Missing Email. ");
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Missing Email.");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);
+		}
+		else if (email.trim().equals(""))
+    	{	
+			erbs  = new ArrayList<ErrorRequestObject>();
+			
+			erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email"); 
+			erb.setProposedSolution("Enter Email");
+			erbs.add(erb);
+
+			invReqMsg.append("Blank Email. ");
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Blank Email.");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);
+    	}
+		    		
+		if (reqeis.size() == 0)
+		{
+       	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+
+    		ArrayList<Membership> ml;
+        	ml = UserManagement.userGetMemberships(email, ErrResps, authBase64String, bwcon, memberNh, statusCode);
+       	 	
+        	System.out.println("ml.size :"+ ml.size());
+        	System.out.println("ErrResps.size :"+ ErrResps.size());
+        	
+        	if (ml.size() > 0)
+        		return Response.status(200).entity(ml).build();			//Success: returns list of Memberships
+    		else
     		{
     			
-    			erbs  = new ArrayList<ErrorRequestObject>();
+    			int scode = statusCode.get(0);
     			
-    			erb = new ErrorRequestObject(); erb.setError("IsMissing"); erb.setPath("User.email"); 
-    			erb.setProposedSolution("Enter Email");
-    			erbs.add(erb);
-
-    			invReqMsg.append("Missing Email. ");
-    			
-    			reqei = new RequestErrorInfo();
-    			reqei.setErrorMessage("Missing Email.");
-    			reqei.setErrorDetails( erbs);
-    			reqeis.add(reqei);
-    		}
-    		else if (email.trim().equals(""))
-        	{	
-    			erbs  = new ArrayList<ErrorRequestObject>();
-    			
-    			erb = new ErrorRequestObject(); erb.setError("IsBlank"); erb.setPath("User.email"); 
-    			erb.setProposedSolution("Enter Email");
-    			erbs.add(erb);
-
-    			invReqMsg.append("Blank Email. ");
-    			
-    			reqei = new RequestErrorInfo();
-    			reqei.setErrorMessage("Blank Email.");
-    			reqei.setErrorDetails( erbs);
-    			reqeis.add(reqei);
-        	}
-    		    		
-    		if (reqeis.size() == 0)
-    		{
-           	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-
-        		ArrayList<Membership> ml;
-            	ml = UserManagement.userGetMemberships(email, ErrResps, authBase64String);
-           	 	
-            	System.out.println("ml.size :"+ ml.size());
-            	System.out.println("ErrResps.size :"+ ErrResps.size());
-            	
-            	if (ml.size() > 0)
-            		return Response.ok().entity(ml).build();
-        		else
-        		{
-    		    	resei = new ResponseErrorInfo();		    	
-    		    	resei.setErrorMessage("Errors on Server");
-    		    	resei.setErrorDetails(ErrResps);
-    		    	reseis.add(resei);
-    		    	
-    		    	ResponseInfo ri = new ResponseInfo();
-    		    	ri.setStatus("Failure");
-    		    	ri.setFailureDetails(reseis);
-    	    		return Response.status(422).entity(ri).build();  
-    	    	}
-        	}
-        	else
-        	{
-    	    	ResponseInfo ri = new ResponseInfo();
-    	    	ri.setStatus("Invalid Request");
-    	    	ri.setMessage(invReqMsg.toString().trim());
-    	    	ri.setInvalidRequestDetails(reqeis);
-    	        return Response.status(400).entity(ri).build();
-        	}
+		    	resei = new ResponseErrorInfo();		    	
+		    	resei.setErrorMessage("Errors on Server");
+		    	resei.setErrorDetails(ErrResps);
+		    	reseis.add(resei);
+		    	
+		    	ResponseInfo ri = new ResponseInfo();
+		    	ri.setStatus("Failure");
+		    	ri.setFailureDetails(reseis);
+	    		return Response.status(scode).entity(ri).build();  	// 403: Forbidden Access if Email and nHpATH does not match with authorization
+	    	}
+    	}
+    	else
+    	{
+	    	ResponseInfo ri = new ResponseInfo();
+	    	ri.setStatus("Invalid Request");
+	    	ri.setMessage(invReqMsg.toString().trim());
+	    	ri.setInvalidRequestDetails(reqeis);
+	        return Response.status(400).entity(ri).build();			//400: BAd rEquest: missing Email
+    	}
     		    	
         //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -154,8 +164,11 @@ public class UserApiServiceImpl extends UserApiService {
       	System.out.println("nhPath : " + nhPath);
       	System.out.println("collabId : " + collabId);
 
+    	BoardwalkConnection bwcon = null;
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
 		//System.out.println("authBase64String : " + authBase64String);
 			
@@ -164,6 +177,18 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
+		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
 		}
 
 		if (email == null)
@@ -198,32 +223,31 @@ public class UserApiServiceImpl extends UserApiService {
 			erb.setProposedSolution("You must enter an Existing Collaboration ID. It should be a Positive Number.");
 			erbs.add(erb);
 		}
-		 		
 
     	if (erbs.size() == 0)
     	{
        	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 
     		ArrayList<Whiteboard> wbs;
-        	wbs = UserManagement.userGetNeighborhoodCollaborationWhiteboards(email, nhPath, collabId, ErrResps, authBase64String);
+    		
+        	wbs = UserManagement.userGetNeighborhoodCollaborationWhiteboards(email, nhPath, collabId, ErrResps, authBase64String, bwcon, memberNh, statusCode);
        	 	
         	System.out.println("wbs.size :"+ wbs.size());
         	System.out.println("ErrResps.size :"+ ErrResps.size());
         	
         	if (wbs.size() > 0)
-        		return Response.ok().entity(wbs).build();
+        		return Response.status(200).entity(wbs).build();		//Success: returns whiteboard list
     		else
     		{
-    			return Response.ok().entity(ErrResps).build();
-    			//return Response.status(500).entity(ErrResps).build();
+    			int scode = statusCode.get(0);
+    			return Response.status(scode).entity(ErrResps).build();		// 404: CollabId Not found. OR. 403: Forbidden Access if Email and nHpATH does not match with authorization
     		}
     	}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();		//Bad Request: missing nhPath, Email, Negative CollabId 
     	}    	
     	    	
-        //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
 
     
@@ -238,8 +262,11 @@ public class UserApiServiceImpl extends UserApiService {
       	System.out.println("collabId : " + collabId);
       	System.out.println("whiteboardId : " + whiteboardId);
 
+    	BoardwalkConnection bwcon = null;
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
 		//System.out.println("authBase64String : " + authBase64String);
 			
@@ -248,7 +275,19 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
 
 		if (email == null)
 		{
@@ -295,26 +334,23 @@ public class UserApiServiceImpl extends UserApiService {
        	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 
     		ArrayList<GridNames> grids;
-        	grids = UserManagement.userGetNeighborhoodCollaborationWhiteboardGrids(email, nhPath, collabId, whiteboardId,  ErrResps, authBase64String);
+        	grids = UserManagement.userGetNeighborhoodCollaborationWhiteboardGrids(email, nhPath, collabId, whiteboardId,  ErrResps, authBase64String, bwcon, memberNh, statusCode);
        	 	
         	System.out.println("wbs.size :"+ grids.size());
         	System.out.println("ErrResps.size :"+ ErrResps.size());
         	
         	if (grids.size() > 0)
-        		return Response.ok().entity(grids).build();
+        		return Response.status(200).entity(grids).build();			//Success returns List of GridNames
     		else
     		{
-    			return Response.ok().entity(ErrResps).build();
-    			//return Response.status(500).entity(ErrResps).build();
+    			int scode = statusCode.get(0);
+    			return Response.status(scode).entity(ErrResps).build();		// 404: CollabId, WbId Not found. OR. 403: Forbidden Access if Email and nHpATH does not match with authorization
     		}
     	}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();		//Bad Request: missing nhPath, Email, collabId, wbId
     	}    	
-    	    	
-    	
-    	//return null;
 	}
 
     //GET	......../user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grid/{gridId}
@@ -326,9 +362,12 @@ public class UserApiServiceImpl extends UserApiService {
        	System.out.println("whiteboardId : " + whiteboardId);
        	System.out.println("gridId : " + gridId);
 
+    	BoardwalkConnection bwcon = null;
  		ErrorRequestObject erb;
  		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
 
+		
  		//System.out.println("authBase64String : " + authBase64String);
  			
  		if (authBase64String == null)
@@ -336,7 +375,19 @@ public class UserApiServiceImpl extends UserApiService {
  			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
  			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
  			erbs.add(erb);
- 		}
+			return Response.status(401).entity(erbs).build();
+		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
 
  		if (email == null)
  		{
@@ -390,25 +441,20 @@ public class UserApiServiceImpl extends UserApiService {
     	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 
      		GridInfo gi;
-         	gi = UserManagement.userGetNeighborhoodCollaborationWhiteboardGrid(email, nhPath, collabId, whiteboardId, gridId, ErrResps, authBase64String);
+         	gi = UserManagement.userGetNeighborhoodCollaborationWhiteboardGrid(email, nhPath, collabId, whiteboardId, gridId, ErrResps, authBase64String, bwcon, memberNh);
         	 	
          	System.out.println("gi.name :"+ gi.getName() );
          	System.out.println("ErrResps.size :"+ ErrResps.size());
          	
-         	if (gi != null)
-         		return Response.ok().entity(gi).build();
-     		else
-     		{
-     			return Response.ok().entity(ErrResps).build();
-     			//return Response.status(500).entity(ErrResps).build();
-     		}
+         	if (gi != null) 
+				return Response.status(200).entity(gi).build();		//Success: returns GridInfo
+			else 
+				return Response.status(403).entity(ErrResps).build(); // Server understood the request but refuses to authorize it.
      	}
      	else
      	{
-         	return Response.ok().entity(erbs).build();
+         	return Response.status(400).entity(erbs).build();	//Bad Request: missing nhPath, Email, CollabId, WbId, GridId
      	}    	        
-     	// do some magic!
-     	// return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
 
      
@@ -427,8 +473,10 @@ public class UserApiServiceImpl extends UserApiService {
       	System.out.println("email : " + email);
       	System.out.println("nhPath : " + nhPath);
 
+    	BoardwalkConnection bwcon = null;
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
 
 		//System.out.println("authBase64String : " + authBase64String);
 			
@@ -437,7 +485,19 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();
+    		}
+    	}
 
 		if (email == null)
 		{
@@ -470,25 +530,22 @@ public class UserApiServiceImpl extends UserApiService {
        	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 
     		ArrayList<Collaboration> cl;
-        	cl = UserManagement.userGetNeighborhoodCollaborations(email, nhPath, ErrResps, authBase64String);
+        	cl = UserManagement.userGetNeighborhoodCollaborations(email, nhPath, ErrResps, authBase64String, bwcon, memberNh);
        	 	
         	System.out.println("cl.size :"+ cl.size());
         	System.out.println("ErrResps.size :"+ ErrResps.size());
         	
         	if (cl.size() > 0)
-        		return Response.ok().entity(cl).build();
+        		return Response.status(200).entity(cl).build();		// Success. returns collaborations list
     		else
     		{
-    			return Response.ok().entity(ErrResps).build();
-    			//return Response.status(500).entity(ErrResps).build();
+    			return Response.status(403).entity(ErrResps).build();	//  server understood the request but refuses to authorize it.
     		}
     	}
     	else
     	{
-        	return Response.ok().entity(erbs).build();
+        	return Response.status(400).entity(erbs).build();	//Bad Request: missing nhPath, Email
     	}    	
-    	
-        //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
 
     @Override

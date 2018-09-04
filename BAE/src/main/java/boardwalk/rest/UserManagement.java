@@ -50,28 +50,15 @@ public class UserManagement {
 	}
 
     //GET	......../user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grid/{gridId}
-	public static GridInfo userGetNeighborhoodCollaborationWhiteboardGrid(String email, String nhPath, int collabId, int whiteboardId, int gridId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String)
+	public static GridInfo userGetNeighborhoodCollaborationWhiteboardGrid(String email, String nhPath, int collabId, int whiteboardId, int gridId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String , BoardwalkConnection bwcon, ArrayList<Integer> memberNh )
 	{
 
 		GridInfo ginfo = null;
     	ErrorRequestObject erb;
     	// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
-		int nhId = -1;
-		int memberId = -1;
-		int userId = -1;
-		int nhLevel = -1;
 		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return ginfo;
-		}
-
 		if  (!bwcon.getUserName().equals(email))
 		{
 			erb = new ErrorRequestObject();
@@ -83,6 +70,11 @@ public class UserManagement {
             //retMsg = "The Email must be same as Aughorization UserNname:" + email;
 			return ginfo;
 		}
+
+		int nhId = -1;
+		int memberId = -1;
+		int userId = -1;
+		int nhLevel = -1;
 		
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
@@ -107,9 +99,7 @@ public class UserManagement {
 			return ginfo;
 		}
 
-		
    		CellBuffer cbf;
-//  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
   	 	
    		int importTid = -1;
    		String view = "LATEST";
@@ -118,60 +108,33 @@ public class UserManagement {
    		
   	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String);
 
-  	 	//	        return Response.ok().entity( new ApiResponseMessage( 201, ErrResps.toString())).build();
-		//return Response.ok().entity(ErrResps).build();   	
-
-//    	if (ErrResps.size() > 0)
-//    		return Response.ok().entity(ErrResps).build();   	
-//   	else
-//    	{
-//    		return Response.ok().entity(cbf).build();
-//    	}
-		
 		ginfo = cbf.getInfo();
 		return ginfo;
 	}
 
 	
 	//GET  ....../user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grids
-	public static ArrayList<GridNames> userGetNeighborhoodCollaborationWhiteboardGrids(String email, String nhPath, int collabId, int whiteboardId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String)
+	public static ArrayList<GridNames> userGetNeighborhoodCollaborationWhiteboardGrids(String email, String nhPath, int collabId, int whiteboardId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh , ArrayList<Integer> statusCode  )
 	{
 		String retMsg = null;
         // get the connection
     	ErrorRequestObject erb;
-
     	
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int nhId = -1;
 		int memberId = -1;
 		int userId = -1;
 		int nhLevel = -1;
-		
-//		ArrayList<Collaboration> colbs = new ArrayList<Collaboration>();
-//		Collaboration colb;
-
-	//	ArrayList<Whiteboard> wbs = new ArrayList<Whiteboard>();
 		Whiteboard wb;
-
-		//ArrayList<GridInfo> grids = new ArrayList<GridInfo>();
-		//GridInfo grid;
 
 		ArrayList<GridNames> grids = new ArrayList<GridNames>();
 		GridNames grid;
 
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return grids;
-		}
-
 		if  (!bwcon.getUserName().equals(email))
 		{
+			statusCode.add(403);
 			erb = new ErrorRequestObject();
 			erb.setError("Email does not match with the Authorization.");
 			erb.setPath("UserManagement.userGetNeighborhoodCollaborationWhiteboardGrids::getUserName!=email");
@@ -195,6 +158,7 @@ public class UserManagement {
 
 		if  (!nhPath.equals(nhPathAuth))
 		{
+			statusCode.add(403);
 			erb = new ErrorRequestObject();
 			erb.setError("Neighborhood Path does not match with the Authorization nhPath.");
 			erb.setPath("UserManagement.userGetNeighborhoodCollaborationWhiteboardGrids::nhPath!=nhPathAuth");
@@ -204,7 +168,6 @@ public class UserManagement {
             //retMsg = "The Email must be same as Aughorization UserNname:" + email;
 			return grids;
 		}
-
 		
 		try
 		{
@@ -220,27 +183,19 @@ public class UserManagement {
 			int tableId;
 
 			boolean collabFound = false;
-			Vector cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon, nhId);
-			Iterator cli = cl.iterator();
+			Vector<?> cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon, nhId);
+			Iterator<?> cli = cl.iterator();
 			while (cli.hasNext())
 			{
 				if ( (Integer)cli.next() == collabId)
 				{
-					
-					//Integer collabId = (Integer)cli.next();
 					BoardwalkCollaborationNode bcn = BoardwalkCollaborationManager.getCollaborationTree(bwcon, collabId);
 					collabName = bcn.getName();
 					System.out.println("Sucessfully fetched the collab tree from the database");
-	
-				/*	colb = new Collaboration();
-					colb.setId((long) bcn.getId());
-					colb.setName(bcn.getName());
-					colb.setPurpose(bcn.getPurpose());*/
-	
-	//				wbs = new ArrayList<Whiteboard>();
+
 					System.out.println("Collaboration = " + bcn.getName());
-					Vector wv = bcn.getWhiteboards();
-					Iterator wvi = wv.iterator();
+					Vector<?> wv = bcn.getWhiteboards();
+					Iterator<?> wvi = wv.iterator();
 					boolean whiteboardFound = false;
 					while ( wvi.hasNext())
 					{
@@ -256,8 +211,8 @@ public class UserManagement {
 
 							grids = new ArrayList<GridNames>();
 							
-							Vector tv = bwn.getTables();
-							Iterator tvi = tv.iterator();
+							Vector<?> tv = bwn.getTables();
+							Iterator<?> tvi = tv.iterator();
 							if (tvi.hasNext())
 							{
 								while (tvi.hasNext())
@@ -273,14 +228,10 @@ public class UserManagement {
 							}
 							break;
 						}
-						//wb.setId((long)bwn.getId());
-						//wb.setName(bwn.getName());
-	
-						//wb.setGridList(grids);
-						//wbs.add(wb);
 					}
 					if(whiteboardFound == false)
 					{
+						statusCode.add(404);				//not found
 						erb = new ErrorRequestObject();
 						erb.setError("Whiteboard Not Found.");
 						erb.setPath("UserManagement.userGetNeighborhoodCollaborationWhiteboardGrids::whiteboardFound=false");
@@ -290,16 +241,13 @@ public class UserManagement {
 			            //retMsg = "The Email must be same as Aughorization UserNname:" + email;
 						return grids;
 					}
-					
-					
-					//colb.setWbList(wbs);
-					//colbs.add(colb);
 					collabFound = true;
 					break;
 				}
 			}
 			if(collabFound == false)
 			{
+				statusCode.add(404);				//not found
 				erb = new ErrorRequestObject();
 				erb.setError("Collaboration Not Found or it is not accessible to User.");
 				erb.setPath("UserManagement.userGetNeighborhoodCollaborationWhiteboardGrids::collabFound=false");
@@ -327,7 +275,7 @@ public class UserManagement {
  	
  	
 	//GET  ....../user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboards
-	public static ArrayList<Whiteboard>  userGetNeighborhoodCollaborationWhiteboards( String email, String nhPath, int collabId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String )
+	public static ArrayList<Whiteboard>  userGetNeighborhoodCollaborationWhiteboards( String email, String nhPath, int collabId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode)
 	{
 		String retMsg = null;
         // get the connection
@@ -335,35 +283,21 @@ public class UserManagement {
 
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int nhId = -1;
 		int memberId = -1;
 		int userId = -1;
 		int nhLevel = -1;
 		
-//		ArrayList<Collaboration> colbs = new ArrayList<Collaboration>();
-//		Collaboration colb;
-
 		ArrayList<Whiteboard> wbs = new ArrayList<Whiteboard>();
 		Whiteboard wb;
-
-		//ArrayList<GridInfo> grids = new ArrayList<GridInfo>();
-		//GridInfo grid;
 
 		ArrayList<GridNames> grids = new ArrayList<GridNames>();
 		GridNames grid;
 
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return wbs;
-		}
-
 		if  (!bwcon.getUserName().equals(email))
 		{
+			statusCode.add(403);		// forbidden
 			erb = new ErrorRequestObject();
 			erb.setError("Email does not match with the Authorization.");
 			erb.setPath("UserManagement.userGetNeighborhoodCollaborationWhiteboards::getUserName!=email");
@@ -387,6 +321,7 @@ public class UserManagement {
 
 		if  (!nhPath.equals(nhPathAuth))
 		{
+			statusCode.add(403);		// forbidden
 			erb = new ErrorRequestObject();
 			erb.setError("Neighborhood Path does not match with the Authorization nhPath.");
 			erb.setPath("UserManagement.userGetNeighborhoodCollaborationWhiteboards::nhPath!=nhPathAuth");
@@ -412,42 +347,34 @@ public class UserManagement {
 			int tableId;
 
 			boolean collabFound = false;
-			Vector cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon, nhId);
-			Iterator cli = cl.iterator();
+			Vector<?> cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon, nhId);
+			Iterator<?> cli = cl.iterator();
 			while (cli.hasNext())
 			{
 				if ( (Integer)cli.next() == collabId)
 				{
-					
-					//Integer collabId = (Integer)cli.next();
 					BoardwalkCollaborationNode bcn = BoardwalkCollaborationManager.getCollaborationTree(bwcon, collabId);
 					collabName = bcn.getName();
 					System.out.println("Sucessfully fetched the collab tree from the database");
 	
-				/*	colb = new Collaboration();
-					colb.setId((long) bcn.getId());
-					colb.setName(bcn.getName());
-					colb.setPurpose(bcn.getPurpose());*/
-	
 					wbs = new ArrayList<Whiteboard>();
 					System.out.println("Collaboration = " + bcn.getName());
-					Vector wv = bcn.getWhiteboards();
-					Iterator wvi = wv.iterator();
+					Vector<?> wv = bcn.getWhiteboards();
+					Iterator<?> wvi = wv.iterator();
 					while ( wvi.hasNext())
 					{
 						wb = new Whiteboard();
 						whiteBoard = "";
 						BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
 						System.out.println("\tWhiteboard = " + bwn.getName());
-						//whiteBoard = bwn.getName();
 	
 						wb.setId((long)bwn.getId());
 						wb.setName(bwn.getName());
 	
 						grids = new ArrayList<GridNames>();
 						
-						Vector tv = bwn.getTables();
-						Iterator tvi = tv.iterator();
+						Vector<?> tv = bwn.getTables();
+						Iterator<?> tvi = tv.iterator();
 						if (tvi.hasNext())
 						{
 							while (tvi.hasNext())
@@ -464,14 +391,13 @@ public class UserManagement {
 						wb.setGridList(grids);
 						wbs.add(wb);
 					}
-					//colb.setWbList(wbs);
-					//colbs.add(colb);
 					collabFound = true;
 					break;
 				}
 			}
 			if(collabFound == false)
 			{
+				statusCode.add(404);			// not found
 				erb = new ErrorRequestObject();
 				erb.setError("Collaboration Not Found or it is not accessible to User.");
 				erb.setPath("UserManagement.userGetNeighborhoodCollaborationWhiteboards::collabFound=false");
@@ -497,7 +423,7 @@ public class UserManagement {
 	}
 	
 	//GET  ....../user/{email}/neighborhood/{nhPath}/collaborations
-	public static ArrayList<Collaboration>  userGetNeighborhoodCollaborations( String email, String nhPath, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String )
+	public static ArrayList<Collaboration>  userGetNeighborhoodCollaborations( String email, String nhPath, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh)
 	{
 		String retMsg = null;
         // get the connection
@@ -505,7 +431,6 @@ public class UserManagement {
 
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int nhId = -1;
 		int memberId = -1;
@@ -518,19 +443,8 @@ public class UserManagement {
 		ArrayList<Whiteboard> wbs = new ArrayList<Whiteboard>();
 		Whiteboard wb;
 
-		//ArrayList<GridInfo> grids = new ArrayList<GridInfo>();
-		//GridInfo grid;
-
 		ArrayList<GridNames> grids = new ArrayList<GridNames>();
 		GridNames grid;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return colbs;
-		}
 
 		if  (!bwcon.getUserName().equals(email))
 		{
@@ -576,13 +490,9 @@ public class UserManagement {
 			String nhName = nh.getName();
 			String collabName = "";
 			String whiteBoard = "";
-			String tableName = "";
-			String Collabline="";
-			int wbId;
-			int tableId;
 
-			Vector cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon, nhId);
-			Iterator cli = cl.iterator();
+			Vector<?> cl = BoardwalkCollaborationManager.getCollaborationsForNeighborhood(bwcon, nhId);
+			Iterator<?> cli = cl.iterator();
 			while (cli.hasNext())
 			{
 				Integer collabId = (Integer)cli.next();
@@ -597,8 +507,8 @@ public class UserManagement {
 
 				wbs = new ArrayList<Whiteboard>();
 				System.out.println("Collaboration = " + bcn.getName());
-				Vector wv = bcn.getWhiteboards();
-				Iterator wvi = wv.iterator();
+				Vector<?> wv = bcn.getWhiteboards();
+				Iterator<?> wvi = wv.iterator();
 				while ( wvi.hasNext())
 				{
 					wb = new Whiteboard();
@@ -613,8 +523,8 @@ public class UserManagement {
 					//grids = new ArrayList<GridInfo>();
 					grids = new ArrayList<GridNames>();
 					
-					Vector tv = bwn.getTables();
-					Iterator tvi = tv.iterator();
+					Vector<?> tv = bwn.getTables();
+					Iterator<?> tvi = tv.iterator();
 					if (tvi.hasNext())
 					{
 						while (tvi.hasNext())
@@ -652,16 +562,14 @@ public class UserManagement {
 	
 	
 	//GET	..../user/{email}/memberships
-	public static ArrayList<Membership> userGetMemberships(String email, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static ArrayList<Membership> userGetMemberships(String email, ArrayList <ErrorRequestObject> ErrResps, String authBase64String , BoardwalkConnection bwcon , ArrayList<Integer> memberNh, ArrayList<Integer> statusCode   )
 	{
-
 		String retMsg = null;
         // get the connection
     	ErrorRequestObject erb;
 
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int nhId = -1;
 		int memberId = -1;
@@ -669,17 +577,10 @@ public class UserManagement {
 		int nhLevel = -1;
 		
 		ArrayList<Membership> ml = new ArrayList<Membership>();
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return ml;
-		}
 
 		if  (!bwcon.getUserName().equals(email))
 		{
+			statusCode.add(403);
 			erb = new ErrorRequestObject();
 			erb.setError("Email does not match with the Authorization.");
 			erb.setPath("UserManagement.userGetMemberships::getUserName!=email");
@@ -695,7 +596,7 @@ public class UserManagement {
 		nhId = memberNh.get(1);
 		userId = bwcon.getUserId();
 		
-    	Hashtable ht = new Hashtable();
+    	Hashtable<?, ?> ht = new Hashtable<Object, Object>();
         ResultSet rs = null;
         CallableStatement cs  = null;
 
@@ -719,50 +620,38 @@ public class UserManagement {
             {
             	if (rs.getInt("UserId") == userId)
             	{
-            	//System.out.println("inside while rs loop");
-                memberId = rs.getInt("MemberId");
-                userId = rs.getInt("UserId");
-                firstName = rs.getString("FirstName");
-                lastName = rs.getString("LastName");
-                Email = rs.getString("Email_Address");
-                nhId = rs.getInt("NhId");
-                nhLevel = rs.getInt("NhLevel");
-                //System.out.println("MemberNode-> memberId:" + memberId + ", userId:" + userId + ", firstName:" + firstName + ", lastName:" + lastName + ", Email:" + Email + ", nhId:" + nhId + ", nhLevel:" + nhLevel);            
-                //ht.put(memberId, new MemberNode(memberId, userId, firstName, lastName, Email, nhId, nhLevel));
-
-                
-				Vector NhPaths = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths( connection , nhId );
-				System.out.println("NhPaths.size() -->" + NhPaths.size());
-//				for ( int n = 0; n < NhPaths.size(); n++ )
-//				{
-//					String nhPath = (String)NhPaths.elementAt(n);
-//					System.out.println("nhPath ->" + nhPath);
-//				}
-				String nhName  = (String)NhPaths.elementAt(NhPaths.size()-1);
-				String nhPath = (String)NhPaths.elementAt(0);
-				System.out.println("1. nhPath:" + nhPath);
-				System.out.println("2. nhName:" + nhName);
-				
-//    			np = GridManagement.getNeighborhoodPath(connection, nhId );
-//    			
-//
-//    			System.out.println("Inside getNeighborhoodPath:" + nhId);
-//    			Vector NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
-//    			com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths(connection, nhid)
-//    			NeighborhoodPath nhpath = new NeighborhoodPath();
-//    			int nhLevels = NhPathIds.size()-1;
-//    			nhpath.setLevels(nhLevels);
-
-    			ms = new Membership();
-    			ms.setEmail(Email);
-    			ms.setMemberId( (long) memberId);
-    			ms.setNhId( (long) nhId);
-    			//ms.setNhIdPath(np.toString());
-    			ms.setNhName(nhName);
-    			ms.setNhNamePath(nhPath);
-    			ms.setUserId((long)userId);
-                
-                ml.add(ms);
+	            	//System.out.println("inside while rs loop");
+	                memberId = rs.getInt("MemberId");
+	                userId = rs.getInt("UserId");
+	                firstName = rs.getString("FirstName");
+	                lastName = rs.getString("LastName");
+	                Email = rs.getString("Email_Address");
+	                nhId = rs.getInt("NhId");
+	                nhLevel = rs.getInt("NhLevel");
+	
+	                
+					Vector<?> NhPaths = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths( connection , nhId );
+					System.out.println("NhPaths.size() -->" + NhPaths.size());
+	//				for ( int n = 0; n < NhPaths.size(); n++ )
+	//				{
+	//					String nhPath = (String)NhPaths.elementAt(n);
+	//					System.out.println("nhPath ->" + nhPath);
+	//				}
+					String nhName  = (String)NhPaths.elementAt(NhPaths.size()-1);
+					String nhPath = (String)NhPaths.elementAt(0);
+					System.out.println("1. nhPath:" + nhPath);
+					System.out.println("2. nhName:" + nhName);
+					
+	    			ms = new Membership();
+	    			ms.setEmail(Email);
+	    			ms.setMemberId( (long) memberId);
+	    			ms.setNhId( (long) nhId);
+	    			//ms.setNhIdPath(np.toString());
+	    			ms.setNhName(nhName);
+	    			ms.setNhNamePath(nhPath);
+	    			ms.setUserId((long)userId);
+	                
+	                ml.add(ms);
             	}
             }
 			System.out.println("outside while rs loop");
@@ -787,8 +676,8 @@ public class UserManagement {
             }
         }
         return ml;
-	
 	}
+
 	
 	//DELETE	....DONE ACORDING TO TEMPLATE
 	public static String userUserIdDelete(int userId, ArrayList <ErrorRequestObject> ErrResps, BoardwalkConnection bwcon)
@@ -1001,8 +890,8 @@ public class UserManagement {
 		try
 		{
 			io.swagger.model.User user ;
-			Vector userList = BoardwalkUserManager.getUserList(bwcon);
-			Iterator ui = userList.iterator();
+			Vector<?> userList = BoardwalkUserManager.getUserList(bwcon);
+			Iterator<?> ui = userList.iterator();
 			while (ui.hasNext())
 			{
 				BoardwalkUser bu = (BoardwalkUser)ui.next();
