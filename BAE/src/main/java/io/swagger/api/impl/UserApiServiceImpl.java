@@ -32,7 +32,7 @@ import boardwalk.rest.UserManagement;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-06-09T04:12:45.675Z")
 public class UserApiServiceImpl extends UserApiService {
 	
-	//  /user/{email}/membership
+	//  /user/{email}/memberships
     @Override
     public Response userEmailMembershipsGet(String email, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
