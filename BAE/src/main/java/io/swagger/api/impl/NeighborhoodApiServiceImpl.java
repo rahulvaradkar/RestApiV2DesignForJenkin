@@ -394,15 +394,30 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 		System.out.println("relation :" + relation);
 		//System.out.println("authBase64String :" + authBase64String);
 		
+    	BoardwalkConnection bwcon = null;
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
 		if (authBase64String == null)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorisation
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();	//401:  Authorisation failed
+    		}
+    	}
 		 
 		System.out.println("nhId ->" + nhId);
 		if (nhId <= 0)
@@ -429,16 +444,21 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 	   	{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	  	 	String msgRet;
-	  	 	msgRet = NeighborhoodManagement.neighborhoodNhIdRelationDelete(nhId, relation, ErrResps, authBase64String);
+	  	 	msgRet = NeighborhoodManagement.neighborhoodNhIdRelationDelete(nhId, relation, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
+			//404 : Neighborhood not found
+			//404 : Relation not found
+	  	 	//500 : Server Internal Error . Failed to Delete Neighbourhood
+			//200 : Success. Relations Deleted message
+			int scode = statusCode.get(0);
 	    	if (ErrResps.size() > 0)
-	    		return Response.ok().entity(ErrResps).build();   	
+	    		return Response.status(scode).entity(ErrResps).build();   	
 	    	else
-   				return Response.ok().entity(msgRet).build();
+   				return Response.status(200).entity(msgRet).build();		//200 : Success message. Deleted Relation or Not found
 	   	}
     	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
+	       	return Response.status(400).entity(erbs).build();		//400 : Bad Request. Negative NhId, Relation Null or Missing.
 	   	}    		
       //  return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -450,13 +470,30 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
         // do some magic!
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+    	BoardwalkConnection bwcon = null;
+    	ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
+    	
 		if (authBase64String == null)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorisation
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();	//401:  Authorisation failed
+    		}
+    	}
 		 
 		System.out.println("nhId ->" + nhId);
 		if (nhId <= 0)
@@ -470,16 +507,18 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 	   	{
 			ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 			ArrayList <Relation> rels;
-			rels = NeighborhoodManagement.neighborhoodNhIdRelationGet(nhId, ErrResps, authBase64String );
-			
-			if (ErrResps.size() > 0)
-				return Response.ok().entity(ErrResps).build();   	
-			else
-				return Response.ok().entity(rels).build();
+			rels = NeighborhoodManagement.neighborhoodNhIdRelationGet(nhId, ErrResps, authBase64String, bwcon, memberNh, statusCode );
+
+	    	//400: Bad Request. Invalid Neighborhoods in NhList.
+			//404 : Neighborhood not found
+			//500 : Internal Server Error.  "Failed to GET Neighborood Relation of Neighborhood :" + nhId
+			//200 : Success. Relations List returned
+			int scode = statusCode.get(0);
+			return Response.status(scode).entity(ErrResps).build();	
 	   	}
     	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
+	       	return Response.status(400).entity(erbs).build();		//400: Bad Request. Negative NhId
 	   	}    
     	//return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
