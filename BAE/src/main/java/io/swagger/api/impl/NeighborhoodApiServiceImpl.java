@@ -491,12 +491,27 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
         // do some magic!
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+    	BoardwalkConnection bwcon = null;
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
 		if (authBase64String == null)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorization
+		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();	//401: Authorization Failed
+    		}
 		}
 		 
 		System.out.println("nhId ->" + nhId);
@@ -527,33 +542,45 @@ public class NeighborhoodApiServiceImpl extends NeighborhoodApiService {
 		}
 
 		List <Neighborhood> nhList = relationship.getRelatedNeighborhoodId();
-		 
-		Neighborhood nh;
-		for(int index=0 ; index < nhList.size(); index +=1)
+
+		if (nhList.size() == 0)
 		{
-			nh = nhList.get(index);
-			if (nh.getId() <= 0)
+			erb = new ErrorRequestObject(); erb.setError("IsEmpty"); erb.setPath("relationship.relatedNhIds"); 
+			erb.setProposedSolution("Related Neighborhood List Cannot be Empty. ");
+			erbs.add(erb);
+		}
+		else
+		{
+			Neighborhood nh;
+			for(int index=0 ; index < nhList.size(); index +=1)
 			{
-				erb = new ErrorRequestObject(); erb.setError("IsNegativeOrZero"); erb.setPath("relationship.nhList[" + index + "].Id = " + nh.getId() ); 
-				erb.setProposedSolution("Neighborhood ID must be a Positive Number of an Existing Neighborhod. ");
-				erbs.add(erb);
+				nh = nhList.get(index);
+				if (nh.getId() <= 0)
+				{
+					erb = new ErrorRequestObject(); erb.setError("IsNegativeOrZero"); erb.setPath("relationship.nhList[" + index + "].Id = " + nh.getId() ); 
+					erb.setProposedSolution("Neighborhood ID must be a Positive Number of an Existing Neighborhod. ");
+					erbs.add(erb);
+				}
 			}
 		}
-		 
+		
 		if (erbs.size() == 0)
 	   	{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	  	 	String msgRet;
-	  	 	msgRet = NeighborhoodManagement.neighborhoodNhIdRelationPost(nhId, relationship, ErrResps, authBase64String);
+	  	 	msgRet = NeighborhoodManagement.neighborhoodNhIdRelationPost(nhId, relationship, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 	    	
-	    	if (ErrResps.size() > 0)
-	    		return Response.ok().entity(ErrResps).build();   	
-	    	else
-   				return Response.ok().entity(msgRet).build();
+	    	//400: Bad Request. Invalid Neighborhoods in NhList.
+	  	 	//200: Success. Neighborhood Relation created successfully for all Neighborhoods in NhList.
+	  	 	//409: Conflict. Creation of Relation failed 
+	  	 	//404: Neighborhood Not found
+	  	 	//400: Bad Request. Invalid Neighborhoods in NhList.
+	  	 	int scode = statusCode.get(0);
+			return Response.status(scode).entity(ErrResps).build();		
 	   	}
     	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
+	       	return Response.status(400).entity(erbs).build();		//400: BAd rEquest: Missing relation Name, Missing Neighborhood List, Negative nhId, Negative nhIds in related Neighborhoods
 	   	}    
     }
     

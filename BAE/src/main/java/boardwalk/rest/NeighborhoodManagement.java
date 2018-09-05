@@ -386,7 +386,7 @@ public class NeighborhoodManagement {
 	
     //@POST  -- AUTHORIZATION DONE
     //@Path("/{nhId}/relation")
-    public static String neighborhoodNhIdRelationPost(int nhId, Relation relationship, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+    public static String neighborhoodNhIdRelationPost(int nhId, Relation relationship, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode )
     {
     	String strRet = null;
         ErrorRequestObject erb;
@@ -398,19 +398,10 @@ public class NeighborhoodManagement {
 
         // get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
+	
 		int loginNhId = -1;
 		int loginMemberId = -1;
 		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return strRet;
-		}
 
 		connection = bwcon.getConnection();
 		loginMemberId = memberNh.get(0);
@@ -473,36 +464,41 @@ public class NeighborhoodManagement {
 				 }
 			 }
 
-            if (targetNeighborhoods.size() > 0)
-			{
-        		BoardwalkNeighborhoodManager.createRelation(bwcon, nhId, relation, targetNeighborhoods );
-	            for(int tindex=0 ; tindex < targetNeighborhoods.size(); tindex +=1)
-    			 {
-	            	s_erb = new ErrorRequestObject(); s_erb.setError("Success"); s_erb.setPath("relationship.nhList[" + tindex + "].Id : "+targetNeighborhoods.get(tindex)); 
- 					s_erb.setProposedSolution("Neighborhood Relations created successfully");
- 					S_ErrResps.add(s_erb);
-    			 }
-
-	            if (r_nhCount == targetNeighborhoods.size())
-	            {	//All Relations are successfully created
-	            	erb = new ErrorRequestObject(); erb.setError("All Neighborhood Relations Created Successfully"); erb.setPath("relationship.nhList[].Id"); 
- 					erb.setProposedSolution("Relations created successfully for all Neighborhood Ids.");
- 					ErrResps.add(erb );
-	            }
-			}
-            else
-            {	//Some Relations are successfully created
-            	erb = new ErrorRequestObject(); erb.setError("Failure"); erb.setPath("relationship.nhList[].Id"); 
-				erb.setProposedSolution("Missing Related Neighborhoods. Provide Related Neighborhoods in nhList[] element.");
-				ErrResps.add(erb );
+            if (r_nhCount != targetNeighborhoods.size())
+            {	//All Neighborhoods in nhList are not Valid.
+            	statusCode.add(400);			//400: Bad Request. Invalid Neighborhoods in NhList.
+            	erb = new ErrorRequestObject(); erb.setError("Failed to create Neighborhood Relations for Neighborhood List"); erb.setPath("relationship.nhList[]"); 
+					erb.setProposedSolution("Neighbohrood List must have all Valid Neighborhoods.");
+					ErrResps.add(erb );
+					
 				for(int ifailure=0; ifailure < F_ErrResps.size(); ifailure+=1)
 				{
 					ErrResps.add(F_ErrResps.get(ifailure));
 				}
+				return strRet;
             }
+            else			// i.e. (r_nhCount == targetNeighborhoods.size())
+            {
+        		BoardwalkNeighborhoodManager.createRelation(bwcon, nhId, relation, targetNeighborhoods );
+
+            	//All Relations are successfully created
+            	statusCode.add(200);			//200: Success. Neighborhood Relation created successfully for all Neighborhoods in NhList.
+            	erb = new ErrorRequestObject(); erb.setError("All Neighborhood Relations Created Successfully"); erb.setPath("relationship.nhList[].Id"); 
+				erb.setProposedSolution("Relations created successfully for all Neighborhood Ids.");
+				ErrResps.add(erb );
+
+	            for(int tindex=0 ; tindex < targetNeighborhoods.size(); tindex +=1)
+    			 {
+	            	s_erb = new ErrorRequestObject(); s_erb.setError("Success"); s_erb.setPath("relationship.nhList[" + tindex + "].Id : "+targetNeighborhoods.get(tindex)); 
+ 					s_erb.setProposedSolution("Neighborhood Relations created successfully");
+ 					ErrResps.add(s_erb);
+    			 }
+				return strRet;
+			}
 		}
 		catch (BoardwalkException bwe)
 		{
+        	statusCode.add(409);			//409: Conflict
         	System.out.println("Creation of Neighborhood Relation Failed");
         	erb = new ErrorRequestObject();
         	erb.setError("Creation of Neighborhood Relation Failed");
@@ -513,6 +509,7 @@ public class NeighborhoodManagement {
 		}
         catch (NoSuchElementException nse)
         {
+        	statusCode.add(404);			//404: Neighborhood Not found
             System.out.println("The Neighborhood Not Found");
 			erb = new ErrorRequestObject();
 			erb.setError("NeighborhoodId NOT FOUND ");
