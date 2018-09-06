@@ -60,27 +60,17 @@ public class NeighborhoodManagement {
 	
     //@POST		-- CREATE COLLABORATION USING NH_ID AND MEMBER_ID
     //@Path("/{nhId}/member/{memberId}/collaboration")
-	public static int neighborhoodNhIdMemberMemberIdCollaborationPost(int nhId, int memberId, Collaboration collaboration, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static int neighborhoodNhIdMemberMemberIdCollaborationPost(int nhId, int memberId, Collaboration collaboration, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode)
 	{
 		ErrorRequestObject erb;
-		ArrayList <Relation> rels = new ArrayList<Relation>();
 		int newCollabId = -1;
 		
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-
+		
 		int loginNhId = -1;
 		int loginMemberId = -1;
 		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return newCollabId;
-		}
 
 		connection = bwcon.getConnection();
 		loginMemberId = memberNh.get(0);
@@ -90,7 +80,7 @@ public class NeighborhoodManagement {
 		if (loginMemberId != memberId)
 		{
 			erb = new ErrorRequestObject();
-			erb.setError("Authorization Is not allowed to create Collaboration in this Neighborood. [MemberID mismatch]");
+			erb.setError("Authorization Is not allowed to create Collaboration in this Neighborhood. [MemberID mismatch]");
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::bwAuthorization.AuthenticateUser");
 			erb.setProposedSolution("Authorization Neighbrohood Membership Doest not match. Provide correct Authorization and Try Again.");
 			ErrResps.add(erb);
@@ -99,7 +89,7 @@ public class NeighborhoodManagement {
 		if (loginNhId != nhId)
 		{
 			erb = new ErrorRequestObject();
-			erb.setError("Authorization Is not allowed to create Collaboration in this Neighborood. [NhID mismatch]");
+			erb.setError("Authorization Is not allowed to create Collaboration in this Neighborhood. [NhID mismatch]");
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::bwAuthorization.AuthenticateUser");
 			erb.setProposedSolution("Authorization Neighbrohood Membership Doest not match. Provide correct Authorization and Try Again.");
 			ErrResps.add(erb);
@@ -107,6 +97,7 @@ public class NeighborhoodManagement {
 		
 		if (!ErrResps.isEmpty())
 		{
+			statusCode.add(403);	//403:	Forbidden. 		Authorization Is not allowed to create Collaboration in this Neighborood. Authorization Is not allowed to create Collaboration in this Neighborood. [NhID mismatch]
 			return newCollabId;
 		}
 		
@@ -142,7 +133,7 @@ public class NeighborhoodManagement {
 				collabName = collaboration.getName();
 				collabDesc = collaboration.getPurpose();
 				
-				//Both Neighborhood and Membership Are Valid. Create Collaboraiton here....
+				//Both Neighborhood and Membership Are Valid. Create Collaboration here....
 	    		TransactionManager tm = null;
 	    		try
 	    		{
@@ -151,6 +142,8 @@ public class NeighborhoodManagement {
 	    			
 	    			newCollabId = CollaborationManager.createCollaboration(connection, collabName, collabDesc, memberId, tid, 1);
 	    			tm.commitTransaction();
+	    			statusCode.add(200);		//200: 		Success. Collaboration created successfully
+	    			return newCollabId ;
 	    		}
 	    		catch (Exception e)
 	    		{
@@ -182,6 +175,8 @@ public class NeighborhoodManagement {
 			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
         	ErrResps.add(erb);
         	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+			statusCode.add(500);		//500: 		Failed to Create New Collaboration
+			return newCollabId ;
 		}
         catch (NoSuchElementException nse)
         {
@@ -191,7 +186,9 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::BoardwalkNeighborhoodManager.getNeighborhoodTree");
 			erb.setProposedSolution("The NeighborhoodId NOT FOUND. You must provide an existing Neigborhood Id.");
 			ErrResps.add(erb);
-        }	 		    			
+			statusCode.add(404);		//404: 		The Neighborhood Not Found
+			return newCollabId ;
+		}	 		    			
         catch (NullPointerException npe)
         {
             System.out.println("npe.getMessage(): " + npe.getMessage());
@@ -201,6 +198,8 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::BoardwalkNeighborhoodManager.getMemberList");
 			erb.setProposedSolution("You must provide an existing MemberId.");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404: 		The Membership Not Found
+			return newCollabId ;
         }	 		    			
 		//Custom code Ends
 		finally
@@ -214,7 +213,6 @@ public class NeighborhoodManagement {
 				e.printStackTrace();
 			}
 		}    		 		
-		return newCollabId ;
 	}
 
     //@GET	-- AUTHORIZATION DONE
@@ -625,25 +623,16 @@ public class NeighborhoodManagement {
     
     //@DELETE	-- AUTHORIZATION DONE
     //@Path("/{nhId}/member/{member}")
-	public static String neighborhoodNhIdMemberMemberIdDelete(int nhId, int memberId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static String neighborhoodNhIdMemberMemberIdDelete(int nhId, int memberId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode)
 	{
 		String strRet = null;
         ErrorRequestObject erb;
         // get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int loginNhId = -1;
 		int loginMemberId = -1;
 		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return strRet;
-		}
 
 		connection = bwcon.getConnection();
 		loginMemberId = memberNh.get(0);
@@ -683,6 +672,8 @@ public class NeighborhoodManagement {
 			}
 			System.out.println("Membership deleted Successfully form Neighborhood :" + nhId);
 			strRet = "Neighborhood Membership : " + memberId + " of Neighborhood: " + nhId + " is Successfully Deleted.";
+			statusCode.add(200);		//200:	Success. Membership deleted Successfully
+			return strRet;
 		}
 		catch (BoardwalkException bwe)
 		{
@@ -693,6 +684,8 @@ public class NeighborhoodManagement {
 			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
         	ErrResps.add(erb);
         	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+        	statusCode.add(500);			//500: Server Error. Deleting membership of Neighborhood Failed
+        	return strRet;
 		}
         catch (NoSuchElementException nse)
         {
@@ -702,6 +695,8 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdDelete::BoardwalkNeighborhoodManager.getNeighborhoodTree");
 			erb.setProposedSolution("The NeighborhoodId NOT FOUND. You must provide an existing Neigborhood Id.");
 			ErrResps.add(erb);
+        	statusCode.add(404);			//404: The Neighborhood Not Found
+        	return strRet;
         }	 		    			
         catch (NullPointerException npe)
         {
@@ -712,6 +707,8 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdDelete::BoardwalkNeighborhoodManager.getMemberList");
 			erb.setProposedSolution("You must provide an existing MemberId.");
 			ErrResps.add(erb);
+        	statusCode.add(404);			//404: The Membership Not Found
+        	return strRet;
         }	 		    			
 		//Custom code Ends
 		finally
@@ -725,31 +722,22 @@ public class NeighborhoodManagement {
 				e.printStackTrace();
 			}
 		}
-    	return strRet;
+    	//return strRet;
 	}
 	
     //@POST	-- AUTHORIZATION DONE
     //@Path("/{nhId}/member")
-	public static ArrayList<Member> neighborhoodNhIdMemberPost(int nhId, Member member, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static ArrayList<Member> neighborhoodNhIdMemberPost(int nhId, Member member, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode )
 	{
 		ArrayList <Member> memberList = new ArrayList<Member>();
         ErrorRequestObject erb;
         
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int loginNhId = -1;
 		int loginMemberId = -1;
 		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return memberList;
-		}
 
 		connection = bwcon.getConnection();
 		loginMemberId = memberNh.get(0);
@@ -790,6 +778,8 @@ public class NeighborhoodManagement {
 				memberList.add(m);
 			}
 			System.out.println("Successfully created Membership for User:" + memberUserId + " under Nh:" + nhId);
+			statusCode.add(200);		//200: Success Membership created
+			return memberList;
 		}
 		catch (BoardwalkException bwe)
 		{
@@ -799,6 +789,7 @@ public class NeighborhoodManagement {
 			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
         	ErrResps.add(erb);
         	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+			statusCode.add(500);		//500: Server Internal Error
             return memberList;
 		}
         catch (NoSuchElementException nse)
@@ -809,6 +800,8 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberPost::BoardwalkNeighborhoodManager.getNeighborhoodTree");
 			erb.setProposedSolution("The NeighborhoodId NOT FOUND. You must provide an existing Neigborhood Id.");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404: Neighborhood Not Found
+            return memberList;
         }	 		    			
         catch (NullPointerException npe)
         {
@@ -819,6 +812,8 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberPost::BoardwalkUserManager.getUser");
 			erb.setProposedSolution("You must provide an existing UserId.");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404: User Not Found
+            return memberList;
         }	 		    			
 		//Custom Code Ends
 		finally
@@ -832,32 +827,20 @@ public class NeighborhoodManagement {
 				e.printStackTrace();
 			}
 		}
-    	return memberList;
 	}
 	
 	//@DELETE -- AUTHORIZATION DONE
     //@Path("/{nhId}")
-	public static String neighborhoodNhIdDelete(int nhId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static String neighborhoodNhIdDelete(int nhId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon , ArrayList<Integer> memberNh, ArrayList<Integer> statusCode)
 	{
 		String retMsg = null;
         ErrorRequestObject erb;
         // get the connection
-        
-		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int memberNhId = -1;
 		int memberId = -1;
 		int userId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return retMsg;
-		}
 
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
@@ -875,6 +858,8 @@ public class NeighborhoodManagement {
 			}    			
 			BoardwalkNeighborhoodManager.deleteNeighborhood(bwcon, nhId );
 			retMsg = "Neighborhood Deleted Successfully. All it's dependent objects are purged successfully.";
+			statusCode.add(200);		//200: Success. Neighborhood Deleted Successfully. All it's dependent objects are purged successfully.
+			return retMsg;
 		}
         catch (BoardwalkException bwe)
         {
@@ -885,6 +870,8 @@ public class NeighborhoodManagement {
 			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
 			ErrResps.add(erb);
             retMsg = "Failed to Delete Neighborhood:" + nhId + ", Boardwalk-ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage();
+			statusCode.add(500);		//500 : Failed to Delete Neighborhood. BoardwalkException: Contact Boardwak Support.
+			return retMsg;
         }
         catch (NoSuchElementException nse)
         {
@@ -895,6 +882,8 @@ public class NeighborhoodManagement {
 			erb.setProposedSolution("The NeighborhoodId NOT FOUND. You must provide an existing Neigborhood Id.");
 			ErrResps.add(erb);
 			retMsg = "Failed to Delete Neighborhood:" + nhId + ". Neighborhood NOT FOUND.";
+			statusCode.add(404);		//404 : NeighborhoodId NOT FOUND
+			return retMsg;
         }    		
 		//Custom Code Ends
     	finally
@@ -908,30 +897,20 @@ public class NeighborhoodManagement {
     			e.printStackTrace();
     		}
     	}
-		return retMsg;
 	}
 
 	//@GET	-- -- AUTHORIZATION DONE
 	//@Path("/{nhId}/member")
-	public static ArrayList<Member> neighborhoodNhIdMemberGet(int nhId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static ArrayList<Member> neighborhoodNhIdMemberGet(int nhId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode)
 	{
         ArrayList <Member> memberList = new ArrayList<Member>();
         ErrorRequestObject erb;
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int memberNhId = -1;
 		int memberId = -1;
 		int userId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return memberList;
-		}
 
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
@@ -963,6 +942,8 @@ public class NeighborhoodManagement {
 				mem.setNhid(obj.longValue());
 				memberList.add(mem);
 			}
+			statusCode.add(200);		//200 : Success. The member list returned
+			return memberList;
 		}
 		catch (BoardwalkException bwe)
 		{
@@ -972,6 +953,7 @@ public class NeighborhoodManagement {
 			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
         	ErrResps.add(erb);
         	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+			statusCode.add(500);		//500 : Get Neighborhood Members Failed
             return memberList;
 		}
         catch (NoSuchElementException nse)
@@ -982,6 +964,8 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberGet::BoardwalkNeighborhoodManager.getNeighborhoodTree");
 			erb.setProposedSolution("The NeighborhoodId NOT FOUND. You must provide an existing Neigborhood Id.");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404 : The Neighborhood Not Found
+			return memberList;
         }	 	
 		//Custom Code Ends
 		finally
@@ -995,31 +979,19 @@ public class NeighborhoodManagement {
 				e.printStackTrace();
 			}
 		}
-	 	return memberList;
 	}
 	
 	//@GET	-- AUTHORIZATION DONE
     //@Path("/{nhId}")
-	public static ArrayList<Neighborhood> neighborhoodNhIdGet(int nhId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String)
+	public static ArrayList<Neighborhood> neighborhoodNhIdGet(int nhId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode)
 	{
-        ArrayList <Neighborhood> nhList = new ArrayList<Neighborhood>();
         ErrorRequestObject erb;
-    	
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int memberNhId = -1;
 		int memberId = -1;
 		int userId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return nhList;
-		}
 
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
@@ -1031,63 +1003,69 @@ public class NeighborhoodManagement {
 		{
 			NhIdGet = new ArrayList<Neighborhood>();
 
-			if (nhId != -1)
+			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
+			if (nh0v.isEmpty()) 
 			{
-    			Vector<?> nh0v = BoardwalkNeighborhoodManager.getNeighborhoodTree( bwcon, nhId);
-    			if (nh0v.isEmpty()) 
+				throw new NoSuchElementException("Parent Neighborhood NOT FOUND") ;
+			}
+			else
+			{
+    			Iterator<?> nh0i = nh0v.iterator();
+    			while (nh0i.hasNext())
     			{
-					throw new NoSuchElementException("Parent Neighborhood NOT FOUND") ;
+    				BoardwalkNeighborhoodNode bnn = (BoardwalkNeighborhoodNode)nh0i.next();
+    				
+    				Vector<?> NhPaths = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths( connection , nhId );
+					System.out.println("NhPaths.size() -->" + NhPaths.size());
+    				for ( int n = 0; n < NhPaths.size(); n++ )
+					{
+						String nhPath = (String)NhPaths.elementAt(n);
+						System.out.println("nhPath ->" + nhPath);
+					}
+    				Vector<?> NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
+					System.out.println("NhPathIds.size() -->" + NhPathIds.size());
+    				for ( int n = 0; n < NhPathIds.size(); n++ )
+					{
+						String nhPathId = (String)NhPathIds.elementAt(n);
+						System.out.println("nhPathId ->" + nhPathId);
+					}
+    				int nhLevel; int parentNhId;
+    				
+    				if (NhPathIds.size() == 1)
+    				{
+    					nhLevel = 0;
+    					parentNhId = -1;
+    				}
+    				else
+    				{
+    					nhLevel = NhPathIds.size()-1;
+    					System.out.println("nhLevel -> " + nhLevel);
+    					//For example 23\45\94\34 for Level-3, 23\45\94 for Level-2. 23\45 for Level-1,   23 for Level-0
+    					String nhpath = (String) NhPathIds.elementAt(0);	
+    					System.out.println("Top nhpath ->" + nhpath);
+    					String nhpathArr[] = nhpath.split("\\\\");
+    					parentNhId = Integer.parseInt(nhpathArr[nhLevel-1]);
+    					System.out.println("parentNhId -> (nhpathArr[nhLevel-1] -> " + parentNhId);
+    				}
+    				System.out.println("parentNhId ->" + parentNhId);
+    				
+    				collectNH(bnn, parentNhId);
+    				System.out.println("NhIdGet.size() ->"  + NhIdGet.size());
     			}
-    			else
-    			{
-        			Iterator<?> nh0i = nh0v.iterator();
-        			while (nh0i.hasNext())
-        			{
-        				BoardwalkNeighborhoodNode bnn = (BoardwalkNeighborhoodNode)nh0i.next();
-        				
-        				Vector<?> NhPaths = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPaths( connection , nhId );
-						System.out.println("NhPaths.size() -->" + NhPaths.size());
-        				for ( int n = 0; n < NhPaths.size(); n++ )
-						{
-							String nhPath = (String)NhPaths.elementAt(n);
-							System.out.println("nhPath ->" + nhPath);
-						}
-        				Vector<?> NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
-						System.out.println("NhPathIds.size() -->" + NhPathIds.size());
-        				for ( int n = 0; n < NhPathIds.size(); n++ )
-						{
-							String nhPathId = (String)NhPathIds.elementAt(n);
-							System.out.println("nhPathId ->" + nhPathId);
-						}
-        				int nhLevel; int parentNhId;
-        				
-        				if (NhPathIds.size() == 1)
-        				{
-        					nhLevel = 0;
-        					parentNhId = -1;
-        				}
-        				else
-        				{
-        					nhLevel = NhPathIds.size()-1;
-        					System.out.println("nhLevel -> " + nhLevel);
-        					//For example 23\45\94\34 for Level-3, 23\45\94 for Level-2. 23\45 for Level-1,   23 for Level-0
-        					String nhpath = (String) NhPathIds.elementAt(0);	
-        					System.out.println("Top nhpath ->" + nhpath);
-        					String nhpathArr[] = nhpath.split("\\\\");
-        					parentNhId = Integer.parseInt(nhpathArr[nhLevel-1]);
-        					System.out.println("parentNhId -> (nhpathArr[nhLevel-1] -> " + parentNhId);
-        				}
-        				System.out.println("parentNhId ->" + parentNhId);
-        				
-        				collectNH(bnn, parentNhId);
-        				System.out.println("NhIdGet.size() ->"  + NhIdGet.size());
-        			}
-    			}
+    			statusCode.add(200);		//200: Success Neighborhood collection returned.
+    			return NhIdGet;
 			}
 		}
 		catch (BoardwalkException bwe)
 		{
 			System.out.println("Error fetching neighborhood");
+			erb = new ErrorRequestObject();
+			erb.setError("Error fetching neighborhood");
+			erb.setPath("NeighborhoodManagement.neighborhoodNhIdGet::BoardwalkNeighborhoodManager.getNeighborhoodTree");
+			erb.setProposedSolution("Serverside Error. Could not fetch Neighborhood. Report Administratior");
+			ErrResps.add(erb);
+			statusCode.add(500);		//500:	Server-side Error fetching Neighborhood
+			return NhIdGet;
 		}
         catch (NoSuchElementException nse)
         {
@@ -1097,6 +1075,8 @@ public class NeighborhoodManagement {
 			erb.setPath("NeighborhoodManagement.neighborhoodNhIdGet::BoardwalkNeighborhoodManager.getNeighborhoodTree");
 			erb.setProposedSolution("The NeighborhoodId NOT FOUND. You must provide an existing Neigborhood Id.");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404:	The Neighborhood Not Found.
+			return NhIdGet;
         }
 		//Custom Code Ends
 		finally
@@ -1110,7 +1090,6 @@ public class NeighborhoodManagement {
     			e.printStackTrace();
     		}
     	}
-		return NhIdGet;
 	}
 
 
@@ -1302,7 +1281,7 @@ public class NeighborhoodManagement {
 
 //	@GET	-- AUTHORIZATION DONE
 //  @Path("/{nhId}/collaboration")
-	public static ArrayList<Collaboration> neighborhoodNhIdCollaborationGet(Integer nhId, ArrayList<ErrorRequestObject> ErrResps, String authBase64String) 
+	public static ArrayList<Collaboration> neighborhoodNhIdCollaborationGet(Integer nhId, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon , ArrayList<Integer> memberNh , ArrayList<Integer> statusCode) 
 	{
         ArrayList <Collaboration> collabList = new ArrayList <Collaboration>() ;
         ArrayList <Whiteboard> wbList ;
@@ -1312,19 +1291,10 @@ public class NeighborhoodManagement {
 		
         // get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int loginNhId = -1;
 		int loginMemberId = -1;
 		int loginUserId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return collabList;
-		}
 
 		connection = bwcon.getConnection();
 		loginMemberId = memberNh.get(0);
@@ -1399,19 +1369,30 @@ public class NeighborhoodManagement {
 				collab.setWbList(wbList);
 				collabList.add(collab);
 			}
+			statusCode.add(200);		//200	: Success. Collaboration List is returned
+			return collabList;
 		}
         catch (NoSuchElementException nse)
         {
             System.out.println("The Neighborhood Not Found");
 			erb = new ErrorRequestObject();
 			erb.setError("NeighborhoodId NOT FOUND ");
-			erb.setPath("NeighborhoodManagement.neighborhoodNhIdMemberMemberIdCollaborationPost::BoardwalkNeighborhoodManager.getNeighborhoodTree");
+			erb.setPath("NeighborhoodManagement.neighborhoodNhIdCollaborationGet::BoardwalkNeighborhoodManager.getNeighborhoodTree");
 			erb.setProposedSolution("The NeighborhoodId NOT FOUND. You must provide an existing Neigborhood Id.");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404	: The Neighborhood Not Found
+			return collabList;
         }	 		    			
 		catch (BoardwalkException bwe)
 		{
-			System.out.println("Error fetching collaboration");
+			System.out.println("Error fetching Collaborations.  ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage());
+			erb = new ErrorRequestObject();
+			erb.setError("Error fetching Collaborations");
+			erb.setPath("NeighborhoodManagement.neighborhoodNhIdCollaborationGet::BoardwalkNeighborhoodManager.getCollaborationsForNeighborhood");
+			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" + bwe.getPotentialSolution());
+			ErrResps.add(erb);
+			statusCode.add(500);		//500	: Server Error fetching Collaborations
+			return collabList;
 		}
 			//Custom Code Ends
     	finally
@@ -1425,6 +1406,5 @@ public class NeighborhoodManagement {
     			e.printStackTrace();
     		}
     	}
-		return collabList;
 	}
 }

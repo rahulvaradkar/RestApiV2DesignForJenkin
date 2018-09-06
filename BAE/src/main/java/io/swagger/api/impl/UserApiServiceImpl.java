@@ -275,7 +275,7 @@ public class UserApiServiceImpl extends UserApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
-			return Response.status(401).entity(erbs).build();
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorization
 		}
     	else
     	{
@@ -285,7 +285,7 @@ public class UserApiServiceImpl extends UserApiService {
     		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
     		if (!ErrResps.isEmpty())
     		{
-    			return Response.status(401).entity(ErrResps).build();
+    			return Response.status(401).entity(ErrResps).build();		//401: Authorization Failed
     		}
     	}
 
