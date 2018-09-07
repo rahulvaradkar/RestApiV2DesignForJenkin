@@ -17,10 +17,15 @@ import java.security.Principal;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
+import com.boardwalk.table.ColumnManager;
+import com.boardwalk.table.RowManager;
+import com.boardwalk.table.TableManager;
 import com.boardwalk.user.UserManager;
 
+import boardwalk.connection.BoardwalkConnection;
 import boardwalk.rest.GridManagement;
 import boardwalk.rest.NeighborhoodManagement;
+import boardwalk.rest.bwAuthorization;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -41,15 +46,30 @@ public class GridApiServiceImpl extends GridApiService {
         // do some magic!
     	
     	//System.out.println("authBase64String : " + authBase64String);
+    	BoardwalkConnection bwcon = null;
     	ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
-
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
+		
 		if (authBase64String == null)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorization
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();		//401: Authorization Failed
+    		}
+    	}
 
 		if (gridId <= 0)	
 		{	
@@ -115,6 +135,7 @@ public class GridApiServiceImpl extends GridApiService {
 			erbs.add(erb);
 		}
 		
+		
 		if (baselineId == null)
 		{
 			erb = new ErrorRequestObject();
@@ -129,39 +150,65 @@ public class GridApiServiceImpl extends GridApiService {
 	   		CellBuffer cbf;
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	  	 	
-	  	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String);
+	  	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
-	  	 	//	        return Response.ok().entity( new ApiResponseMessage( 201, ErrResps.toString())).build();
-    		//return Response.ok().entity(ErrResps).build();   	
+	  	 	//[LINK IMPORT]
+	  	 	//500: Server-side Error. Exception thrown from GridManagement.gridGridIdGet [getTableBuffer] Block
+	    	//500: Server-side Error. SystemException thrown from GridManagement.gridGridIdGet:TableManager.getTableInfo 
+	    	//403: Forbidden. User don't have the privileges to execute this action.
+	    	//200: Success. Returns cellBuffer
 
+	  	 	//[REFRESH]
+	  	 	//200 : Success. cellBuffer Returned
+	  	 	//403: Forbidden. User don't have the privileges to execute this action.
+	  	 	//500 : Server Error. SQLException thrown from GridManagement.gridGridIdGet::getGridRefresh -> getCriteriaTable | StartTransaction | BW_IMPORT_CHANGES 
+	  	 	//500 : Server Error. SystemException thrown from GridManagement.gridGridIdGet::getGridRefresh -> TableManager.getTableInfo | ColumnManager.getXlColumnsForImport | RowManager.getTableRows
+	  	 	
 	    	if (ErrResps.size() > 0)
-	    		return Response.ok().entity(ErrResps).build();   	
+	    	{
+				int scode = statusCode.get(0);
+				return Response.status(scode).entity(ErrResps).build();   	
+	    	}
 	    	else
 	    	{
-	    		return Response.ok().entity(cbf).build();
+	    		return Response.status(200).entity(cbf).build();		//200: Success. returns cellBuffer
 	    	}
 	   	}
 	   	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
+	       	return Response.status(400).entity(erbs).build();	//400: Bad Request: Negative gridId, Null importTid, view, baseline, mode, mode != 1 or 0 
 	   	}    
-
 //        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
     public Response gridPost(Grid grid, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
 		ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+    	BoardwalkConnection bwcon = null;
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
-	    	//System.out.println("GridApiServiceImpl::gridPost --> authBase64String : " + authBase64String);
-
-	    	if (authBase64String == null)
-			{	
-				erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
-				erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
-				erbs.add(erb);
-			}
+		 
+    	//System.out.println("GridApiServiceImpl::gridPost --> authBase64String : " + authBase64String);
+    	if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorization
+		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();		//401: Authorization Failed
+    		}
+    	}
 		 
 		String gridName = null;
 		String gridDesc = null;
@@ -226,33 +273,44 @@ public class GridApiServiceImpl extends GridApiService {
 		 
 	   	if (erbs.size() == 0)
 	   	{
-   			ArrayList<Collaboration> collabList;
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	  	 	int gridId = -1;
-	  	 	gridId = GridManagement.gridPost(grid, ErrResps, authBase64String);
+	  	 	gridId = GridManagement.gridPost(grid, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 	    	
+	  	 	//404: Not found. Whiteboard not found.
+	  	 	//404: Not found. Collaboration Id not found.
+	  	 	//500: Server Error. Failed to get Neighborhood Relationships.
+	  	 	//412: Precondition Failed.	Grid already exists in whiteboard. 
+
 	    	if (ErrResps.size() > 0)
-	    		return Response.ok().entity(ErrResps).build();   	
+	    	{
+				int scode = statusCode.get(0);
+				return Response.status(scode).entity(ErrResps).build();   	
+	    	}
 	    	else
 	    	{
 	    		grid.setGridId(gridId);
-	    		return Response.ok().entity(grid).build();
+	    		return Response.status(200).entity(grid).build();		//200: Success. Returns grid object with GridId
 	    	}
 	   	}
 	   	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
+	       	return Response.status(400).entity(erbs).build();			//400:	Bad Request Negative or null collabId, wbId. Blank or null gridDesc, gridName.
 	   	}    
     	//return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
+
     @Override
     public Response gridPut( @NotNull Integer gridId, CellBuffer cellBufferRequest, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
 
 		ErrorRequestObject erb;
-		 ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+    	BoardwalkConnection bwcon = null;
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
-			System.out.println("Inside GridApiServiceImpl.gridPut --- gridId : " + gridId);
+		System.out.println("Inside GridApiServiceImpl.gridPut --- gridId : " + gridId);
 	    	//System.out.println("authBase64String : " + authBase64String);
 			
 		if (authBase64String == null)
@@ -260,7 +318,19 @@ public class GridApiServiceImpl extends GridApiService {
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
 			erbs.add(erb);
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorization
 		}
+    	else
+    	{
+    		ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+        	//Connection connection = null;
+    		
+    		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+    		if (!ErrResps.isEmpty())
+    		{
+    			return Response.status(401).entity(ErrResps).build();		//401: Authorization Failed
+    		}
+    	}
 			
 		if (gridId <= 0)
 		{	
@@ -273,19 +343,40 @@ public class GridApiServiceImpl extends GridApiService {
 	   	{
 	   		CellBuffer cbf;
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-	  	 	
-	  	 	cbf = GridManagement.gridPut(gridId, cellBufferRequest, ErrResps, authBase64String);
+	  	 	cbf = GridManagement.gridPut(gridId, cellBufferRequest, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 	    	
+	  	 	//[LINK EXPORT]
+	  	 	//404 : Bad Request. Missing elements info | cells | rowArray | columnArray | rows | columns | columnCellArrays | GridChangeBuffer
+	  	 	//403 : Forbidden. User don't have the privileges Add Row | Administer Columns | View=none
+	  	 	//404 : Bad Request. Blank Column Name
+	  	 	//412 : Precondition Failed. Column Already Exists in Grid (Duplicate)
+	  	 	//200 : Success. Returns cellBuffer
+	  	 	//500 : Server Error. SystemException: Failed to get TableManager.getTableInfo.
+	  	 	//500 : Server Error. SQLException on Server
+	  	 	
+	  	 	//[SUBMIT]
+	  	 	//404 : Bad Request. Missing elements info | cells | rowArray | columnArray | rows | columns | columnCellArrays | GridChangeBuffer
+		  	//404 : Bad Request. Membership is Not Valid (in validateMembership)
+		  	//500 : Server Error. SystemException on Server in validateMembership
+		  	//500 : Server Error. SQLException on Server on Submit
+		  	//500 : Server Error. SystemException on Server on Submit	 	
+	  	 	//409 : Conflict.  Critical Updates on Server.
+	  	 	//403 : Forbidden.  User don't have the privileges to execute this action. Add/Delete Row | Administer Columns
+	  	 	//423 : Locked. The resource that is being accessed is locked. The table is being updated by another user, Please try later
+	  	 	//412 : Precondition Failed. Columns are not Unique. 
+	  	 	//400 : Bad Request . Too many errors in payload
+	  	 	
 	    	if (ErrResps.size() > 0)
-	    		return Response.ok().entity(ErrResps).build();   	
-	    	else
 	    	{
-	    		return Response.ok().entity(cbf).build();
+				int scode = statusCode.get(0);
+				return Response.status(scode).entity(ErrResps).build();   	
 	    	}
+	    	else
+	    		return Response.status(200).entity(cbf).build();		//200 : Success. returns cellBuffer
 	   	}
 	   	else
 	   	{
-	       	return Response.ok().entity(erbs).build();
+	       	return Response.status(400).entity(erbs).build();		//400: Bad Request. Negative GridId
 	   	}    
 
 

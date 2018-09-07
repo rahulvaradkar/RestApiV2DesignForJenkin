@@ -29,6 +29,7 @@ import com.boardwalk.excel.newXLRow;
 import com.boardwalk.excel.xlColumn_import;
 import com.boardwalk.excel.xlErrorNew;
 import com.boardwalk.exception.BoardwalkException;
+import com.boardwalk.exception.BoardwalkMessage;
 import com.boardwalk.exception.SystemException;
 import com.boardwalk.member.MemberNode;
 import com.boardwalk.neighborhood.NeighborhoodManager;
@@ -71,7 +72,7 @@ public class GridManagement {
 		
     //@GET
     //@Path("/{gridId}")
-	public static CellBuffer gridGridIdGet(int gridId, int importTid, String view, int mode, int baselineId , ArrayList<ErrorRequestObject> ErrResps, String authBase64String)
+	public static CellBuffer gridGridIdGet(int gridId, int importTid, String view, int mode, int baselineId , ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode )
 	{
 		//CellBuffer  cellBufferRequest = new CellBuffer();
 		CellBuffer cbfReturn = new CellBuffer();
@@ -79,19 +80,9 @@ public class GridManagement {
 
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int nhId = -1;
 		int memberId = -1;
-		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return cbfReturn;
-		}
-
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
@@ -99,7 +90,7 @@ public class GridManagement {
 		//System.out.println("MemberNode -> nhId :" + nhId);
 		//System.out.println("MemberNode -> memberId :" + memberId);
 		
-    	Vector xlErrorCells = new Vector(); 
+    	Vector<xlErrorNew> xlErrorCells = new Vector<xlErrorNew>(); 
     	try
     	{
     		
@@ -146,11 +137,11 @@ public class GridManagement {
     		boolean canDeleteRows = false;
     		boolean canAdministerColumns = false;
 
-    		ArrayList	columnIds = null;
-    		ArrayList	rowIds = null;
-    		ArrayList	formulaIds = null;
-    		ArrayList	strValIds = null;
-    		String		formulaString = null;
+/*    		ArrayList<?>	columnIds = null;
+    		ArrayList<?>	rowIds = null;
+    		ArrayList<?>	formulaIds = null;
+    		ArrayList<?>	strValIds = null;
+    		String		formulaString = null;*/
     		
     		PreparedStatement stmt		= null;
     		TransactionManager tm = null;
@@ -174,7 +165,7 @@ public class GridManagement {
 			
 			if (importTid > 0)
 			{
-				cbfReturn = getGridRefresh  (connection, gridId, importTid, userId, memberId, nhId,  view, mode, baselineId, synch , ErrResps);
+				cbfReturn = getGridRefresh  (connection, gridId, importTid, userId, memberId, nhId,  view, mode, baselineId, synch , ErrResps, statusCode);
 				return cbfReturn;
 			}
 			
@@ -198,6 +189,7 @@ public class GridManagement {
 			// But in this case the user does not have provision to select the table
 			if(view.equals("None"))
 			{
+				//BoardwalkMessage( 10005 -> "ACCESS EXCEPTION", 5 ,"You dont have the priviliges to execute this action ",  "Please contact the owner of the table to setup necessary access control"));
 				xlErrorCells.add( new xlErrorNew(gridId, 0, 0, 10005));
 				throw new BoardwalkException(10005);		//it was 11005.
 			}
@@ -223,7 +215,7 @@ public class GridManagement {
 				int criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId, userId);
 				System.out.println("Using criterea table id = " + criteriaTableId);
 				int accessTableId = TableViewManager.getAccessTable(connection, gridId, userId);
-				HashSet restrColumnList = new HashSet();
+				HashSet<?> restrColumnList = new HashSet<Object>();
 				if (accessTableId > 0) 
 				{
 					System.out.println("Using access table id = " + accessTableId);
@@ -231,8 +223,8 @@ public class GridManagement {
 					restrColumnList = TableViewManager.getRestrictedColumnsForImport(connection, gridId, accessTableId, userId);
 				}
 				// Get the columns
-				Vector colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
-				Iterator ci = colv.iterator();
+				Vector<?> colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
+				Iterator<?> ci = colv.iterator();
 				
 				// columns
 				float previousColumnSequence = -1;
@@ -297,7 +289,7 @@ public class GridManagement {
 					System.out.println("RowManager.getTableRows....3");
 					tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
 				}
-				Vector rowv = tbrowInfo.getRowVector();
+				Vector<?> rowv = tbrowInfo.getRowVector();
 				// rows
 				gridRows = new ArrayList <Row>();
 				rowArray = new ArrayList <Integer>();
@@ -534,7 +526,7 @@ public class GridManagement {
 
 				System.out.println("nhId : " + nhId);
 				System.out.println("connection : " + connection);
-				Vector NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
+				Vector<?> NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
 				
 				NeighborhoodPath nhpath = new NeighborhoodPath();
 				int nhLevels = NhPathIds.size()-1;
@@ -596,9 +588,15 @@ public class GridManagement {
 			catch (Exception e) 
 			{
 				e.printStackTrace();
-				return null;
+				erb = new ErrorRequestObject();
+				erb.setError("Exception:" + e.getMessage() );
+				erb.setPath("GridManagement.gridGridIdGet: getTableBuffer Block");
+				erb.setProposedSolution("Contact Administrator");
+				ErrResps.add(erb);
+				statusCode.add(500);	//500: Server-side Error. Exception thrown from GridManagement.gridGridIdGet [getTableBuffer] Block
+				return cbfReturn ;
 			}
-		//}
+		
 		
 			gcb.setDeletedColumnArray(deletedColumnArray);	//gcb added in LINK IMPORT CELLBUFFER
 			gcb.setDeletedRowArray(deletedRowArray);		//gcb added in LINK IMPORT CELLBUFFER
@@ -613,30 +611,41 @@ public class GridManagement {
 			cbfReturn.setRowArray(rowArray);
 			cbfReturn.setRows(gridRows);
 			cbfReturn.setGridChangeBuffer(gcb);				
+        	statusCode.add(200);		//200: Success. Returns cellBuffer
+			return cbfReturn ;
 		}
 		//Custom code Ends
 		catch (BoardwalkException bwe)
 		{
+			StringBuffer  errorBuffer  = new StringBuffer();
 			if( xlErrorCells.size() > 0 )
 			{
-				StringBuffer  errorBuffer  = new StringBuffer();
-
 				for ( int errorIndex = 0; errorIndex< xlErrorCells.size(); errorIndex++ )
 				{
 					xlErrorNew excelError = (xlErrorNew)(xlErrorCells.elementAt(errorIndex));
 					errorBuffer.append( excelError.buildTokenString() );
 				}
 			}
+        	erb = new ErrorRequestObject();
+        	erb.setError("TABLE ACCESS EXCEPTION (10005). " + bwe.getMessage());
+        	erb.setPath(errorBuffer.toString());
+			erb.setProposedSolution(bwe.getPotentialSolution());
+        	ErrResps.add(erb);
+			//BoardwalkMessage( 10005 -> "ACCESS EXCEPTION", 5 ,"You don't have the privileges to execute this action ",  "Please contact the owner of the table to setup necessary access control"));
+        	statusCode.add(403);		//403: Forbidden. User don't have the privileges to execute this action.
+			return cbfReturn ;
 		}
 		catch ( SystemException s)
 		{
-			System.out.println("SystemException thrown in GridManagement.gridGet: Possibly from getAllMemberships() OR TableManager.getTableInfo()");
+			System.out.println("SystemException thrown in GridManagement.gridGridIdGet:TableManager.getTableInfo()");
 			s.printStackTrace();
 			erb = new ErrorRequestObject();
 			erb.setError("SystemException: " + s.getErrorMessage());
-			erb.setPath("GridManagement.gridGet::GridManagement.getAllMemberships OR TableManager.getTableInfo");
+			erb.setPath("GridManagement.gridGridIdGet:TableManager.getTableInfo");
 			erb.setProposedSolution(s.getPotentialSolution());
 			ErrResps.add(erb);
+			statusCode.add(500);	//500: Server-side Error. SystemException thrown from GridManagement.gridGridIdGet:TableManager.getTableInfo
+			return cbfReturn ;
 		}  					
 		finally
 		{
@@ -654,18 +663,18 @@ public class GridManagement {
 //		System.out.println("End of PRINTING cbfReturn.toString() ...................END");
 		//System.out.println("authBase64String ..................." + authBase64String);
 		// Decode data on other side, by processing encoded data
-		byte[] valueDecoded = Base64.decodeBase64(authBase64String);
+		//byte[] valueDecoded = Base64.decodeBase64(authBase64String);
 		//System.out.println("Decoded value is " + new String(valueDecoded));		
-		return cbfReturn ;
+		//return cbfReturn ;
 	}	// end of GET GRID LINK IMPORT
 		
 
 	//Returns Grid Refresh CellBuffer 
-	public static CellBuffer getGridRefresh(Connection connection, int gridId, int importTid, int userId, int memberId, int nhId,  String view, int mode, int baselineId, int synch , ArrayList<ErrorRequestObject> ErrResps)
+	public static CellBuffer getGridRefresh(Connection connection, int gridId, int importTid, int userId, int memberId, int nhId,  String view, int mode, int baselineId, int synch , ArrayList<ErrorRequestObject> ErrResps, ArrayList<Integer> statusCode)
 	{
 		ErrorRequestObject erb;
 		CellBuffer cbfReturn = new CellBuffer();
-		Vector xlErrorCells = new Vector(); 
+		Vector<xlErrorNew> xlErrorCells = new Vector<xlErrorNew>(); 
 		TransactionManager tm = null ;
 		ArrayList<Cell> gridCells = new ArrayList<Cell>();
 		ArrayList <Column> newGridCols = new ArrayList <Column>();
@@ -733,7 +742,7 @@ public class GridManagement {
 	
 			//Added to fix Refresh issue when the Column Access is applied from Template side 2016/11/16
 			int accessTableId = TableViewManager.getAccessTable(connection, gridId, userId);
-			HashSet restrColumnList = new HashSet();
+			HashSet<?> restrColumnList = new HashSet<Object>();
 			if (accessTableId > 0)
 			{
 				//System.out.println("Using access table id = " + accessTableId);
@@ -742,10 +751,10 @@ public class GridManagement {
 			}
 	
 			// Get the columns
-			Vector colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
-			HashMap colHash = new HashMap();
+			Vector<?> colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
+			HashMap<Integer, xlColumn_import> colHash = new HashMap<Integer, xlColumn_import>();
 			//ColObjsByColId = new HashMap();
-			Iterator ci = colv.iterator();
+			Iterator<?> ci = colv.iterator();
 			//while (ci.hasNext())
 			//{
 			//    xlColumn_import coli = (xlColumn_import)ci.next();
@@ -854,9 +863,9 @@ public class GridManagement {
 			{
 				tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
 			}
-			Vector rowv = tbrowInfo.getRowVector();
+			Vector<?> rowv = tbrowInfo.getRowVector();
 	
-			Hashtable rowHash = tbrowInfo.getRowHash();
+			Hashtable<?, ?> rowHash = tbrowInfo.getRowHash();
 	
 			// rows
 			//System.out.println("transaction start");
@@ -945,7 +954,6 @@ public class GridManagement {
 	    		previousRowid = rowObject.getId() ;
 	    		previousRowSequence = obj.intValue();
 			}
-
 			//System.out.println(resData.toString());
 			// Get the cells TBD : views other than latest
 			String q = null;
@@ -1179,20 +1187,32 @@ public class GridManagement {
 	    }
 		catch (BoardwalkException bwe)
 		{
-	    	System.out.println("Collaboration Id not found");
-	    	erb = new ErrorRequestObject();
-	    	erb.setError("Collaboration ID NOT FOUND");
-	    	erb.setPath("GridManagement.gridPut::BoardwalkCollaborationManager.getCollaborationTree");
-			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-	    	ErrResps.add(erb);
-	    	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-		}	catch (SQLException sqe)
+			//BoardwalkException(10005);
+			StringBuffer  errorBuffer  = new StringBuffer();
+			if( xlErrorCells.size() > 0 )
+			{
+				for ( int errorIndex = 0; errorIndex< xlErrorCells.size(); errorIndex++ )
+				{
+					xlErrorNew excelError = (xlErrorNew)(xlErrorCells.elementAt(errorIndex));
+					errorBuffer.append( excelError.buildTokenString() );
+				}
+			}
+        	erb = new ErrorRequestObject();
+        	erb.setError("TABLE ACCESS EXCEPTION (10005). " + bwe.getMessage());
+        	erb.setPath(errorBuffer.toString());
+			erb.setProposedSolution(bwe.getPotentialSolution());
+        	ErrResps.add(erb);
+			//BoardwalkMessage( 10005 -> "ACCESS EXCEPTION", 5 ,"You don't have the privileges to execute this action ",  "Please contact the owner of the table to setup necessary access control"));
+        	statusCode.add(403);		//403: Forbidden. User don't have the privileges to execute this action.
+			return cbfReturn ;
+		}	
+    	catch (SQLException sqe)
 		{
-			System.out.println("Exception in INSERT INTO BW_COLUMN ");
+    		System.out.println("SQLException in GridManagement.getGridRefresh");
 			erb = new ErrorRequestObject();
 			erb.setError("SQLException:" + sqe.getErrorCode() + ", Cause:"+ sqe.getMessage());
-			erb.setPath("GridManagement.gridPut::stmt(INSERT INTO BW_COLUMN)");
-			erb.setProposedSolution("Column Exists Grid. Try different Column Name");
+			erb.setPath("GridManagement.getGridRefresh:: getCriteriaTable | StartTransaction | BW_IMPORT_CHANGES ");
+			erb.setProposedSolution("Contact System Administrator");
 			ErrResps.add(erb);
 			try
 			{
@@ -1204,6 +1224,7 @@ public class GridManagement {
 				sqe1.printStackTrace();
 			}
 			System.out.println("After Rollback Transaction. Returning gridId:" + gridId);
+			statusCode.add(500);			//500 : Server Error. SQLException thrown from GridManagement.gridGridIdGet::getGridRefresh -> getCriteriaTable | StartTransaction | BW_IMPORT_CHANGES 
 			return cbfReturn;
 		}
 		catch ( SystemException s)
@@ -1212,9 +1233,11 @@ public class GridManagement {
 			s.printStackTrace();
 			erb = new ErrorRequestObject();
 			erb.setError("SystemException: " + s.getErrorMessage());
-			erb.setPath("GridManagement.gridGet::GridManagement.getAllMemberships OR TableManager.getTableInfo");
+			erb.setPath("GridManagement.getGridRefresh:: TableManager.getTableInfo | ColumnManager.getXlColumnsForImport | RowManager.getTableRows");
 			erb.setProposedSolution(s.getPotentialSolution());
 			ErrResps.add(erb);
+			statusCode.add(500);			//500 : Server Error. SystemException thrown from GridManagement.gridGridIdGet::getGridRefresh -> TableManager.getTableInfo | ColumnManager.getXlColumnsForImport | RowManager.getTableRows
+			return cbfReturn;
 		}  					
 		finally
 		{
@@ -1245,31 +1268,23 @@ public class GridManagement {
 		cbfReturn.setGridChangeBuffer(gcb);
 		cbfReturn.setRows(allRowArray);
 
+		statusCode.add(200);			//200 : Success. cellBuffer Returned
 		return cbfReturn;
 	}	// end of GET GRID REFRESH
 	
     //@PUT
     //@Path("/{gridId}")
-	public static CellBuffer gridPut(int gridId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, String authBase64String)
+	public static CellBuffer gridPut(int gridId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode)
 	{
 		CellBuffer cbfReturn = new CellBuffer();
 		ErrorRequestObject erb;
 		
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int nhId = -1;
 		int memberId = -1;
 		int userId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return cbfReturn;
-		}
 
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
@@ -1313,7 +1328,7 @@ public class GridManagement {
     		    System.out.println("Missing element cells:[]");
     		    //return cbfReturn;
     		}
-
+    		
     		if (rowArr == null)
     		{
     			erb = new ErrorRequestObject();
@@ -1382,7 +1397,8 @@ public class GridManagement {
 
 	    	if (ErrResps.size() > 0) 
 	    	{
-    		    return cbfReturn;
+	    		statusCode.add(404);	//404 : Bad Request. Missing elements info | cells | rowArray | columnArray | rows | columns | columnCellArrays | GridChangeBuffer 
+	    		return cbfReturn;
 	    	}
 
     		//cellBufferRequest.getGridChangeBuffer()   -------- need to be decided
@@ -1406,7 +1422,7 @@ public class GridManagement {
 			{
     			System.out.println("This is Submit Operation");
     			int baselineId = -1;
-    			processSubmitRequest(connection, userId, memberId, nhId, gridId, baselineId, cellBufferRequest, ErrResps, cbfReturn);
+    			processSubmitRequest(connection, userId, memberId, nhId, gridId, baselineId, cellBufferRequest, ErrResps, cbfReturn, statusCode);
     			return cbfReturn;
 			}	    	
 
@@ -1437,16 +1453,16 @@ public class GridManagement {
     		//System.out.println("GRID/PUT REST-API CALL :  view : " + view);
     		
     		// Error vector to all the Exceptions
-    		Vector xlErrorCells = new Vector(); //new Vector();
+    		Vector<xlErrorNew> xlErrorCells = new Vector<xlErrorNew>(); //new Vector();
     		// access variables
     		boolean canAddRows = false;
     		boolean canDeleteRows = false;
     		boolean canAdministerColumns = false;
 
-    		ArrayList	columnIds = null;
-    		ArrayList	rowIds = null;
-    		ArrayList	formulaIds = null;
-    		ArrayList	strValIds = null;
+    		ArrayList<Integer>	columnIds = null;
+    		ArrayList<?>	rowIds = null;
+    		ArrayList<?>	formulaIds = null;
+    		ArrayList<?>	strValIds = null;
     		String		formulaString = null;
     		
     		PreparedStatement stmt		= null;
@@ -1507,6 +1523,7 @@ public class GridManagement {
 
 	    	if (ErrResps.size() > 0) 
 	    	{
+	    		statusCode.add(403);	//403 : Forbidden. User don't have the privileges to execute this action.
     		    return cbfReturn;
 	    	}
 
@@ -1525,6 +1542,7 @@ public class GridManagement {
 					erb.setPath("Blank Grid Column at position:" + cni);
 					erb.setProposedSolution("Enter Unique NonEmpty Column Name.");
 					ErrResps.add(erb);
+					statusCode.add(404);		//404 : Bad Request. Blank Column Name
 					return cbfReturn;
 				}
 			}
@@ -1534,9 +1552,9 @@ public class GridManagement {
 			{
 				try 
 				{
-					columnIds = new ArrayList(numColumns);
+					columnIds = new ArrayList<Integer>(numColumns);
 //						String[] columnNames = columnInfo.split(Seperator);
-					Vector columns = new Vector();
+					Vector<?> columns = new Vector<Object>();
 					query = " INSERT INTO BW_COLUMN " +
 							   " (NAME, BW_TBL_ID, COLUMN_TYPE, SEQUENCE_NUMBER, TX_ID) " +
 							   " VALUES " +
@@ -1581,6 +1599,7 @@ public class GridManagement {
 						sqe1.printStackTrace();
 					}
 					System.out.println("After Rollback Transaction. Returning gridId:" + gridId);
+					statusCode.add(412);		//412 : Precondition Failed. Column Already Exists in Grid (Duplicate)
 					return cbfReturn;
 				}
 			}
@@ -1669,11 +1688,6 @@ public class GridManagement {
 		    		rowArr.add(iRow,(Integer) rowIds.get(iRow));		// Recreating rowArr by Adding each id into rowArr
 				}
 				
-				System.out.println("GridManagement::gridPut -> xlErrorCells.size() " + xlErrorCells.size());
-				if (xlErrorCells.size() > 0)
-				{
-					throw new BoardwalkException(12011);
-				}
 				query = "{CALL BW_UPD_CELL_FROM_RCSV_LINK_EXPORT(?,?,?)}";
 				CallableStatement cstmt = connection.prepareCall(query);
 				cstmt.setInt(1, tid);
@@ -1726,36 +1740,33 @@ public class GridManagement {
     		cbfReturn.setRows(gridRows);
     		cbfReturn.setCells(cellArr);
     		cbfReturn.setGridChangeBuffer(gcb);
+    		
+    		statusCode.add(200);	//200 : Success. Returns cellBuffer
+    		return cbfReturn;
     		//Custom code Ends
     	}
-		catch (BoardwalkException bwe)
+       catch ( SystemException s)
 		{
-        	System.out.println("Collaboration Id not found");
-        	erb = new ErrorRequestObject();
-        	erb.setError("Collaboration ID NOT FOUND");
-        	erb.setPath("GridManagement.gridPut::BoardwalkCollaborationManager.getCollaborationTree");
-			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-        	ErrResps.add(erb);
-        	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
-		}
-        catch ( SystemException s)
-		{
-        	System.out.println("SystemException MAY BE thrown by getAllMemberships");
+        	System.out.println("SystemException MAY BE thrown by TableManager.getTableInfo");
         	s.printStackTrace();
         	erb = new ErrorRequestObject();
         	erb.setError("SystemException: " + s.getErrorMessage());
-        	erb.setPath("GridManagement.gridPut::GridManagement.getAllMemberships");
+        	erb.setPath("GridManagement.gridPut:: TableManager.getTableInfo");
 			erb.setProposedSolution(s.getPotentialSolution());
         	ErrResps.add(erb);
+        	statusCode.add(500);			//500 : Server Error. SystemException: Failed to get TableManager.getTableInfo.
+        	return cbfReturn;
 		}      	
 		catch (SQLException sqe)
 		{
 			erb = new ErrorRequestObject();
 			erb.setError("SQLException:" + sqe.getCause());
-			erb.setPath("GridManagement.gridPut::getConnection");
+			erb.setPath("GridManagement.gridPut");
 			erb.setProposedSolution("Get DBConnection failed. Contact Boardwalk System Administrator");
 			ErrResps.add(erb);
 			sqe.printStackTrace();
+        	statusCode.add(500);			//500 : Server Error. SQLException on Server
+        	return cbfReturn;
 		}
 		finally
 		{
@@ -1768,14 +1779,13 @@ public class GridManagement {
 				e.printStackTrace();
 			}
 		}    		 		    		
-		return cbfReturn;
 	}//End of PUT GRID for LINK EXPORT
 
 	//Returns nhPath used gridInfo.NeighborhoodHeirarchy property
 	public static  NeighborhoodPath getNeighborhoodPath(Connection connection , int nhId)
 	{
 		System.out.println("Inside getNeighborhoodPath:" + nhId);
-		Vector NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
+		Vector<?> NhPathIds = com.boardwalk.neighborhood.NeighborhoodManager.getBoardwalkPathIds( connection , nhId );
 		
 		NeighborhoodPath nhpath = new NeighborhoodPath();
 		int nhLevels = NhPathIds.size()-1;
@@ -1827,7 +1837,7 @@ public class GridManagement {
 	}
 	
 //	public static void processLinkExportColumnData(Connection connection, String cellData, String formulaData, int columnIdx, ArrayList rowIds, ArrayList columnIds, int numRows, int tid) throws SQLException 
-	public static void processLinkExportColumnData(Connection connection, ArrayList<Cell> cellArr,  SequencedCellArray sca, SequencedCellArray scaFmla, int columnIdx, ArrayList rowIds, ArrayList columnIds, int numRows, int tid) throws SQLException 
+	public static void processLinkExportColumnData(Connection connection, ArrayList<Cell> cellArr,  SequencedCellArray sca, SequencedCellArray scaFmla, int columnIdx, ArrayList<?> rowIds, ArrayList<Integer> columnIds, int numRows, int tid) throws SQLException 
 	{
 		PreparedStatement stmt		= null;
 		ArrayList<String> seqColValues = (ArrayList<String>) sca.getCellValues();
@@ -1933,7 +1943,7 @@ public class GridManagement {
 	
 	
 	//Submit chnages using PUT GRID REST API CALL
-	public static void processSubmitRequest(Connection connection, int userId, int memberId, int nhId, int gridId, int baselineId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, CellBuffer cbfReturn )
+	public static void processSubmitRequest(Connection connection, int userId, int memberId, int nhId, int gridId, int baselineId, CellBuffer  cellBufferRequest, ArrayList<ErrorRequestObject> ErrResps, CellBuffer cbfReturn, ArrayList<Integer> statusCode)
 	{
 
 		TransactionManager tm = null;
@@ -1950,16 +1960,16 @@ public class GridManagement {
 		boolean ExceptionAddRows = false;
 		boolean ExceptionDeleteRows = false;
 
-		Vector xlErrorCells = new Vector();
-		Vector xlDeleteRows = new Vector();
-		HashMap rowIdHash = new HashMap();
-		HashMap colIdHash = new HashMap();
-		HashMap accCols = new HashMap();
-		HashMap newRowsHash = new HashMap();
-		HashMap newColumnsHash = new HashMap();
+		Vector<xlErrorNew> xlErrorCells = new Vector<xlErrorNew>();
+		Vector<Integer> xlDeleteRows = new Vector<Integer>();
+		HashMap<Integer, Integer> rowIdHash = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> colIdHash = new HashMap<Integer, Integer>();
+		HashMap<?, ?> accCols = new HashMap<Object, Object>();
+		HashMap<Integer, HashMap<String, Comparable>> newRowsHash = new HashMap<Integer, HashMap<String, Comparable>>();
+		HashMap<?, ?> newColumnsHash = new HashMap<Object, Object>();
 
-		ArrayList columnIds = null;
-		ArrayList columnNames = null;
+		ArrayList<?> columnIds = null;
+		ArrayList<?> columnNames = null;
 		
 		boolean colsDeleted = false;
 		boolean rowsDeleted = false;
@@ -1980,6 +1990,7 @@ public class GridManagement {
 			erb.setPath("newRowArray or newColumnArray or deletedRowArray or deletedColumnArray or cells is Missing."); 
 			erb.setProposedSolution("The Request must contain newRowArray, newColumnArray, deletedRowArray, deletedColumnArray, cells");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404 : Bad Request. Missing Grid Change Elements
 			return;
 		}
 		
@@ -1989,9 +2000,9 @@ public class GridManagement {
 			erb.setPath("Empty newRowArray, newColumnArray, deletedRowArray, deletedColumnArray, cells"); 
 			erb.setProposedSolution("No Change detail Found in Request. So no changes made to the Grid on Server.");
 			ErrResps.add(erb);
+			statusCode.add(404);		//404 : Bad Request. Missing Grid Change Elements
 			return;
 		}
-		
 		
 		int intCritical = gcb.getCritical();
 		int intCriticalLevel = gcb.getCriticalLevel();
@@ -2007,7 +2018,7 @@ public class GridManagement {
 		
 		//processHeader functionality FOR SUBMIT
 		
-		if (validateMemberShip(connection, memberId , nhId, userId, ErrResps) == false)
+		if (validateMemberShip(connection, memberId , nhId, userId, ErrResps, statusCode) == false)
 		{
 			xlErrorCells.add( new xlErrorNew( gridId, 0, 0, 11005));
 			return;
@@ -2105,6 +2116,7 @@ public class GridManagement {
 		        	erb.setPath("GridManagement.gridPut::GridManagement.BW_CHECK_SIGNIFICANT_UPDATES");
 					erb.setProposedSolution("There has been Critical update(s) to this table after your last import, please refresh first.");
 		        	ErrResps.add(erb);
+		        	statusCode.add(409);			//409 : Conflict.  Critical Updates on Server.
 		        	return;
 				}
 			}
@@ -2131,6 +2143,7 @@ public class GridManagement {
 		        	erb.setPath("GridManagement.gridPut::GridManagement.TableViewManager.getSuggestedAccess");
 					erb.setProposedSolution("You dont have the priviliges to execute this action, Please contact the owner of the table to setup necessary access control");
 		        	ErrResps.add(erb);
+		        	statusCode.add(403);			//403 : Forbidden.  User don't have the privileges to execute this action.
 		        	return;
 				}
 			}
@@ -2164,6 +2177,7 @@ public class GridManagement {
 	        	erb.setPath("GridManagement.gridPut::GridManagement.TableAccessRequest");
 				erb.setProposedSolution("You dont have the priviliges to execute this action, Please contact the owner of the table to setup necessary access control");
 	        	ErrResps.add(erb);
+	        	statusCode.add(403);			//403 : Forbidden.  User don't have the privileges to execute this action.
 	        	return;
 			}
 
@@ -2175,6 +2189,7 @@ public class GridManagement {
 				erb.setPath("GridManagement.gridPut::canAddRows=FALSE, newRowArray.size()>0");
 				erb.setProposedSolution("You don't have access to add a new row,  Please resolve errors and try again");
 				ErrResps.add(erb);
+	        	statusCode.add(403);			//403 : Forbidden.  User don't have the privileges to execute this action.
 				System.out.println("No access to add rows");
 			}
 			
@@ -2185,6 +2200,7 @@ public class GridManagement {
 				erb.setPath("GridManagement.gridPut::canDeleteRows=FALSE, delRowArray.size()>0");
 				erb.setProposedSolution("You don't access to Delete a row, Please contact the owner of the Table");
 				ErrResps.add(erb);
+	        	statusCode.add(403);			//403 : Forbidden.  User don't have the privileges to execute this action.
 				System.out.println("No access to Delete rows");
 			}
 			
@@ -2195,6 +2211,7 @@ public class GridManagement {
 				erb.setPath("GridManagement.gridPut::canAdministerColumns=FALSE, newColArray.Size()>0");
 				erb.setProposedSolution("You don't access to add a new column, Please contact the owner of the Table");
 				ErrResps.add(erb);
+	        	statusCode.add(403);			//403 : Forbidden.  User don't have the privileges to execute this action.
 				System.out.println("TABLE UPDATE EXCEPTION (12010): No access to Add a new Column");
 			}
 			
@@ -2205,6 +2222,7 @@ public class GridManagement {
 				erb.setPath("GridManagement.gridPut::canAdministerColumns=FALSE, delColArray.size()>0");
 				erb.setProposedSolution("You don't access to Delete a column, Please contact the owner of the Table");
 				ErrResps.add(erb);
+	        	statusCode.add(403);			//403 : Forbidden.  User don't have the privileges to execute this action.
 				System.out.println("TABLE UPDATE EXCEPTION (12010): No access to Delete a Column." );
 			}
 
@@ -2225,15 +2243,15 @@ public class GridManagement {
 				e.printStackTrace();
 			}
 
-			HashMap colCellAccess = new HashMap();
-			HashMap accessQueryXrowSet = new HashMap();
+			HashMap<?, ?> colCellAccess = new HashMap<Object, Object>();
+			HashMap<String, HashSet<Integer>> accessQueryXrowSet = new HashMap<String, HashSet<Integer>>();
 //			int defaultAccess = 2;
 
 			if (accessTableId > 0)
 			{
 				Integer defAccess = new Integer(2);
 				colCellAccess = TableViewManager.getColumnAcccess( connection, gridId, accessTableId, userId);
-				Iterator columnConditionalAccessIter = colCellAccess.keySet().iterator();
+				Iterator<?> columnConditionalAccessIter = colCellAccess.keySet().iterator();
 				while (columnConditionalAccessIter.hasNext())
 				{
 					Integer colId = (Integer) columnConditionalAccessIter.next();
@@ -2248,7 +2266,7 @@ public class GridManagement {
 							System.out.println("column acess for colid = " + colId + " is " + access +
 									" if row matches accessQuery = " + accessInstr);
 
-							HashSet rowSet = (HashSet) accessQueryXrowSet.get(accessInstr);
+							HashSet<Integer> rowSet = (HashSet<Integer>) accessQueryXrowSet.get(accessInstr);
 							if (rowSet == null)
 							{
 								String rowQuery = TableViewManager.getRowQuery(connection, TableViewManager.getCriteriaForDynamicView(accessInstr), gridId, true, "RESULTSET");
@@ -2264,7 +2282,7 @@ public class GridManagement {
 									}
 									else
 									{
-										rowSet = new HashSet();
+										rowSet = new HashSet<Integer>();
 										rowSet.add(new Integer(rowId));
 										accessQueryXrowSet.put(accessInstr, rowSet);
 									}
@@ -2344,6 +2362,7 @@ public class GridManagement {
 							erb.setPath("GridManagement.gridPut::TableManager.lockTableForUpdate");
 							erb.setProposedSolution("The table is being updated by another user, Please try later");
 							ErrResps.add(erb);
+							statusCode.add(423);		//423 : Locked. The resource that is being accessed is locked. The table is being updated by another user, Please try later
 							return;
 						}
 						
@@ -2375,6 +2394,7 @@ public class GridManagement {
 							erb.setPath("GridManagement.gridPut::TableManager.createColumnXL");
 							erb.setProposedSolution("Columns are not unqiue\",  \"Please make sure the columns are unique");
 							ErrResps.add(erb);
+							statusCode.add(412);		//412 : Precondition Failed. Columns are not Unique. 
 							return;
 						}
 					}
@@ -2486,7 +2506,7 @@ public class GridManagement {
 					int prevRowId = -1;
 					int prOffset = 1;
 					int rwSeq = -1;
-					Vector nrv = new Vector();
+					Vector<newXLRow> nrv = new Vector<newXLRow>();
 					boolean isDeletedRow = false;
 
 					for (int rni = 0; rni < newRowArray.size(); rni = rni + 1)
@@ -2513,6 +2533,7 @@ public class GridManagement {
 								erb.setPath("GridManagement.gridPut::TableManager.lockTableForUpdate");
 								erb.setProposedSolution("The table is being updated by another user, Please try later");
 								ErrResps.add(erb);
+								statusCode.add(423);		//423 : Locked. The resource that is being accessed is locked. The table is being updated by another user, Please try later
 								return;
 							}
 	
@@ -2535,7 +2556,7 @@ public class GridManagement {
 							"VALUES " +
 							"(?, ?, ?) ";
 						PreparedStatement stmt = connection.prepareStatement(query);
-						Iterator nri = nrv.iterator();
+						Iterator<newXLRow> nri = nrv.iterator();
 						while (nri.hasNext())
 						{
 							newXLRow nr = (newXLRow)nri.next();
@@ -2575,7 +2596,7 @@ public class GridManagement {
 						stmt.setInt(1, tid);
 						ResultSet rs = stmt.executeQuery();
 
-						HashMap rdata;
+						HashMap<String, Comparable> rdata;
 						
 						while (rs.next())
 						{
@@ -2584,7 +2605,7 @@ public class GridManagement {
 							System.out.println("Adding row into rowIdHash ridx :" + ridx + " ..... rid:" + rid);
 							rowIdHash.put(new Integer(ridx), new Integer(rid));
 
-							rdata = new HashMap();
+							rdata = new HashMap<String, Comparable>();
 							rdata.put("rowId", rs.getInt(1));
 							rdata.put("name", rs.getString(2));
 							rdata.put("txId", rs.getInt(4));
@@ -2773,7 +2794,7 @@ public class GridManagement {
 											" if row matches accessQuery = " + accessInstr);
 									System.out.println("Otherwise using defaultAccess = " + defaultAccess);
 									System.out.println(accessQueryXrowSet.toString());
-									if (((HashSet) accessQueryXrowSet.get(accessInstr)).contains(new Integer(xlRowId)))
+									if (((HashSet<?>) accessQueryXrowSet.get(accessInstr)).contains(new Integer(xlRowId)))
 									{
 										ColAcess = access;
 										System.out.println("Using access = " + ColAcess + "for cell with rowId = " + xlRowId + "matching condition " + accessInstr);
@@ -2862,6 +2883,8 @@ public class GridManagement {
 					        	erb.setPath("GridManagement.gridPut::GridManagement.processSubmitRequest. GridId:" + gridId + ", RowId:" + xlRowId + ",CoumnId:" + xlColId );
 								erb.setProposedSolution("You dont have the priviliges to execute this action, Please contact the owner of the table to setup necessary access control");
 					        	ErrResps.add(erb);
+					        	statusCode.add(403);	//403 : Forbidden.  User don't have the privileges to execute this action. Add/Delete Row | Administer Columns
+					        	return; //return was not there earlier
 							}
 						}
 						else
@@ -2875,6 +2898,8 @@ public class GridManagement {
 					        	erb.setPath("GridManagement.gridPut::GridManagement.processSubmitRequest");
 								erb.setProposedSolution("New Column without Access Right Added, Please contact the owner of the table to setup necessary access control");
 					        	ErrResps.add(erb);
+					        	statusCode.add(403);	//403 : Forbidden.  User don't have the privileges to execute this action. Add/Delete Row | Administer Columns
+					        	return;		//return was not there earlier
 							}
 						}
 					}
@@ -2922,7 +2947,7 @@ public class GridManagement {
 
 			//Added by Jeetendra on 20171111 to fix Issue ID: 5120 - START
 			//there could be some rows already deleted on server. We want to skip those 
-			HashSet delRowsOnServer = new HashSet();				
+			HashSet<Integer> delRowsOnServer = new HashSet<Integer>();				
 
 			query = "SELECT BW_ROW.ID FROM BW_ROW WHERE BW_TBL_ID = ? AND BW_ROW.TX_ID > ? AND IS_ACTIVE = 0";
 			stmt = connection.prepareStatement(query);
@@ -2943,7 +2968,7 @@ public class GridManagement {
 			// filter consistency check
 			if (criteriaTableId > 0)
 			{
-				HashSet accessibleRowsAfterSubmit = new HashSet();
+				HashSet<Integer> accessibleRowsAfterSubmit = new HashSet<Integer>();
 				
 				lsRowQuery  = TableViewManager.getRowQuery(connection, gridId, userId, criteriaTableId, true, "LATEST", "RESULTSET");
 				lsRowQuery = lsRowQuery + " IF OBJECT_ID('tempdb..#CELL_TEMP') IS NOT NULL DROP TABLE #CELL_TEMP "; //Modified by Lakshman on 20171108 to avoid self joins on BW_CELL for performance gain
@@ -2958,7 +2983,7 @@ public class GridManagement {
 				rs.close();
 				stmt.close();
 				
-				Iterator rowIdsFromClientIter = rowIdHash.keySet().iterator();
+				Iterator<Integer> rowIdsFromClientIter = rowIdHash.keySet().iterator();
 				while (rowIdsFromClientIter.hasNext())
 				{
 					//System.out.println ("xlExpoortChangesService::service(): xlDeleteRows = " + xlDeleteRows.toString());
@@ -2974,6 +2999,7 @@ public class GridManagement {
 			        	erb.setPath("GridManagement.processSubmitRequest::accessibleRowsAfterSubmit, delRowsOnServer, xlDeleteRows does not contain Rows sent by client.");
 						erb.setProposedSolution("Access Filter violation, You have either updated columns used for access filters or trying to update a row that is no longer accessible. Please contact your process admin Or the owner of the table to setup necessary access control");
 			        	ErrResps.add(erb);
+			        	statusCode.add(403);		//403 : Forbidden.  User don't have the privileges to execute this action. Add/Delete Row | Administer Columns
 			        	return;
 					}
 				}
@@ -3036,7 +3062,7 @@ public class GridManagement {
 				{
 					rw = newRowArray.get(rn);
 					int newRowId = (Integer) rowIdHash.get(rw.getSeqNo());
-					HashMap rowdata = (HashMap) newRowsHash.get(rw.getSeqNo());
+					HashMap<?, ?> rowdata = (HashMap<?, ?>) newRowsHash.get(rw.getSeqNo());
 					rw.setId(newRowId);
 					rw.setActive(  (Integer) rowdata.get("isActive") == 1 ? true : false);
 					rw.setCreaterId((Integer) rowdata.get("ownerId"));
@@ -3129,7 +3155,7 @@ public class GridManagement {
         	erb.setPath(errorBuffer.toString());
 			erb.setProposedSolution("There are many errors\",  \"Please resolve errors and try again");
         	ErrResps.add(erb);
-        	
+        	statusCode.add(400);			//400 : Bad Request . Too many errors in payload
 			try
 			{
 				if (tm != null)
@@ -3141,7 +3167,7 @@ public class GridManagement {
 			}
 		
 		}
-        catch (SystemException se)
+       catch (SystemException se)
 		{
 			erb = new ErrorRequestObject();
 			erb.setError("SystemException:" + se.getErrorMessage() );
@@ -3149,6 +3175,7 @@ public class GridManagement {
 			erb.setProposedSolution(se.getMessage() + ", " + se.getPotentialSolution());
 			ErrResps.add(erb);
 			se.printStackTrace();
+			statusCode.add(500);		 //500 : Server Error. SystemException on Server on Submit
         }
 		catch (SQLException sqe)
 		{
@@ -3157,6 +3184,7 @@ public class GridManagement {
 			erb.setPath("GridManagement.gridPut::TableViewManager.getCriteriaTable OR TableViewManager.getColumnAcccess");
 			erb.setProposedSolution(sqe.getMessage() + ", " + sqe.getCause());
 			ErrResps.add(erb);
+			statusCode.add(500);		 //500 : Server Error. SQLException on Server on Submit
 			sqe.printStackTrace();
 			try
 			{
@@ -3172,22 +3200,23 @@ public class GridManagement {
 
 	
 	//Validate membership
-	public static boolean validateMemberShip(Connection connection, int memberId, int nhId, int userId, ArrayList<ErrorRequestObject> ErrResps)
+	public static boolean validateMemberShip(Connection connection, int memberId, int nhId, int userId, ArrayList<ErrorRequestObject> ErrResps, ArrayList<Integer> statusCode )
 	{
 		boolean blnReturn = false;
 		ErrorRequestObject erb;
 		try
 		{
-			Hashtable members = getAllMemberships(connection);
+			Hashtable<Integer, MemberNode> members = getAllMemberships(connection);
 
 			if (!members.containsKey(memberId))
 			{
 				//System.out.println("members.containsKey(memberId) memberId : " + memberId + " --> is FALSE");
 	        	erb = new ErrorRequestObject();
-	        	erb.setError("Membership ID NOT FOUND");
+	        	erb.setError("Membership is Not Valid");
 	        	erb.setPath("GridManagement.gridPut.validateMemberShip [SUBMIT]::GridManagement.getAllMemberships");
 				erb.setProposedSolution("Request with Exiting Member ID");
 	        	ErrResps.add(erb);
+	        	statusCode.add(404);		//404 : Bad Request. Membership Not found in validateMembership
 			}
 			else
 			{
@@ -3199,40 +3228,30 @@ public class GridManagement {
 		}
         catch ( SystemException s)
 		{
-        	System.out.println("SystemException MAY BE thrown by getAllMemberships");
+        	System.out.println("SystemException thrown by getAllMemberships");
         	s.printStackTrace();
         	erb = new ErrorRequestObject();
         	erb.setError("SystemException: " + s.getErrorMessage());
-        	erb.setPath("GridManagement.gridPut::GridManagement.getAllMemberships");
+        	erb.setPath("GridManagement.gridPut.validateMemberShip [SUBMIT]::GridManagement.getAllMemberships");
 			erb.setProposedSolution(s.getPotentialSolution());
         	ErrResps.add(erb);
+        	statusCode.add(500);		//500 : Server Error. SystemException on Server in validateMembership
 		}    		
-		
 		return blnReturn;
 	}
 	
 	
     //@POST
-	public static int gridPost(Grid grid, ArrayList <ErrorRequestObject> ErrResps, String authBase64String) 
+	public static int gridPost(Grid grid, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode) 
 	{
 		int gridId = -1;
 		ErrorRequestObject erb;
-
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
 		
 		int nhId = -1;
 		int memberId = -1;
 		int userId = -1;
-
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return gridId;
-		}
 
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
@@ -3257,8 +3276,8 @@ public class GridManagement {
 			}    		
 			//com.boardwalk.whiteboard.Whiteboard wb  
 			boolean wbValid = false;
-			Vector wv = bcn.getWhiteboards();
-			Iterator wvi = wv.iterator();
+			Vector<?> wv = bcn.getWhiteboards();
+			Iterator<?> wvi = wv.iterator();
 			while ( wvi.hasNext())
 			{
 				BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
@@ -3274,9 +3293,10 @@ public class GridManagement {
 	        	System.out.println("Whiteboard Id not found");
 	        	erb = new ErrorRequestObject();
 	        	erb.setError("Whitebaord ID NOT FOUND");
-	        	erb.setPath("GridManagement.gridPost::BoardwalkCollaborationManager.getCollaborationTree");
+	        	erb.setPath("GridManagement.gridPost::bcn.getWhiteboards");
 				erb.setProposedSolution("Request with Exiting Whiteboard ID");
 	        	ErrResps.add(erb);
+	        	statusCode.add(404);		//404: Not found.	Whiteboard not found.
 	        	return gridId;
 			}
 			else
@@ -3288,9 +3308,9 @@ public class GridManagement {
 					int tid = tm.startTransaction();
 					gridId = TableManager.createTable( connection, wbId, tableName, tableDesc, 2, 1, 1,"LATEST", memberId, tid, 1);
 					// set default access control
-		            Vector accessLists = new Vector();
-		            Hashtable  relationships = NeighborhoodManager.getNeighborhoodRelationships(connection, nhId );
-					Enumeration relationKeys = relationships.keys();
+		            Vector<NewTableAccessList> accessLists = new Vector<NewTableAccessList>();
+		            Hashtable<?, ?>  relationships = NeighborhoodManager.getNeighborhoodRelationships(connection, nhId );
+					Enumeration<?> relationKeys = relationships.keys();
 					if ( relationships.size() > 0 )
 					{
 						while ( relationKeys.hasMoreElements() )
@@ -3332,7 +3352,7 @@ public class GridManagement {
 					System.out.println("Exception in TableManager.createTable() TRY BLOCK");
 					erb = new ErrorRequestObject();
 					erb.setError("SQLException:" + sqe.getErrorCode() + ", Cause:"+ sqe.getMessage());
-					erb.setPath("GridManagement.gridPost::TableManager.createTable");
+					erb.setPath("GridManagement.gridPost::TableManager.createTable block");
 					erb.setProposedSolution("Grid Already Exists in Whiteboard. Try different Grid Name");
 					ErrResps.add(erb);
 			
@@ -3346,6 +3366,7 @@ public class GridManagement {
 						sqe1.printStackTrace();
 					}
 					System.out.println("After Rollback Transaction. Returning gridId:" + gridId);
+					statusCode.add(412);		//412: Precondition Failed.	Grid already exists in whiteboard. 
 					return gridId ;
 				}
 			}
@@ -3359,16 +3380,20 @@ public class GridManagement {
 			erb.setProposedSolution("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
         	ErrResps.add(erb);
         	System.out.println("Boardwalk Exception. ErrorCode:" + bwe.getErrorCode() + ", Error Msg:" + bwe.getMessage() + ", Solution:" +bwe.getPotentialSolution());
+        	statusCode.add(404);		//404: Not found. Collaboration Id not found.
+        	return gridId;
 		}
         catch ( SystemException s)
 		{
-        	System.out.println("SystemException MAY BE thrown by getAllMemberships");
+        	System.out.println("SystemException thrown by NeighborhoodManager.getNeighborhoodRelationships");
         	s.printStackTrace();
         	erb = new ErrorRequestObject();
         	erb.setError("SystemException: " + s.getErrorMessage());
-        	erb.setPath("GridManagement.gridPost::GridManagement.getAllMemberships");
+        	erb.setPath("GridManagement.gridPost::NeighborhoodManager.getNeighborhoodRelationships");
 			erb.setProposedSolution(s.getPotentialSolution());
         	ErrResps.add(erb);
+        	statusCode.add(500);		//500: Server Error. Failed to get Neighborhood Relationships.
+        	return gridId;
 		}
     		//Custom code Ends
 		finally
@@ -3382,12 +3407,11 @@ public class GridManagement {
 				e.printStackTrace();
 			}
 		}    		 		    		
-		return gridId;
 	}
 
-    static public Hashtable getAllMemberships(Connection connection) throws SystemException
+    static public Hashtable<Integer, MemberNode> getAllMemberships(Connection connection) throws SystemException
     {
-    	Hashtable ht = new Hashtable();
+    	Hashtable<Integer, MemberNode> ht = new Hashtable<Integer, MemberNode>();
         ResultSet rs = null;
         CallableStatement cs  = null;
 
@@ -3465,7 +3489,7 @@ public class GridManagement {
 			int criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId, userId);
 			System.out.println("Using criterea table id = " + criteriaTableId);
 			int accessTableId = TableViewManager.getAccessTable(connection, gridId, userId);
-			HashSet restrColumnList = new HashSet();
+			HashSet<?> restrColumnList = new HashSet<Object>();
 			if (accessTableId > 0) 
 			{
 				System.out.println("Using access table id = " + accessTableId);
@@ -3473,8 +3497,8 @@ public class GridManagement {
 				restrColumnList = TableViewManager.getRestrictedColumnsForImport(connection, gridId, accessTableId, userId);
 			}
 			// Get the columns
-			Vector colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
-			Iterator ci = colv.iterator();
+			Vector<?> colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
+			Iterator<?> ci = colv.iterator();
 			
 			// columns
 			float previousColumnSequence = -1;
@@ -3567,7 +3591,7 @@ public class GridManagement {
 			} else {
 				tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
 			}
-			Vector rowv = tbrowInfo.getRowVector();
+			Vector<?> rowv = tbrowInfo.getRowVector();
 			// rows
 			//gridRows = new ArrayList <Row>();
 			//rowArray = new ArrayList <Integer>();
@@ -3689,11 +3713,11 @@ public class GridManagement {
 			} else {
 				tbrowInfo = RowManager.getTableRows(connection, gridId, userId, nhId, baselineId, view, 1, -1, -1);
 			}
-			Vector rowv = tbrowInfo.getRowVector();
+			Vector<?> rowv = tbrowInfo.getRowVector();
 			
 			
 			int accessTableId = TableViewManager.getAccessTable(connection, gridId, userId);
-			HashSet restrColumnList = new HashSet();
+			HashSet<?> restrColumnList = new HashSet<Object>();
 			if (accessTableId > 0) 
 			{
 				System.out.println("Using access table id = " + accessTableId);
@@ -3701,8 +3725,8 @@ public class GridManagement {
 				restrColumnList = TableViewManager.getRestrictedColumnsForImport(connection, gridId, accessTableId, userId);
 			}
 	
-			Vector colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
-			Iterator ci = colv.iterator();
+			Vector<?> colv = ColumnManager.getXlColumnsForImport(connection, gridId, userId, memberId);
+			Iterator<?> ci = colv.iterator();
 			
 			String q = null;
 			String rowQuery = null;
@@ -3915,7 +3939,7 @@ public class GridManagement {
 		try
 		{
 		
-			Hashtable transactionList = TableManager.getTransactionList(connection,
+			Hashtable<?, ?> transactionList = TableManager.getTransactionList(connection,
 				      gridId,
 				      startTid.intValue() ,
 				      endTid.intValue(),
@@ -3931,9 +3955,9 @@ public class GridManagement {
 			System.out.println("stid = " + startTid);
 			System.out.println("etid = " + endTid);
 
-			Vector tvec = new Vector(transactionList.keySet());
-			Collections.sort(tvec);
-		    Iterator i = tvec.iterator();
+			Vector<?> tvec = new Vector<Object>(transactionList.keySet());
+			//Collections.sort(tvec);
+		    Iterator<?> i = tvec.iterator();
 		    String descr;
 		    
 		    while (i.hasNext())
@@ -3941,7 +3965,7 @@ public class GridManagement {
 		    	Integer tid = (Integer)i.next();
 		    	System.out.println("TransactionList..ID : " + tid);
 
-			    Vector  vt = (Vector)transactionList.get(tid);
+			    Vector<?>  vt = (Vector<?>)transactionList.get(tid);
 			    t = (Transaction)vt.elementAt(0);
 /*			    String rowadd = "";
 			    String rowdel = "";
@@ -3949,7 +3973,7 @@ public class GridManagement {
 			    String cellupd = "";
 			    String frmupd = "";
 			    String blnadd = "";
-*/			    Iterator j = vt.iterator();
+*/			    Iterator<?> j = vt.iterator();
 			    String checkImage = "";
 			    while (j.hasNext())
 			    {

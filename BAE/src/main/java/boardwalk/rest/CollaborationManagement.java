@@ -41,7 +41,7 @@ public class CollaborationManagement {
 	public static void collaborationCollabIdDelete(int collabId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh , ArrayList<Integer> statusCode)
     {
 		ErrorRequestObject erb;
-		ArrayList <Collaboration> collabList = new ArrayList<Collaboration>();
+		//ArrayList <Collaboration> collabList = new ArrayList<Collaboration>();
 
 		// get the connection
     	Connection connection = null;
@@ -146,20 +146,20 @@ public class CollaborationManagement {
 				
 				System.out.println("Sucessfully fetched the collab tree from the database");
 				
-				String collabName = bcn.getName();
+/*				String collabName = bcn.getName();
 				String whiteBoard = "";
 				String tableName = "";
 				String Collabline="";
 				int wbId;
-				int tableId;
+				int tableId;*/
 
 				Long obj = new Long(bcn.getId());
 				collab.setId( obj.longValue());
 				collab.setName(bcn.getName());
 
 				System.out.println("Collaboration = " + bcn.getName());
-				Vector wv = bcn.getWhiteboards();
-				Iterator wvi = wv.iterator();
+				Vector<?> wv = bcn.getWhiteboards();
+				Iterator<?> wvi = wv.iterator();
 				while ( wvi.hasNext())
 				{
 					wb = new Whiteboard();
@@ -244,8 +244,8 @@ public class CollaborationManagement {
 			}    		
 			
 			boolean wbExists = false;
-			Vector wv = bcn.getWhiteboards();
-			Iterator wvi = wv.iterator();
+			Vector<?> wv = bcn.getWhiteboards();
+			Iterator<?> wvi = wv.iterator();
 			while ( wvi.hasNext())
 			{
 				BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
@@ -316,7 +316,6 @@ public class CollaborationManagement {
     public static void collaborationCollabIdWhiteboardWhiteboardIdDelete(int collabId, int whiteboardId, ArrayList <ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh , ArrayList<Integer> statusCode) 
     {
 		ErrorRequestObject erb;
-		ArrayList <Collaboration> collabList = new ArrayList<Collaboration>();
 		// get the connection
     	Connection connection = null;
 		
@@ -345,8 +344,8 @@ public class CollaborationManagement {
 				System.out.println("Sucessfully fetched the collab tree from the database");
 
 				boolean wbExists = false;
-				Vector wv = bcn.getWhiteboards();
-				Iterator wvi = wv.iterator();
+				Vector<?> wv = bcn.getWhiteboards();
+				Iterator<?> wvi = wv.iterator();
 				while ( wvi.hasNext())
 				{
 					BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();

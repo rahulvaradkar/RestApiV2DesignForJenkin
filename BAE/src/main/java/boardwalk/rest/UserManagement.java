@@ -105,8 +105,8 @@ public class UserManagement {
    		String view = "LATEST";
    		int mode = 1;
    		int baselineId = -1;
-   		
-  	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String);
+   		ArrayList<Integer> statusCode ;
+  	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
 		ginfo = cbf.getInfo();
 		return ginfo;
