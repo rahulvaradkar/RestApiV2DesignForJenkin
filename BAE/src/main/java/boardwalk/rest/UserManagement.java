@@ -50,7 +50,7 @@ public class UserManagement {
 	}
 
     //GET	......../user/{email}/neighborhood/{nhPath}/collaboration/{collabId}/whiteboard/{whiteboardId}/grid/{gridId}
-	public static GridInfo userGetNeighborhoodCollaborationWhiteboardGrid(String email, String nhPath, int collabId, int whiteboardId, int gridId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String , BoardwalkConnection bwcon, ArrayList<Integer> memberNh )
+	public static GridInfo userGetNeighborhoodCollaborationWhiteboardGrid(String email, String nhPath, int collabId, int whiteboardId, int gridId, ArrayList  <ErrorRequestObject> ErrResps, String authBase64String , BoardwalkConnection bwcon, ArrayList<Integer> memberNh)
 	{
 
 		GridInfo ginfo = null;
@@ -105,7 +105,8 @@ public class UserManagement {
    		String view = "LATEST";
    		int mode = 1;
    		int baselineId = -1;
-   		ArrayList<Integer> statusCode ;
+   		ArrayList<Integer> statusCode = new ArrayList<Integer>();
+   		
   	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
 		ginfo = cbf.getInfo();

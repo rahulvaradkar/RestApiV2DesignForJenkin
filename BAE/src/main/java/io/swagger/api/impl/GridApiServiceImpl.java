@@ -7,6 +7,10 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import io.swagger.model.Grid;
+import io.swagger.model.GridTransaction;
+import io.swagger.model.ResponseInfo;
+import io.swagger.model.Transaction;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -395,7 +399,11 @@ public class GridApiServiceImpl extends GridApiService {
     @Override
     public Response gridGridIdTransactionsGet(Integer gridId,  @NotNull String localTimeAfter111970, Long startTid,  Long endTid,  String startTime,  String endTime, SecurityContext securityContext  , String authBase64String) throws NotFoundException 
     {
-    	
+
+    	BoardwalkConnection bwcon = null;
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
+
     	long difference_in_MiliSec;
     	long local_offset = Long.parseLong(localTimeAfter111970);
     	
@@ -426,8 +434,22 @@ public class GridApiServiceImpl extends GridApiService {
 			reqei.setErrorMessage("Authorization in Header not Found");
 			reqei.setErrorDetails( erbs);
 			reqeis.add(reqei);
+			return Response.status(401).entity(erbs).build();		//401: Missing Authorization
 		}
+		else
+		{
+			ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+	    	//Connection connection = null;
 			
+			bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+			if (!ErrResps.isEmpty())
+			{
+				return Response.status(401).entity(ErrResps).build();		//401: Authorization Failed
+			}
+		}
+
+		
+		
 		if (gridId <= 0)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
@@ -508,9 +530,9 @@ public class GridApiServiceImpl extends GridApiService {
 		{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	  	 	
-	   		ArrayList <Transaction> txs;
+	   		ArrayList <GridTransaction> txs;
 
-	  	 	txs = GridManagement.gridGridIdTransactionsGet(gridId, startTid, endTid, startDate, endDate, local_offset, ErrResps, authBase64String);
+	  	 	txs = GridManagement.gridGridIdTransactionsGet(gridId, startTid, endTid, startDate, endDate, local_offset, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
 	    	if (ErrResps.size() > 0)
 	    	{

@@ -15,6 +15,7 @@ import io.swagger.model.ErrorDeleteRows;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.ErrorUpdateObject;
 import io.swagger.model.Grid;
+import io.swagger.model.GridTransaction;
 import io.swagger.model.ResponseInfo;
 import io.swagger.model.Transaction;
 
@@ -145,11 +146,11 @@ public class GridApi  {
     @Path("/{gridId}/transactions")
     
     @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Get cuboid transactions for time interval for a given specification", notes = "", response = Transaction.class, responseContainer = "List", authorizations = {
+    @io.swagger.annotations.ApiOperation(value = "Get cuboid transactions for time interval for a given specification", notes = "", response = GridTransaction.class, responseContainer = "List", authorizations = {
         @io.swagger.annotations.Authorization(value = "bwAuth")
     }, tags={ "grid", })
     @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = Transaction.class, responseContainer = "List"),
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = GridTransaction.class, responseContainer = "List"),
         
         @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ResponseInfo.class),
         

@@ -13,6 +13,7 @@ import io.swagger.model.ErrorDeleteRows;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.ErrorUpdateObject;
 import io.swagger.model.Grid;
+import io.swagger.model.GridTransaction;
 import io.swagger.model.ResponseInfo;
 import io.swagger.model.Transaction;
 

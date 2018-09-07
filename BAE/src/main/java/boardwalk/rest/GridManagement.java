@@ -3893,8 +3893,8 @@ public class GridManagement {
 
     //@GET
     //@Path("/{gridId}/transactions")
-    public static ArrayList<io.swagger.model.Transaction> gridGridIdTransactionsGet(Integer gridId, Long startTid, Long endTid,
-			long startDate, long endDate, long local_offset, ArrayList<ErrorRequestObject> ErrResps, String authBase64String) 
+    public static ArrayList<io.swagger.model.GridTransaction> gridGridIdTransactionsGet(Integer gridId, Long startTid, Long endTid,
+			long startDate, long endDate, long local_offset, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
     {
 
     	
@@ -3909,23 +3909,18 @@ public class GridManagement {
     	// TODO Auto-generated method stub
 		ErrorRequestObject erb;
    		
-		ArrayList<io.swagger.model.Transaction> txs = new ArrayList<io.swagger.model.Transaction>();
-		io.swagger.model.Transaction tx ;
+		//ArrayList<io.swagger.model.Transaction> txs = new ArrayList<io.swagger.model.Transaction>();
+		
+		ArrayList<io.swagger.model.GridTransaction> txs = new ArrayList<io.swagger.model.GridTransaction>();
+		
+		io.swagger.model.GridTransaction tx ;
 		
 		// get the connection
     	Connection connection = null;
-		BoardwalkConnection bwcon = null;
-		
+
 		int nhId = -1;
 		int memberId = -1;
 		
-		ArrayList<Integer> memberNh = new ArrayList<Integer>();
-		bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-				
-		if (!ErrResps.isEmpty())
-		{
-			return txs;
-		}
 		connection = bwcon.getConnection();
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
@@ -3967,52 +3962,45 @@ public class GridManagement {
 
 			    Vector<?>  vt = (Vector<?>)transactionList.get(tid);
 			    t = (Transaction)vt.elementAt(0);
-/*			    String rowadd = "";
-			    String rowdel = "";
-			    String coladd = "";
-			    String cellupd = "";
-			    String frmupd = "";
-			    String blnadd = "";
-*/			    Iterator<?> j = vt.iterator();
+			    Iterator<?> j = vt.iterator();
 			    String checkImage = "";
 			    while (j.hasNext())
 			    {
 			    	ts = (Transaction)j.next();
 			    	descr = ts.getDescription();
+
+					tx = new io.swagger.model.GridTransaction();
+
+					
+					tx.setId(ts.getId());
+					tx.setComment(ts.getComment());
+					tx.setCreatedOnTime(  ts.getCreatedOn());
+					tx.setTransactionTime(new BigDecimal(ts.getCreatedOnTime()));
+					tx.setUpdatedBy(ts.getCreatedByUserAddress());
+					
+					tx.setBlnAdded(false);
+					tx.setCellUpdated(false);
+					tx.setColumnAdded(false);
+					tx.setFormulaUpdated(false);
+					tx.setRowAdded(false);
+					tx.setRowDeleted(false);
 			    	//System.out.println("descr=" + descr);
 
 			    	
-/*			    	if (descr.toUpperCase().startsWith("ROWADD"))
-			    	{
-			    		rowadd = "Y";
-			    		//System.out.println("rowadd set to true");
-			    	}
+			    	if (descr.toUpperCase().startsWith("ROWADD"))
+			    		tx.setRowAdded(true);
 			    	else if (descr.toUpperCase().startsWith("ROWDEL"))
-			    	{
-			    		rowdel = "Y";
-			    		//System.out.println("rowdel set to true");
-			    	}
+			    		tx.setRowDeleted(true);
 			    	else if (descr.toUpperCase().startsWith("COLADD"))
-			    	{
-			    		coladd = "Y";
-			    		//System.out.println("coladd set to true");
-			    	}
+						tx.setColumnAdded(true);
 			    	else if (descr.toUpperCase().startsWith("CELLUPD"))
-			    	{
-			    		cellupd = "Y";
-			    		//System.out.println("cellupd set to true");
-			    	}
+						tx.setCellUpdated(true);
 			    	else if (descr.toUpperCase().startsWith("FRMUPD"))
-			    	{
-			    		frmupd = "Y";
-			    		//System.out.println("frmupd set to true");
-			    	}
+						tx.setFormulaUpdated(true);
 			    	else if (descr.toUpperCase().startsWith("BLNADD"))
-			    	{
-			    		blnadd = "Y";
-			    		//System.out.println("blnadd set to true");
-			    	}
-*/			 
+						tx.setBlnAdded(true);
+			 
+					txs.add(tx);			    	
 			    
 				    long id = (long) t.getId();
 				    String updatedBy = t.getCreatedByUserAddress();
@@ -4032,7 +4020,6 @@ public class GridManagement {
 				    //String descr = t.getDescription();
 				    String comment = t.getComment();
 	
-					tx = new io.swagger.model.Transaction();
 
 					System.out.println("Setting tx.id : " + id);
 					System.out.println("Setting transactionTime : " + transactionTime);
@@ -4041,14 +4028,6 @@ public class GridManagement {
 					System.out.println("Setting tx.keyword : " + comment);
 					System.out.println("Setting tx.userid : " + t.getCreatedByUserId());
 					System.out.println("Setting tx.username : " + updatedBy);
-
-					tx.setId(id);
-					tx.setCreatedOn( BigDecimal.valueOf(transactionTime));
-					tx.setDescription(descr + "....tran_date: " + tran_date);
-					tx.setKeyword(comment);
-					tx.setUserId((long) t.getCreatedByUserId());
-					tx.setUserName(updatedBy);		
-					txs.add(tx);
 			    }
 				System.out.println("End of vt.iterator");
 			}
