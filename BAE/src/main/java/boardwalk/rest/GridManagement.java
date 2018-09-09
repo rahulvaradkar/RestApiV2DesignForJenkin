@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -3893,19 +3894,19 @@ public class GridManagement {
 
     //@GET
     //@Path("/{gridId}/transactions")
-    public static ArrayList<io.swagger.model.GridTransaction> gridGridIdTransactionsGet(Integer gridId, Long startTid, Long endTid,
-			long startDate, long endDate, long local_offset, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
+    public static ArrayList<io.swagger.model.GridTransaction> gridGridIdTransactionsGet(Integer gridId, String reportType, long importTid, 
+			long startDate, long endDate, long difference_in_MiliSec, String viewPref , ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
     {
 
     	
-    	long difference_in_MiliSec;
+/*    	long difference_in_MiliSec;
 
 		Calendar cal_GMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		long server_Millis = cal_GMT.getTimeInMillis();
 		difference_in_MiliSec = local_offset - server_Millis;
 		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
 		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
-    	
+  */  	
     	// TODO Auto-generated method stub
 		ErrorRequestObject erb;
    		
@@ -3925,36 +3926,47 @@ public class GridManagement {
 		memberId = memberNh.get(0);
 		nhId = memberNh.get(1);
 		int userId = bwcon.getUserId();
-		String viewPref = "LATEST";
+		//String viewPref = "LATEST";
 
 	    com.boardwalk.database.Transaction ts, t;
-		
+	    
 		//long endDate = startTime - difference_in_MiliSec;
 		//long startDate = Long.parseLong(endTime) - difference_in_MiliSec;
 		try
 		{
-		
-			Hashtable<?, ?> transactionList = TableManager.getTransactionList(connection,
-				      gridId,
-				      startTid.intValue() ,
-				      endTid.intValue(),
-				      startDate,
-				      endDate,
-				      userId,
-				      nhId,
-				      viewPref,
-				      true);
+			Hashtable<?, ?> transactionList = null; ;
+
+			if (reportType.toUpperCase().equals("DURATION"))
+			{
+				transactionList = TableManager.getTransactionList(connection,
+					      gridId,
+					      -1,
+					      -1,
+					      startDate,
+					      endDate,
+					      userId,
+					      nhId,
+					      viewPref,
+					      true);
+			}
+			else if (reportType.toUpperCase().equals("AFTERIMPORT"))
+			{
+				transactionList = TableManager.getTransactionListAfterImport(connection,
+					      gridId.intValue(),
+					      (int) importTid,
+					      userId,
+					      nhId,
+					      viewPref);
+			}
 
 			System.out.println("Number of transactions = " + transactionList.size());
-			//req.setAttribute("transactionList", transactionList);
-			System.out.println("stid = " + startTid);
-			System.out.println("etid = " + endTid);
 
 			Vector<?> tvec = new Vector<Object>(transactionList.keySet());
 			//Collections.sort(tvec);
 		    Iterator<?> i = tvec.iterator();
 		    String descr;
-		    
+	    
+		    Date longDate ;
 		    while (i.hasNext())
 			{
 		    	Integer tid = (Integer)i.next();
@@ -3964,29 +3976,47 @@ public class GridManagement {
 			    t = (Transaction)vt.elementAt(0);
 			    Iterator<?> j = vt.iterator();
 			    String checkImage = "";
+
+			    tx = new io.swagger.model.GridTransaction();
+			    
+			    tx.setId(tid);
+				tx.setBaselineAdded(false);
+				tx.setCellUpdated(false);
+				tx.setColumnAdded(false);
+				tx.setFormulaUpdated(false);
+				tx.setRowAdded(false);
+				tx.setRowDeleted(false);
+
+				tx.setComment(t.getComment());
+				tx.setTransactionTime(new BigDecimal(t.getCreatedOnTime()));
+				tx.setUpdatedBy(t.getCreatedByUserAddress());
+
+				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss a");
+
+				Calendar gmtCal = Calendar.getInstance();
+				gmtCal.setTimeInMillis(t.getCreatedOnTime());
+				
+				java.util.Date  theLocalServerConversionDate =  gmtCal.getTime();
+			    String strTheLocalServerConversionDate = sdfDate.format(theLocalServerConversionDate);
+				System.out.println("Setting strTheLocalServerConversionDate with Format ^&^&^&^&^&^&^&^&^&^ : " + strTheLocalServerConversionDate);
+				
+				tx.setCreatedOnTime(sdfDate.format(theLocalServerConversionDate));
+				
+				Calendar gmtaCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+				//after considering Client's locale difference to get GMT Time
+				gmtaCal.setTimeInMillis(t.getCreatedOnTime() - difference_in_MiliSec);
+				java.util.Date  theGMTConversionDate =  gmtaCal.getTime();
+			    String strTheGMTConversionDate = sdfDate.format(theGMTConversionDate);
+				System.out.println("Setting strTheGMTConversionDate with Format ^&^&^&^&^&^&^&^&^&^ : " + strTheGMTConversionDate);
+				
+				tx.setCreatedOnTimeGMT(sdfDate.format(theGMTConversionDate));
+
+				
 			    while (j.hasNext())
 			    {
 			    	ts = (Transaction)j.next();
 			    	descr = ts.getDescription();
-
-					tx = new io.swagger.model.GridTransaction();
-
-					
-					tx.setId(ts.getId());
-					tx.setComment(ts.getComment());
-					tx.setCreatedOnTime(  ts.getCreatedOn());
-					tx.setTransactionTime(new BigDecimal(ts.getCreatedOnTime()));
-					tx.setUpdatedBy(ts.getCreatedByUserAddress());
-					
-					tx.setBlnAdded(false);
-					tx.setCellUpdated(false);
-					tx.setColumnAdded(false);
-					tx.setFormulaUpdated(false);
-					tx.setRowAdded(false);
-					tx.setRowDeleted(false);
 			    	//System.out.println("descr=" + descr);
-
-			    	
 			    	if (descr.toUpperCase().startsWith("ROWADD"))
 			    		tx.setRowAdded(true);
 			    	else if (descr.toUpperCase().startsWith("ROWDEL"))
@@ -3998,37 +4028,9 @@ public class GridManagement {
 			    	else if (descr.toUpperCase().startsWith("FRMUPD"))
 						tx.setFormulaUpdated(true);
 			    	else if (descr.toUpperCase().startsWith("BLNADD"))
-						tx.setBlnAdded(true);
-			 
-					txs.add(tx);			    	
-			    
-				    long id = (long) t.getId();
-				    String updatedBy = t.getCreatedByUserAddress();
-				    double dtransactionTime = (double) t.getCreatedOnTime();
-					System.out.println("Setting double dtransactionTime : " + dtransactionTime);
-					long myLong = difference_in_MiliSec + ((long) (dtransactionTime * 1000));
-					System.out.println(myLong);
-
-					Date itemDate = new Date(myLong);
-					System.out.println("Setting itemDate : " + itemDate);
-
-
-					long transactionTime = t.getCreatedOnTime() + difference_in_MiliSec;
-					
-					Date tran_date =new Date(transactionTime);
-				    //String updatedOn = t.getCreatedOn();
-				    //String descr = t.getDescription();
-				    String comment = t.getComment();
-	
-
-					System.out.println("Setting tx.id : " + id);
-					System.out.println("Setting transactionTime : " + transactionTime);
-					System.out.println("Setting tx.CreatedOn : " + BigDecimal.valueOf(transactionTime));
-					System.out.println("Setting tx.description : " + descr + "....tran_date: " + tran_date);
-					System.out.println("Setting tx.keyword : " + comment);
-					System.out.println("Setting tx.userid : " + t.getCreatedByUserId());
-					System.out.println("Setting tx.username : " + updatedBy);
+						tx.setBaselineAdded(true);
 			    }
+				txs.add(tx);			    	
 				System.out.println("End of vt.iterator");
 			}
 			System.out.println("End of tvec.iterator");

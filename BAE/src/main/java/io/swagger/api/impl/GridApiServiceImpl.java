@@ -3,6 +3,7 @@ package io.swagger.api.impl;
 import io.swagger.api.*;
 import io.swagger.model.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -392,21 +393,18 @@ public class GridApiServiceImpl extends GridApiService {
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridGridIdTransactionsBetweenTidsGet(Long gridId,  @NotNull Long startTid,  @NotNull Long endTid, SecurityContext securityContext  , String authBase64String) throws NotFoundException {
+    public Response gridGridIdTransactionsBetweenTidsGet(Long gridId,  @NotNull String reportType, @NotNull Long startTid,  @NotNull Long endTid, @NotNull String viewPref, SecurityContext securityContext  , String authBase64String) throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridGridIdTransactionsGet(Integer gridId,  @NotNull String localTimeAfter111970, Long startTid,  Long endTid,  String startTime,  String endTime, SecurityContext securityContext  , String authBase64String) throws NotFoundException 
+    public Response gridGridIdTransactionsGet(Integer gridId,  @NotNull BigDecimal localTimeAfter111970,  @NotNull String viewPref,  @NotNull String reportType,  String activityPeriod,  BigDecimal startDate,  BigDecimal endDate,  BigDecimal importTid, SecurityContext securityContext  , String authBase64String) throws NotFoundException 
     {
 
     	BoardwalkConnection bwcon = null;
 		ArrayList<Integer> memberNh = new ArrayList<Integer>();
 		ArrayList<Integer> statusCode = new ArrayList<Integer>();
 
-    	long difference_in_MiliSec;
-    	long local_offset = Long.parseLong(localTimeAfter111970);
-    	
     	ArrayList <RequestErrorInfo> reqeis = new ArrayList<RequestErrorInfo>();
     	RequestErrorInfo reqei;
 
@@ -418,13 +416,36 @@ public class GridApiServiceImpl extends GridApiService {
 
 		System.out.println("Inside GridApiServiceImpl.gridPut --- gridId : " + gridId);
 		System.out.println("Inside GridApiServiceImpl.gridPut --- localTimeAfter111970 : " + localTimeAfter111970);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- startTid : " + startTid);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- endTid : " + endTid);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- startTime : " + startTime);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- endTime : " + endTime);
+		System.out.println("Inside GridApiServiceImpl.gridPut --- viewPref : " + viewPref);
+		System.out.println("Inside GridApiServiceImpl.gridPut --- reportType : " + reportType);
+		System.out.println("Inside GridApiServiceImpl.gridPut --- activityPeriod : " + activityPeriod);
+		System.out.println("Inside GridApiServiceImpl.gridPut --- startDate : " + startDate);
+		System.out.println("Inside GridApiServiceImpl.gridPut --- endDate : " + endDate);
+		System.out.println("Inside GridApiServiceImpl.gridPut --- importTid : " + importTid);
     	System.out.println("Inside GridApiServiceImpl.gridPut --- authBase64String : " + authBase64String);
 			
-		if (authBase64String == null)
+    	long difference_in_MiliSec;
+    	long local_offset = localTimeAfter111970.longValue() ;  //ON User machine
+
+		Calendar cal_GMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		long server_Millis = cal_GMT.getTimeInMillis();			//ON GMT
+		difference_in_MiliSec = local_offset - server_Millis;	//This is Offset of Local machine. i.e. India is +5:30 GMT in milliseconds.
+
+		
+		Calendar cal_Local = Calendar.getInstance();
+		long server_Millis_local = cal_Local.getTimeInMillis();			//ON local
+		long difference_in_MiliSec_local = local_offset - server_Millis_local;	//This is Offset of Local machine. i.e. India is +5:30 GMT in milliseconds.
+
+		
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- local_offset : " + local_offset);
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- server_Millis : " + server_Millis);
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec : " + difference_in_MiliSec);
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec_local : " + difference_in_MiliSec_local);
+
+		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
+		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
+    	
+    	if (authBase64String == null)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
 			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
@@ -448,8 +469,6 @@ public class GridApiServiceImpl extends GridApiService {
 			}
 		}
 
-		
-		
 		if (gridId <= 0)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
@@ -462,7 +481,78 @@ public class GridApiServiceImpl extends GridApiService {
 			reqeis.add(reqei);
 		}
 
-		if (startTid <= 0)
+		long actStartDate = -1;
+		long actEndDate = -1;
+
+		if (reportType.toUpperCase().equals("DURATION"))
+		{
+			java.util.Date d = new java.util.Date();
+			
+			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+			cal.setTime(d);
+
+			actEndDate = d.getTime();
+			actStartDate = 0;
+
+			
+			if (activityPeriod.toUpperCase().equals("WEEK"))
+			{
+				cal.add(Calendar.DATE, -7);
+				actStartDate = cal.getTime().getTime();
+			}
+			else if (activityPeriod.toUpperCase().equals("MONTH"))
+			{
+				cal.add(Calendar.MONTH, -1);
+				actStartDate = cal.getTime().getTime();
+			}
+			else if (activityPeriod.toUpperCase().equals("QUARTER"))
+			{
+				cal.add(Calendar.MONTH, -3);
+				actStartDate = cal.getTime().getTime();
+			}
+			else if (activityPeriod.toUpperCase().equals("YEAR"))
+			{
+				cal.add(Calendar.YEAR, -1);
+				actStartDate = cal.getTime().getTime();
+			}
+			else if (activityPeriod.toUpperCase().equals("CUSTOM") && startDate != null && endDate != null)
+			{
+				actEndDate = endDate.longValue() - difference_in_MiliSec;
+				actStartDate = startDate.longValue() - difference_in_MiliSec;
+				
+				if (actStartDate < actEndDate)
+				{
+					erb = new ErrorRequestObject();
+					erb.setError("Start Date < End Date");
+					erb.setPath("startDate, endDate");
+					erb.setProposedSolution("Start Date must be prior to End Date.");
+					erbs.add(erb);
+				}
+			}
+			else 
+			{
+				erb = new ErrorRequestObject();
+				erb.setError("Invalid Activity Period");
+				erb.setPath("activityPeriod");
+				erb.setProposedSolution("The Valid ActivityPeriod must be either Week OR Month OR Quarter OR Year OR Custom. For Custom activityPeriod you must provide valid startDate and endDate.");
+				erbs.add(erb);
+			}
+		}
+		else if (reportType.toUpperCase().equals("AFTERIMPORT"))
+		{
+			if (importTid == null)
+			{
+				erb = new ErrorRequestObject();
+				erb.setError("importTid is missing in GET Request");
+				erb.setPath("importTid");
+				erb.setProposedSolution("importTid is mandetory to get transaction list after Last Import. Enter importTid as -1 or Positive Tranaction Number");
+				erbs.add(erb);
+			}
+		}
+		System.out.println("++++++++++++++++ actStartDate = "  + actStartDate + " actEndDate = " + actEndDate );
+		
+		
+/*		if (startTid <= 0)
 		{	
 			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("startTid"); 
 			erb.setProposedSolution("You must enter an Existing Start Transaction ID. It should be a Positive Number.");
@@ -498,41 +588,25 @@ public class GridApiServiceImpl extends GridApiService {
 			reqeis.add(reqei);
 		}
 
-		Calendar cal_GMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		long server_Millis = cal_GMT.getTimeInMillis();
-
-		difference_in_MiliSec = local_offset - server_Millis;
-		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
-		System.out.println("The difference in Server and Client is " + (local_offset - server_Millis ));
-		
-		java.util.Date d = new java.util.Date();
-		long endDate = d.getTime();
-		long startDate = 0;
-
-		startDate = Long.parseLong(startTime) - difference_in_MiliSec;
-		endDate = Long.parseLong(endTime) - difference_in_MiliSec;
-		System.out.println("startDate : " + startDate );
-		System.out.println("endDate : " + endDate );
-		
 		if (startDate > endDate)
 		{
-			erb = new ErrorRequestObject(); erb.setError("startTime > endTime"); erb.setPath("startTime"); 
-			erb.setProposedSolution("Start Time must be prior to End Time. ");
+			erb = new ErrorRequestObject(); erb.setError("startDate > endDate"); erb.setPath("startDate"); 
+			erb.setProposedSolution("Start Date must be prior to End Date. ");
 			erbs.add(erb);
 			
 			reqei = new RequestErrorInfo();
-			reqei.setErrorMessage("Start Time > End Time");
+			reqei.setErrorMessage("Start Date > End Date");
 			reqei.setErrorDetails( erbs);
 			reqeis.add(reqei);
 		}
+*/
 
 		if (reqeis.size() == 0)
 		{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-	  	 	
 	   		ArrayList <GridTransaction> txs;
 
-	  	 	txs = GridManagement.gridGridIdTransactionsGet(gridId, startTid, endTid, startDate, endDate, local_offset, ErrResps, authBase64String, bwcon, memberNh, statusCode);
+	  	 	txs = GridManagement.gridGridIdTransactionsGet(gridId, reportType, importTid.longValue() , actStartDate, actEndDate, difference_in_MiliSec, viewPref, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
 	    	if (ErrResps.size() > 0)
 	    	{

@@ -5,6 +5,7 @@ import io.swagger.model.*;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
+import java.math.BigDecimal;
 import io.swagger.model.CellBuffer;
 import java.util.Date;
 import io.swagger.model.ErrorAddRows;
@@ -32,6 +33,6 @@ public abstract class GridApiService {
     public abstract Response gridPost(Grid grid,SecurityContext securityContext, String authBase64String) throws NotFoundException;
     public abstract Response gridPut( @NotNull Integer gridId,CellBuffer cellBufferRequest,SecurityContext securityContext, String authBase64String) throws NotFoundException;
     public abstract Response gridGridIdTransactionIdChangesGet(Integer gridId,Integer transactionId,SecurityContext securityContext, String authBase64String) throws NotFoundException;
-    public abstract Response gridGridIdTransactionsBetweenTidsGet(Long gridId, @NotNull Long startTid, @NotNull Long endTid,SecurityContext securityContext, String authBase64String) throws NotFoundException;
-    public abstract Response gridGridIdTransactionsGet(Integer gridId, @NotNull String localTimeAfter111970, Long startTid, Long endTid, String startTime, String endTime,SecurityContext securityContext, String authBase64String) throws NotFoundException;
+    public abstract Response gridGridIdTransactionsBetweenTidsGet(Long gridId, @NotNull String reportType, @NotNull Long startTid, @NotNull Long endTid, @NotNull String viewPref,SecurityContext securityContext, String authBase64String) throws NotFoundException;
+    public abstract Response gridGridIdTransactionsGet(Integer gridId, @NotNull BigDecimal localTimeAfter111970, @NotNull String viewPref, @NotNull String reportType, String activityPeriod, BigDecimal startDate, BigDecimal endDate, BigDecimal importTid,SecurityContext securityContext, String authBase64String) throws NotFoundException;
 }

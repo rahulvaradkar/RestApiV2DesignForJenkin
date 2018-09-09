@@ -53,11 +53,14 @@ public class GridTransaction   {
   @JsonProperty("formulaUpdated")
   private Boolean formulaUpdated = null;
 
-  @JsonProperty("blnAdded")
-  private Boolean blnAdded = null;
+  @JsonProperty("baselineAdded")
+  private Boolean baselineAdded = null;
 
   @JsonProperty("createdOnTime")
   private String createdOnTime = null;
+
+  @JsonProperty("createdOnTimeGMT")
+  private String createdOnTimeGMT = null;
 
   public GridTransaction id(Integer id) {
     this.id = id;
@@ -230,23 +233,23 @@ public class GridTransaction   {
     this.formulaUpdated = formulaUpdated;
   }
 
-  public GridTransaction blnAdded(Boolean blnAdded) {
-    this.blnAdded = blnAdded;
+  public GridTransaction baselineAdded(Boolean baselineAdded) {
+    this.baselineAdded = baselineAdded;
     return this;
   }
 
   /**
-   * Get blnAdded
-   * @return blnAdded
+   * Get baselineAdded
+   * @return baselineAdded
    **/
-  @JsonProperty("blnAdded")
+  @JsonProperty("baselineAdded")
   @ApiModelProperty(value = "")
-  public Boolean isBlnAdded() {
-    return blnAdded;
+  public Boolean isBaselineAdded() {
+    return baselineAdded;
   }
 
-  public void setBlnAdded(Boolean blnAdded) {
-    this.blnAdded = blnAdded;
+  public void setBaselineAdded(Boolean baselineAdded) {
+    this.baselineAdded = baselineAdded;
   }
 
   public GridTransaction createdOnTime(String createdOnTime) {
@@ -268,6 +271,25 @@ public class GridTransaction   {
     this.createdOnTime = createdOnTime;
   }
 
+  public GridTransaction createdOnTimeGMT(String createdOnTimeGMT) {
+    this.createdOnTimeGMT = createdOnTimeGMT;
+    return this;
+  }
+
+  /**
+   * Get createdOnTimeGMT
+   * @return createdOnTimeGMT
+   **/
+  @JsonProperty("createdOnTimeGMT")
+  @ApiModelProperty(value = "")
+  public String getCreatedOnTimeGMT() {
+    return createdOnTimeGMT;
+  }
+
+  public void setCreatedOnTimeGMT(String createdOnTimeGMT) {
+    this.createdOnTimeGMT = createdOnTimeGMT;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -287,13 +309,14 @@ public class GridTransaction   {
         Objects.equals(this.columnAdded, gridTransaction.columnAdded) &&
         Objects.equals(this.cellUpdated, gridTransaction.cellUpdated) &&
         Objects.equals(this.formulaUpdated, gridTransaction.formulaUpdated) &&
-        Objects.equals(this.blnAdded, gridTransaction.blnAdded) &&
-        Objects.equals(this.createdOnTime, gridTransaction.createdOnTime);
+        Objects.equals(this.baselineAdded, gridTransaction.baselineAdded) &&
+        Objects.equals(this.createdOnTime, gridTransaction.createdOnTime) &&
+        Objects.equals(this.createdOnTimeGMT, gridTransaction.createdOnTimeGMT);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, updatedBy, transactionTime, comment, rowAdded, rowDeleted, columnAdded, cellUpdated, formulaUpdated, blnAdded, createdOnTime);
+    return Objects.hash(id, updatedBy, transactionTime, comment, rowAdded, rowDeleted, columnAdded, cellUpdated, formulaUpdated, baselineAdded, createdOnTime, createdOnTimeGMT);
   }
 
 
@@ -311,8 +334,9 @@ public class GridTransaction   {
     sb.append("    columnAdded: ").append(toIndentedString(columnAdded)).append("\n");
     sb.append("    cellUpdated: ").append(toIndentedString(cellUpdated)).append("\n");
     sb.append("    formulaUpdated: ").append(toIndentedString(formulaUpdated)).append("\n");
-    sb.append("    blnAdded: ").append(toIndentedString(blnAdded)).append("\n");
+    sb.append("    baselineAdded: ").append(toIndentedString(baselineAdded)).append("\n");
     sb.append("    createdOnTime: ").append(toIndentedString(createdOnTime)).append("\n");
+    sb.append("    createdOnTimeGMT: ").append(toIndentedString(createdOnTimeGMT)).append("\n");
     sb.append("}");
     return sb.toString();
   }
