@@ -388,10 +388,195 @@ public class GridApiServiceImpl extends GridApiService {
 //        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
-    public Response gridGridIdTransactionIdChangesGet(Integer gridId, Integer transactionId, SecurityContext securityContext , String authBase64String) throws NotFoundException {
+    public Response gridGridIdTxIdTransactionIdChangesGet(Integer gridId, Integer transactionId,  @NotNull BigDecimal localTimeAfter111970, @NotNull String viewPref, SecurityContext securityContext, String authBase64String) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    	
+    	//System.out.println("authBase64String : " + authBase64String);
+    	BoardwalkConnection bwcon = null;
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
+
+    	ArrayList <RequestErrorInfo> reqeis = new ArrayList<RequestErrorInfo>();
+    	RequestErrorInfo reqei;
+
+    	ArrayList <ResponseErrorInfo> reseis = new ArrayList<ResponseErrorInfo>();
+    	ResponseErrorInfo resei ;
+		
+    	ErrorRequestObject erb;
+		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
+		    	
+    	if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Authorization in Header not Found");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);
+			return Response.status(401).entity(reqeis).build();		//401: Missing Authorization
+		}
+		else
+		{
+			ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+	    	//Connection connection = null;
+			
+			bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+			if (!ErrResps.isEmpty())
+			{
+				reqei = new RequestErrorInfo();
+				reqei.setErrorMessage("Authorization in Header not Found");
+				reqei.setErrorDetails( ErrResps);
+				reqeis.add(reqei);
+				return Response.status(401).entity(reqeis).build();		//401: Authorization Failed
+			}
+		}
+
+		if (gridId <= 0)	
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
+			erb.setProposedSolution("You must enter an Existing Grid ID. It should be a Positive Number.");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Negative GridId");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}
+
+		if (transactionId < 0)
+		{
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("transactionId"); 
+			erb.setProposedSolution("You must enter an Existing transactionId. It should be a Positive Number.");
+			erbs.add(erb);
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Negative transactionId");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}
+
+		if (localTimeAfter111970 == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("localTimeAfter111970 is missing in GET Request");
+			erb.setPath("localTimeAfter111970");
+			erb.setProposedSolution("localTimeAfter111970 must be number of MilliSeconds passed after date 01-01-1970");
+			erbs.add(erb);
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Missing localTimeAfter111970");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}
+		else if (localTimeAfter111970.compareTo(BigDecimal.ZERO) <= 0)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("localTimeAfter111970 must be Positive Number");
+			erb.setPath("localTimeAfter111970");
+			erb.setProposedSolution("localTimeAfter111970 must be number of MilliSeconds passed after date 01-01-1970");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Negative localTimeAfter111970");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}		
+
+		if (viewPref == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("viewPref is missing in GET Request");
+			erb.setPath("viewPref");
+			erb.setProposedSolution("viewPref is mandetory. Valid View values are [ MY_ROWS |LATEST | DESIGN | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ]");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Missing viewPref");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);		}
+		else if (viewPref.trim().equals("MY_ROWS") || 
+				viewPref.trim().equals("LATEST") || 
+				viewPref.trim().equals("DESIGN") || 
+				viewPref.trim().equals("LATEST_BY_USER") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_USERS") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_CHILDREN") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH") || 
+				viewPref.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH") || 
+				viewPref.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD") || 
+				viewPref.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD") || viewPref.trim().indexOf("?") == 0 )
+		{    			
+    		System.out.println("viewPref : " + viewPref);
+		}
+		else
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("Invalid viewPref");
+			erb.setPath("viewPref");
+			erb.setProposedSolution("viewPref is mandetory. Valid View values are [ MY_ROWS |LATEST | DESIGN | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ]");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Invalid viewPref");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}
+		
+		if (reqeis.size() > 0)
+		{
+	    	ResponseInfo ri = new ResponseInfo();
+	    	ri.setStatus("Invalid Request");
+	    	ri.setInvalidRequestDetails(reqeis);
+	        return Response.status(400).entity(ri).build();		//400 : Invalid Request
+		}
+		
+    	long difference_in_MiliSec;
+    	long local_offset = localTimeAfter111970.longValue() ;  //ON User machine
+
+		Calendar cal_GMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		long server_Millis = cal_GMT.getTimeInMillis();			//ON GMT
+		difference_in_MiliSec = local_offset - server_Millis;	//This is Offset of Local machine. i.e. India is +5:30 GMT in milliseconds.
+
+		
+		Calendar cal_Local = Calendar.getInstance();
+		long server_Millis_local = cal_Local.getTimeInMillis();			//ON local
+		long difference_in_MiliSec_local = local_offset - server_Millis_local;	//This is Offset of Local machine. i.e. India is +5:30 GMT in milliseconds.
+
+		
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- local_offset : " + local_offset);
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- server_Millis : " + server_Millis);
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec : " + difference_in_MiliSec);
+    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec_local : " + difference_in_MiliSec_local);
+
+		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
+		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
+		
+   		CellBuffer cbf;
+  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+  	 	
+  	 	cbf = GridManagement.gridGridIdTransactionIdChangesGet(gridId, transactionId, difference_in_MiliSec, viewPref, ErrResps, authBase64String, bwcon, memberNh, statusCode);
+
+    	if (ErrResps.size() > 0)
+    	{
+			int scode = statusCode.get(0);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Failed to get Transaction Changes");
+			reqei.setErrorDetails( ErrResps);
+			reqeis.add(reqei);			
+
+			return Response.status(scode).entity(reqeis).build();   	
+    	}
+    	else
+    	{
+    		return Response.status(200).entity(cbf).build();		//200: Success. returns cellBuffer
+    	}
+      //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
+    
+    
     @Override
     public Response gridGridIdTransactionsBetweenTidsGet(Long gridId,  @NotNull String reportType, @NotNull Long startTid,  @NotNull Long endTid, @NotNull String viewPref, SecurityContext securityContext  , String authBase64String) throws NotFoundException {
         // do some magic!
@@ -424,6 +609,96 @@ public class GridApiServiceImpl extends GridApiService {
 		System.out.println("Inside GridApiServiceImpl.gridPut --- importTid : " + importTid);
     	System.out.println("Inside GridApiServiceImpl.gridPut --- authBase64String : " + authBase64String);
 			
+    	
+    	if (authBase64String == null)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
+			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
+			erbs.add(erb);
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Authorization in Header not Found");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);
+			return Response.status(401).entity(reqeis).build();		//401: Missing Authorization
+		}
+		else
+		{
+			ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+	    	//Connection connection = null;
+			
+			bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+			if (!ErrResps.isEmpty())
+			{
+				reqei = new RequestErrorInfo();
+				reqei.setErrorMessage("Authorization in Header not Found");
+				reqei.setErrorDetails( ErrResps);
+				reqeis.add(reqei);
+				return Response.status(401).entity(reqeis).build();		//401: Authorization Failed
+			}
+		}
+
+		if (gridId <= 0)
+		{	
+			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
+			erb.setProposedSolution("You must enter an Existing Grid ID. It should be a Positive Number.");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Negative GridId");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);
+		}
+
+		if (reportType == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("reportType is missing in GET Request");
+			erb.setPath("reportType");
+			erb.setProposedSolution("reportType must be AFTERIMPORT or DURATION");
+			erbs.add(erb);
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Missing reportType");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);
+		}
+
+		if (localTimeAfter111970 == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("localTimeAfter111970 is missing in GET Request");
+			erb.setPath("localTimeAfter111970");
+			erb.setProposedSolution("localTimeAfter111970 must be number of MilliSeconds passed after date 01-01-1970");
+			erbs.add(erb);
+			
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Missing localTimeAfter111970");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}
+		else if (localTimeAfter111970.compareTo(BigDecimal.ZERO) <= 0)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("localTimeAfter111970 must be Positive Number");
+			erb.setPath("localTimeAfter111970");
+			erb.setProposedSolution("localTimeAfter111970 must be number of MilliSeconds passed after date 01-01-1970");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Negative localTimeAfter111970");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}		
+
+		if (reqeis.size() > 0)
+		{
+	    	ResponseInfo ri = new ResponseInfo();
+	    	ri.setStatus("Invalid Request");
+	    	ri.setInvalidRequestDetails(reqeis);
+	        return Response.status(400).entity(ri).build();		//400 : Invalid Request
+		}
+		
     	long difference_in_MiliSec;
     	long local_offset = localTimeAfter111970.longValue() ;  //ON User machine
 
@@ -444,43 +719,7 @@ public class GridApiServiceImpl extends GridApiService {
 
 		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
 		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
-    	
-    	if (authBase64String == null)
-		{	
-			erb = new ErrorRequestObject(); erb.setError("Missing Authorization in Header"); erb.setPath("Header:Authorization"); 
-			erb.setProposedSolution("Authorization Header should contain user:pwd:nhPath as Base64 string");
-			erbs.add(erb);
-			
-			reqei = new RequestErrorInfo();
-			reqei.setErrorMessage("Authorization in Header not Found");
-			reqei.setErrorDetails( erbs);
-			reqeis.add(reqei);
-			return Response.status(401).entity(erbs).build();		//401: Missing Authorization
-		}
-		else
-		{
-			ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-	    	//Connection connection = null;
-			
-			bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
-			if (!ErrResps.isEmpty())
-			{
-				return Response.status(401).entity(ErrResps).build();		//401: Authorization Failed
-			}
-		}
-
-		if (gridId <= 0)
-		{	
-			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("gridId"); 
-			erb.setProposedSolution("You must enter an Existing Grid ID. It should be a Positive Number.");
-			erbs.add(erb);
-
-			reqei = new RequestErrorInfo();
-			reqei.setErrorMessage("Negative GridId");
-			reqei.setErrorDetails( erbs);
-			reqeis.add(reqei);
-		}
-
+		
 		long actStartDate = -1;
 		long actEndDate = -1;
 
@@ -527,6 +766,11 @@ public class GridApiServiceImpl extends GridApiService {
 					erb.setPath("startDate, endDate");
 					erb.setProposedSolution("Start Date must be prior to End Date.");
 					erbs.add(erb);
+
+					reqei = new RequestErrorInfo();
+					reqei.setErrorMessage("Invalid Start and End Dates");
+					reqei.setErrorDetails( erbs);
+					reqeis.add(reqei);			
 				}
 			}
 			else 
@@ -536,6 +780,11 @@ public class GridApiServiceImpl extends GridApiService {
 				erb.setPath("activityPeriod");
 				erb.setProposedSolution("The Valid ActivityPeriod must be either Week OR Month OR Quarter OR Year OR Custom. For Custom activityPeriod you must provide valid startDate and endDate.");
 				erbs.add(erb);
+
+				reqei = new RequestErrorInfo();
+				reqei.setErrorMessage("Invalid Activity Period");
+				reqei.setErrorDetails( erbs);
+				reqeis.add(reqei);			
 			}
 		}
 		else if (reportType.toUpperCase().equals("AFTERIMPORT"))
@@ -547,60 +796,28 @@ public class GridApiServiceImpl extends GridApiService {
 				erb.setPath("importTid");
 				erb.setProposedSolution("importTid is mandetory to get transaction list after Last Import. Enter importTid as -1 or Positive Tranaction Number");
 				erbs.add(erb);
+
+				reqei = new RequestErrorInfo();
+				reqei.setErrorMessage("Missing importTid");
+				reqei.setErrorDetails( erbs);
+				reqeis.add(reqei);			
 			}
+		}
+		else 
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("Invalid reportType");
+			erb.setPath("reportType");
+			erb.setProposedSolution("reportType must be AFTERIMPORT or DURATION");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Invalid reportType");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
 		}
 		System.out.println("++++++++++++++++ actStartDate = "  + actStartDate + " actEndDate = " + actEndDate );
 		
-		
-/*		if (startTid <= 0)
-		{	
-			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("startTid"); 
-			erb.setProposedSolution("You must enter an Existing Start Transaction ID. It should be a Positive Number.");
-			erbs.add(erb);
-			
-			reqei = new RequestErrorInfo();
-			reqei.setErrorMessage("Negative Start TxId");
-			reqei.setErrorDetails( erbs);
-			reqeis.add(reqei);
-		}
-
-		if (endTid <= 0)
-		{	
-			erb = new ErrorRequestObject(); erb.setError("IsNegative"); erb.setPath("endTid"); 
-			erb.setProposedSolution("You must enter an Existing End Transaction ID. It should be a Positive Number.");
-			erbs.add(erb);
-
-			reqei = new RequestErrorInfo();
-			reqei.setErrorMessage("Negative End TxId");
-			reqei.setErrorDetails( erbs);
-			reqeis.add(reqei);
-		}
-
-		if (startTid > endTid )
-		{
-			erb = new ErrorRequestObject(); erb.setError("startTid >= endTid"); erb.setPath("startTid"); 
-			erb.setProposedSolution("Start Transaction Id must be prior to End Transaction Id.");
-			erbs.add(erb);
-			
-			reqei = new RequestErrorInfo();
-			reqei.setErrorMessage("StartTId > EndTid");
-			reqei.setErrorDetails( erbs);
-			reqeis.add(reqei);
-		}
-
-		if (startDate > endDate)
-		{
-			erb = new ErrorRequestObject(); erb.setError("startDate > endDate"); erb.setPath("startDate"); 
-			erb.setProposedSolution("Start Date must be prior to End Date. ");
-			erbs.add(erb);
-			
-			reqei = new RequestErrorInfo();
-			reqei.setErrorMessage("Start Date > End Date");
-			reqei.setErrorDetails( erbs);
-			reqeis.add(reqei);
-		}
-*/
-
 		if (reqeis.size() == 0)
 		{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
@@ -629,7 +846,7 @@ public class GridApiServiceImpl extends GridApiService {
 	    	ResponseInfo ri = new ResponseInfo();
 	    	ri.setStatus("Invalid Request");
 	    	ri.setInvalidRequestDetails(reqeis);
-	        return Response.status(400).entity(ri).build();
+	        return Response.status(400).entity(ri).build();		//400 : Invalid Request
 		}
     }
 }

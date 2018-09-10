@@ -105,10 +105,10 @@ public class GridApi  {
         return delegate.gridGridIdGet(gridId,importTid,view,mode,baselineId,securityContext,authBase64String );
     }
     @GET
-    @Path("/{gridId}/{transactionId}/changes")
+    @Path("/{gridId}/txId/{transactionId}/changes")
     
     @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Get changes for given transaction Id", notes = "", response = CellBuffer.class, authorizations = {
+    @io.swagger.annotations.ApiOperation(value = "Get changes for given transaction Id", notes = "user reportType =  CompleteTableWithChanges in xlTableHistory Servlet", response = CellBuffer.class, authorizations = {
         @io.swagger.annotations.Authorization(value = "bwAuth")
     }, tags={ "grid", })
     @io.swagger.annotations.ApiResponses(value = { 
@@ -119,9 +119,11 @@ public class GridApi  {
         @io.swagger.annotations.ApiResponse(code = 422, message = "Authorization Failed. GridId Nout foun, Neighborhood Path doesnot exists. Unauthorized Access.", response = ResponseInfo.class) })
     public Response gridGridIdTransactionIdChangesGet(@ApiParam(value = "",required=true) @PathParam("gridId") Integer gridId
 ,@ApiParam(value = "",required=true) @PathParam("transactionId") Integer transactionId
+,@ApiParam(value = "",required=true) @QueryParam("localTimeAfter_1_11970") BigDecimal localTimeAfter111970
+,@ApiParam(value = "",required=true) @QueryParam("viewPref") String viewPref
 ,@Context SecurityContext securityContext,  @HeaderParam("Authorization") String authBase64String)
     throws NotFoundException {
-    	return delegate.gridGridIdTransactionIdChangesGet(gridId,transactionId,securityContext, authBase64String);
+    	return delegate.gridGridIdTxIdTransactionIdChangesGet(gridId,transactionId,localTimeAfter111970,viewPref,securityContext, authBase64String);
     }
     @GET
     @Path("/{gridId}/transactionsBetweenTids")
