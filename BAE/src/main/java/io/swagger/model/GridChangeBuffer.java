@@ -36,6 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.*;
 
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+
 /**
  * GridChangeBuffer
  */

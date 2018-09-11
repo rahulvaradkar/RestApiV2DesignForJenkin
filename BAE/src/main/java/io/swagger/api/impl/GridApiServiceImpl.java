@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import io.swagger.model.Grid;
+import io.swagger.model.GridChanges;
 import io.swagger.model.GridTransaction;
 import io.swagger.model.ResponseInfo;
 import io.swagger.model.Transaction;
@@ -553,10 +554,10 @@ public class GridApiServiceImpl extends GridApiService {
 		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
 		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
 		
-   		CellBuffer cbf;
+   		GridChanges gc;
   	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
   	 	
-  	 	cbf = GridManagement.gridGridIdTransactionIdChangesGet(gridId, transactionId, difference_in_MiliSec, viewPref, ErrResps, authBase64String, bwcon, memberNh, statusCode);
+  	 	gc = GridManagement.gridGridIdTransactionIdChangesGet(gridId, transactionId, difference_in_MiliSec, viewPref, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
     	if (ErrResps.size() > 0)
     	{
@@ -571,7 +572,7 @@ public class GridApiServiceImpl extends GridApiService {
     	}
     	else
     	{
-    		return Response.status(200).entity(cbf).build();		//200: Success. returns cellBuffer
+    		return Response.status(200).entity(gc).build();		//200: Success. returns cellBuffer
     	}
       //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }

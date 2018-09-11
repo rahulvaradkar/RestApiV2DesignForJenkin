@@ -33,6 +33,9 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.NeighborhoodPath;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 /**
  * GridInfo
  */

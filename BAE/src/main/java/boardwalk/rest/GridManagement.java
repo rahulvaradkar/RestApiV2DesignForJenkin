@@ -55,10 +55,12 @@ import io.swagger.model.Column;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.Grid;
 import io.swagger.model.GridChangeBuffer;
+import io.swagger.model.GridChanges;
 import io.swagger.model.GridInfo;
 import io.swagger.model.NeighborhoodPath;
 import io.swagger.model.Row;
 import io.swagger.model.SequencedCellArray;
+import io.swagger.model.StatusChange;
 
 public class GridManagement {
 
@@ -3906,15 +3908,60 @@ public class GridManagement {
             this.colNo = colNo;
         }    	
         
-        public int getcolNo()
-        {
+        public int getcolNo() {
+        	return this.colNo;
+        }
+    }
+    
+    public enum GET_CHANGES_FOR_TX {
+    	ROW_ID (0),
+    	COLUMN_ID (1),
+    	CELL_STRING_VALUE (2),
+    	TX_CREATED_BY (3),
+    	CREATED_ON (4),
+    	COMMENT (5),
+    	EMAIL_ADDRESS (6),
+    	FORMULA (7),
+    	COLUMN_NAME (8),
+    	COLUMN_SEQUENCE (9),
+    	ROW_SEQUENCE (10);
+    	
+        private int colNo;
+
+    	GET_CHANGES_FOR_TX(int colNo) {
+            this.colNo = colNo;
+        }    	
+        
+        public int getcolNo() {
+        	return this.colNo;
+        }
+    }
+    
+    public enum GET_CHANGE_STATUS_FOR_TX {
+    	ROW_ID (0),
+    	COLUMN_ID (1),
+    	ACTIVE (2),
+    	TX_CREATED_BY (3),
+    	CREATED_ON (4),
+    	COMMENT (5),
+    	EMAIL_ADDRESS (6),
+    	COLUMN_SEQUENCE (7),
+    	ROW_SEQUENCE (8);
+    	
+        private int colNo;
+
+        GET_CHANGE_STATUS_FOR_TX(int colNo) {
+            this.colNo = colNo;
+        }    	
+        
+        public int getcolNo() {
         	return this.colNo;
         }
     }
     
     //@GET
     //@Path("/{gridId}/{transactionId}/changes")
-    public static CellBuffer gridGridIdTransactionIdChangesGet(Integer gridId, long transactionId, long difference_in_MiliSec, String viewPref, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
+    public static GridChanges gridGridIdTransactionIdChangesGet(Integer gridId, long transactionId, long difference_in_MiliSec, String viewPref, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
     {
     	
     	Connection connection = null;
@@ -3928,42 +3975,19 @@ public class GridManagement {
 		
     	//CompleteTableWithChanges
 		ErrorRequestObject erb;
-		CellBuffer cbfReturn = new CellBuffer();
-
-		
-		int wbId;
-		int collabId;
+		GridChanges gcReturn = new GridChanges();
 		
 		ArrayList<Integer> rowArray = new ArrayList<Integer>();
 		ArrayList<Integer> columnArray  = new ArrayList<Integer>();
 		ArrayList<String> cellValues  = new ArrayList<String>();
 		ArrayList<String> cellfmla  = new ArrayList<String>();
-		ArrayList<Integer> colCellAccess  = new ArrayList<Integer>();
 		ArrayList <SequencedCellArray> scas = new ArrayList<SequencedCellArray>();
 		SequencedCellArray sca;
 		ArrayList<Row> gridRows = new ArrayList<Row>();
 		Row gridRow = new Row();
 		ArrayList <Column> gridCols = new ArrayList<Column>();
 		Column gridCol ;
-		GridChangeBuffer gcb = new GridChangeBuffer();
-		ArrayList<Integer> deletedColumnArray = new ArrayList<Integer>();
-		ArrayList<Integer> deletedRowArray = new ArrayList<Integer>();
 		ArrayList<Cell> gridCells  = new ArrayList<Cell>();
-		Cell gridCell;
-		
-		
-		Vector<xlErrorNew> xlErrorCells = new Vector<xlErrorNew>(); 
-		TransactionManager tm = null ;
-		ArrayList <Column> newGridCols = new ArrayList <Column>();
-		ArrayList <Row> newGridRows = new ArrayList <Row>();
-
-
-		ArrayList<Column> newColumnArray = new ArrayList<Column>();
-		ArrayList<Row> newRowArray = new ArrayList<Row>();
-
-		//All Rows and Columns in Grid
-		ArrayList<Column> allColumnArray = new ArrayList<Column>();
-		ArrayList<Row> allRowArray = new ArrayList<Row>();
 		GridInfo ginfo = new GridInfo();
 
 		PreparedStatement stmt = null;
@@ -4084,14 +4108,25 @@ public class GridManagement {
 			    		//Adding SequenceCellArray() into collections of columns SequenceCellArray() with columnId and columnSequence
 			    		sca.setCellValues(cellValues);
 			    		sca.setCellFormulas(cellfmla);
-			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
-			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    		//sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		//sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    		System.out.println("adding into scas for colId: " + prevColId + "  ##@#$#$^%$^%$&&**");
 			    		scas.add(sca);
 			    		
 			    		//Initializing SequenceCellArray() for next column
 			    		sca = new SequencedCellArray();
 			    		cellValues =  new ArrayList<String>();
 			    		cellfmla = new ArrayList<String>();
+			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    		//cellValues =  new ArrayList<String>();
+			    		//cellfmla = new ArrayList<String>();
+			    	}
+			    	else
+			    	{
+			    		System.out.println("First time $@#@@$#@@#$@$@#$@$");
+			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 			    	}
 			    	
 			    	
@@ -4111,7 +4146,7 @@ public class GridManagement {
 			    	rowArray.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
 			    }
 			    
-			    gridCell = new Cell();
+/*			    gridCell = new Cell();
 			    gridCell.setRowId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
 			    gridCell.setRowSequence((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
 			    gridCell.setColId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
@@ -4119,10 +4154,9 @@ public class GridManagement {
 			    gridCell.setCellFormula(row[GET_TBL.FORMULA.getcolNo()]);
 			    gridCell.setCellValue(row[GET_TBL.STRING_VALUE.getcolNo()]);
 			    gridCells.add(gridCell);
-
+*/
 			    cellValues.add(row[GET_TBL.STRING_VALUE.getcolNo()]);
 			    cellfmla.add(row[GET_TBL.FORMULA.getcolNo()]);
-			    //row[GET_TBL.COLUMN_ID.getcolNo()]);
 			    
 			    table.add( row );
 			}
@@ -4133,19 +4167,13 @@ public class GridManagement {
     		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
     		scas.add(sca);
 
-			cbfReturn.setCells(gridCells);
-			cbfReturn.setColumnArray(columnArray);
-			cbfReturn.setColumnCellArrays(scas);
-			cbfReturn.setColumns(gridCols);
-			cbfReturn.setInfo(ginfo);
-			cbfReturn.setRowArray(rowArray);
-			cbfReturn.setRows(gridRows);
+			gcReturn.setColumnArray(columnArray);
+			gcReturn.setColumnCellArrays(scas);
+			gcReturn.setColumns(gridCols);
+			gcReturn.setInfo(ginfo);
+			gcReturn.setRowArray(rowArray);
+			gcReturn.setRows(gridRows);
 			
-			cbfReturn.setGridChangeBuffer(gcb);
-
-			statusCode.add(200);
-			System.out.println("Printing rows");
-
 			// print result
 			for( String[] roww: table ){
 				
@@ -4157,109 +4185,10 @@ public class GridManagement {
 			    System.out.println();
 			}
 
-			
-			int currColumn = -1;
-			boolean  rowProcessed = false;
-			/* In fact we can remove the rowid , colids  */
-			int colId			= -1;
-			int rowId			= -1;
-			int ColSeq			= -1;
-			float RowSeq		= 0.0f;
-			String cellval		= "";
-			String cellFormula	= "";
-			String ColName		= "";
-
-			while(rs.next())
-			{
-				colId		= rs.getInt(1);
-				rowId		= rs.getInt(2);
-				ColSeq		= rs.getInt(3);
-				RowSeq		= rs.getFloat(4);
-				cellval		= rs.getString(5);
-				cellFormula	= rs.getString(6);
-				ColName		= rs.getString(7);
-
-				if (cellFormula == null)
-					cellFormula = "";
-
-				if (currColumn == colId )
-				{
-					if (cellFormula == null)
-						cellFormula = "";
-
-//					resData.append(cellval + Seperator);
-//					fmlData.append(cellFormula + Seperator);
-				}
-				else
-				{
-//					colIdData.append(colId + Seperator);
-//					colNames.append(ColName + Seperator);
-//					colSequence.append(ColSeq + Seperator);
-
-					if (currColumn != -1)
-					{
-						rowProcessed = true;
-//						resData.deleteCharAt(resData.length()-1);
-//						resData.append(ContentDelimeter);
-//						fmlData.deleteCharAt(fmlData.length()-1);
-//						fmlData.append(ContentDelimeter);
-					}
-
-					if (cellFormula == null)
-						cellFormula = "";
-
-//					resData.append(cellval + Seperator);
-//					fmlData.append(cellFormula + Seperator);
-
-					currColumn = colId;
-				}
-
-				if (rowProcessed == false)
-				{
-//					rowIdData.append(rowId + Seperator);
-//					rowSeqence.append(RowSeq + Seperator);
-				}
-			}
-
-			//Adding contentDelimeter to Data and Formula data
-//			if (resData.length() > 0)
-//				resData.deleteCharAt(resData.length()-1);
-//
-//			resData.append(ContentDelimeter);
-//
-//			if (fmlData.length() > 0)
-//				fmlData.deleteCharAt(fmlData.length()-1);
-//
-//			fmlData.append(ContentDelimeter);
-//
-//			// Appending formulae to data String
-//			resData.append(fmlData.toString());
-//
-//			//Adding contentDelimeter to Row ids and Row order data
-//			if (rowIdData.length() > 0)
-//				rowIdData.deleteCharAt(rowIdData.length()-1);
-//
-//			rowIdData.append(ContentDelimeter);
-//
-//			if (rowSeqence.length() > 0)
-//				rowSeqence.deleteCharAt(rowSeqence.length()-1);
-//
-//			rowSeqence.append(ContentDelimeter);
-//
-//			// Appending row Order to Row ids
-//			rowIdData.append(rowSeqence.toString());
-//
-//			if (rowIdData.length() > 0)
-//				rowIdData.deleteCharAt(rowIdData.length()-1);		//rpv
-//
-//			if (resData.length() > 0)						// rpv
-//				resData.deleteCharAt(resData.length()-1);
-
 			stmt.close();
 			rs.close();
 			stmt	= null;
 			rs		= null;
-
 
 			System.out.println("calling...........BW_GET_VALUE_CHANGES_FOR_TID..........");
 			System.out.println("1.tableid " +  gridId);
@@ -4301,63 +4230,35 @@ public class GridManagement {
 
 			rs = stmt.executeQuery();
 
-			int CurrCol = -1 ;
-
-			rowId							= -1;
-			colId							= -1;
-			String cellValue				= "";
-			java.sql.Timestamp CreatedOn	= null;
-			Long CreatedOnLng					= null;
-			String	Comment_				= "";
-			String	CreatedBy				= "";
-			String Formula					= "";
-			ColName							= "";
-			ColSeq							= -1;
-			RowSeq							= 0.0f;
-
+			nCol = rs.getMetaData().getColumnCount();
+			row = new String[nCol] ;
+			table = new ArrayList<>();
+			Cell cl;
+			gridCells = new ArrayList<Cell>();
 			while(rs.next())
 			{
-				rowId			= rs.getInt(1);
-				colId			= rs.getInt(2);
-				cellValue		= rs.getString(3);
-				CreatedOn		= (rs.getTimestamp(5, cal));
-				//CreatedOn		= (rs.getTime(5, cal)) + difference_in_MiliSec;					
-				Comment_		= rs.getString(6);
-				CreatedBy		= rs.getString(7);
-				Formula			= rs.getString(8);
-				ColName			= rs.getString(9);
-				ColSeq			= rs.getInt(10);
-				RowSeq			= rs.getFloat(11);
-
-				if (Formula == null)
-					Formula = "";
-
-				if(CurrCol != colId)
-					CurrCol = colId;
-				CreatedOnLng =CreatedOn.getTime() + difference_in_MiliSec;
-//				changedData.append(rowId + Seperator);
-//				changedData.append(colId + Seperator);
-//				changedData.append(cellValue + Seperator);
-//				//changedData.append(CreatedOn + Seperator);
-//				changedData.append(CreatedOnLng + Seperator);
-//				changedData.append(Comment_ + Seperator);
-//				changedData.append(CreatedBy + Seperator);
-//				changedData.append(Formula + Seperator);
-//				changedData.append(ColSeq + Seperator);
-//				changedData.append(RowSeq + Seperator);
-//				changedData.append(ColName + ContentDelimeter);
-
+			    row = new String[nCol];
+			    for( int iCol = 1; iCol <= nCol; iCol++ ){
+			            Object obj = rs.getObject( iCol );
+			            row[iCol-1] = (obj == null) ?null:obj.toString();
+			    }
+			    cl = new Cell();
+			    cl.setRowId(Integer.parseInt(row[GET_CHANGES_FOR_TX.ROW_ID.getcolNo()]));
+			    cl.setColId(Integer.parseInt(row[GET_CHANGES_FOR_TX.COLUMN_ID.getcolNo()]));
+			    cl.setCellValue(row[GET_CHANGES_FOR_TX.CELL_STRING_VALUE.getcolNo()]);
+			    cl.setCellFormula(row[GET_CHANGES_FOR_TX.FORMULA.getcolNo()]);
+			    cl.setRowSequence((int) Double.parseDouble(row[GET_CHANGES_FOR_TX.ROW_SEQUENCE.getcolNo()]));
+			    cl.setColSequence((int) Double.parseDouble(row[GET_CHANGES_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
+			    
+			    gridCells.add(cl);
+				table.add( row );
 			}
-
-//			if (changedData.length() > 0)
-//				changedData.deleteCharAt(changedData.length()-1);
-
 			stmt.close();
 			rs.close();
 			stmt	= null;
 			rs		= null;
 
-//			System.out.println("Time to get Value Changes= " + getElapsedTime());
+			gcReturn.setCells(gridCells);
 
 			System.out.println("calling...........BW_GET_STATUS_CHANGES_FOR_TID..........");
 			System.out.println("1.tableid " +  gridId);
@@ -4396,44 +4297,35 @@ public class GridManagement {
 
 			rs = stmt.executeQuery();
 
-			CurrCol			= -1;
-			rowProcessed	= false;
-
-//			statusData.append("");
-
-			rowId			= -1;
-			colId			= -1;
-			int activeFlag	= -1;
-			CreatedOn		= null;
-			Comment_		= "";
-			CreatedBy		= "";
-			int colSeq		= -1;
-			float rowSeq	= 0.0f;
-
+			nCol = rs.getMetaData().getColumnCount();
+			row = new String[nCol] ;
+			table = new ArrayList<>();
+			ArrayList<StatusChange> Scc = new ArrayList<StatusChange>(); 
+			StatusChange sc;
 			while(rs.next())
 			{
-				rowId			= rs.getInt(1);
-				colId			= rs.getInt(2);
-				activeFlag		= rs.getInt(3);
-				CreatedOn		= rs.getTimestamp(5, cal);
-				//CreatedOn		= rs.getTimestamp(5, cal).getTime;
-				Comment_		= rs.getString(6);
-				CreatedBy		= rs.getString(7);
-				colSeq			= rs.getInt(8);
-				rowSeq			= rs.getFloat(9);
-
-//				statusData.append(rowId + Seperator);
-//				statusData.append(colId + Seperator);
-//				statusData.append(activeFlag + Seperator);
-//				statusData.append(CreatedOn + Seperator);
-//				statusData.append(Comment_ + Seperator);
-//				statusData.append(CreatedBy + Seperator);
-//				statusData.append(colSeq + Seperator);
-//				statusData.append(rowSeq + ContentDelimeter);
+			    row = new String[nCol];
+			    for( int iCol = 1; iCol <= nCol; iCol++ ){
+			            Object obj = rs.getObject( iCol );
+			            row[iCol-1] = (obj == null) ?null:obj.toString();
+			    }
+			    System.out.println("Active:" + row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]);
+			    sc = new StatusChange();
+			    sc.setRowId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.ROW_ID.getcolNo()]));
+			    sc.setColumnId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_ID.getcolNo()]));
+			    sc.setActive(Boolean.valueOf(row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]));
+			    sc.setTxId(transactionId);
+			    sc.setColumnSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
+			    sc.setComment((row[GET_CHANGE_STATUS_FOR_TX.COMMENT.getcolNo()]));
+			   // sc.setCreatedDateTime(new BigDecimal(row[GET_CHANGE_STATUS_FOR_TX.CREATED_ON.getcolNo()]));
+			    sc.setRowSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.ROW_SEQUENCE.getcolNo()]));
+			    sc.setUserEmail((row[GET_CHANGE_STATUS_FOR_TX.EMAIL_ADDRESS.getcolNo()]));
+			    
+			    Scc.add(sc);
+				table.add( row );
 			}
 
-//			if (statusData.length() > 0)
-//				statusData.deleteCharAt(statusData.length()-1);
+			gcReturn.setStatusChanges(Scc);
 
 			stmt.close();
 			rs.close();
@@ -4442,7 +4334,6 @@ public class GridManagement {
 		}
 		catch (Exception e)
 		{
-//			resHeader.append("Failure" + DataBlockDelimeter);
 			e.printStackTrace();
 			return null;
 		}
@@ -4469,26 +4360,8 @@ public class GridManagement {
 				rs = null;
 			}
 		}
-
-//		System.out.println("Time to get Status Changes= " + getElapsedTime());
-//
-//		if(colIdData.length() > 0)
-//		{
-//			resHeader.append("Success" + DataBlockDelimeter);
-//			colIdData = colIdData.deleteCharAt(colIdData.length()-1);
-//		}
-//
-//		if(colNames.length() > 0)
-//			colNames = colNames.deleteCharAt(colNames.length()-1);
-//
-//		if(colSequence.length() > 0)
-//			colSequence = colSequence.deleteCharAt(colSequence.length()-1);
-//
-//		resHeader.append(colIdData.toString() +  ContentDelimeter + colNames.toString()  + ContentDelimeter + colSequence.toString()  + ContentDelimeter);
-
-	
-
-    	return cbfReturn;
+		statusCode.add(200);
+    	return gcReturn;
     }
 
     //@GET

@@ -16,6 +16,7 @@ import io.swagger.model.ErrorDeleteRows;
 import io.swagger.model.ErrorRequestObject;
 import io.swagger.model.ErrorUpdateObject;
 import io.swagger.model.Grid;
+import io.swagger.model.GridChanges;
 import io.swagger.model.GridTransaction;
 import io.swagger.model.ResponseInfo;
 import io.swagger.model.Transaction;
@@ -112,7 +113,7 @@ public class GridApi  {
         @io.swagger.annotations.Authorization(value = "bwAuth")
     }, tags={ "grid", })
     @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = CellBuffer.class),
+        @io.swagger.annotations.ApiResponse(code = 200, message = "successful operation", response = GridChanges.class),
         
         @io.swagger.annotations.ApiResponse(code = 400, message = "Invalid input (Bad Request)", response = ResponseInfo.class),
         
