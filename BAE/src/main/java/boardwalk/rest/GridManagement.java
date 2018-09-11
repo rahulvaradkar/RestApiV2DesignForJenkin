@@ -3959,6 +3959,31 @@ public class GridManagement {
         }
     }
     
+    public enum GET_CHANGES_BETWN_TID {
+    	ROW_ID (0),
+    	COLUMN_ID (1),
+    	CELL_STRING_VALUE (2),
+    	TX_CREATED_BY (3),
+    	CREATED_ON (4),
+    	COMMENT (5),
+    	EMAIL_ADDRESS (6),
+    	FORMULA (7),
+    	COLUMN_SEQUENCE (8),
+    	ROW_SEQUENCE (9),
+    	COLUMN_NAME (10);
+    	
+        private int colNo;
+
+        GET_CHANGES_BETWN_TID(int colNo) {
+            this.colNo = colNo;
+        }    	
+        
+        public int getcolNo() {
+        	return this.colNo;
+        }
+    }
+
+    
     //@GET
     //@Path("/{gridId}/{transactionId}/changes")
     public static GridChanges gridGridIdTransactionIdChangesGet(Integer gridId, long transactionId, long difference_in_MiliSec, String viewPref, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
@@ -4528,4 +4553,405 @@ public class GridManagement {
 		
     	return txs;
 	}
+    
+    
+    //@GET
+    //@Path("/grid/{gridId}/transactionsBetweenTids")
+    public static GridChanges gridGridIdTransactionsBetweenTids(Long gridId, long difference_in_MiliSec,  long startTid, long endTid, String viewPref, String reportType, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
+    {
+    	
+    	Connection connection = null;
+		int nhId = -1;
+		int memberId = -1;
+		int userId = -1;
+		connection = bwcon.getConnection();
+		memberId = memberNh.get(0);
+		nhId = memberNh.get(1);
+		userId = bwcon.getUserId();
+		
+    	//CompleteTableWithChanges
+		ErrorRequestObject erb;
+		GridChanges gcReturn = new GridChanges();
+		
+		ArrayList<Integer> rowArray = new ArrayList<Integer>();
+		ArrayList<Integer> columnArray  = new ArrayList<Integer>();
+		ArrayList<String> cellValues  = new ArrayList<String>();
+		ArrayList<String> cellfmla  = new ArrayList<String>();
+		ArrayList <SequencedCellArray> scas = new ArrayList<SequencedCellArray>();
+		SequencedCellArray sca;
+		ArrayList<Row> gridRows = new ArrayList<Row>();
+		Row gridRow = new Row();
+		ArrayList <Column> gridCols = new ArrayList<Column>();
+		Column gridCol ;
+		ArrayList<Cell> gridCells  = new ArrayList<Cell>();
+		GridInfo ginfo = new GridInfo();
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+		int CurrCol		= -1 ;
+		String rowQuery = "" ;
+		
+		try
+		{
+			
+			int criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId.intValue(), userId);
+			if (criteriaTableId > -1)
+				rowQuery = TableViewManager.getRowQuery(connection, gridId.intValue(), userId, criteriaTableId, false, viewPref, "TABLE"); //Modified by Lakshman on 20171108 to avoid self joins on BW_CELL for performance gain
+//				System.out.println("rowQuery = " + rowQuery);
+
+			String lsSql = "";
+
+			System.out.println("calling...........BW_GET_TBL_AT_T..........");
+			System.out.println("1.gridId " +  gridId);
+			System.out.println("2. startTid " +  startTid);
+			System.out.println("3. userId " +  userId);
+			System.out.println("4. memberId " +  memberId);
+			System.out.println("5. nhId " +  nhId);
+			System.out.println("6. view " + viewPref);
+
+			if(criteriaTableId == -1)
+			{
+				stmt = connection.prepareStatement("{CALL BW_GET_TBL_AT_T(?,?,?,?,?,?)}");
+				stmt.setInt(1, gridId.intValue());
+				stmt.setInt(2, (int) startTid);
+				stmt.setInt(3, userId);
+				stmt.setInt(4, memberId);
+				stmt.setInt(5, nhId);
+				stmt.setString(6, viewPref);
+			}
+			else
+			{
+				lsSql	= QueryMaker.getFiltredQueryTBLCmpXL(rowQuery);
+				stmt	= connection.prepareStatement(lsSql);
+//				System.out.println(" << lsSql >>"+lsSql);
+
+				stmt.setInt(1, gridId.intValue());
+				stmt.setInt(2, userId);
+				stmt.setInt(3, memberId);
+				stmt.setInt(4, (int) startTid);
+
+				stmt.setInt(5, gridId.intValue());
+				stmt.setInt(6, userId);
+				stmt.setInt(7, memberId);
+				stmt.setInt(8, (int) startTid);
+			}
+
+			rs = stmt.executeQuery();
+
+			ArrayList <Integer> Cols = new ArrayList<Integer>();
+			ArrayList <Integer> Rows = new ArrayList<Integer>();
+			
+			TableInfo tinfo = TableManager.getTableInfo(connection, userId, gridId.intValue());
+			ginfo.setCollabId(tinfo.getCollaborationId());
+			ginfo.setWbId(tinfo.getWhiteboardId());
+			ginfo.setId(gridId.intValue());
+			ginfo.setName(tinfo.getTableName());
+			ginfo.setPurpose(tinfo.getTablePurpose());
+			ginfo.setView(tinfo.getTableDefaultViewPreference());
+			ginfo.setMemberId(memberId);
+			ginfo.setUserId(userId);
+			
+			//Initializing SequenceCellArray()
+			sca = new SequencedCellArray();
+    		cellValues =  new ArrayList<String>();
+    		cellfmla = new ArrayList<String>();
+			
+			int prevRowId = -1;
+			int prevColId = -1;
+			
+			int nCol = rs.getMetaData().getColumnCount();
+			String[] row = new String[nCol] ;
+
+			ArrayList<String[]> table = new ArrayList<>();
+
+			while(rs.next())
+			{
+			    row = new String[nCol];
+			    for( int iCol = 1; iCol <= nCol; iCol++ ){
+			            Object obj = rs.getObject( iCol );
+			            row[iCol-1] = (obj == null) ?null:obj.toString();
+			    }
+			    
+			    if(!Cols.contains(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()])))
+			    {
+			    	Cols.add(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    	gridCol = new Column();
+			    	gridCol.setId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    	gridCol.setName(row[GET_TBL.COLUMN_NAME.getcolNo()]);
+			    	gridCol.setSeqNo(new BigDecimal( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    	gridCol.setPreviousColumnid(prevColId);
+			    	gridCols.add(gridCol);
+			    	
+			    	columnArray.add(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+
+			    	if (prevColId != -1 & prevColId != Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]) )
+			    	{
+			    		//Adding SequenceCellArray() into collections of columns SequenceCellArray() with columnId and columnSequence
+			    		sca.setCellValues(cellValues);
+			    		sca.setCellFormulas(cellfmla);
+			    		//sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		//sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    		System.out.println("adding into scas for colId: " + prevColId + "  ##@#$#$^%$^%$&&**");
+			    		scas.add(sca);
+			    		
+			    		//Initializing SequenceCellArray() for next column
+			    		sca = new SequencedCellArray();
+			    		cellValues =  new ArrayList<String>();
+			    		cellfmla = new ArrayList<String>();
+			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    		//cellValues =  new ArrayList<String>();
+			    		//cellfmla = new ArrayList<String>();
+			    	}
+			    	else
+			    	{
+			    		System.out.println("First time $@#@@$#@@#$@$@#$@$");
+			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    	}
+			    	
+			    	
+			    	prevColId = Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]);
+			    }
+
+			    if(!Rows.contains(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()])))
+			    {
+			    	Rows.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+					gridRow = new Row();
+					gridRow.setId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+					gridRow.setSeqNo((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
+					gridRow.setPreviousRowid(prevRowId);
+					gridRows.add(gridRow);
+					prevRowId = Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]);
+					
+			    	rowArray.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+			    }
+			    
+/*			    gridCell = new Cell();
+			    gridCell.setRowId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+			    gridCell.setRowSequence((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
+			    gridCell.setColId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+			    gridCell.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    gridCell.setCellFormula(row[GET_TBL.FORMULA.getcolNo()]);
+			    gridCell.setCellValue(row[GET_TBL.STRING_VALUE.getcolNo()]);
+			    gridCells.add(gridCell);
+*/
+			    cellValues.add(row[GET_TBL.STRING_VALUE.getcolNo()]);
+			    cellfmla.add(row[GET_TBL.FORMULA.getcolNo()]);
+			    
+			    table.add( row );
+			}
+			//Adding last Sequence column Arrau
+    		sca.setCellValues(cellValues);
+    		sca.setCellFormulas(cellfmla);
+    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+    		scas.add(sca);
+
+			gcReturn.setColumnArray(columnArray);
+			gcReturn.setColumnCellArrays(scas);
+			gcReturn.setColumns(gridCols);
+			gcReturn.setInfo(ginfo);
+			gcReturn.setRowArray(rowArray);
+			gcReturn.setRows(gridRows);
+						
+			// print result
+			for( String[] roww: table ){
+				
+				System.out.print( "COLUMN_ID " + roww[GET_TBL.COLUMN_ID.getcolNo()]);
+				
+			    for( String s: roww ){
+			        System.out.print( " " + s );
+			    }
+			    System.out.println();
+			}
+
+			stmt.close();
+			rs.close();
+			stmt	= null;
+			rs		= null;
+
+			///////////////////////////////// End of ...........BW_GET_TBL_AT_T..........
+
+			System.out.println("calling...........BW_GET_VALUE_CHANGES_BETN_TID..........");
+			System.out.println("1.tableid " +  gridId);
+			System.out.println("2. startTid " +  startTid);
+			System.out.println("3. endTid " +  endTid);
+			System.out.println("4. userId " +  userId);
+			System.out.println("5. memberId " +  memberId);
+			System.out.println("6. nhId " +  nhId);
+			System.out.println("7. view " + viewPref);
+
+			if(criteriaTableId == -1)
+			{
+				stmt = connection.prepareStatement("{CALL BW_GET_VALUE_CHANGES_BETN_TID(?,?,?,?,?,?,?)}");
+				stmt.setInt(1, gridId.intValue());
+				stmt.setInt(2, (int) startTid);
+				stmt.setInt(3, (int) endTid);
+				stmt.setInt(4, userId);
+				stmt.setInt(5, memberId);
+				stmt.setInt(6, nhId);
+				stmt.setString(7, viewPref);
+			}
+			else
+			{
+				lsSql	= QueryMaker.getFiltredQueryValueChangesCmpXL(rowQuery);
+				stmt	= connection.prepareStatement(lsSql);
+				//System.out.println(" << lsSql >>"+lsSql);
+
+				stmt.setInt(1, gridId.intValue());
+				stmt.setInt(2, userId);
+				stmt.setInt(3, memberId);
+
+				stmt.setInt(4, (int) startTid);
+				stmt.setInt(5, (int) endTid);
+
+				stmt.setInt(6, gridId.intValue());
+				stmt.setInt(7, userId);
+				stmt.setInt(8, memberId);
+
+				stmt.setInt(9, (int) startTid);
+				stmt.setInt(10, (int) endTid);
+			}
+
+			rs = stmt.executeQuery();
+			
+			nCol = rs.getMetaData().getColumnCount();
+			row = new String[nCol] ;
+			table = new ArrayList<>();
+			Cell cl;
+			gridCells = new ArrayList<Cell>();
+			while(rs.next())
+			{
+			    row = new String[nCol];
+			    for( int iCol = 1; iCol <= nCol; iCol++ ){
+			            Object obj = rs.getObject( iCol );
+			            row[iCol-1] = (obj == null) ?null:obj.toString();
+			    }
+			    cl = new Cell();
+			    
+			    cl.setRowId(Integer.parseInt(row[GET_CHANGES_BETWN_TID.ROW_ID.getcolNo()]));
+			    cl.setColId(Integer.parseInt(row[GET_CHANGES_BETWN_TID.COLUMN_ID.getcolNo()]));
+			    cl.setCellValue(row[GET_CHANGES_BETWN_TID.CELL_STRING_VALUE.getcolNo()]);
+			    cl.setCellFormula(row[GET_CHANGES_BETWN_TID.FORMULA.getcolNo()]);
+			    cl.setRowSequence((int) Double.parseDouble(row[GET_CHANGES_BETWN_TID.ROW_SEQUENCE.getcolNo()]));
+			    cl.setColSequence((int) Double.parseDouble(row[GET_CHANGES_BETWN_TID.COLUMN_SEQUENCE.getcolNo()]));
+			    
+			    gridCells.add(cl);
+				table.add( row );
+			}
+			stmt.close();
+			rs.close();
+			stmt	= null;
+			rs		= null;
+
+			gcReturn.setCells(gridCells);
+			
+			///////////////////////////// Start of  ............BW_GET_STATUS_CHANGES_BETN_TID///////////////////////////////////////////////////////
+
+			System.out.println("calling...........BW_GET_STATUS_CHANGES_BETN_TID..........");
+			System.out.println("1.tableid " +  gridId);
+			System.out.println("2. startTid " +  startTid);
+			System.out.println("3. endTid " +  endTid);
+			System.out.println("4. userId " +  userId);
+			System.out.println("5. memberId " +  memberId);
+			System.out.println("6. nhId " +  nhId);
+			System.out.println("7. viewPref " + viewPref);
+
+			if(criteriaTableId == -1)
+			{
+				stmt = connection.prepareStatement("{CALL BW_GET_STATUS_CHANGES_BETN_TID(?,?,?,?,?,?,?)}");
+				stmt.setInt(1, gridId.intValue());
+				stmt.setInt(2, (int) startTid);
+				stmt.setInt(3, (int) endTid);
+				stmt.setInt(4, userId);
+				stmt.setInt(5, memberId);
+				stmt.setInt(6, nhId);
+				stmt.setString(7, viewPref);
+			}
+			else
+			{
+				lsSql	= QueryMaker.getFiltredQueryStatusChangesCmpXL(rowQuery);
+				stmt	= connection.prepareStatement(lsSql);
+//				System.out.println(" << lsSql >>"+lsSql);
+
+				stmt.setInt(1, gridId.intValue());
+				stmt.setInt(2, userId);
+				stmt.setInt(3, memberId);
+				stmt.setInt(4, (int) startTid);
+				stmt.setInt(5, (int) endTid);
+			}
+
+			rs = stmt.executeQuery();
+
+			nCol = rs.getMetaData().getColumnCount();
+			row = new String[nCol] ;
+			table = new ArrayList<>();
+			ArrayList<StatusChange> Scc = new ArrayList<StatusChange>(); 
+			StatusChange sc;
+			while(rs.next())
+			{
+			    row = new String[nCol];
+			    for( int iCol = 1; iCol <= nCol; iCol++ ){
+			            Object obj = rs.getObject( iCol );
+			            row[iCol-1] = (obj == null) ?null:obj.toString();
+			    }
+			    System.out.println("Active:" + row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]);
+			    sc = new StatusChange();
+			    sc.setRowId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.ROW_ID.getcolNo()]));
+			    sc.setColumnId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_ID.getcolNo()]));
+			    sc.setActive(Boolean.valueOf(row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]));
+			    //sc.setTxId(transactionId);
+			    sc.setColumnSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
+			    sc.setComment((row[GET_CHANGE_STATUS_FOR_TX.COMMENT.getcolNo()]));
+			   // sc.setCreatedDateTime(new BigDecimal(row[GET_CHANGE_STATUS_FOR_TX.CREATED_ON.getcolNo()]));
+			    sc.setRowSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.ROW_SEQUENCE.getcolNo()]));
+			    sc.setUserEmail((row[GET_CHANGE_STATUS_FOR_TX.EMAIL_ADDRESS.getcolNo()]));
+			    
+			    Scc.add(sc);
+				table.add( row );
+			}
+
+			gcReturn.setStatusChanges(Scc);
+
+			stmt.close();
+			rs.close();
+			stmt = null;
+			rs = null;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			if (stmt != null)
+			{
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				stmt = null;
+			}
+			if (rs != null)
+			{
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				rs = null;
+			}
+		}
+
+		statusCode.add(200);
+    	return gcReturn;
+    }
+    
 }

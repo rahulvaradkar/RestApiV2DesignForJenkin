@@ -140,13 +140,14 @@ public class GridApi  {
         
         @io.swagger.annotations.ApiResponse(code = 422, message = "Authorization Failed. GridId Nout foun, Neighborhood Path doesnot exists. Unauthorized Access.", response = ResponseInfo.class) })
     public Response gridGridIdTransactionsBetweenTidsGet(@ApiParam(value = "",required=true) @PathParam("gridId") Long gridId
-,@ApiParam(value = "",required=true) @QueryParam("reportType") String reportType
+,@ApiParam(value = "",required=true) @QueryParam("localTimeAfter_1_11970") BigDecimal localTimeAfter111970
 ,@ApiParam(value = "",required=true) @QueryParam("startTid") Long startTid
 ,@ApiParam(value = "",required=true) @QueryParam("endTid") Long endTid
 ,@ApiParam(value = "",required=true) @QueryParam("viewPref") String viewPref
+,@ApiParam(value = "",required=true) @QueryParam("reportType") String reportType
 ,@Context SecurityContext securityContext ,  @HeaderParam("Authorization") String authBase64String )
     throws NotFoundException {
-        return delegate.gridGridIdTransactionsBetweenTidsGet(gridId,reportType,startTid,endTid,viewPref,securityContext,authBase64String);
+        return delegate.gridGridIdTransactionsBetweenTidsGet(gridId,localTimeAfter111970,startTid,endTid,viewPref,reportType,securityContext,authBase64String);
     }
     @GET
     @Path("/{gridId}/transactions")

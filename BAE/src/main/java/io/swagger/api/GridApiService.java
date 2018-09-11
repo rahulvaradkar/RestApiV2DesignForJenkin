@@ -34,6 +34,6 @@ public abstract class GridApiService {
     public abstract Response gridPost(Grid grid,SecurityContext securityContext, String authBase64String) throws NotFoundException;
     public abstract Response gridPut( @NotNull Integer gridId,CellBuffer cellBufferRequest,SecurityContext securityContext, String authBase64String) throws NotFoundException;
     public abstract Response gridGridIdTxIdTransactionIdChangesGet(Integer gridId,Integer transactionId, @NotNull BigDecimal localTimeAfter111970, @NotNull String viewPref, SecurityContext securityContext, String authBase64String) throws NotFoundException;
-    public abstract Response gridGridIdTransactionsBetweenTidsGet(Long gridId, @NotNull String reportType, @NotNull Long startTid, @NotNull Long endTid, @NotNull String viewPref,SecurityContext securityContext, String authBase64String) throws NotFoundException;
+    public abstract Response gridGridIdTransactionsBetweenTidsGet(Long gridId,  @NotNull BigDecimal localTimeAfter111970, @NotNull Long startTid, @NotNull Long endTid, @NotNull String viewPref,  @NotNull String reportType, SecurityContext securityContext, String authBase64String) throws NotFoundException;
     public abstract Response gridGridIdTransactionsGet(Integer gridId, @NotNull BigDecimal localTimeAfter111970, @NotNull String viewPref, @NotNull String reportType, String activityPeriod, BigDecimal startDate, BigDecimal endDate, BigDecimal importTid,SecurityContext securityContext, String authBase64String) throws NotFoundException;
 }
