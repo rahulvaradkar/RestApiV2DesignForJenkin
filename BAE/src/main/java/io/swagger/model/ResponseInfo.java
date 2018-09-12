@@ -27,6 +27,9 @@ import javax.validation.constraints.*;
 /**
  * ResponseInfo
  */
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 
 public class ResponseInfo   {
   @JsonProperty("Status")

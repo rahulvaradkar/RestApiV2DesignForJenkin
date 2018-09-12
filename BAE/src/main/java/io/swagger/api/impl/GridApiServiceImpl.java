@@ -561,6 +561,8 @@ public class GridApiServiceImpl extends GridApiService {
 
     	if (ErrResps.size() > 0)
     	{
+    		//404: GridId not found
+    		//404 : TxId Nout found
 			int scode = statusCode.get(0);
 
 			reqei = new RequestErrorInfo();
@@ -595,13 +597,13 @@ public class GridApiServiceImpl extends GridApiService {
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-		System.out.println("Inside GridApiServiceImpl.gridPut --- gridId : " + gridId);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- localTimeAfter111970 : " + localTimeAfter111970);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- startTid : " + startTid);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- endTid : " + endTid);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- viewPref : " + viewPref);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- reportType : " + reportType);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- authBase64String : " + authBase64String);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- gridId : " + gridId);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- localTimeAfter111970 : " + localTimeAfter111970);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- startTid : " + startTid);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- endTid : " + endTid);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- viewPref : " + viewPref);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- reportType : " + reportType);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- authBase64String : " + authBase64String);
 			
     	
     	if (authBase64String == null)
@@ -684,7 +686,62 @@ public class GridApiServiceImpl extends GridApiService {
 			reqei.setErrorDetails( erbs);
 			reqeis.add(reqei);			
 		}		
+		
+		if (viewPref == null)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("viewPref is missing in GET Request");
+			erb.setPath("viewPref");
+			erb.setProposedSolution("viewPref is mandetory. Valid View values are [ MY_ROWS |LATEST | DESIGN | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ]");
+			erbs.add(erb);
 
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Missing viewPref");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);		}
+		else if (viewPref.trim().equals("MY_ROWS") || 
+				viewPref.trim().equals("LATEST") || 
+				viewPref.trim().equals("DESIGN") || 
+				viewPref.trim().equals("LATEST_BY_USER") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_USERS") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_CHILDREN") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH") || 
+				viewPref.trim().equals("LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH") || 
+				viewPref.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH") || 
+				viewPref.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD") || 
+				viewPref.trim().equals("LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD") || viewPref.trim().indexOf("?") == 0 )
+		{    			
+    		System.out.println("viewPref : " + viewPref);
+		}
+		else
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("Invalid viewPref");
+			erb.setPath("viewPref");
+			erb.setProposedSolution("viewPref is mandetory. Valid View values are [ MY_ROWS |LATEST | DESIGN | LATEST_BY_USER | LATEST_VIEW_OF_ALL_USERS | LATEST_VIEW_OF_ALL_CHILDREN | LATEST_VIEW_OF_ALL_USERS_IN_ANY_NH | LATEST_VIEW_OF_ALL_USERS_IN_ANY_CHILDREN_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_IMM_CHD | LATEST_ROWS_OF_ALL_USERS_IN_MY_NH_AND_ALL_CHD ]");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Invalid viewPref");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);			
+		}
+				
+		if (startTid >= endTid)
+		{
+			erb = new ErrorRequestObject();
+			erb.setError("startTid must be prior to endTid");
+			erb.setPath("startTid >= endTid");
+			erb.setProposedSolution("Start TxId must be prior to End TxId.");
+			erbs.add(erb);
+
+			reqei = new RequestErrorInfo();
+			reqei.setErrorMessage("Invalid startTxId, endTxId");
+			reqei.setErrorDetails( erbs);
+			reqeis.add(reqei);					
+		}
+		
+		
 		if (reqeis.size() > 0)
 		{
 	    	ResponseInfo ri = new ResponseInfo();
@@ -706,10 +763,10 @@ public class GridApiServiceImpl extends GridApiService {
 		long difference_in_MiliSec_local = local_offset - server_Millis_local;	//This is Offset of Local machine. i.e. India is +5:30 GMT in milliseconds.
 
 		
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- local_offset : " + local_offset);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- server_Millis : " + server_Millis);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec : " + difference_in_MiliSec);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec_local : " + difference_in_MiliSec_local);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- local_offset : " + local_offset);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- server_Millis : " + server_Millis);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- difference_in_MiliSec : " + difference_in_MiliSec);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsBetweenTidsGet --- difference_in_MiliSec_local : " + difference_in_MiliSec_local);
 
 		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
 		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
@@ -724,18 +781,25 @@ public class GridApiServiceImpl extends GridApiService {
   	 	
     	if (ErrResps.size() > 0)
     	{
+    		//500 : Server Error. SQLException thrown from TableViewManager.getCriteriaTable OR TableViewManager.getRowQuery
+    		//500 : Server Error. SystemException thrown from GridManagement.gridGridIdTransactionsBetweenTids::TableManager.getTableInfo
+    		//200 : Success. Returns GridChanges
+    		//404 : GridId not found
+			int scode = statusCode.get(0);
+
 	    	resei = new ResponseErrorInfo();		    	
 	    	resei.setErrorMessage("Errors on Server");
 	    	resei.setErrorDetails(ErrResps);
-	  
+	    	reseis.add(resei);
+	    	
 	    	ResponseInfo ri = new ResponseInfo();
 	    	ri.setStatus("Failure");
 	    	ri.setFailureDetails(reseis);
-    		return Response.status(422).entity(ri).build();   	
+    		return Response.status(scode).entity(ri).build();   	
     	}
     	else
     	{
-    		return Response.status(200).entity(gc).build();
+    		return Response.status(200).entity(gc).build();			//200 : Success. Returns GridChanges
     	}
     	//return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -757,15 +821,15 @@ public class GridApiServiceImpl extends GridApiService {
 		ErrorRequestObject erb;
 		ArrayList <ErrorRequestObject> erbs = new ArrayList<ErrorRequestObject>();
 
-		System.out.println("Inside GridApiServiceImpl.gridPut --- gridId : " + gridId);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- localTimeAfter111970 : " + localTimeAfter111970);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- viewPref : " + viewPref);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- reportType : " + reportType);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- activityPeriod : " + activityPeriod);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- startDate : " + startDate);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- endDate : " + endDate);
-		System.out.println("Inside GridApiServiceImpl.gridPut --- importTid : " + importTid);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- authBase64String : " + authBase64String);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- gridId : " + gridId);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- localTimeAfter111970 : " + localTimeAfter111970);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- viewPref : " + viewPref);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- reportType : " + reportType);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- activityPeriod : " + activityPeriod);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- startDate : " + startDate);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- endDate : " + endDate);
+		System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- importTid : " + importTid);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- authBase64String : " + authBase64String);
 			
     	
     	if (authBase64String == null)
@@ -870,10 +934,10 @@ public class GridApiServiceImpl extends GridApiService {
 		long difference_in_MiliSec_local = local_offset - server_Millis_local;	//This is Offset of Local machine. i.e. India is +5:30 GMT in milliseconds.
 
 		
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- local_offset : " + local_offset);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- server_Millis : " + server_Millis);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec : " + difference_in_MiliSec);
-    	System.out.println("Inside GridApiServiceImpl.gridPut --- difference_in_MiliSec_local : " + difference_in_MiliSec_local);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- local_offset : " + local_offset);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- server_Millis : " + server_Millis);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- difference_in_MiliSec : " + difference_in_MiliSec);
+    	System.out.println("Inside GridApiServiceImpl.gridGridIdTransactionsGet --- difference_in_MiliSec_local : " + difference_in_MiliSec_local);
 
 		System.out.println("Local Server (gmt) in miliSeconds is " + server_Millis );
 		System.out.println("The difference in Server and Clietnis " + (local_offset - server_Millis ));
@@ -983,20 +1047,28 @@ public class GridApiServiceImpl extends GridApiService {
 
 	  	 	txs = GridManagement.gridGridIdTransactionsGet(gridId, reportType, importTid.longValue() , actStartDate, actEndDate, difference_in_MiliSec, viewPref, ErrResps, authBase64String, bwcon, memberNh, statusCode);
 
+	  	 	//404: GridId not found
+	  	 	//200 : Success. Returns txs
+	  	 	//500 : Server Error. SQLException thrown fromTableManager.getTransactionList OR TableManager.getTransactionListAfterImport
+	  	 	//500 : Server Error. SystemException thrown from GridManagement.gridGridIdTransactionsGet::TableManager.getTableInfo
+	  	 	
 	    	if (ErrResps.size() > 0)
 	    	{
+				int scode = statusCode.get(0);
+
 		    	resei = new ResponseErrorInfo();		    	
 		    	resei.setErrorMessage("Errors on Server");
 		    	resei.setErrorDetails(ErrResps);
-		  
+		    	reseis.add(resei);
+		    	
 		    	ResponseInfo ri = new ResponseInfo();
 		    	ri.setStatus("Failure");
 		    	ri.setFailureDetails(reseis);
-	    		return Response.status(422).entity(ri).build();   	
+	    		return Response.status(scode).entity(ri).build();   	
 	    	}
 	    	else
 	    	{
-	    		return Response.status(200).entity(txs).build();
+	    		return Response.status(200).entity(txs).build();		//200 Success: Return transactions
 	    	}
 		}
 		else

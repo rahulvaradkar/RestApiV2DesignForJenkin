@@ -4020,7 +4020,6 @@ public class GridManagement {
 		
 		try
 		{
-			
 			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 			
 			// Collect the Active column IDs first
@@ -4032,13 +4031,44 @@ public class GridManagement {
 			System.out.println("5. nhId " +  nhId);
 			System.out.println("6. view " + viewPref);
 
+			ArrayList <Integer> Cols = new ArrayList<Integer>();
+			ArrayList <Integer> Rows = new ArrayList<Integer>();
+			
+			TableInfo tinfo = TableManager.getTableInfo(connection, userId, gridId);
+			
+			if (tinfo == null)
+			{
+	        	erb = new ErrorRequestObject();
+	        	erb.setError("GridId not found.");
+	        	erb.setPath("GridManagement.gridGridIdTransactionIdChangesGet:: TableManager.getTableInfo returns Null");
+				erb.setProposedSolution("Grid Details for GridId not found. You must provide an existing GridId.");
+	        	ErrResps.add(erb);
+				statusCode.add(404);			//404: GridId not found
+				return gcReturn;
+			}
+			
+			ginfo.setCollabId(tinfo.getCollaborationId());
+			ginfo.setWbId(tinfo.getWhiteboardId());
+			ginfo.setId(gridId);
+			ginfo.setName(tinfo.getTableName());
+			ginfo.setPurpose(tinfo.getTablePurpose());
+			ginfo.setView(tinfo.getTableDefaultViewPreference());
+			ginfo.setMemberId(memberId);
+			ginfo.setUserId(userId);
+			
+			//Initializing SequenceCellArray()
+			sca = new SequencedCellArray();
+    		cellValues =  new ArrayList<String>();
+    		cellfmla = new ArrayList<String>();
+			
+			
 			int criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId, userId);
 			System.out.println("Using criteriaTableId = " + criteriaTableId);
 			String rowQuery = "";
 
 			if (criteriaTableId > -1)
 				rowQuery = TableViewManager.getRowQuery(connection, gridId, userId, criteriaTableId, false, viewPref, "TABLE"); //Modified by Lakshman on 20171108 to avoid self joins on BW_CELL for performance gain
-//				System.out.println("rowQuery = " + rowQuery);
+				System.out.println("rowQuery = " + rowQuery);
 
 			if(criteriaTableId == -1)
 			{
@@ -4084,24 +4114,6 @@ public class GridManagement {
 
 			rs = stmt.executeQuery();
 
-			ArrayList <Integer> Cols = new ArrayList<Integer>();
-			ArrayList <Integer> Rows = new ArrayList<Integer>();
-			
-			TableInfo tinfo = TableManager.getTableInfo(connection, userId, gridId);
-			ginfo.setCollabId(tinfo.getCollaborationId());
-			ginfo.setWbId(tinfo.getWhiteboardId());
-			ginfo.setId(gridId);
-			ginfo.setName(tinfo.getTableName());
-			ginfo.setPurpose(tinfo.getTablePurpose());
-			ginfo.setView(tinfo.getTableDefaultViewPreference());
-			ginfo.setMemberId(memberId);
-			ginfo.setUserId(userId);
-			
-			//Initializing SequenceCellArray()
-			sca = new SequencedCellArray();
-    		cellValues =  new ArrayList<String>();
-    		cellfmla = new ArrayList<String>();
-			
 			int prevRowId = -1;
 			int prevColId = -1;
 			
@@ -4109,105 +4121,119 @@ public class GridManagement {
 			String[] row = new String[nCol] ;
 
 			ArrayList<String[]> table = new ArrayList<>();
-			while( rs.next()) {
-			    row = new String[nCol];
-			    for( int iCol = 1; iCol <= nCol; iCol++ ){
-			            Object obj = rs.getObject( iCol );
-			            row[iCol-1] = (obj == null) ?null:obj.toString();
-			    }
-			    
-			    if(!Cols.contains(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()])))
-			    {
-			    	Cols.add(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-			    	gridCol = new Column();
-			    	gridCol.setId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-			    	gridCol.setName(row[GET_TBL.COLUMN_NAME.getcolNo()]);
-			    	gridCol.setSeqNo(new BigDecimal( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
-			    	gridCol.setPreviousColumnid(prevColId);
-			    	gridCols.add(gridCol);
-			    	
-			    	columnArray.add(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-
-			    	if (prevColId != -1 & prevColId != Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]) )
-			    	{
-			    		//Adding SequenceCellArray() into collections of columns SequenceCellArray() with columnId and columnSequence
-			    		sca.setCellValues(cellValues);
-			    		sca.setCellFormulas(cellfmla);
-			    		//sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
-			    		//sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-			    		System.out.println("adding into scas for colId: " + prevColId + "  ##@#$#$^%$^%$&&**");
-			    		scas.add(sca);
-			    		
-			    		//Initializing SequenceCellArray() for next column
-			    		sca = new SequencedCellArray();
-			    		cellValues =  new ArrayList<String>();
-			    		cellfmla = new ArrayList<String>();
-			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
-			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-			    		//cellValues =  new ArrayList<String>();
-			    		//cellfmla = new ArrayList<String>();
-			    	}
-			    	else
-			    	{
-			    		System.out.println("First time $@#@@$#@@#$@$@#$@$");
-			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
-			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-			    	}
-			    	
-			    	
-			    	prevColId = Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]);
-			    }
-
-			    if(!Rows.contains(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()])))
-			    {
-			    	Rows.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
-					gridRow = new Row();
-					gridRow.setId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
-					gridRow.setSeqNo((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
-					gridRow.setPreviousRowid(prevRowId);
-					gridRows.add(gridRow);
-					prevRowId = Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]);
-					
-			    	rowArray.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
-			    }
-			    
-/*			    gridCell = new Cell();
-			    gridCell.setRowId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
-			    gridCell.setRowSequence((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
-			    gridCell.setColId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-			    gridCell.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
-			    gridCell.setCellFormula(row[GET_TBL.FORMULA.getcolNo()]);
-			    gridCell.setCellValue(row[GET_TBL.STRING_VALUE.getcolNo()]);
-			    gridCells.add(gridCell);
-*/
-			    cellValues.add(row[GET_TBL.STRING_VALUE.getcolNo()]);
-			    cellfmla.add(row[GET_TBL.FORMULA.getcolNo()]);
-			    
-			    table.add( row );
-			}
-			//Adding last Sequence column Arrau
-    		sca.setCellValues(cellValues);
-    		sca.setCellFormulas(cellfmla);
-    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
-    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
-    		scas.add(sca);
-
-			gcReturn.setColumnArray(columnArray);
-			gcReturn.setColumnCellArrays(scas);
-			gcReturn.setColumns(gridCols);
-			gcReturn.setInfo(ginfo);
-			gcReturn.setRowArray(rowArray);
-			gcReturn.setRows(gridRows);
 			
-			// print result
-			for( String[] roww: table ){
+			if( rs.next()) {
+				do {
+				    row = new String[nCol];
+				    for( int iCol = 1; iCol <= nCol; iCol++ ){
+				            Object obj = rs.getObject( iCol );
+				            row[iCol-1] = (obj == null) ?null:obj.toString();
+				    }
+				    
+				    if(!Cols.contains(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()])))
+				    {
+				    	Cols.add(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+				    	gridCol = new Column();
+				    	gridCol.setId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+				    	gridCol.setName(row[GET_TBL.COLUMN_NAME.getcolNo()]);
+				    	gridCol.setSeqNo(new BigDecimal( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    	gridCol.setPreviousColumnid(prevColId);
+				    	gridCols.add(gridCol);
+				    	
+				    	columnArray.add(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+	
+				    	if (prevColId != -1 & prevColId != Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]) )
+				    	{
+				    		//Adding SequenceCellArray() into collections of columns SequenceCellArray() with columnId and columnSequence
+				    		sca.setCellValues(cellValues);
+				    		sca.setCellFormulas(cellfmla);
+				    		//sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    		//sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+				    		System.out.println("adding into scas for colId: " + prevColId + "  ##@#$#$^%$^%$&&**");
+				    		scas.add(sca);
+				    		
+				    		//Initializing SequenceCellArray() for next column
+				    		sca = new SequencedCellArray();
+				    		cellValues =  new ArrayList<String>();
+				    		cellfmla = new ArrayList<String>();
+				    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+				    		//cellValues =  new ArrayList<String>();
+				    		//cellfmla = new ArrayList<String>();
+				    	}
+				    	else
+				    	{
+				    		System.out.println("First time $@#@@$#@@#$@$@#$@$");
+				    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+				    	}
+				    	
+				    	
+				    	prevColId = Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]);
+				    }
+	
+				    if(!Rows.contains(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()])))
+				    {
+				    	Rows.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+						gridRow = new Row();
+						gridRow.setId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+						gridRow.setSeqNo((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
+						gridRow.setPreviousRowid(prevRowId);
+						gridRows.add(gridRow);
+						prevRowId = Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]);
+						
+				    	rowArray.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+				    }
+				    
+	/*			    gridCell = new Cell();
+				    gridCell.setRowId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
+				    gridCell.setRowSequence((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
+				    gridCell.setColId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+				    gridCell.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    gridCell.setCellFormula(row[GET_TBL.FORMULA.getcolNo()]);
+				    gridCell.setCellValue(row[GET_TBL.STRING_VALUE.getcolNo()]);
+				    gridCells.add(gridCell);
+	*/
+				    cellValues.add(row[GET_TBL.STRING_VALUE.getcolNo()]);
+				    cellfmla.add(row[GET_TBL.FORMULA.getcolNo()]);
+				    
+				    table.add( row );
+				} while( rs.next());
 				
-				System.out.print( "COLUMN_ID " + roww[GET_TBL.COLUMN_ID.getcolNo()]);
+				//Adding last Sequence column Arrau
+	    		sca.setCellValues(cellValues);
+	    		sca.setCellFormulas(cellfmla);
+	    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+	    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
+	    		scas.add(sca);
+	
+				gcReturn.setColumnArray(columnArray);
+				gcReturn.setColumnCellArrays(scas);
+				gcReturn.setColumns(gridCols);
+				gcReturn.setInfo(ginfo);
+				gcReturn.setRowArray(rowArray);
+				gcReturn.setRows(gridRows);
 				
-			    for( String s: roww ){
-			        System.out.print( " " + s );
-			    }
-			    System.out.println();
+				// print result
+				for( String[] roww: table ){
+					
+					System.out.print( "COLUMN_ID " + roww[GET_TBL.COLUMN_ID.getcolNo()]);
+					
+				    for( String s: roww ){
+				        System.out.print( " " + s );
+				    }
+				    System.out.println();
+				}
+			}
+			else
+			{
+	        	erb = new ErrorRequestObject();
+	        	erb.setError("TxId not found.");
+	        	erb.setPath("GridManagement.gridGridIdTransactionIdChangesGet:: Get Table before TxId failed.");
+				erb.setProposedSolution("You must provide an existing TxId after the Grid Creation TxId.");
+	        	ErrResps.add(erb);
+				statusCode.add(404);			//404: TxId not found
+				return gcReturn;
 			}
 
 			stmt.close();
@@ -4410,7 +4436,6 @@ public class GridManagement {
 		//ArrayList<io.swagger.model.Transaction> txs = new ArrayList<io.swagger.model.Transaction>();
 		
 		ArrayList<io.swagger.model.GridTransaction> txs = new ArrayList<io.swagger.model.GridTransaction>();
-		
 		io.swagger.model.GridTransaction tx ;
 		
 		// get the connection
@@ -4431,6 +4456,20 @@ public class GridManagement {
 		//long startDate = Long.parseLong(endTime) - difference_in_MiliSec;
 		try
 		{
+
+			TableInfo tinfo = TableManager.getTableInfo(connection, userId, gridId);
+			
+			if (tinfo == null)
+			{
+	        	erb = new ErrorRequestObject();
+	        	erb.setError("GridId not found.");
+	        	erb.setPath("GridManagement.gridGridIdTransactionsGet:: TableManager.getTableInfo returns Null");
+				erb.setProposedSolution("Grid Details for GridId not found. You must provide an existing GridId.");
+	        	ErrResps.add(erb);
+				statusCode.add(404);			//404: GridId not found
+				return txs;
+			}
+			
 			Hashtable<?, ?> transactionList = null; ;
 
 			if (reportType.toUpperCase().equals("DURATION"))
@@ -4531,12 +4570,33 @@ public class GridManagement {
 				System.out.println("End of vt.iterator");
 			}
 			System.out.println("End of tvec.iterator");
+			statusCode.add(200);			//200 : Success. Returns txs
+	    	return txs;
 
 		}
 		catch (SQLException sql)
 		{
 			sql.printStackTrace();
-
+    		System.out.println("SQLException in GridManagement.gridGridIdTransactionsGet::TableManager.getTransactionList OR TableManager.getTransactionListAfterImport");
+			erb = new ErrorRequestObject();
+			erb.setError("SQLException:" + sql.getErrorCode() + ", Cause:"+ sql.getMessage());
+			erb.setPath("GridManagement.gridGridIdTransactionsGet::TableManager.getTransactionList OR TableManager.getTransactionListAfterImport");
+			erb.setProposedSolution("Contact System Administrator");
+			ErrResps.add(erb);
+			statusCode.add(500);			//500 : Server Error. SQLException thrown fromTableManager.getTransactionList OR TableManager.getTransactionListAfterImport
+			return txs;
+		}
+		catch (SystemException s)
+		{
+			System.out.println("SystemException in GridManagement.gridGridIdTransactionsGet::TableManager.getTableInfo");
+			s.printStackTrace();
+			erb = new ErrorRequestObject();
+			erb.setError("SystemException: " + s.getErrorMessage());
+			erb.setPath("GridManagement.gridGridIdTransactionsGet::TableManager.getTableInfo");
+			erb.setProposedSolution(s.getPotentialSolution());
+			ErrResps.add(erb);
+			statusCode.add(500);			//500 : Server Error. SystemException thrown from GridManagement.gridGridIdTransactionsGet::TableManager.getTableInfo
+			return txs;
 		}
 		finally
 		{
@@ -4550,8 +4610,6 @@ public class GridManagement {
 			sql.printStackTrace();
 		  }
 		}
-		
-    	return txs;
 	}
     
     
@@ -4595,7 +4653,29 @@ public class GridManagement {
 		
 		try
 		{
+
+			TableInfo tinfo = TableManager.getTableInfo(connection, userId, gridId.intValue());
 			
+			if (tinfo == null)
+			{
+	        	erb = new ErrorRequestObject();
+	        	erb.setError("GridId not found.");
+	        	erb.setPath("GridManagement.gridGridIdTransactionsBetweenTids:: TableManager.getTableInfo returns Null");
+				erb.setProposedSolution("Grid Details for GridId not found. You must provide an existing GridId.");
+	        	ErrResps.add(erb);
+				statusCode.add(404);			//404: GridId not found
+				return gcReturn;
+			}
+
+			ginfo.setCollabId(tinfo.getCollaborationId());
+			ginfo.setWbId(tinfo.getWhiteboardId());
+			ginfo.setId(gridId.intValue());
+			ginfo.setName(tinfo.getTableName());
+			ginfo.setPurpose(tinfo.getTablePurpose());
+			ginfo.setView(tinfo.getTableDefaultViewPreference());
+			ginfo.setMemberId(memberId);
+			ginfo.setUserId(userId);
+
 			int criteriaTableId = TableViewManager.getCriteriaTable(connection, gridId.intValue(), userId);
 			if (criteriaTableId > -1)
 				rowQuery = TableViewManager.getRowQuery(connection, gridId.intValue(), userId, criteriaTableId, false, viewPref, "TABLE"); //Modified by Lakshman on 20171108 to avoid self joins on BW_CELL for performance gain
@@ -4642,16 +4722,6 @@ public class GridManagement {
 
 			ArrayList <Integer> Cols = new ArrayList<Integer>();
 			ArrayList <Integer> Rows = new ArrayList<Integer>();
-			
-			TableInfo tinfo = TableManager.getTableInfo(connection, userId, gridId.intValue());
-			ginfo.setCollabId(tinfo.getCollaborationId());
-			ginfo.setWbId(tinfo.getWhiteboardId());
-			ginfo.setId(gridId.intValue());
-			ginfo.setName(tinfo.getTableName());
-			ginfo.setPurpose(tinfo.getTablePurpose());
-			ginfo.setView(tinfo.getTableDefaultViewPreference());
-			ginfo.setMemberId(memberId);
-			ginfo.setUserId(userId);
 			
 			//Initializing SequenceCellArray()
 			sca = new SequencedCellArray();
@@ -4711,8 +4781,6 @@ public class GridManagement {
 			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 			    	}
-			    	
-			    	
 			    	prevColId = Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]);
 			    }
 
@@ -4759,9 +4827,7 @@ public class GridManagement {
 						
 			// print result
 			for( String[] roww: table ){
-				
 				System.out.print( "COLUMN_ID " + roww[GET_TBL.COLUMN_ID.getcolNo()]);
-				
 			    for( String s: roww ){
 			        System.out.print( " " + s );
 			    }
@@ -4913,18 +4979,39 @@ public class GridManagement {
 			    Scc.add(sc);
 				table.add( row );
 			}
-
 			gcReturn.setStatusChanges(Scc);
 
 			stmt.close();
 			rs.close();
 			stmt = null;
 			rs = null;
+
+			statusCode.add(200);		//200   : Success. Returns GridChanges
+	    	return gcReturn;
 		}
-		catch (Exception e)
+		catch (SQLException sql)
 		{
-			e.printStackTrace();
-			return null;
+			sql.printStackTrace();
+    		System.out.println("SQLException in GridManagement.gridGridIdTransactionsBetweenTids::TableViewManager.getCriteriaTable OR TableViewManager.getRowQuery");
+			erb = new ErrorRequestObject();
+			erb.setError("SQLException:" + sql.getErrorCode() + ", Cause:"+ sql.getMessage());
+			erb.setPath("GridManagement.gridGridIdTransactionsBetweenTids::TableViewManager.getCriteriaTable OR TableViewManager.getRowQuery");
+			erb.setProposedSolution("Contact System Administrator");
+			ErrResps.add(erb);
+			statusCode.add(500);			//500 : Server Error. SQLException thrown from TableViewManager.getCriteriaTable OR TableViewManager.getRowQuery
+			return gcReturn;
+		}
+		catch (SystemException s)
+		{
+			System.out.println("SystemException in GridManagement.gridGridIdTransactionsBetweenTids::TableManager.getTableInfo");
+			s.printStackTrace();
+			erb = new ErrorRequestObject();
+			erb.setError("SystemException: " + s.getErrorMessage());
+			erb.setPath("GridManagement.gridGridIdTransactionsBetweenTids::TableManager.getTableInfo");
+			erb.setProposedSolution(s.getPotentialSolution());
+			ErrResps.add(erb);
+			statusCode.add(500);			//500 : Server Error. SystemException thrown from GridManagement.gridGridIdTransactionsBetweenTids::TableManager.getTableInfo
+			return gcReturn;
 		}
 		finally
 		{
@@ -4949,9 +5036,6 @@ public class GridManagement {
 				rs = null;
 			}
 		}
-
-		statusCode.add(200);
-    	return gcReturn;
     }
     
 }
