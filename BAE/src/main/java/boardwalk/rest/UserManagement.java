@@ -221,7 +221,7 @@ public class UserManagement {
 									grid = new GridNames();
 									BoardwalkTableNode btn = (BoardwalkTableNode)tvi.next();
 									System.out.println("\t\tTable = " + btn.getName());
-									grid.setId(btn.getId());
+									grid.setId( btn.getId());
 									grid.setName(btn.getName());
 									grid.setPurpose(btn.getDescription());
 									grids.add(grid);
@@ -369,7 +369,7 @@ public class UserManagement {
 						BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
 						System.out.println("\tWhiteboard = " + bwn.getName());
 	
-						wb.setId((long)bwn.getId());
+						wb.setId(bwn.getId());
 						wb.setName(bwn.getName());
 	
 						grids = new ArrayList<GridNames>();
@@ -502,7 +502,7 @@ public class UserManagement {
 				System.out.println("Sucessfully fetched the collab tree from the database");
 
 				colb = new Collaboration();
-				colb.setId((long) bcn.getId());
+				colb.setId(bcn.getId());
 				colb.setName(bcn.getName());
 				colb.setPurpose(bcn.getPurpose());
 
@@ -518,7 +518,7 @@ public class UserManagement {
 					System.out.println("\tWhiteboard = " + bwn.getName());
 					//whiteBoard = bwn.getName();
 
-					wb.setId((long)bwn.getId());
+					wb.setId(bwn.getId());
 					wb.setName(bwn.getName());
 
 					//grids = new ArrayList<GridInfo>();
@@ -534,7 +534,7 @@ public class UserManagement {
 							grid = new GridNames();
 							BoardwalkTableNode btn = (BoardwalkTableNode)tvi.next();
 							System.out.println("\t\tTable = " + btn.getName());
-							grid.setId(btn.getId());
+							grid.setId( btn.getId());
 							grid.setName(btn.getName());
 							grid.setPurpose(btn.getDescription());
 							grids.add(grid);
@@ -645,12 +645,12 @@ public class UserManagement {
 					
 	    			ms = new Membership();
 	    			ms.setEmail(Email);
-	    			ms.setMemberId( (long) memberId);
-	    			ms.setNhId( (long) nhId);
+	    			ms.setMemberId(memberId);
+	    			ms.setNhId( nhId);
 	    			//ms.setNhIdPath(np.toString());
 	    			ms.setNhName(nhName);
 	    			ms.setNhNamePath(nhPath);
-	    			ms.setUserId((long)userId);
+	    			ms.setUserId(userId);
 	                
 	                ml.add(ms);
             	}

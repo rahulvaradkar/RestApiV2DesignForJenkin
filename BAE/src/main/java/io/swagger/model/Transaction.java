@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+import java.util.Date;
 import javax.validation.constraints.*;
 
 /**
@@ -27,16 +27,19 @@ import javax.validation.constraints.*;
 
 public class Transaction   {
   @JsonProperty("id")
-  private Long id = null;
+  private Integer id = null;
 
   @JsonProperty("userId")
-  private Long userId = null;
+  private Integer userId = null;
 
   @JsonProperty("userName")
   private String userName = null;
 
   @JsonProperty("createdOn")
-  private BigDecimal createdOn = null;
+  private Long createdOn = null;
+
+  @JsonProperty("transactionTimeUTC")
+  private Date transactionTimeUTC = null;
 
   @JsonProperty("keyword")
   private String keyword = null;
@@ -44,7 +47,7 @@ public class Transaction   {
   @JsonProperty("description")
   private String description = null;
 
-  public Transaction id(Long id) {
+  public Transaction id(Integer id) {
     this.id = id;
     return this;
   }
@@ -55,15 +58,15 @@ public class Transaction   {
    **/
   @JsonProperty("id")
   @ApiModelProperty(value = "")
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
-  public Transaction userId(Long userId) {
+  public Transaction userId(Integer userId) {
     this.userId = userId;
     return this;
   }
@@ -74,11 +77,11 @@ public class Transaction   {
    **/
   @JsonProperty("userId")
   @ApiModelProperty(value = "")
-  public Long getUserId() {
+  public Integer getUserId() {
     return userId;
   }
 
-  public void setUserId(Long userId) {
+  public void setUserId(Integer userId) {
     this.userId = userId;
   }
 
@@ -101,7 +104,7 @@ public class Transaction   {
     this.userName = userName;
   }
 
-  public Transaction createdOn(BigDecimal createdOn) {
+  public Transaction createdOn(Long createdOn) {
     this.createdOn = createdOn;
     return this;
   }
@@ -112,12 +115,31 @@ public class Transaction   {
    **/
   @JsonProperty("createdOn")
   @ApiModelProperty(value = "")
-  public BigDecimal getCreatedOn() {
+  public Long getCreatedOn() {
     return createdOn;
   }
 
-  public void setCreatedOn(BigDecimal createdOn) {
+  public void setCreatedOn(Long createdOn) {
     this.createdOn = createdOn;
+  }
+
+  public Transaction transactionTimeUTC(Date transactionTimeUTC) {
+    this.transactionTimeUTC = transactionTimeUTC;
+    return this;
+  }
+
+  /**
+   * Get transactionTimeUTC
+   * @return transactionTimeUTC
+   **/
+  @JsonProperty("transactionTimeUTC")
+  @ApiModelProperty(value = "")
+  public Date getTransactionTimeUTC() {
+    return transactionTimeUTC;
+  }
+
+  public void setTransactionTimeUTC(Date transactionTimeUTC) {
+    this.transactionTimeUTC = transactionTimeUTC;
   }
 
   public Transaction keyword(String keyword) {
@@ -172,13 +194,14 @@ public class Transaction   {
         Objects.equals(this.userId, transaction.userId) &&
         Objects.equals(this.userName, transaction.userName) &&
         Objects.equals(this.createdOn, transaction.createdOn) &&
+        Objects.equals(this.transactionTimeUTC, transaction.transactionTimeUTC) &&
         Objects.equals(this.keyword, transaction.keyword) &&
         Objects.equals(this.description, transaction.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, userId, userName, createdOn, keyword, description);
+    return Objects.hash(id, userId, userName, createdOn, transactionTimeUTC, keyword, description);
   }
 
 
@@ -191,6 +214,7 @@ public class Transaction   {
     sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
     sb.append("    createdOn: ").append(toIndentedString(createdOn)).append("\n");
+    sb.append("    transactionTimeUTC: ").append(toIndentedString(transactionTimeUTC)).append("\n");
     sb.append("    keyword: ").append(toIndentedString(keyword)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("}");

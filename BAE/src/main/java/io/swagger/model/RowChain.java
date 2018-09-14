@@ -19,8 +19,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Transaction;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
 
@@ -36,7 +36,7 @@ public class RowChain   {
   private Integer rowId = null;
 
   @JsonProperty("sequenceNumber")
-  private Integer sequenceNumber = null;
+  private Float sequenceNumber = null;
 
   @JsonProperty("isActive")
   private Boolean isActive = null;
@@ -50,14 +50,20 @@ public class RowChain   {
   @JsonProperty("creationTxId")
   private Integer creationTxId = null;
 
-  @JsonProperty("creationDateTime")
-  private BigDecimal creationDateTime = null;
+  @JsonProperty("creationDateTimeGMT")
+  private Long creationDateTimeGMT = null;
+
+  @JsonProperty("creationDateTimeUTC")
+  private Date creationDateTimeUTC = null;
 
   @JsonProperty("deletionTxId")
   private Integer deletionTxId = null;
 
-  @JsonProperty("deletionDateTime")
-  private BigDecimal deletionDateTime = null;
+  @JsonProperty("deletionDateTimeGMT")
+  private Long deletionDateTimeGMT = null;
+
+  @JsonProperty("deletionDateTimeUTC")
+  private Date deletionDateTimeUTC = null;
 
   @JsonProperty("rowCreatedTxDetails")
   private List<Transaction> rowCreatedTxDetails = null;
@@ -103,7 +109,7 @@ public class RowChain   {
     this.rowId = rowId;
   }
 
-  public RowChain sequenceNumber(Integer sequenceNumber) {
+  public RowChain sequenceNumber(Float sequenceNumber) {
     this.sequenceNumber = sequenceNumber;
     return this;
   }
@@ -114,11 +120,11 @@ public class RowChain   {
    **/
   @JsonProperty("sequenceNumber")
   @ApiModelProperty(value = "")
-  public Integer getSequenceNumber() {
+  public Float getSequenceNumber() {
     return sequenceNumber;
   }
 
-  public void setSequenceNumber(Integer sequenceNumber) {
+  public void setSequenceNumber(Float sequenceNumber) {
     this.sequenceNumber = sequenceNumber;
   }
 
@@ -198,23 +204,42 @@ public class RowChain   {
     this.creationTxId = creationTxId;
   }
 
-  public RowChain creationDateTime(BigDecimal creationDateTime) {
-    this.creationDateTime = creationDateTime;
+  public RowChain creationDateTimeGMT(Long creationDateTimeGMT) {
+    this.creationDateTimeGMT = creationDateTimeGMT;
     return this;
   }
 
   /**
-   * Get creationDateTime
-   * @return creationDateTime
+   * Get creationDateTimeGMT
+   * @return creationDateTimeGMT
    **/
-  @JsonProperty("creationDateTime")
+  @JsonProperty("creationDateTimeGMT")
   @ApiModelProperty(value = "")
-  public BigDecimal getCreationDateTime() {
-    return creationDateTime;
+  public Long getCreationDateTimeGMT() {
+    return creationDateTimeGMT;
   }
 
-  public void setCreationDateTime(BigDecimal creationDateTime) {
-    this.creationDateTime = creationDateTime;
+  public void setCreationDateTimeGMT(Long creationDateTimeGMT) {
+    this.creationDateTimeGMT = creationDateTimeGMT;
+  }
+
+  public RowChain creationDateTimeUTC(Date creationDateTimeUTC) {
+    this.creationDateTimeUTC = creationDateTimeUTC;
+    return this;
+  }
+
+  /**
+   * Get creationDateTimeUTC
+   * @return creationDateTimeUTC
+   **/
+  @JsonProperty("creationDateTimeUTC")
+  @ApiModelProperty(value = "")
+  public Date getCreationDateTimeUTC() {
+    return creationDateTimeUTC;
+  }
+
+  public void setCreationDateTimeUTC(Date creationDateTimeUTC) {
+    this.creationDateTimeUTC = creationDateTimeUTC;
   }
 
   public RowChain deletionTxId(Integer deletionTxId) {
@@ -236,23 +261,42 @@ public class RowChain   {
     this.deletionTxId = deletionTxId;
   }
 
-  public RowChain deletionDateTime(BigDecimal deletionDateTime) {
-    this.deletionDateTime = deletionDateTime;
+  public RowChain deletionDateTimeGMT(Long deletionDateTimeGMT) {
+    this.deletionDateTimeGMT = deletionDateTimeGMT;
     return this;
   }
 
   /**
-   * Get deletionDateTime
-   * @return deletionDateTime
+   * Get deletionDateTimeGMT
+   * @return deletionDateTimeGMT
    **/
-  @JsonProperty("deletionDateTime")
+  @JsonProperty("deletionDateTimeGMT")
   @ApiModelProperty(value = "")
-  public BigDecimal getDeletionDateTime() {
-    return deletionDateTime;
+  public Long getDeletionDateTimeGMT() {
+    return deletionDateTimeGMT;
   }
 
-  public void setDeletionDateTime(BigDecimal deletionDateTime) {
-    this.deletionDateTime = deletionDateTime;
+  public void setDeletionDateTimeGMT(Long deletionDateTimeGMT) {
+    this.deletionDateTimeGMT = deletionDateTimeGMT;
+  }
+
+  public RowChain deletionDateTimeUTC(Date deletionDateTimeUTC) {
+    this.deletionDateTimeUTC = deletionDateTimeUTC;
+    return this;
+  }
+
+  /**
+   * Get deletionDateTimeUTC
+   * @return deletionDateTimeUTC
+   **/
+  @JsonProperty("deletionDateTimeUTC")
+  @ApiModelProperty(value = "")
+  public Date getDeletionDateTimeUTC() {
+    return deletionDateTimeUTC;
+  }
+
+  public void setDeletionDateTimeUTC(Date deletionDateTimeUTC) {
+    this.deletionDateTimeUTC = deletionDateTimeUTC;
   }
 
   public RowChain rowCreatedTxDetails(List<Transaction> rowCreatedTxDetails) {
@@ -326,16 +370,18 @@ public class RowChain   {
         Objects.equals(this.ownerId, rowChain.ownerId) &&
         Objects.equals(this.ownerEmail, rowChain.ownerEmail) &&
         Objects.equals(this.creationTxId, rowChain.creationTxId) &&
-        Objects.equals(this.creationDateTime, rowChain.creationDateTime) &&
+        Objects.equals(this.creationDateTimeGMT, rowChain.creationDateTimeGMT) &&
+        Objects.equals(this.creationDateTimeUTC, rowChain.creationDateTimeUTC) &&
         Objects.equals(this.deletionTxId, rowChain.deletionTxId) &&
-        Objects.equals(this.deletionDateTime, rowChain.deletionDateTime) &&
+        Objects.equals(this.deletionDateTimeGMT, rowChain.deletionDateTimeGMT) &&
+        Objects.equals(this.deletionDateTimeUTC, rowChain.deletionDateTimeUTC) &&
         Objects.equals(this.rowCreatedTxDetails, rowChain.rowCreatedTxDetails) &&
         Objects.equals(this.rowDeletedTxDetails, rowChain.rowDeletedTxDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(gridId, rowId, sequenceNumber, isActive, ownerId, ownerEmail, creationTxId, creationDateTime, deletionTxId, deletionDateTime, rowCreatedTxDetails, rowDeletedTxDetails);
+    return Objects.hash(gridId, rowId, sequenceNumber, isActive, ownerId, ownerEmail, creationTxId, creationDateTimeGMT, creationDateTimeUTC, deletionTxId, deletionDateTimeGMT, deletionDateTimeUTC, rowCreatedTxDetails, rowDeletedTxDetails);
   }
 
 
@@ -351,9 +397,11 @@ public class RowChain   {
     sb.append("    ownerId: ").append(toIndentedString(ownerId)).append("\n");
     sb.append("    ownerEmail: ").append(toIndentedString(ownerEmail)).append("\n");
     sb.append("    creationTxId: ").append(toIndentedString(creationTxId)).append("\n");
-    sb.append("    creationDateTime: ").append(toIndentedString(creationDateTime)).append("\n");
+    sb.append("    creationDateTimeGMT: ").append(toIndentedString(creationDateTimeGMT)).append("\n");
+    sb.append("    creationDateTimeUTC: ").append(toIndentedString(creationDateTimeUTC)).append("\n");
     sb.append("    deletionTxId: ").append(toIndentedString(deletionTxId)).append("\n");
-    sb.append("    deletionDateTime: ").append(toIndentedString(deletionDateTime)).append("\n");
+    sb.append("    deletionDateTimeGMT: ").append(toIndentedString(deletionDateTimeGMT)).append("\n");
+    sb.append("    deletionDateTimeUTC: ").append(toIndentedString(deletionDateTimeUTC)).append("\n");
     sb.append("    rowCreatedTxDetails: ").append(toIndentedString(rowCreatedTxDetails)).append("\n");
     sb.append("    rowDeletedTxDetails: ").append(toIndentedString(rowDeletedTxDetails)).append("\n");
     sb.append("}");

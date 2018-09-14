@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
+import java.util.Date;
 import javax.validation.constraints.*;
 
 /**
@@ -43,6 +44,21 @@ public class SampleDataTypes   {
 
   @JsonProperty("typeIntegerFormatInt64")
   private Long typeIntegerFormatInt64 = null;
+
+  @JsonProperty("typeStringFormatDate-time")
+  private Date typeStringFormatDateTime = null;
+
+  @JsonProperty("typeStringFormatDate")
+  private Date typeStringFormatDate = null;
+
+  @JsonProperty("typeStringFormatByte")
+  private byte[] typeStringFormatByte = null;
+
+  @JsonProperty("typeStringFormatBinary")
+  private byte[] typeStringFormatBinary = null;
+
+  @JsonProperty("typeBoolean")
+  private Boolean typeBoolean = null;
 
   public SampleDataTypes typeNumberFormatNone(BigDecimal typeNumberFormatNone) {
     this.typeNumberFormatNone = typeNumberFormatNone;
@@ -158,6 +174,101 @@ public class SampleDataTypes   {
     this.typeIntegerFormatInt64 = typeIntegerFormatInt64;
   }
 
+  public SampleDataTypes typeStringFormatDateTime(Date typeStringFormatDateTime) {
+    this.typeStringFormatDateTime = typeStringFormatDateTime;
+    return this;
+  }
+
+  /**
+   * Get typeStringFormatDateTime
+   * @return typeStringFormatDateTime
+   **/
+  @JsonProperty("typeStringFormatDate-time")
+  @ApiModelProperty(value = "")
+  public Date getTypeStringFormatDateTime() {
+    return typeStringFormatDateTime;
+  }
+
+  public void setTypeStringFormatDateTime(Date typeStringFormatDateTime) {
+    this.typeStringFormatDateTime = typeStringFormatDateTime;
+  }
+
+  public SampleDataTypes typeStringFormatDate(Date typeStringFormatDate) {
+    this.typeStringFormatDate = typeStringFormatDate;
+    return this;
+  }
+
+  /**
+   * Get typeStringFormatDate
+   * @return typeStringFormatDate
+   **/
+  @JsonProperty("typeStringFormatDate")
+  @ApiModelProperty(value = "")
+  public Date getTypeStringFormatDate() {
+    return typeStringFormatDate;
+  }
+
+  public void setTypeStringFormatDate(Date typeStringFormatDate) {
+    this.typeStringFormatDate = typeStringFormatDate;
+  }
+
+  public SampleDataTypes typeStringFormatByte(byte[] typeStringFormatByte) {
+    this.typeStringFormatByte = typeStringFormatByte;
+    return this;
+  }
+
+  /**
+   * Get typeStringFormatByte
+   * @return typeStringFormatByte
+   **/
+  @JsonProperty("typeStringFormatByte")
+  @ApiModelProperty(value = "")
+ @Pattern(regexp="^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$")  public byte[] getTypeStringFormatByte() {
+    return typeStringFormatByte;
+  }
+
+  public void setTypeStringFormatByte(byte[] typeStringFormatByte) {
+    this.typeStringFormatByte = typeStringFormatByte;
+  }
+
+  public SampleDataTypes typeStringFormatBinary(byte[] typeStringFormatBinary) {
+    this.typeStringFormatBinary = typeStringFormatBinary;
+    return this;
+  }
+
+  /**
+   * Get typeStringFormatBinary
+   * @return typeStringFormatBinary
+   **/
+  @JsonProperty("typeStringFormatBinary")
+  @ApiModelProperty(value = "")
+  public byte[] getTypeStringFormatBinary() {
+    return typeStringFormatBinary;
+  }
+
+  public void setTypeStringFormatBinary(byte[] typeStringFormatBinary) {
+    this.typeStringFormatBinary = typeStringFormatBinary;
+  }
+
+  public SampleDataTypes typeBoolean(Boolean typeBoolean) {
+    this.typeBoolean = typeBoolean;
+    return this;
+  }
+
+  /**
+   * Get typeBoolean
+   * @return typeBoolean
+   **/
+  @JsonProperty("typeBoolean")
+  @ApiModelProperty(value = "")
+  public Boolean isTypeBoolean() {
+    return typeBoolean;
+  }
+
+  public void setTypeBoolean(Boolean typeBoolean) {
+    this.typeBoolean = typeBoolean;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -173,12 +284,17 @@ public class SampleDataTypes   {
         Objects.equals(this.typeNumberFormatDouble, sampleDataTypes.typeNumberFormatDouble) &&
         Objects.equals(this.typeIntegerFormatNone, sampleDataTypes.typeIntegerFormatNone) &&
         Objects.equals(this.typeIntegerFormatInt32, sampleDataTypes.typeIntegerFormatInt32) &&
-        Objects.equals(this.typeIntegerFormatInt64, sampleDataTypes.typeIntegerFormatInt64);
+        Objects.equals(this.typeIntegerFormatInt64, sampleDataTypes.typeIntegerFormatInt64) &&
+        Objects.equals(this.typeStringFormatDateTime, sampleDataTypes.typeStringFormatDateTime) &&
+        Objects.equals(this.typeStringFormatDate, sampleDataTypes.typeStringFormatDate) &&
+        Objects.equals(this.typeStringFormatByte, sampleDataTypes.typeStringFormatByte) &&
+        Objects.equals(this.typeStringFormatBinary, sampleDataTypes.typeStringFormatBinary) &&
+        Objects.equals(this.typeBoolean, sampleDataTypes.typeBoolean);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(typeNumberFormatNone, typeNumberFormatFloat, typeNumberFormatDouble, typeIntegerFormatNone, typeIntegerFormatInt32, typeIntegerFormatInt64);
+    return Objects.hash(typeNumberFormatNone, typeNumberFormatFloat, typeNumberFormatDouble, typeIntegerFormatNone, typeIntegerFormatInt32, typeIntegerFormatInt64, typeStringFormatDateTime, typeStringFormatDate, typeStringFormatByte, typeStringFormatBinary, typeBoolean);
   }
 
 
@@ -193,6 +309,11 @@ public class SampleDataTypes   {
     sb.append("    typeIntegerFormatNone: ").append(toIndentedString(typeIntegerFormatNone)).append("\n");
     sb.append("    typeIntegerFormatInt32: ").append(toIndentedString(typeIntegerFormatInt32)).append("\n");
     sb.append("    typeIntegerFormatInt64: ").append(toIndentedString(typeIntegerFormatInt64)).append("\n");
+    sb.append("    typeStringFormatDateTime: ").append(toIndentedString(typeStringFormatDateTime)).append("\n");
+    sb.append("    typeStringFormatDate: ").append(toIndentedString(typeStringFormatDate)).append("\n");
+    sb.append("    typeStringFormatByte: ").append(toIndentedString(typeStringFormatByte)).append("\n");
+    sb.append("    typeStringFormatBinary: ").append(toIndentedString(typeStringFormatBinary)).append("\n");
+    sb.append("    typeBoolean: ").append(toIndentedString(typeBoolean)).append("\n");
     sb.append("}");
     return sb.toString();
   }

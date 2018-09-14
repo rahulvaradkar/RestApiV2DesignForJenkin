@@ -29,7 +29,7 @@ import javax.validation.constraints.*;
 
 public class Whiteboard   {
   @JsonProperty("id")
-  private Long id = null;
+  private Integer id = null;
 
   @JsonProperty("name")
   private String name = null;
@@ -37,7 +37,7 @@ public class Whiteboard   {
   @JsonProperty("gridList")
   private List<GridNames> gridList = null;
 
-  public Whiteboard id(Long id) {
+  public Whiteboard id(Integer id) {
     this.id = id;
     return this;
   }
@@ -48,11 +48,11 @@ public class Whiteboard   {
    **/
   @JsonProperty("id")
   @ApiModelProperty(value = "")
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

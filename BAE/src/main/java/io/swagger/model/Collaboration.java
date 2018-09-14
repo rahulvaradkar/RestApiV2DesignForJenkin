@@ -41,7 +41,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T09:36:40.808Z")
 public class Collaboration   {
   @JsonProperty("id")
-  private Long id = null;
+  private Integer id = null;
 
   @JsonProperty("name")
   private String name = null;
@@ -52,7 +52,7 @@ public class Collaboration   {
   @JsonProperty("wbList")
   private List<Whiteboard> wbList = null;
 
-  public Collaboration id(Long id) {
+  public Collaboration id(Integer id) {
     this.id = id;
     return this;
   }
@@ -63,11 +63,11 @@ public class Collaboration   {
    **/
   @JsonProperty("id")
   @ApiModelProperty(value = "")
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

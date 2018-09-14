@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+import java.util.Date;
 import javax.validation.constraints.*;
 
 /**
@@ -27,19 +27,22 @@ import javax.validation.constraints.*;
 
 public class StatusChange   {
   @JsonProperty("rowId")
-  private Long rowId = null;
+  private Integer rowId = null;
 
   @JsonProperty("columnId")
-  private Long columnId = null;
+  private Integer columnId = null;
 
   @JsonProperty("active")
   private Boolean active = null;
 
   @JsonProperty("txId")
-  private Long txId = null;
+  private Integer txId = null;
 
   @JsonProperty("createdDateTime")
-  private BigDecimal createdDateTime = null;
+  private Long createdDateTime = null;
+
+  @JsonProperty("creationDateTimeUTC")
+  private Date creationDateTimeUTC = null;
 
   @JsonProperty("comment")
   private String comment = null;
@@ -48,12 +51,12 @@ public class StatusChange   {
   private String userEmail = null;
 
   @JsonProperty("columnSeq")
-  private Integer columnSeq = null;
+  private Float columnSeq = null;
 
   @JsonProperty("rowSeq")
-  private Integer rowSeq = null;
+  private Float rowSeq = null;
 
-  public StatusChange rowId(Long rowId) {
+  public StatusChange rowId(Integer rowId) {
     this.rowId = rowId;
     return this;
   }
@@ -64,15 +67,15 @@ public class StatusChange   {
    **/
   @JsonProperty("rowId")
   @ApiModelProperty(value = "")
-  public Long getRowId() {
+  public Integer getRowId() {
     return rowId;
   }
 
-  public void setRowId(Long rowId) {
+  public void setRowId(Integer rowId) {
     this.rowId = rowId;
   }
 
-  public StatusChange columnId(Long columnId) {
+  public StatusChange columnId(Integer columnId) {
     this.columnId = columnId;
     return this;
   }
@@ -83,11 +86,11 @@ public class StatusChange   {
    **/
   @JsonProperty("columnId")
   @ApiModelProperty(value = "")
-  public Long getColumnId() {
+  public Integer getColumnId() {
     return columnId;
   }
 
-  public void setColumnId(Long columnId) {
+  public void setColumnId(Integer columnId) {
     this.columnId = columnId;
   }
 
@@ -110,7 +113,7 @@ public class StatusChange   {
     this.active = active;
   }
 
-  public StatusChange txId(Long txId) {
+  public StatusChange txId(Integer txId) {
     this.txId = txId;
     return this;
   }
@@ -121,15 +124,15 @@ public class StatusChange   {
    **/
   @JsonProperty("txId")
   @ApiModelProperty(value = "")
-  public Long getTxId() {
+  public Integer getTxId() {
     return txId;
   }
 
-  public void setTxId(Long txId) {
+  public void setTxId(Integer txId) {
     this.txId = txId;
   }
 
-  public StatusChange createdDateTime(BigDecimal createdDateTime) {
+  public StatusChange createdDateTime(Long createdDateTime) {
     this.createdDateTime = createdDateTime;
     return this;
   }
@@ -140,12 +143,31 @@ public class StatusChange   {
    **/
   @JsonProperty("createdDateTime")
   @ApiModelProperty(value = "")
-  public BigDecimal getCreatedDateTime() {
+  public Long getCreatedDateTime() {
     return createdDateTime;
   }
 
-  public void setCreatedDateTime(BigDecimal createdDateTime) {
+  public void setCreatedDateTime(Long createdDateTime) {
     this.createdDateTime = createdDateTime;
+  }
+
+  public StatusChange creationDateTimeUTC(Date creationDateTimeUTC) {
+    this.creationDateTimeUTC = creationDateTimeUTC;
+    return this;
+  }
+
+  /**
+   * Get creationDateTimeUTC
+   * @return creationDateTimeUTC
+   **/
+  @JsonProperty("creationDateTimeUTC")
+  @ApiModelProperty(value = "")
+  public Date getCreationDateTimeUTC() {
+    return creationDateTimeUTC;
+  }
+
+  public void setCreationDateTimeUTC(Date creationDateTimeUTC) {
+    this.creationDateTimeUTC = creationDateTimeUTC;
   }
 
   public StatusChange comment(String comment) {
@@ -186,7 +208,7 @@ public class StatusChange   {
     this.userEmail = userEmail;
   }
 
-  public StatusChange columnSeq(Integer columnSeq) {
+  public StatusChange columnSeq(Float columnSeq) {
     this.columnSeq = columnSeq;
     return this;
   }
@@ -197,15 +219,15 @@ public class StatusChange   {
    **/
   @JsonProperty("columnSeq")
   @ApiModelProperty(value = "")
-  public Integer getColumnSeq() {
+  public Float getColumnSeq() {
     return columnSeq;
   }
 
-  public void setColumnSeq(Integer columnSeq) {
+  public void setColumnSeq(Float columnSeq) {
     this.columnSeq = columnSeq;
   }
 
-  public StatusChange rowSeq(Integer rowSeq) {
+  public StatusChange rowSeq(Float rowSeq) {
     this.rowSeq = rowSeq;
     return this;
   }
@@ -216,11 +238,11 @@ public class StatusChange   {
    **/
   @JsonProperty("rowSeq")
   @ApiModelProperty(value = "")
-  public Integer getRowSeq() {
+  public Float getRowSeq() {
     return rowSeq;
   }
 
-  public void setRowSeq(Integer rowSeq) {
+  public void setRowSeq(Float rowSeq) {
     this.rowSeq = rowSeq;
   }
 
@@ -239,6 +261,7 @@ public class StatusChange   {
         Objects.equals(this.active, statusChange.active) &&
         Objects.equals(this.txId, statusChange.txId) &&
         Objects.equals(this.createdDateTime, statusChange.createdDateTime) &&
+        Objects.equals(this.creationDateTimeUTC, statusChange.creationDateTimeUTC) &&
         Objects.equals(this.comment, statusChange.comment) &&
         Objects.equals(this.userEmail, statusChange.userEmail) &&
         Objects.equals(this.columnSeq, statusChange.columnSeq) &&
@@ -247,7 +270,7 @@ public class StatusChange   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(rowId, columnId, active, txId, createdDateTime, comment, userEmail, columnSeq, rowSeq);
+    return Objects.hash(rowId, columnId, active, txId, createdDateTime, creationDateTimeUTC, comment, userEmail, columnSeq, rowSeq);
   }
 
 
@@ -261,6 +284,7 @@ public class StatusChange   {
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    txId: ").append(toIndentedString(txId)).append("\n");
     sb.append("    createdDateTime: ").append(toIndentedString(createdDateTime)).append("\n");
+    sb.append("    creationDateTimeUTC: ").append(toIndentedString(creationDateTimeUTC)).append("\n");
     sb.append("    comment: ").append(toIndentedString(comment)).append("\n");
     sb.append("    userEmail: ").append(toIndentedString(userEmail)).append("\n");
     sb.append("    columnSeq: ").append(toIndentedString(columnSeq)).append("\n");

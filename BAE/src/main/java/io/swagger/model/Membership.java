@@ -26,16 +26,16 @@ import javax.validation.constraints.*;
 
 public class Membership   {
   @JsonProperty("userId")
-  private Long userId = -1l;
+  private Integer userId = null;
 
   @JsonProperty("memberId")
-  private Long memberId = -1l;
+  private Integer memberId = null;
 
   @JsonProperty("email")
   private String email = null;
 
   @JsonProperty("nhId")
-  private Long nhId = -1l;
+  private Integer nhId = null;
 
   @JsonProperty("nhName")
   private String nhName = null;
@@ -43,7 +43,7 @@ public class Membership   {
   @JsonProperty("nhNamePath")
   private String nhNamePath = null;
 
-  public Membership userId(Long userId) {
+  public Membership userId(Integer userId) {
     this.userId = userId;
     return this;
   }
@@ -54,15 +54,15 @@ public class Membership   {
    **/
   @JsonProperty("userId")
   @ApiModelProperty(value = "")
-  public Long getUserId() {
+  public Integer getUserId() {
     return userId;
   }
 
-  public void setUserId(Long userId) {
+  public void setUserId(Integer userId) {
     this.userId = userId;
   }
 
-  public Membership memberId(Long memberId) {
+  public Membership memberId(Integer memberId) {
     this.memberId = memberId;
     return this;
   }
@@ -73,11 +73,11 @@ public class Membership   {
    **/
   @JsonProperty("memberId")
   @ApiModelProperty(value = "")
-  public Long getMemberId() {
+  public Integer getMemberId() {
     return memberId;
   }
 
-  public void setMemberId(Long memberId) {
+  public void setMemberId(Integer memberId) {
     this.memberId = memberId;
   }
 
@@ -100,7 +100,7 @@ public class Membership   {
     this.email = email;
   }
 
-  public Membership nhId(Long nhId) {
+  public Membership nhId(Integer nhId) {
     this.nhId = nhId;
     return this;
   }
@@ -111,11 +111,11 @@ public class Membership   {
    **/
   @JsonProperty("nhId")
   @ApiModelProperty(value = "")
-  public Long getNhId() {
+  public Integer getNhId() {
     return nhId;
   }
 
-  public void setNhId(Long nhId) {
+  public void setNhId(Integer nhId) {
     this.nhId = nhId;
   }
 

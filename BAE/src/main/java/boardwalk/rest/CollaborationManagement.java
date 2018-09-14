@@ -153,8 +153,8 @@ public class CollaborationManagement {
 				int wbId;
 				int tableId;*/
 
-				Long obj = new Long(bcn.getId());
-				collab.setId( obj.longValue());
+				//Long obj = new Long(bcn.getId());
+				collab.setId( bcn.getId());
 				collab.setName(bcn.getName());
 
 				System.out.println("Collaboration = " + bcn.getName());
@@ -166,8 +166,8 @@ public class CollaborationManagement {
 					BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
 					System.out.println("\tWhiteboard = " + bwn.getName());
 
-					obj = new Long(bwn.getId());
-					wb.setId(obj.longValue());
+					//obj = new Long(bwn.getId());
+					wb.setId(bwn.getId());
 					wb.setName(bwn.getName());
 					wbList.add(wb);
 				}

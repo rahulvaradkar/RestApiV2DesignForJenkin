@@ -295,7 +295,7 @@ public class GridApiServiceImpl extends GridApiService {
 	    	}
 	    	else
 	    	{
-	    		grid.setGridId(gridId);
+	    		grid.setId(gridId);
 	    		return Response.status(200).entity(grid).build();		//200: Success. Returns grid object with GridId
 	    	}
 	   	}

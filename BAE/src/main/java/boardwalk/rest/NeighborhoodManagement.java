@@ -272,17 +272,17 @@ public class NeighborhoodManagement {
 						GetNhLevelAndParent(connection, nid.getId(), level_parent );
 						System.out.println("After GetNhLevelAndParent, intLevel :" + level_parent.get( 0) + " , intParentNh :" + level_parent.get(1));
 
-						Long obj = new Long(nid.getId());
+						//Long obj = new Long(nid.getId());
 
 						nh = new Neighborhood();
-						nh.setId(obj.longValue());
+						nh.setId(nid.getId());
 						nh.setName(nid.getName());
 						
-						obj = new Long(level_parent.get(0));
-						nh.setLevel(obj.longValue());
+						//obj = new Long(level_parent.get(0));
+						nh.setLevel(level_parent.get(0));
 						
-						obj = new Long(level_parent.get(1));
-						nh.setParentId(obj.longValue());
+						//obj = new Long(level_parent.get(1));
+						nh.setParentId(level_parent.get(1));
 						nh.setSecure(true);
 						relNh.add(nh);
 					}
@@ -753,7 +753,7 @@ public class NeighborhoodManagement {
 				throw new NoSuchElementException("Neighborhood NOT FOUND") ;
 			}    		
 
-			long memberUserId = member.getUserId();
+			int memberUserId = member.getUserId();
 			Long obj = new Long(memberUserId );
 
 			BoardwalkUser bu = null;
@@ -770,10 +770,10 @@ public class NeighborhoodManagement {
 			{
 				Member m = new Member();
 				m.setActive(true);
-				obj = new Long(memberId);
-				m.setId(obj.longValue());
-				obj = new Long(nhId);
-				m.setNhid(obj.longValue());
+				//obj = new Long(memberId);
+				m.setId(memberId);
+				//obj = new Long(nhId);
+				m.setNhid(nhId);
 				m.setUserId(memberUserId);
 				memberList.add(m);
 			}
@@ -934,12 +934,12 @@ public class NeighborhoodManagement {
 			{
 				BoardwalkMember bm = (BoardwalkMember)mi.next();
 				mem = new io.swagger.model.Member();
-    			obj = new Integer(bm.getId());
-				mem.setId(obj.longValue());
-				obj = new Integer(bm.getUserId());
-				mem.setUserId(obj.longValue());
-    			obj = new Integer(bm.getNeighborhoodId());
-				mem.setNhid(obj.longValue());
+    			//obj = new Integer(bm.getId());
+				mem.setId(bm.getId());
+				//obj = new Integer(bm.getUserId());
+				mem.setUserId(bm.getUserId());
+    			//obj = new Integer(bm.getNeighborhoodId());
+				mem.setNhid(bm.getNeighborhoodId());
 				memberList.add(mem);
 			}
 			statusCode.add(200);		//200 : Success. The member list returned
@@ -1103,15 +1103,12 @@ public class NeighborhoodManagement {
 //			sb.append("\t");
 		}
 
-		Integer obj;
+		//Integer obj;
 		Neighborhood newNh = new Neighborhood();
-		obj = new Integer(bnn.getNeighborhood().getId());
-		newNh.setId(obj.longValue());
-		obj = new Integer(bnn.getNeighborhood().getLevel());
-		newNh.setLevel(obj.longValue());
+		newNh.setId(bnn.getNeighborhood().getId());
+		newNh.setLevel(bnn.getNeighborhood().getLevel());
 		newNh.setName(bnn.getNeighborhood().getName());
-		obj = new Integer(parent);
-		newNh.setParentId(obj.longValue());
+		newNh.setParentId(parent);
 		newNh.setSecure(bnn.getNeighborhood().isSecure());
 		
 		NhIdGet.add(newNh);
@@ -1201,8 +1198,8 @@ public class NeighborhoodManagement {
 			else
 			{
 				Neighborhood nh = new Neighborhood();
-				Integer obj = new Integer(nhId);
-				nh.setId(obj.longValue());
+				//Integer obj = new Integer(nhId);
+				nh.setId(nhId);
 				nh.setName(nhName);
 				nh.setSecure(isSecure);
 	
@@ -1213,19 +1210,19 @@ public class NeighborhoodManagement {
 				if (parentNhId != -1)
 				{
 					level += 1;
-	    			obj = new Integer(level);
-	    			nh.setLevel(obj.longValue());
-	    			obj = new Integer(parentNhId);
-	    			nh.setParentId(obj.longValue());
+	    			//obj = new Integer(level);
+	    			nh.setLevel(level);
+	    			//obj = new Integer(parentNhId);
+	    			nh.setParentId(parentNhId);
 	    			System.out.println("ParentNhId:"+ parentNhId);
 	    			System.out.println("level:"+ level);
 				}
 				else	
 				{
-	    			obj = new Integer(parentNhId);
-	    			nh.setParentId(obj.longValue());
-	    			obj = new Integer(0);
-	    			nh.setLevel(obj.longValue());
+	    			//obj = new Integer(parentNhId);
+	    			nh.setParentId(parentNhId);
+	    			//obj = new Integer(0);
+	    			nh.setLevel(0);
 	    			System.out.println("ParentNhId:"+ parentNhId);
 	    			System.out.println("level:"+ 0);
 				}
@@ -1329,8 +1326,8 @@ public class NeighborhoodManagement {
 				System.out.println("Sucessfully fetched the collab tree from the database");
 
 				//Setting Collab Information
-				obj = new Long(bcn.getId());
-				collab.setId(obj.longValue());
+				//obj = new Long(bcn.getId());
+				collab.setId(bcn.getId());
 				collab.setName(bcn.getName());
 				
 				System.out.println("Collaboration = " + bcn.getName());
@@ -1343,8 +1340,8 @@ public class NeighborhoodManagement {
 					BoardwalkWhiteboardNode bwn = (BoardwalkWhiteboardNode)wvi.next();
 					System.out.println("\tWhiteboard = " + bwn.getName());
 					wb = new Whiteboard();
-					obj = new Long(bwn.getId());
-					wb.setId(obj.longValue());
+					//obj = new Long(bwn.getId());
+					wb.setId(bwn.getId());
 					wb.setName(bwn.getName());
 					
 					Vector<?> tv = bwn.getTables();
@@ -1358,7 +1355,7 @@ public class NeighborhoodManagement {
 						BoardwalkTableNode btn = (BoardwalkTableNode)tvi.next();
 						System.out.println("\t\tTable = " + btn.getName());
 
-						gi.setId(btn.getId());
+						gi.setId( btn.getId());
 						gi.setName(btn.getName());
 						gi.setPurpose(btn.getDescription());
 						giList.add(gi);

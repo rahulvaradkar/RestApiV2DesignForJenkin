@@ -23,8 +23,8 @@ import io.swagger.model.ColumnChain;
 import io.swagger.model.FormulaValue;
 import io.swagger.model.RowChain;
 import io.swagger.model.TransactionChain;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
 
@@ -39,10 +39,13 @@ public class GridChain   {
   @JsonProperty("creator_id")
   private Integer creatorId = null;
 
-  @JsonProperty("creation_datetime")
-  private BigDecimal creationDatetime = null;
+  @JsonProperty("creationDateTime")
+  private Date creationDateTime = null;
 
-  @JsonProperty("creation_tx_id")
+  @JsonProperty("creationDateTimeGMT")
+  private Long creationDateTimeGMT = null;
+
+  @JsonProperty("creationTxId")
   private Integer creationTxId = null;
 
   @JsonProperty("gridRows")
@@ -98,23 +101,42 @@ public class GridChain   {
     this.creatorId = creatorId;
   }
 
-  public GridChain creationDatetime(BigDecimal creationDatetime) {
-    this.creationDatetime = creationDatetime;
+  public GridChain creationDateTime(Date creationDateTime) {
+    this.creationDateTime = creationDateTime;
     return this;
   }
 
   /**
-   * Get creationDatetime
-   * @return creationDatetime
+   * Get creationDateTime
+   * @return creationDateTime
    **/
-  @JsonProperty("creation_datetime")
+  @JsonProperty("creationDateTime")
   @ApiModelProperty(value = "")
-  public BigDecimal getCreationDatetime() {
-    return creationDatetime;
+  public Date getCreationDateTime() {
+    return creationDateTime;
   }
 
-  public void setCreationDatetime(BigDecimal creationDatetime) {
-    this.creationDatetime = creationDatetime;
+  public void setCreationDateTime(Date creationDateTime) {
+    this.creationDateTime = creationDateTime;
+  }
+
+  public GridChain creationDateTimeGMT(Long creationDateTimeGMT) {
+    this.creationDateTimeGMT = creationDateTimeGMT;
+    return this;
+  }
+
+  /**
+   * Get creationDateTimeGMT
+   * @return creationDateTimeGMT
+   **/
+  @JsonProperty("creationDateTimeGMT")
+  @ApiModelProperty(value = "")
+  public Long getCreationDateTimeGMT() {
+    return creationDateTimeGMT;
+  }
+
+  public void setCreationDateTimeGMT(Long creationDateTimeGMT) {
+    this.creationDateTimeGMT = creationDateTimeGMT;
   }
 
   public GridChain creationTxId(Integer creationTxId) {
@@ -126,7 +148,7 @@ public class GridChain   {
    * Get creationTxId
    * @return creationTxId
    **/
-  @JsonProperty("creation_tx_id")
+  @JsonProperty("creationTxId")
   @ApiModelProperty(value = "")
   public Integer getCreationTxId() {
     return creationTxId;
@@ -283,7 +305,8 @@ public class GridChain   {
     GridChain gridChain = (GridChain) o;
     return Objects.equals(this.creatorName, gridChain.creatorName) &&
         Objects.equals(this.creatorId, gridChain.creatorId) &&
-        Objects.equals(this.creationDatetime, gridChain.creationDatetime) &&
+        Objects.equals(this.creationDateTime, gridChain.creationDateTime) &&
+        Objects.equals(this.creationDateTimeGMT, gridChain.creationDateTimeGMT) &&
         Objects.equals(this.creationTxId, gridChain.creationTxId) &&
         Objects.equals(this.gridRows, gridChain.gridRows) &&
         Objects.equals(this.gridColumns, gridChain.gridColumns) &&
@@ -294,7 +317,7 @@ public class GridChain   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(creatorName, creatorId, creationDatetime, creationTxId, gridRows, gridColumns, gridCells, gridTransactions, gridFormulas);
+    return Objects.hash(creatorName, creatorId, creationDateTime, creationDateTimeGMT, creationTxId, gridRows, gridColumns, gridCells, gridTransactions, gridFormulas);
   }
 
 
@@ -305,7 +328,8 @@ public class GridChain   {
     
     sb.append("    creatorName: ").append(toIndentedString(creatorName)).append("\n");
     sb.append("    creatorId: ").append(toIndentedString(creatorId)).append("\n");
-    sb.append("    creationDatetime: ").append(toIndentedString(creationDatetime)).append("\n");
+    sb.append("    creationDateTime: ").append(toIndentedString(creationDateTime)).append("\n");
+    sb.append("    creationDateTimeGMT: ").append(toIndentedString(creationDateTimeGMT)).append("\n");
     sb.append("    creationTxId: ").append(toIndentedString(creationTxId)).append("\n");
     sb.append("    gridRows: ").append(toIndentedString(gridRows)).append("\n");
     sb.append("    gridColumns: ").append(toIndentedString(gridColumns)).append("\n");

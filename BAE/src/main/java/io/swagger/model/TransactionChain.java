@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+import java.util.Date;
 import javax.validation.constraints.*;
 
 /**
@@ -27,13 +27,16 @@ import javax.validation.constraints.*;
 
 public class TransactionChain   {
   @JsonProperty("gridId")
-  private Integer gridId = null;
+  private Long gridId = null;
 
   @JsonProperty("txId")
-  private Integer txId = null;
+  private Long txId = null;
 
-  @JsonProperty("txDateTime")
-  private BigDecimal txDateTime = null;
+  @JsonProperty("txDateTimeGMT")
+  private Long txDateTimeGMT = null;
+
+  @JsonProperty("txDateTimeUTC")
+  private Date txDateTimeUTC = null;
 
   @JsonProperty("txCreatedByName")
   private String txCreatedByName = null;
@@ -44,7 +47,7 @@ public class TransactionChain   {
   @JsonProperty("txAction")
   private String txAction = null;
 
-  public TransactionChain gridId(Integer gridId) {
+  public TransactionChain gridId(Long gridId) {
     this.gridId = gridId;
     return this;
   }
@@ -55,15 +58,15 @@ public class TransactionChain   {
    **/
   @JsonProperty("gridId")
   @ApiModelProperty(value = "")
-  public Integer getGridId() {
+  public Long getGridId() {
     return gridId;
   }
 
-  public void setGridId(Integer gridId) {
+  public void setGridId(Long gridId) {
     this.gridId = gridId;
   }
 
-  public TransactionChain txId(Integer txId) {
+  public TransactionChain txId(Long txId) {
     this.txId = txId;
     return this;
   }
@@ -74,31 +77,50 @@ public class TransactionChain   {
    **/
   @JsonProperty("txId")
   @ApiModelProperty(value = "")
-  public Integer getTxId() {
+  public Long getTxId() {
     return txId;
   }
 
-  public void setTxId(Integer txId) {
+  public void setTxId(Long txId) {
     this.txId = txId;
   }
 
-  public TransactionChain txDateTime(BigDecimal txDateTime) {
-    this.txDateTime = txDateTime;
+  public TransactionChain txDateTimeGMT(Long txDateTimeGMT) {
+    this.txDateTimeGMT = txDateTimeGMT;
     return this;
   }
 
   /**
-   * Get txDateTime
-   * @return txDateTime
+   * Get txDateTimeGMT
+   * @return txDateTimeGMT
    **/
-  @JsonProperty("txDateTime")
+  @JsonProperty("txDateTimeGMT")
   @ApiModelProperty(value = "")
-  public BigDecimal getTxDateTime() {
-    return txDateTime;
+  public Long getTxDateTimeGMT() {
+    return txDateTimeGMT;
   }
 
-  public void setTxDateTime(BigDecimal txDateTime) {
-    this.txDateTime = txDateTime;
+  public void setTxDateTimeGMT(Long txDateTimeGMT) {
+    this.txDateTimeGMT = txDateTimeGMT;
+  }
+
+  public TransactionChain txDateTimeUTC(Date txDateTimeUTC) {
+    this.txDateTimeUTC = txDateTimeUTC;
+    return this;
+  }
+
+  /**
+   * Get txDateTimeUTC
+   * @return txDateTimeUTC
+   **/
+  @JsonProperty("txDateTimeUTC")
+  @ApiModelProperty(value = "")
+  public Date getTxDateTimeUTC() {
+    return txDateTimeUTC;
+  }
+
+  public void setTxDateTimeUTC(Date txDateTimeUTC) {
+    this.txDateTimeUTC = txDateTimeUTC;
   }
 
   public TransactionChain txCreatedByName(String txCreatedByName) {
@@ -170,7 +192,8 @@ public class TransactionChain   {
     TransactionChain transactionChain = (TransactionChain) o;
     return Objects.equals(this.gridId, transactionChain.gridId) &&
         Objects.equals(this.txId, transactionChain.txId) &&
-        Objects.equals(this.txDateTime, transactionChain.txDateTime) &&
+        Objects.equals(this.txDateTimeGMT, transactionChain.txDateTimeGMT) &&
+        Objects.equals(this.txDateTimeUTC, transactionChain.txDateTimeUTC) &&
         Objects.equals(this.txCreatedByName, transactionChain.txCreatedByName) &&
         Objects.equals(this.txComment, transactionChain.txComment) &&
         Objects.equals(this.txAction, transactionChain.txAction);
@@ -178,7 +201,7 @@ public class TransactionChain   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(gridId, txId, txDateTime, txCreatedByName, txComment, txAction);
+    return Objects.hash(gridId, txId, txDateTimeGMT, txDateTimeUTC, txCreatedByName, txComment, txAction);
   }
 
 
@@ -189,7 +212,8 @@ public class TransactionChain   {
     
     sb.append("    gridId: ").append(toIndentedString(gridId)).append("\n");
     sb.append("    txId: ").append(toIndentedString(txId)).append("\n");
-    sb.append("    txDateTime: ").append(toIndentedString(txDateTime)).append("\n");
+    sb.append("    txDateTimeGMT: ").append(toIndentedString(txDateTimeGMT)).append("\n");
+    sb.append("    txDateTimeUTC: ").append(toIndentedString(txDateTimeUTC)).append("\n");
     sb.append("    txCreatedByName: ").append(toIndentedString(txCreatedByName)).append("\n");
     sb.append("    txComment: ").append(toIndentedString(txComment)).append("\n");
     sb.append("    txAction: ").append(toIndentedString(txAction)).append("\n");

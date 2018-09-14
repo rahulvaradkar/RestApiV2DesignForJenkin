@@ -231,7 +231,7 @@ public class GridManagement {
 				Iterator<?> ci = colv.iterator();
 				
 				// columns
-				float previousColumnSequence = -1;
+				int previousColumnSequence = -1;
 				int previousColumnid = -1;
 				gridCols = new ArrayList <Column>();
 				columnArray = new ArrayList <Integer>();
@@ -258,13 +258,13 @@ public class GridManagement {
 					gridCol.setId(col.getId()); 
 					gridCol.setName(col.getName()); 
 					gridCol.setPreviousColumnid(previousColumnid);
-					gridCol.setPreviousColumnSequence( new BigDecimal(previousColumnSequence));
-					gridCol.setSeqNo(  new BigDecimal(col.getSequenceNumber())); 
+					gridCol.setPreviousColumnSequence(previousColumnSequence);
+					gridCol.setSeqNo( (int)  col.getSequenceNumber()); 
 					gridCol.setTid(col.getCreationTid());
 					gridCols.add(gridCol);
 					columnArray.add(col.getId());
 					
-					previousColumnSequence = col.getSequenceNumber();
+					previousColumnSequence = (int) col.getSequenceNumber();
 					previousColumnid = col.getId();
 				}
 				gcb.setNewColumnArray( gridCols);				//gcb is part of LINK IMPORT CELL BUFFER
@@ -306,22 +306,21 @@ public class GridManagement {
 					rowArray.add(rowObject.getId());
 
 					gridRow = new Row();
-					gridRow.setCreationTid(rowObject.getCreationTid());
-					gridRow.setCreaterId(rowObject.getCreatorUserId());
+					gridRow.setCreationTid( rowObject.getCreationTid());
+					gridRow.setCreaterId(  rowObject.getCreatorUserId());
 					gridRow.setOwnerName(rowObject.getOwnerName());
-					gridRow.setOwnershipAssignedTid(rowObject.getOwnershipAssignedTid());
+					gridRow.setOwnershipAssignedTid( rowObject.getOwnershipAssignedTid());
 					gridRow.setOwnerName(rowObject.getOwnerName());
-					gridRow.setOwnerId(rowObject.getOwnerUserId());
+					gridRow.setOwnerId(  rowObject.getOwnerUserId());
 					gridRow.setActive((rowObject.getIsActive()== 1? true : false));
 					gridRow.setRowName(rowObject.getName()); 	
-		    		gridRow.setId(rowObject.getId()); 
+		    		gridRow.setId( rowObject.getId()); 
 		    		gridRow.setPreviousRowid(  previousRowid);
 		    		gridRow.setPreviousRowSequence(previousRowSequence); 
-		    		Float obj = new Float(rowObject.getSequenceNumber());
-		    		gridRow.setSeqNo(obj.intValue()); 
+		    		gridRow.setSeqNo(rowObject.getSequenceNumber()); 
 		    		
 		    		previousRowid = rowObject.getId() ;
-		    		previousRowSequence = obj.intValue();
+		    		previousRowSequence = (int) rowObject.getSequenceNumber();		//obj.intValue();
 					
 					if (maxTransactionId < rowObject.getCreationTid()) {
 						maxTransactionId = rowObject.getCreationTid();
@@ -417,8 +416,7 @@ public class GridManagement {
 								cellValues = new ArrayList <String>();
 								cellfmla = new ArrayList <String>();
 								columnId = col.getId();
-								Float obj = new Float(col.getSequenceNumber());
-								int colSequence = obj.intValue();
+								Float colSequence = col.getSequenceNumber();
 								colCellAccess = new ArrayList <Integer>();
 
 								System.out.println("Processing Rows....columnId : " + columnId + " , rowv.size():" + rowv.size());
@@ -461,7 +459,7 @@ public class GridManagement {
 									gridCell.setColSequence(colSequence);
 									//gridCell.setId(id);	NOT AVAILABLE
 									gridCell.setRowId(rowObject.getId()); 
-									gridCell.setRowSequence((int) rowObject.getSequenceNumber());
+									gridCell.setRowSequence(rowObject.getSequenceNumber());
 									gridCell.setTid(celltid);
 									gridCells.add(gridCell);
 								}
@@ -810,8 +808,8 @@ public class GridManagement {
 					gridCol.setId(col.getId());
 					gridCol.setName(col.getName());
 					gridCol.setPreviousColumnid(previousColId);
-					gridCol.setPreviousColumnSequence(new BigDecimal(previousColSequence));
-					gridCol.setSeqNo(new BigDecimal(col.getSequenceNumber()));
+					gridCol.setPreviousColumnSequence(previousColSequence);
+					gridCol.setSeqNo( (int)  col.getSequenceNumber());
 					gridCol.setTid(col.getCreationTid());
 					newGridCols.add(gridCol);
 				}
@@ -823,8 +821,8 @@ public class GridManagement {
 					gridCol.setId(col.getId());
 					gridCol.setName(col.getName());
 					gridCol.setPreviousColumnid(previousColId);
-					gridCol.setPreviousColumnSequence(new BigDecimal(previousColSequence));
-					gridCol.setSeqNo(new BigDecimal(col.getSequenceNumber()));
+					gridCol.setPreviousColumnSequence(previousColSequence);
+					gridCol.setSeqNo( (int) col.getSequenceNumber());
 					gridCol.setTid(col.getAccessTid());
 					newGridCols.add(gridCol);
 				}
@@ -835,8 +833,8 @@ public class GridManagement {
 				allGridCol.setId(col.getId());
 				allGridCol.setName(col.getName());
 				allGridCol.setPreviousColumnid(previousColId);
-				allGridCol.setPreviousColumnSequence(new BigDecimal(previousColSequence));
-				allGridCol.setSeqNo(new BigDecimal(col.getSequenceNumber()));
+				allGridCol.setPreviousColumnSequence(previousColSequence);
+				allGridCol.setSeqNo( (int) col.getSequenceNumber());
 				allGridCol.setTid(col.getCreationTid());
 				allColumnArray.add(allGridCol);
 				
@@ -925,8 +923,7 @@ public class GridManagement {
 		    		gridRow.setPreviousRowid(  previousRowid);
 		    		gridRow.setPreviousRowSequence(previousRowSequence);
 		    		gridRow.setTid((rowObject.getCreationTid() >= rowObject.getOwnershipAssignedTid())   ? rowObject.getCreationTid() : rowObject.getOwnershipAssignedTid());
-		    		Float obj = new Float(rowObject.getSequenceNumber());
-		    		gridRow.setSeqNo(obj.intValue()); 
+		    		gridRow.setSeqNo(rowObject.getSequenceNumber()); 
 		    		newGridRows.add(gridRow);
 				}
 				else
@@ -947,16 +944,15 @@ public class GridManagement {
 				allGridRow.setActive((rowObject.getIsActive()== 1? true : false));
 				allGridRow.setRowName(rowObject.getName()); 	
 				allGridRow.setId(rowObject.getId()); 
-				allGridRow.setPreviousRowid(  previousRowid);
+				allGridRow.setPreviousRowid(previousRowid);
 				allGridRow.setPreviousRowSequence(previousRowSequence); 
 				allGridRow.setTid((rowObject.getCreationTid() >= rowObject.getOwnershipAssignedTid())   ? rowObject.getCreationTid() : rowObject.getOwnershipAssignedTid());
-	    		Float obj = new Float(rowObject.getSequenceNumber());
-	    		allGridRow.setSeqNo(obj.intValue()); 
+	    		allGridRow.setSeqNo(rowObject.getSequenceNumber()); 
 	    		allRowArray.add(allGridRow);
 				
 				//Float obj = new Float(rowObject.getSequenceNumber());
 	    		previousRowid = rowObject.getId() ;
-	    		previousRowSequence = obj.intValue();
+	    		previousRowSequence = (int) rowObject.getSequenceNumber();
 			}
 			//System.out.println(resData.toString());
 			// Get the cells TBD : views other than latest
@@ -1629,11 +1625,11 @@ public class GridManagement {
 				col = new Column();
 				col.setId(resultset.getInt(1));
 				col.setName(resultset.getString(2));
-				col.setSeqNo(new BigDecimal( resultset.getInt(3)));
+				col.setSeqNo(resultset.getInt(3));
 				col.setTid(resultset.getInt(4));
 				col.setActive(resultset.getBoolean(5));
 				col.setPreviousColumnid(prevColId);
-				col.setPreviousColumnSequence(new BigDecimal(prevColSeq));
+				col.setPreviousColumnSequence(prevColSeq);
 				prevColId = resultset.getInt(1);
 				prevColSeq = resultset.getInt(3);
 				gridColumns.set(index, col);
@@ -1680,7 +1676,7 @@ public class GridManagement {
 					rw.setId((Integer) rowIds.get(iRow));
 					rw.setPreviousRowid(prevRowId);
 					rw.setPreviousRowSequence(prevRowSeq);
-					rw.setSeqNo(iRow+1);
+					rw.setSeqNo( (float)  iRow+1);
 					rw.setTid(tid);
 					prevRowId = (Integer) rowIds.get(iRow);
 					prevRowSeq = iRow;
@@ -1936,7 +1932,9 @@ public class GridManagement {
 			stmt.addBatch();
 			
 			cl.setRowId(rowId); cl.setColId(columnId); cl.setCellValue(cellValue); cl.setCellFormula(formula);
-			cl.setTid(tid); cl.setChangeFlag(12);cl.setActive(true); cl.setColSequence(columnIdx); cl.setRowSequence(i+1);
+			cl.setTid(tid); cl.setChangeFlag(12);cl.setActive(true); 
+			cl.setColSequence((float) columnIdx); 
+			cl.setRowSequence( (float) i+1);
 			//cl.setAccess(access); 
     		cellArr.add(cl);
 		}
@@ -2011,7 +2009,7 @@ public class GridManagement {
 		int intCritical = gcb.getCritical();
 		int intCriticalLevel = gcb.getCriticalLevel();
 		
-		Column cl;
+		//Column cl;
 		Row rw;
 		
 		GridInfo ginfo = cellBufferRequest.getInfo();
@@ -2096,7 +2094,6 @@ public class GridManagement {
 				}
 				//Change For Critical Update end
 				resultset1 = preparedstatement1.executeQuery();
-				String lsResponseStr = null;
 				
 				if (resultset1.next())
 				{
@@ -2519,7 +2516,7 @@ public class GridManagement {
 						int rwId = rw.getId();
 						prOffset = rw.getPreviousRowSequence();
 						prevRowId = rw.getPreviousRowid();
-						rwSeq = rw.getSeqNo();
+						rwSeq =  rw.getSeqNo().intValue();
 						
 						if (rwId == -1)
 						{
@@ -2721,8 +2718,8 @@ public class GridManagement {
 				for (int ccdc=0; ccdc < cellArr.size(); ccdc=ccdc+1)
 				{
 					ccd = cellArr.get(ccdc);
-					xlRowIdx = ccd.getRowSequence();
-					xlColIdx = ccd.getColSequence();
+					xlRowIdx = ccd.getRowSequence().intValue() ;
+					xlColIdx = ccd.getColSequence().intValue() ;
 					xlcellval = ccd.getCellValue();
 					xlFormula = ccd.getCellFormula();
 					if (xlFormula.indexOf("=") != 0)					//Fix for IssueId: 
@@ -3074,7 +3071,7 @@ public class GridManagement {
 					rw.setOwnerId((Integer) rowdata.get("ownerId"));
 					rw.setOwnershipAssignedTid((Integer) rowdata.get("ownerTid"));
 					rw.setRowName((String) rowdata.get("name"));
-					rw.setSeqNo(  (int) Math.round( (float) rowdata.get("sequenceNumber") ));
+					rw.setSeqNo(  (float) rowdata.get("sequenceNumber"));
 					rw.setTid((Integer) rowdata.get("txId"));
 					
 					retNewRowArray.add(rn, rw);
@@ -3505,7 +3502,7 @@ public class GridManagement {
 			Iterator<?> ci = colv.iterator();
 			
 			// columns
-			float previousColumnSequence = -1;
+			int previousColumnSequence = -1;
 			int previousColumnid = -1;
 	//		gridCols = new ArrayList <Column>();
 	//		columnArray = new ArrayList <Integer>();
@@ -3532,13 +3529,13 @@ public class GridManagement {
 				gridCol.setId(col.getId()); 
 				gridCol.setName(col.getName()); 
 				gridCol.setPreviousColumnid(previousColumnid);
-				gridCol.setPreviousColumnSequence( new BigDecimal(previousColumnSequence));
-				gridCol.setSeqNo(  new BigDecimal(col.getSequenceNumber())); 
+				gridCol.setPreviousColumnSequence( previousColumnSequence);
+				gridCol.setSeqNo( (int) col.getSequenceNumber()); 
 				gridCol.setTid(col.getCreationTid());
 				gridCols.add(gridCol);
 				columnArray.add(col.getId());
 				
-				previousColumnSequence = col.getSequenceNumber();
+				previousColumnSequence = (int) col.getSequenceNumber();
 				previousColumnid = col.getId();
 			}
 
@@ -3618,13 +3615,12 @@ public class GridManagement {
 	    		gridRow.setId(rowObject.getId()); 
 	    		gridRow.setPreviousRowid(  previousRowid);
 	    		gridRow.setPreviousRowSequence(previousRowSequence); 
-	    		Float obj = new Float(rowObject.getSequenceNumber());
-	    		gridRow.setSeqNo(obj.intValue()); 
+	    		gridRow.setSeqNo(rowObject.getSequenceNumber()); 
 
 				rowArray.add(rowObject.getId());
 	    		
 	    		previousRowid = rowObject.getId() ;
-	    		previousRowSequence = obj.intValue();
+	    		previousRowSequence = (int) rowObject.getSequenceNumber();
 				
 				if (maxTransactionId < rowObject.getCreationTid()) {
 					maxTransactionId = rowObject.getCreationTid();
@@ -3809,8 +3805,8 @@ public class GridManagement {
 							cellValues = new ArrayList <String>();
 							cellfmla = new ArrayList <String>();
 							columnId = col.getId();
-							Float obj = new Float(col.getSequenceNumber());
-							int colSequence = obj.intValue();
+
+							float colSequence = col.getSequenceNumber();
 							colCellAccess = new ArrayList <Integer>();
 	
 							System.out.println("Processing Rows....columnId : " + columnId + " , rowv.size():" + rowv.size());
@@ -3986,7 +3982,7 @@ public class GridManagement {
     
     //@GET
     //@Path("/{gridId}/{transactionId}/changes")
-    public static GridChanges gridGridIdTransactionIdChangesGet(Integer gridId, long transactionId, long difference_in_MiliSec, String viewPref, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
+    public static GridChanges gridGridIdTransactionIdChangesGet(Integer gridId, int transactionId, long difference_in_MiliSec, String viewPref, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
     {
     	
     	Connection connection = null;
@@ -4136,7 +4132,7 @@ public class GridManagement {
 				    	gridCol = new Column();
 				    	gridCol.setId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 				    	gridCol.setName(row[GET_TBL.COLUMN_NAME.getcolNo()]);
-				    	gridCol.setSeqNo(new BigDecimal( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    	gridCol.setSeqNo(Integer.parseInt(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 				    	gridCol.setPreviousColumnid(prevColId);
 				    	gridCols.add(gridCol);
 				    	
@@ -4156,7 +4152,7 @@ public class GridManagement {
 				    		sca = new SequencedCellArray();
 				    		cellValues =  new ArrayList<String>();
 				    		cellfmla = new ArrayList<String>();
-				    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    		sca.setColSequence(Float.parseFloat(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 				    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 				    		//cellValues =  new ArrayList<String>();
 				    		//cellfmla = new ArrayList<String>();
@@ -4164,7 +4160,7 @@ public class GridManagement {
 				    	else
 				    	{
 				    		System.out.println("First time $@#@@$#@@#$@$@#$@$");
-				    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    		sca.setColSequence(Float.parseFloat(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 				    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 				    	}
 				    	
@@ -4177,7 +4173,7 @@ public class GridManagement {
 				    	Rows.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
 						gridRow = new Row();
 						gridRow.setId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
-						gridRow.setSeqNo((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
+						gridRow.setSeqNo(Float.parseFloat(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
 						gridRow.setPreviousRowid(prevRowId);
 						gridRows.add(gridRow);
 						prevRowId = Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]);
@@ -4203,7 +4199,7 @@ public class GridManagement {
 				//Adding last Sequence column Arrau
 	    		sca.setCellValues(cellValues);
 	    		sca.setCellFormulas(cellfmla);
-	    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+	    		sca.setColSequence( Float.parseFloat(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 	    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 	    		scas.add(sca);
 	
@@ -4298,8 +4294,8 @@ public class GridManagement {
 			    cl.setColId(Integer.parseInt(row[GET_CHANGES_FOR_TX.COLUMN_ID.getcolNo()]));
 			    cl.setCellValue(row[GET_CHANGES_FOR_TX.CELL_STRING_VALUE.getcolNo()]);
 			    cl.setCellFormula(row[GET_CHANGES_FOR_TX.FORMULA.getcolNo()]);
-			    cl.setRowSequence((int) Double.parseDouble(row[GET_CHANGES_FOR_TX.ROW_SEQUENCE.getcolNo()]));
-			    cl.setColSequence((int) Double.parseDouble(row[GET_CHANGES_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
+			    cl.setRowSequence(Float.parseFloat(row[GET_CHANGES_FOR_TX.ROW_SEQUENCE.getcolNo()]));
+			    cl.setColSequence(Float.parseFloat(row[GET_CHANGES_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
 			    
 			    gridCells.add(cl);
 				table.add( row );
@@ -4362,14 +4358,14 @@ public class GridManagement {
 			    }
 			    System.out.println("Active:" + row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]);
 			    sc = new StatusChange();
-			    sc.setRowId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.ROW_ID.getcolNo()]));
-			    sc.setColumnId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_ID.getcolNo()]));
+			    sc.setRowId(Integer.parseInt(row[GET_CHANGE_STATUS_FOR_TX.ROW_ID.getcolNo()]));
+			    sc.setColumnId(Integer.parseInt(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_ID.getcolNo()]));
 			    sc.setActive(Boolean.valueOf(row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]));
 			    sc.setTxId(transactionId);
-			    sc.setColumnSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
+			    sc.setColumnSeq(Float.parseFloat(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
 			    sc.setComment((row[GET_CHANGE_STATUS_FOR_TX.COMMENT.getcolNo()]));
 			   // sc.setCreatedDateTime(new BigDecimal(row[GET_CHANGE_STATUS_FOR_TX.CREATED_ON.getcolNo()]));
-			    sc.setRowSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.ROW_SEQUENCE.getcolNo()]));
+			    sc.setRowSeq(Float.parseFloat(row[GET_CHANGE_STATUS_FOR_TX.ROW_SEQUENCE.getcolNo()]));
 			    sc.setUserEmail((row[GET_CHANGE_STATUS_FOR_TX.EMAIL_ADDRESS.getcolNo()]));
 			    
 			    Scc.add(sc);
@@ -4524,7 +4520,7 @@ public class GridManagement {
 				tx.setRowDeleted(false);
 
 				tx.setComment(t.getComment());
-				tx.setTransactionTime(new BigDecimal(t.getCreatedOnTime()));
+				tx.setTransactionTime((long)(t.getCreatedOnTime()));
 				tx.setUpdatedBy(t.getCreatedByUserAddress());
 
 				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss a");
@@ -4750,7 +4746,7 @@ public class GridManagement {
 			    	gridCol = new Column();
 			    	gridCol.setId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 			    	gridCol.setName(row[GET_TBL.COLUMN_NAME.getcolNo()]);
-			    	gridCol.setSeqNo(new BigDecimal( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    	gridCol.setSeqNo(Integer.parseInt( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 			    	gridCol.setPreviousColumnid(prevColId);
 			    	gridCols.add(gridCol);
 			    	
@@ -4770,7 +4766,7 @@ public class GridManagement {
 			    		sca = new SequencedCellArray();
 			    		cellValues =  new ArrayList<String>();
 			    		cellfmla = new ArrayList<String>();
-			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		sca.setColSequence(Float.parseFloat(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 			    		//cellValues =  new ArrayList<String>();
 			    		//cellfmla = new ArrayList<String>();
@@ -4778,7 +4774,7 @@ public class GridManagement {
 			    	else
 			    	{
 			    		System.out.println("First time $@#@@$#@@#$@$@#$@$");
-			    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    		sca.setColSequence(Float.parseFloat(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 			    		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 			    	}
 			    	prevColId = Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]);
@@ -4789,11 +4785,10 @@ public class GridManagement {
 			    	Rows.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
 					gridRow = new Row();
 					gridRow.setId(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
-					gridRow.setSeqNo((int)   Double.parseDouble(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
+					gridRow.setSeqNo(Float.parseFloat(row[GET_TBL.ROW_SEQUENCE.getcolNo()]));
 					gridRow.setPreviousRowid(prevRowId);
 					gridRows.add(gridRow);
 					prevRowId = Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]);
-					
 			    	rowArray.add(Integer.parseInt(row[GET_TBL.ROW_ID.getcolNo()]));
 			    }
 			    
@@ -4814,7 +4809,7 @@ public class GridManagement {
 			//Adding last Sequence column Arrau
     		sca.setCellValues(cellValues);
     		sca.setCellFormulas(cellfmla);
-    		sca.setColSequence((int)   Double.parseDouble(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+    		sca.setColSequence(Float.parseFloat(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
     		sca.setColumnId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
     		scas.add(sca);
 
@@ -4902,8 +4897,8 @@ public class GridManagement {
 			    cl.setColId(Integer.parseInt(row[GET_CHANGES_BETWN_TID.COLUMN_ID.getcolNo()]));
 			    cl.setCellValue(row[GET_CHANGES_BETWN_TID.CELL_STRING_VALUE.getcolNo()]);
 			    cl.setCellFormula(row[GET_CHANGES_BETWN_TID.FORMULA.getcolNo()]);
-			    cl.setRowSequence((int) Double.parseDouble(row[GET_CHANGES_BETWN_TID.ROW_SEQUENCE.getcolNo()]));
-			    cl.setColSequence((int) Double.parseDouble(row[GET_CHANGES_BETWN_TID.COLUMN_SEQUENCE.getcolNo()]));
+			    cl.setRowSequence(Float.parseFloat(row[GET_CHANGES_BETWN_TID.ROW_SEQUENCE.getcolNo()]));
+			    cl.setColSequence(Float.parseFloat(row[GET_CHANGES_BETWN_TID.COLUMN_SEQUENCE.getcolNo()]));
 			    
 			    gridCells.add(cl);
 				table.add( row );
@@ -4966,14 +4961,14 @@ public class GridManagement {
 			    }
 			    System.out.println("Active:" + row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]);
 			    sc = new StatusChange();
-			    sc.setRowId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.ROW_ID.getcolNo()]));
-			    sc.setColumnId(Long.parseLong(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_ID.getcolNo()]));
+			    sc.setRowId(Integer.parseInt(row[GET_CHANGE_STATUS_FOR_TX.ROW_ID.getcolNo()]));
+			    sc.setColumnId(Integer.parseInt(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_ID.getcolNo()]));
 			    sc.setActive(Boolean.valueOf(row[GET_CHANGE_STATUS_FOR_TX.ACTIVE.getcolNo()]));
 			    //sc.setTxId(transactionId);
-			    sc.setColumnSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
+			    sc.setColumnSeq(Float.parseFloat(row[GET_CHANGE_STATUS_FOR_TX.COLUMN_SEQUENCE.getcolNo()]));
 			    sc.setComment((row[GET_CHANGE_STATUS_FOR_TX.COMMENT.getcolNo()]));
 			   // sc.setCreatedDateTime(new BigDecimal(row[GET_CHANGE_STATUS_FOR_TX.CREATED_ON.getcolNo()]));
-			    sc.setRowSeq((int) Double.parseDouble(row[GET_CHANGE_STATUS_FOR_TX.ROW_SEQUENCE.getcolNo()]));
+			    sc.setRowSeq(Float.parseFloat(row[GET_CHANGE_STATUS_FOR_TX.ROW_SEQUENCE.getcolNo()]));
 			    sc.setUserEmail((row[GET_CHANGE_STATUS_FOR_TX.EMAIL_ADDRESS.getcolNo()]));
 			    
 			    Scc.add(sc);

@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+import java.util.Date;
 import javax.validation.constraints.*;
 
 /**
@@ -33,7 +33,10 @@ public class GridTransaction   {
   private String updatedBy = null;
 
   @JsonProperty("transactionTime")
-  private BigDecimal transactionTime = null;
+  private Long transactionTime = null;
+
+  @JsonProperty("transactionTimeUTC")
+  private Date transactionTimeUTC = null;
 
   @JsonProperty("comment")
   private String comment = null;
@@ -100,7 +103,7 @@ public class GridTransaction   {
     this.updatedBy = updatedBy;
   }
 
-  public GridTransaction transactionTime(BigDecimal transactionTime) {
+  public GridTransaction transactionTime(Long transactionTime) {
     this.transactionTime = transactionTime;
     return this;
   }
@@ -111,12 +114,31 @@ public class GridTransaction   {
    **/
   @JsonProperty("transactionTime")
   @ApiModelProperty(value = "")
-  public BigDecimal getTransactionTime() {
+  public Long getTransactionTime() {
     return transactionTime;
   }
 
-  public void setTransactionTime(BigDecimal transactionTime) {
+  public void setTransactionTime(Long transactionTime) {
     this.transactionTime = transactionTime;
+  }
+
+  public GridTransaction transactionTimeUTC(Date transactionTimeUTC) {
+    this.transactionTimeUTC = transactionTimeUTC;
+    return this;
+  }
+
+  /**
+   * Get transactionTimeUTC
+   * @return transactionTimeUTC
+   **/
+  @JsonProperty("transactionTimeUTC")
+  @ApiModelProperty(value = "")
+  public Date getTransactionTimeUTC() {
+    return transactionTimeUTC;
+  }
+
+  public void setTransactionTimeUTC(Date transactionTimeUTC) {
+    this.transactionTimeUTC = transactionTimeUTC;
   }
 
   public GridTransaction comment(String comment) {
@@ -303,6 +325,7 @@ public class GridTransaction   {
     return Objects.equals(this.id, gridTransaction.id) &&
         Objects.equals(this.updatedBy, gridTransaction.updatedBy) &&
         Objects.equals(this.transactionTime, gridTransaction.transactionTime) &&
+        Objects.equals(this.transactionTimeUTC, gridTransaction.transactionTimeUTC) &&
         Objects.equals(this.comment, gridTransaction.comment) &&
         Objects.equals(this.rowAdded, gridTransaction.rowAdded) &&
         Objects.equals(this.rowDeleted, gridTransaction.rowDeleted) &&
@@ -316,7 +339,7 @@ public class GridTransaction   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, updatedBy, transactionTime, comment, rowAdded, rowDeleted, columnAdded, cellUpdated, formulaUpdated, baselineAdded, createdOnTime, createdOnTimeGMT);
+    return Objects.hash(id, updatedBy, transactionTime, transactionTimeUTC, comment, rowAdded, rowDeleted, columnAdded, cellUpdated, formulaUpdated, baselineAdded, createdOnTime, createdOnTimeGMT);
   }
 
 
@@ -328,6 +351,7 @@ public class GridTransaction   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    updatedBy: ").append(toIndentedString(updatedBy)).append("\n");
     sb.append("    transactionTime: ").append(toIndentedString(transactionTime)).append("\n");
+    sb.append("    transactionTimeUTC: ").append(toIndentedString(transactionTimeUTC)).append("\n");
     sb.append("    comment: ").append(toIndentedString(comment)).append("\n");
     sb.append("    rowAdded: ").append(toIndentedString(rowAdded)).append("\n");
     sb.append("    rowDeleted: ").append(toIndentedString(rowDeleted)).append("\n");
