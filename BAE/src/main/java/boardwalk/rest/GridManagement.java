@@ -258,8 +258,8 @@ public class GridManagement {
 					gridCol.setId(col.getId()); 
 					gridCol.setName(col.getName()); 
 					gridCol.setPreviousColumnid(previousColumnid);
-					gridCol.setPreviousColumnSequence(previousColumnSequence);
-					gridCol.setSeqNo( (int)  col.getSequenceNumber()); 
+					gridCol.setPreviousColumnOffset(previousColumnSequence);
+					gridCol.setSeqNo(col.getSequenceNumber());
 					gridCol.setTid(col.getCreationTid());
 					gridCols.add(gridCol);
 					columnArray.add(col.getId());
@@ -299,7 +299,7 @@ public class GridManagement {
 				rowArray = new ArrayList <Integer>();
 				
 				int previousRowid = -1;
-				int previousRowSequence = -1;
+				int previousRowOffset = 1;
 				for (int r = 0; r < rowv.size(); r++) 
 				{
 					com.boardwalk.table.Row rowObject = (com.boardwalk.table.Row) rowv.elementAt(r);
@@ -316,11 +316,11 @@ public class GridManagement {
 					gridRow.setRowName(rowObject.getName()); 	
 		    		gridRow.setId( rowObject.getId()); 
 		    		gridRow.setPreviousRowid(  previousRowid);
-		    		gridRow.setPreviousRowSequence(previousRowSequence); 
+		    		gridRow.setPreviousRowOffset(previousRowOffset); 
 		    		gridRow.setSeqNo(rowObject.getSequenceNumber()); 
 		    		
 		    		previousRowid = rowObject.getId() ;
-		    		previousRowSequence = (int) rowObject.getSequenceNumber();		//obj.intValue();
+		    		//previousRowOffset = (int) rowObject.getSequenceNumber();		//obj.intValue();   ....need review
 					
 					if (maxTransactionId < rowObject.getCreationTid()) {
 						maxTransactionId = rowObject.getCreationTid();
@@ -768,7 +768,7 @@ public class GridManagement {
 			Column gridCol;
 			Column allGridCol;
 			int previousColId =-1;
-			int previousColSequence = -1;
+			int previousColOffset = 1;
 			
 			colCount = colv.size();
 			for (int c = 0; c < colv.size(); c++)
@@ -808,8 +808,8 @@ public class GridManagement {
 					gridCol.setId(col.getId());
 					gridCol.setName(col.getName());
 					gridCol.setPreviousColumnid(previousColId);
-					gridCol.setPreviousColumnSequence(previousColSequence);
-					gridCol.setSeqNo( (int)  col.getSequenceNumber());
+					gridCol.setPreviousColumnOffset(previousColOffset);
+					gridCol.setSeqNo(col.getSequenceNumber());
 					gridCol.setTid(col.getCreationTid());
 					newGridCols.add(gridCol);
 				}
@@ -821,8 +821,8 @@ public class GridManagement {
 					gridCol.setId(col.getId());
 					gridCol.setName(col.getName());
 					gridCol.setPreviousColumnid(previousColId);
-					gridCol.setPreviousColumnSequence(previousColSequence);
-					gridCol.setSeqNo( (int) col.getSequenceNumber());
+					gridCol.setPreviousColumnOffset(previousColOffset);
+					gridCol.setSeqNo(col.getSequenceNumber());
 					gridCol.setTid(col.getAccessTid());
 					newGridCols.add(gridCol);
 				}
@@ -833,14 +833,14 @@ public class GridManagement {
 				allGridCol.setId(col.getId());
 				allGridCol.setName(col.getName());
 				allGridCol.setPreviousColumnid(previousColId);
-				allGridCol.setPreviousColumnSequence(previousColSequence);
-				allGridCol.setSeqNo( (int) col.getSequenceNumber());
+				allGridCol.setPreviousColumnOffset(previousColOffset);
+				allGridCol.setSeqNo(col.getSequenceNumber());
 				allGridCol.setTid(col.getCreationTid());
 				allColumnArray.add(allGridCol);
 				
 				colHash.put(new Integer(col.getId()), col);
 				previousColId = col.getId();
-				previousColSequence = Math.round(col.getSequenceNumber());
+				//previousColSequence = Math.round(col.getSequenceNumber());		// review.
 			}
 	
 			//System.out.println(resData.toString());
@@ -886,7 +886,7 @@ public class GridManagement {
 			
 			rowCount = rowv.size();
 			int previousRowid = -1;
-			int previousRowSequence = -1;
+			int previousRowOffset = 1;
 			for (int r = 0; r < rowv.size(); r++)
 			{
 				com.boardwalk.table.Row rowObject = (com.boardwalk.table.Row) rowv.elementAt(r);
@@ -921,7 +921,7 @@ public class GridManagement {
 					gridRow.setRowName(rowObject.getName()); 	
 		    		gridRow.setId(rowObject.getId()); 
 		    		gridRow.setPreviousRowid(  previousRowid);
-		    		gridRow.setPreviousRowSequence(previousRowSequence);
+		    		gridRow.setPreviousRowOffset(previousRowOffset);
 		    		gridRow.setTid((rowObject.getCreationTid() >= rowObject.getOwnershipAssignedTid())   ? rowObject.getCreationTid() : rowObject.getOwnershipAssignedTid());
 		    		gridRow.setSeqNo(rowObject.getSequenceNumber()); 
 		    		newGridRows.add(gridRow);
@@ -945,14 +945,14 @@ public class GridManagement {
 				allGridRow.setRowName(rowObject.getName()); 	
 				allGridRow.setId(rowObject.getId()); 
 				allGridRow.setPreviousRowid(previousRowid);
-				allGridRow.setPreviousRowSequence(previousRowSequence); 
+				allGridRow.setPreviousRowOffset(previousRowOffset); 
 				allGridRow.setTid((rowObject.getCreationTid() >= rowObject.getOwnershipAssignedTid())   ? rowObject.getCreationTid() : rowObject.getOwnershipAssignedTid());
 	    		allGridRow.setSeqNo(rowObject.getSequenceNumber()); 
 	    		allRowArray.add(allGridRow);
 				
 				//Float obj = new Float(rowObject.getSequenceNumber());
 	    		previousRowid = rowObject.getId() ;
-	    		previousRowSequence = (int) rowObject.getSequenceNumber();
+	    		//previousRowOffset = (int) rowObject.getSequenceNumber();			.... review
 			}
 			//System.out.println(resData.toString());
 			// Get the cells TBD : views other than latest
@@ -1614,7 +1614,7 @@ public class GridManagement {
 			//Updating gridColumns in-Place
     		colArr.clear();						// Clearing CellBuffer.colArr
 			int prevColId = -1;
-			int prevColSeq = -1;
+			int prevColOffset = 1;
 			int index = 0;
 			Column col ;
 			while (resultset.next())
@@ -1625,13 +1625,13 @@ public class GridManagement {
 				col = new Column();
 				col.setId(resultset.getInt(1));
 				col.setName(resultset.getString(2));
-				col.setSeqNo(resultset.getInt(3));
+				col.setSeqNo( (float) resultset.getInt(3));
 				col.setTid(resultset.getInt(4));
 				col.setActive(resultset.getBoolean(5));
 				col.setPreviousColumnid(prevColId);
-				col.setPreviousColumnSequence(prevColSeq);
+				col.setPreviousColumnOffset(prevColOffset);
 				prevColId = resultset.getInt(1);
-				prevColSeq = resultset.getInt(3);
+				prevColOffset = resultset.getInt(3);
 				gridColumns.set(index, col);
 				gcb.getNewColumnArray().set(index, col);			//Refilling NewColumn Detailsin GridChangeBuffer with Ids
 			
@@ -1675,7 +1675,7 @@ public class GridManagement {
 					rw.setActive(true);
 					rw.setId((Integer) rowIds.get(iRow));
 					rw.setPreviousRowid(prevRowId);
-					rw.setPreviousRowSequence(prevRowSeq);
+					rw.setPreviousRowOffset(prevRowSeq);
 					rw.setSeqNo( (float)  iRow+1);
 					rw.setTid(tid);
 					prevRowId = (Integer) rowIds.get(iRow);
@@ -2341,7 +2341,7 @@ public class GridManagement {
 				if (prevColId == -1)
 					prevColId = prevNewColId;
 				
-				prevColOffset = newco.getPreviousColumnSequence().intValue();
+				prevColOffset = newco.getPreviousColumnOffset().intValue();
 				newColName = newco.getName();
 				newColid = newco.getId();
 				newColSeq = newco.getSeqNo().intValue();
@@ -2514,7 +2514,7 @@ public class GridManagement {
 					{
 						rw = newRowArray.get(rni);
 						int rwId = rw.getId();
-						prOffset = rw.getPreviousRowSequence();
+						prOffset = rw.getPreviousRowOffset();
 						prevRowId = rw.getPreviousRowid();
 						rwSeq =  rw.getSeqNo().intValue();
 						
@@ -3396,7 +3396,7 @@ public class GridManagement {
         	statusCode.add(500);		//500: Server Error. Failed to get Neighborhood Relationships.
         	return gridId;
 		}
-    		//Custom code Ends
+		//Custom code Ends
 		finally
 		{
 			try
@@ -3529,8 +3529,8 @@ public class GridManagement {
 				gridCol.setId(col.getId()); 
 				gridCol.setName(col.getName()); 
 				gridCol.setPreviousColumnid(previousColumnid);
-				gridCol.setPreviousColumnSequence( previousColumnSequence);
-				gridCol.setSeqNo( (int) col.getSequenceNumber()); 
+				gridCol.setPreviousColumnOffset( previousColumnSequence);
+				gridCol.setSeqNo( col.getSequenceNumber()); 
 				gridCol.setTid(col.getCreationTid());
 				gridCols.add(gridCol);
 				columnArray.add(col.getId());
@@ -3614,7 +3614,7 @@ public class GridManagement {
 				gridRow.setRowName(rowObject.getName()); 	
 	    		gridRow.setId(rowObject.getId()); 
 	    		gridRow.setPreviousRowid(  previousRowid);
-	    		gridRow.setPreviousRowSequence(previousRowSequence); 
+	    		gridRow.setPreviousRowOffset(previousRowSequence); 
 	    		gridRow.setSeqNo(rowObject.getSequenceNumber()); 
 
 				rowArray.add(rowObject.getId());
@@ -4132,7 +4132,7 @@ public class GridManagement {
 				    	gridCol = new Column();
 				    	gridCol.setId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 				    	gridCol.setName(row[GET_TBL.COLUMN_NAME.getcolNo()]);
-				    	gridCol.setSeqNo(Integer.parseInt(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+				    	gridCol.setSeqNo(Float.parseFloat(row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 				    	gridCol.setPreviousColumnid(prevColId);
 				    	gridCols.add(gridCol);
 				    	
@@ -4611,7 +4611,7 @@ public class GridManagement {
     
     //@GET
     //@Path("/grid/{gridId}/transactionsBetweenTids")
-    public static GridChanges gridGridIdTransactionsBetweenTids(Long gridId, long difference_in_MiliSec,  long startTid, long endTid, String viewPref, String reportType, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
+    public static GridChanges gridGridIdTransactionsBetweenTids(Integer gridId, long difference_in_MiliSec,  long startTid, long endTid, String viewPref, ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode ) 
     {
     	
     	Connection connection = null;
@@ -4746,7 +4746,7 @@ public class GridManagement {
 			    	gridCol = new Column();
 			    	gridCol.setId(Integer.parseInt(row[GET_TBL.COLUMN_ID.getcolNo()]));
 			    	gridCol.setName(row[GET_TBL.COLUMN_NAME.getcolNo()]);
-			    	gridCol.setSeqNo(Integer.parseInt( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
+			    	gridCol.setSeqNo(Float.parseFloat( row[GET_TBL.COLUMN_SEQUENCE.getcolNo()]));
 			    	gridCol.setPreviousColumnid(prevColId);
 			    	gridCols.add(gridCol);
 			    	

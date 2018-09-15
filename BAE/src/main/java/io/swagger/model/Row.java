@@ -49,8 +49,8 @@ public class Row   {
   @JsonProperty("previousRowid")
   private Integer previousRowid = null;
 
-  @JsonProperty("previousRowSequence")
-  private Integer previousRowSequence = null;
+  @JsonProperty("previousRowOffset")
+  private Integer previousRowOffset = null;
 
   @JsonProperty("active")
   private Boolean active = null;
@@ -133,23 +133,23 @@ public class Row   {
     this.previousRowid = previousRowid;
   }
 
-  public Row previousRowSequence(Integer previousRowSequence) {
-    this.previousRowSequence = previousRowSequence;
+  public Row previousRowOffset(Integer previousRowOffset) {
+    this.previousRowOffset = previousRowOffset;
     return this;
   }
 
   /**
-   * Get previousRowSequence
-   * @return previousRowSequence
+   * Get previousRowOffset
+   * @return previousRowOffset
    **/
-  @JsonProperty("previousRowSequence")
+  @JsonProperty("previousRowOffset")
   @ApiModelProperty(value = "")
-  public Integer getPreviousRowSequence() {
-    return previousRowSequence;
+  public Integer getPreviousRowOffset() {
+    return previousRowOffset;
   }
 
-  public void setPreviousRowSequence(Integer previousRowSequence) {
-    this.previousRowSequence = previousRowSequence;
+  public void setPreviousRowOffset(Integer previousRowOffset) {
+    this.previousRowOffset = previousRowOffset;
   }
 
   public Row active(Boolean active) {
@@ -317,7 +317,7 @@ public class Row   {
     return Objects.equals(this.id, row.id) &&
         Objects.equals(this.seqNo, row.seqNo) &&
         Objects.equals(this.previousRowid, row.previousRowid) &&
-        Objects.equals(this.previousRowSequence, row.previousRowSequence) &&
+        Objects.equals(this.previousRowOffset, row.previousRowOffset) &&
         Objects.equals(this.active, row.active) &&
         Objects.equals(this.rowName, row.rowName) &&
         Objects.equals(this.tid, row.tid) &&
@@ -330,7 +330,7 @@ public class Row   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, seqNo, previousRowid, previousRowSequence, active, rowName, tid, ownerId, ownerName, creationTid, createrId, ownershipAssignedTid);
+    return Objects.hash(id, seqNo, previousRowid, previousRowOffset, active, rowName, tid, ownerId, ownerName, creationTid, createrId, ownershipAssignedTid);
   }
 
 
@@ -342,7 +342,7 @@ public class Row   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    seqNo: ").append(toIndentedString(seqNo)).append("\n");
     sb.append("    previousRowid: ").append(toIndentedString(previousRowid)).append("\n");
-    sb.append("    previousRowSequence: ").append(toIndentedString(previousRowSequence)).append("\n");
+    sb.append("    previousRowOffset: ").append(toIndentedString(previousRowOffset)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    rowName: ").append(toIndentedString(rowName)).append("\n");
     sb.append("    tid: ").append(toIndentedString(tid)).append("\n");

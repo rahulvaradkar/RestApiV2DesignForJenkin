@@ -47,13 +47,13 @@ public class Column   {
   private String name = null;
 
   @JsonProperty("seqNo")
-  private Integer seqNo = null;
+  private Float seqNo = null;
 
   @JsonProperty("previousColumnid")
   private Integer previousColumnid = null;
 
-  @JsonProperty("previousColumnSequence")
-  private Integer previousColumnSequence = null;
+  @JsonProperty("previousColumnOffset")
+  private Integer previousColumnOffset = null;
 
   @JsonProperty("active")
   private Boolean active = null;
@@ -99,7 +99,7 @@ public class Column   {
     this.name = name;
   }
 
-  public Column seqNo(Integer seqNo) {
+  public Column seqNo(Float seqNo) {
     this.seqNo = seqNo;
     return this;
   }
@@ -110,11 +110,11 @@ public class Column   {
    **/
   @JsonProperty("seqNo")
   @ApiModelProperty(value = "")
-  public Integer getSeqNo() {
+  public Float getSeqNo() {
     return seqNo;
   }
 
-  public void setSeqNo(Integer seqNo) {
+  public void setSeqNo(Float seqNo) {
     this.seqNo = seqNo;
   }
 
@@ -137,23 +137,23 @@ public class Column   {
     this.previousColumnid = previousColumnid;
   }
 
-  public Column previousColumnSequence(Integer previousColumnSequence) {
-    this.previousColumnSequence = previousColumnSequence;
+  public Column previousColumnOffset(Integer previousColumnOffset) {
+    this.previousColumnOffset = previousColumnOffset;
     return this;
   }
 
   /**
-   * Get previousColumnSequence
-   * @return previousColumnSequence
+   * Get previousColumnOffset
+   * @return previousColumnOffset
    **/
-  @JsonProperty("previousColumnSequence")
+  @JsonProperty("previousColumnOffset")
   @ApiModelProperty(value = "")
-  public Integer getPreviousColumnSequence() {
-    return previousColumnSequence;
+  public Integer getPreviousColumnOffset() {
+    return previousColumnOffset;
   }
 
-  public void setPreviousColumnSequence(Integer previousColumnSequence) {
-    this.previousColumnSequence = previousColumnSequence;
+  public void setPreviousColumnOffset(Integer previousColumnOffset) {
+    this.previousColumnOffset = previousColumnOffset;
   }
 
   public Column active(Boolean active) {
@@ -208,14 +208,14 @@ public class Column   {
         Objects.equals(this.name, column.name) &&
         Objects.equals(this.seqNo, column.seqNo) &&
         Objects.equals(this.previousColumnid, column.previousColumnid) &&
-        Objects.equals(this.previousColumnSequence, column.previousColumnSequence) &&
+        Objects.equals(this.previousColumnOffset, column.previousColumnOffset) &&
         Objects.equals(this.active, column.active) &&
         Objects.equals(this.tid, column.tid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, seqNo, previousColumnid, previousColumnSequence, active, tid);
+    return Objects.hash(id, name, seqNo, previousColumnid, previousColumnOffset, active, tid);
   }
 
 
@@ -228,7 +228,7 @@ public class Column   {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    seqNo: ").append(toIndentedString(seqNo)).append("\n");
     sb.append("    previousColumnid: ").append(toIndentedString(previousColumnid)).append("\n");
-    sb.append("    previousColumnSequence: ").append(toIndentedString(previousColumnSequence)).append("\n");
+    sb.append("    previousColumnOffset: ").append(toIndentedString(previousColumnOffset)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    tid: ").append(toIndentedString(tid)).append("\n");
     sb.append("}");
