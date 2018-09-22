@@ -7,3 +7,4 @@ new changes
 This is unstaged line
 
 new changes should be invisible after checkout
+anoter new line added
