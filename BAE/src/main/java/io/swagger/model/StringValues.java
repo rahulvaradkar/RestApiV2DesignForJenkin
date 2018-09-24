@@ -18,16 +18,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.StringValuesStrValueFormula;
-import io.swagger.model.Transaction;
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.constraints.*;
 
 /**
  * StringValues
  */
-
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-09-18T12:35:03.779Z")
 public class StringValues   {
   @JsonProperty("cellId")
   private Integer cellId = null;
@@ -38,11 +34,11 @@ public class StringValues   {
   @JsonProperty("stringValue")
   private String stringValue = null;
 
-  @JsonProperty("strValueTransaction")
-  private List<Transaction> strValueTransaction = null;
+  @JsonProperty("txId")
+  private Integer txId = null;
 
-  @JsonProperty("strValueFormula")
-  private StringValuesStrValueFormula strValueFormula = null;
+  @JsonProperty("formulaId")
+  private Integer formulaId = null;
 
   public StringValues cellId(Integer cellId) {
     this.cellId = cellId;
@@ -101,50 +97,42 @@ public class StringValues   {
     this.stringValue = stringValue;
   }
 
-  public StringValues strValueTransaction(List<Transaction> strValueTransaction) {
-    this.strValueTransaction = strValueTransaction;
-    return this;
-  }
-
-  public StringValues addStrValueTransactionItem(Transaction strValueTransactionItem) {
-    if (this.strValueTransaction == null) {
-      this.strValueTransaction = new ArrayList<Transaction>();
-    }
-    this.strValueTransaction.add(strValueTransactionItem);
+  public StringValues txId(Integer txId) {
+    this.txId = txId;
     return this;
   }
 
   /**
-   * Get strValueTransaction
-   * @return strValueTransaction
+   * Get txId
+   * @return txId
    **/
-  @JsonProperty("strValueTransaction")
+  @JsonProperty("txId")
   @ApiModelProperty(value = "")
-  public List<Transaction> getStrValueTransaction() {
-    return strValueTransaction;
+  public Integer getTxId() {
+    return txId;
   }
 
-  public void setStrValueTransaction(List<Transaction> strValueTransaction) {
-    this.strValueTransaction = strValueTransaction;
+  public void setTxId(Integer txId) {
+    this.txId = txId;
   }
 
-  public StringValues strValueFormula(StringValuesStrValueFormula strValueFormula) {
-    this.strValueFormula = strValueFormula;
+  public StringValues formulaId(Integer formulaId) {
+    this.formulaId = formulaId;
     return this;
   }
 
   /**
-   * Get strValueFormula
-   * @return strValueFormula
+   * Get formulaId
+   * @return formulaId
    **/
-  @JsonProperty("strValueFormula")
+  @JsonProperty("formulaId")
   @ApiModelProperty(value = "")
-  public StringValuesStrValueFormula getStrValueFormula() {
-    return strValueFormula;
+  public Integer getFormulaId() {
+    return formulaId;
   }
 
-  public void setStrValueFormula(StringValuesStrValueFormula strValueFormula) {
-    this.strValueFormula = strValueFormula;
+  public void setFormulaId(Integer formulaId) {
+    this.formulaId = formulaId;
   }
 
 
@@ -160,13 +148,13 @@ public class StringValues   {
     return Objects.equals(this.cellId, stringValues.cellId) &&
         Objects.equals(this.stringValueId, stringValues.stringValueId) &&
         Objects.equals(this.stringValue, stringValues.stringValue) &&
-        Objects.equals(this.strValueTransaction, stringValues.strValueTransaction) &&
-        Objects.equals(this.strValueFormula, stringValues.strValueFormula);
+        Objects.equals(this.txId, stringValues.txId) &&
+        Objects.equals(this.formulaId, stringValues.formulaId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cellId, stringValueId, stringValue, strValueTransaction, strValueFormula);
+    return Objects.hash(cellId, stringValueId, stringValue, txId, formulaId);
   }
 
 
@@ -178,8 +166,8 @@ public class StringValues   {
     sb.append("    cellId: ").append(toIndentedString(cellId)).append("\n");
     sb.append("    stringValueId: ").append(toIndentedString(stringValueId)).append("\n");
     sb.append("    stringValue: ").append(toIndentedString(stringValue)).append("\n");
-    sb.append("    strValueTransaction: ").append(toIndentedString(strValueTransaction)).append("\n");
-    sb.append("    strValueFormula: ").append(toIndentedString(strValueFormula)).append("\n");
+    sb.append("    txId: ").append(toIndentedString(txId)).append("\n");
+    sb.append("    formulaId: ").append(toIndentedString(formulaId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

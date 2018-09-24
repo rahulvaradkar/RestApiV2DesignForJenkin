@@ -18,15 +18,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Transaction;
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.constraints.*;
 
 /**
  * CellStatus
  */
-
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-09-18T12:35:03.779Z")
 public class CellStatus   {
   @JsonProperty("cellStatusId")
   private Integer cellStatusId = null;
@@ -37,8 +34,8 @@ public class CellStatus   {
   @JsonProperty("isActive")
   private Integer isActive = null;
 
-  @JsonProperty("statusTransaction")
-  private List<Transaction> statusTransaction = null;
+  @JsonProperty("txId")
+  private Integer txId = null;
 
   public CellStatus cellStatusId(Integer cellStatusId) {
     this.cellStatusId = cellStatusId;
@@ -97,31 +94,23 @@ public class CellStatus   {
     this.isActive = isActive;
   }
 
-  public CellStatus statusTransaction(List<Transaction> statusTransaction) {
-    this.statusTransaction = statusTransaction;
-    return this;
-  }
-
-  public CellStatus addStatusTransactionItem(Transaction statusTransactionItem) {
-    if (this.statusTransaction == null) {
-      this.statusTransaction = new ArrayList<Transaction>();
-    }
-    this.statusTransaction.add(statusTransactionItem);
+  public CellStatus txId(Integer txId) {
+    this.txId = txId;
     return this;
   }
 
   /**
-   * Get statusTransaction
-   * @return statusTransaction
+   * Get txId
+   * @return txId
    **/
-  @JsonProperty("statusTransaction")
+  @JsonProperty("txId")
   @ApiModelProperty(value = "")
-  public List<Transaction> getStatusTransaction() {
-    return statusTransaction;
+  public Integer getTxId() {
+    return txId;
   }
 
-  public void setStatusTransaction(List<Transaction> statusTransaction) {
-    this.statusTransaction = statusTransaction;
+  public void setTxId(Integer txId) {
+    this.txId = txId;
   }
 
 
@@ -137,12 +126,12 @@ public class CellStatus   {
     return Objects.equals(this.cellStatusId, cellStatus.cellStatusId) &&
         Objects.equals(this.cellId, cellStatus.cellId) &&
         Objects.equals(this.isActive, cellStatus.isActive) &&
-        Objects.equals(this.statusTransaction, cellStatus.statusTransaction);
+        Objects.equals(this.txId, cellStatus.txId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cellStatusId, cellId, isActive, statusTransaction);
+    return Objects.hash(cellStatusId, cellId, isActive, txId);
   }
 
 
@@ -154,7 +143,7 @@ public class CellStatus   {
     sb.append("    cellStatusId: ").append(toIndentedString(cellStatusId)).append("\n");
     sb.append("    cellId: ").append(toIndentedString(cellId)).append("\n");
     sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
-    sb.append("    statusTransaction: ").append(toIndentedString(statusTransaction)).append("\n");
+    sb.append("    txId: ").append(toIndentedString(txId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

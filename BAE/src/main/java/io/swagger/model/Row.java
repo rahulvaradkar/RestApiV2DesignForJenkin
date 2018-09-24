@@ -38,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * Row
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-05-10T14:51:11.960Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-09-18T12:35:03.779Z")
 public class Row   {
   @JsonProperty("id")
   private Integer id = null;

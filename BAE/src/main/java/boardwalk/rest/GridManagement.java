@@ -76,7 +76,7 @@ public class GridManagement {
 		
     //@GET
     //@Path("/{gridId}")
-	public static CellBuffer gridGridIdGet(int gridId, int importTid, String view, int mode, int baselineId , ArrayList<ErrorRequestObject> ErrResps, String authBase64String, BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode )
+	public static CellBuffer gridGridIdGet(int gridId, int importTid, String view, int mode, int baselineId , ArrayList<ErrorRequestObject> ErrResps,  BoardwalkConnection bwcon, ArrayList<Integer> memberNh, ArrayList<Integer> statusCode )
 	{
 		//CellBuffer  cellBufferRequest = new CellBuffer();
 		CellBuffer cbfReturn = new CellBuffer();
@@ -310,7 +310,6 @@ public class GridManagement {
 					gridRow.setCreaterId(  rowObject.getCreatorUserId());
 					gridRow.setOwnerName(rowObject.getOwnerName());
 					gridRow.setOwnershipAssignedTid( rowObject.getOwnershipAssignedTid());
-					gridRow.setOwnerName(rowObject.getOwnerName());
 					gridRow.setOwnerId(  rowObject.getOwnerUserId());
 					gridRow.setActive((rowObject.getIsActive()== 1? true : false));
 					gridRow.setRowName(rowObject.getName()); 	
@@ -4378,6 +4377,10 @@ public class GridManagement {
 			rs.close();
 			stmt = null;
 			rs = null;
+
+			statusCode.add(200);		//Success. returns GridChanges.
+	    	return gcReturn;
+
 		}
 		catch (Exception e)
 		{
@@ -4407,8 +4410,6 @@ public class GridManagement {
 				rs = null;
 			}
 		}
-		statusCode.add(200);
-    	return gcReturn;
     }
 
     //@GET

@@ -21,10 +21,13 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 /**
  * Transaction
  */
-
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-09-18T12:35:03.779Z")
 public class Transaction   {
   @JsonProperty("id")
   private Integer id = null;

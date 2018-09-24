@@ -11,8 +11,9 @@ import java.io.InputStream;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
-
+import boardwalk.connection.BoardwalkConnection;
 import boardwalk.rest.GridchainManagement;
+import boardwalk.rest.bwAuthorization;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -25,7 +26,11 @@ public class GridchainApiServiceImpl extends GridchainApiService {
 
     	StringBuffer invReqMsg = new StringBuffer(500);
     	StringBuffer invResMsg = new StringBuffer(500);
-    		
+
+    	BoardwalkConnection bwcon = null;
+		ArrayList<Integer> memberNh = new ArrayList<Integer>();
+		ArrayList<Integer> statusCode = new ArrayList<Integer>();
+    	
     	ArrayList <ErrorRequestObject> erbs  = new ArrayList<ErrorRequestObject>();
     	ErrorRequestObject erb;
 
@@ -54,6 +59,21 @@ public class GridchainApiServiceImpl extends GridchainApiService {
 			reqei.setErrorDetails( erbs);
 			reqeis.add(reqei);
 		}
+		else
+		{
+			ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
+	    	//Connection connection = null;
+			
+			bwcon = bwAuthorization.AuthenticateUser(authBase64String, memberNh, ErrResps);
+			if (!ErrResps.isEmpty())
+			{
+				reqei = new RequestErrorInfo();
+				reqei.setErrorMessage("Authentication Failed");
+				reqei.setErrorDetails( ErrResps);
+				reqeis.add(reqei);
+				return Response.status(401).entity(reqeis).build();		//401: Authorization Failed
+			}
+		} 		
 
 		if (gridId <= 0)	
 		{	
@@ -75,7 +95,7 @@ public class GridchainApiServiceImpl extends GridchainApiService {
 		if (reqeis.size() == 0)
 		{
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
-	  	 	gc = GridchainManagement.gridchainGridIdGet(gridId, ErrResps, authBase64String);
+	  	 	gc = GridchainManagement.gridchainGridIdGet(gridId, ErrResps, bwcon, memberNh, statusCode);
 
 	    	if (ErrResps.size() > 0)
 	    	{

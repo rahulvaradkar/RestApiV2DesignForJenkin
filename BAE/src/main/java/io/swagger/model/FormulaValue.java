@@ -18,15 +18,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Transaction;
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.constraints.*;
 
 /**
  * FormulaValue
  */
-
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-09-18T12:35:03.779Z")
 public class FormulaValue   {
   @JsonProperty("formulaId")
   private Integer formulaId = null;
@@ -37,8 +34,8 @@ public class FormulaValue   {
   @JsonProperty("formulaIndex")
   private String formulaIndex = null;
 
-  @JsonProperty("formulaTransaction")
-  private List<Transaction> formulaTransaction = null;
+  @JsonProperty("txId")
+  private Integer txId = null;
 
   public FormulaValue formulaId(Integer formulaId) {
     this.formulaId = formulaId;
@@ -97,31 +94,23 @@ public class FormulaValue   {
     this.formulaIndex = formulaIndex;
   }
 
-  public FormulaValue formulaTransaction(List<Transaction> formulaTransaction) {
-    this.formulaTransaction = formulaTransaction;
-    return this;
-  }
-
-  public FormulaValue addFormulaTransactionItem(Transaction formulaTransactionItem) {
-    if (this.formulaTransaction == null) {
-      this.formulaTransaction = new ArrayList<Transaction>();
-    }
-    this.formulaTransaction.add(formulaTransactionItem);
+  public FormulaValue txId(Integer txId) {
+    this.txId = txId;
     return this;
   }
 
   /**
-   * Get formulaTransaction
-   * @return formulaTransaction
+   * Get txId
+   * @return txId
    **/
-  @JsonProperty("formulaTransaction")
+  @JsonProperty("txId")
   @ApiModelProperty(value = "")
-  public List<Transaction> getFormulaTransaction() {
-    return formulaTransaction;
+  public Integer getTxId() {
+    return txId;
   }
 
-  public void setFormulaTransaction(List<Transaction> formulaTransaction) {
-    this.formulaTransaction = formulaTransaction;
+  public void setTxId(Integer txId) {
+    this.txId = txId;
   }
 
 
@@ -137,12 +126,12 @@ public class FormulaValue   {
     return Objects.equals(this.formulaId, formulaValue.formulaId) &&
         Objects.equals(this.formula, formulaValue.formula) &&
         Objects.equals(this.formulaIndex, formulaValue.formulaIndex) &&
-        Objects.equals(this.formulaTransaction, formulaValue.formulaTransaction);
+        Objects.equals(this.txId, formulaValue.txId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(formulaId, formula, formulaIndex, formulaTransaction);
+    return Objects.hash(formulaId, formula, formulaIndex, txId);
   }
 
 
@@ -154,7 +143,7 @@ public class FormulaValue   {
     sb.append("    formulaId: ").append(toIndentedString(formulaId)).append("\n");
     sb.append("    formula: ").append(toIndentedString(formula)).append("\n");
     sb.append("    formulaIndex: ").append(toIndentedString(formulaIndex)).append("\n");
-    sb.append("    formulaTransaction: ").append(toIndentedString(formulaTransaction)).append("\n");
+    sb.append("    txId: ").append(toIndentedString(txId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

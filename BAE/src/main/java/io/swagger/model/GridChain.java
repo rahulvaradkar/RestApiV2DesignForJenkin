@@ -22,31 +22,34 @@ import io.swagger.model.CellChain;
 import io.swagger.model.ColumnChain;
 import io.swagger.model.FormulaValue;
 import io.swagger.model.RowChain;
-import io.swagger.model.TransactionChain;
+import io.swagger.model.Transaction;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 
 /**
  * GridChain
  */
-
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-09-18T12:35:03.779Z")
 public class GridChain   {
-  @JsonProperty("creator_name")
+  @JsonProperty("creatorName")
   private String creatorName = null;
 
-  @JsonProperty("creator_id")
+  @JsonProperty("creatorId")
   private Integer creatorId = null;
-
-  @JsonProperty("creationDateTime")
-  private Date creationDateTime = null;
-
-  @JsonProperty("creationDateTimeGMT")
-  private Long creationDateTimeGMT = null;
 
   @JsonProperty("creationTxId")
   private Integer creationTxId = null;
+
+  @JsonProperty("collabId")
+  private Integer collabId = null;
+
+  @JsonProperty("wbId")
+  private Integer wbId = null;
 
   @JsonProperty("gridRows")
   private List<RowChain> gridRows = null;
@@ -58,7 +61,7 @@ public class GridChain   {
   private List<CellChain> gridCells = null;
 
   @JsonProperty("gridTransactions")
-  private List<TransactionChain> gridTransactions = null;
+  private List<Transaction> gridTransactions = null;
 
   @JsonProperty("gridFormulas")
   private List<FormulaValue> gridFormulas = null;
@@ -72,7 +75,7 @@ public class GridChain   {
    * Get creatorName
    * @return creatorName
    **/
-  @JsonProperty("creator_name")
+  @JsonProperty("creatorName")
   @ApiModelProperty(value = "")
   public String getCreatorName() {
     return creatorName;
@@ -91,7 +94,7 @@ public class GridChain   {
    * Get creatorId
    * @return creatorId
    **/
-  @JsonProperty("creator_id")
+  @JsonProperty("creatorId")
   @ApiModelProperty(value = "")
   public Integer getCreatorId() {
     return creatorId;
@@ -99,44 +102,6 @@ public class GridChain   {
 
   public void setCreatorId(Integer creatorId) {
     this.creatorId = creatorId;
-  }
-
-  public GridChain creationDateTime(Date creationDateTime) {
-    this.creationDateTime = creationDateTime;
-    return this;
-  }
-
-  /**
-   * Get creationDateTime
-   * @return creationDateTime
-   **/
-  @JsonProperty("creationDateTime")
-  @ApiModelProperty(value = "")
-  public Date getCreationDateTime() {
-    return creationDateTime;
-  }
-
-  public void setCreationDateTime(Date creationDateTime) {
-    this.creationDateTime = creationDateTime;
-  }
-
-  public GridChain creationDateTimeGMT(Long creationDateTimeGMT) {
-    this.creationDateTimeGMT = creationDateTimeGMT;
-    return this;
-  }
-
-  /**
-   * Get creationDateTimeGMT
-   * @return creationDateTimeGMT
-   **/
-  @JsonProperty("creationDateTimeGMT")
-  @ApiModelProperty(value = "")
-  public Long getCreationDateTimeGMT() {
-    return creationDateTimeGMT;
-  }
-
-  public void setCreationDateTimeGMT(Long creationDateTimeGMT) {
-    this.creationDateTimeGMT = creationDateTimeGMT;
   }
 
   public GridChain creationTxId(Integer creationTxId) {
@@ -156,6 +121,44 @@ public class GridChain   {
 
   public void setCreationTxId(Integer creationTxId) {
     this.creationTxId = creationTxId;
+  }
+
+  public GridChain collabId(Integer collabId) {
+    this.collabId = collabId;
+    return this;
+  }
+
+  /**
+   * Get collabId
+   * @return collabId
+   **/
+  @JsonProperty("collabId")
+  @ApiModelProperty(value = "")
+  public Integer getCollabId() {
+    return collabId;
+  }
+
+  public void setCollabId(Integer collabId) {
+    this.collabId = collabId;
+  }
+
+  public GridChain wbId(Integer wbId) {
+    this.wbId = wbId;
+    return this;
+  }
+
+  /**
+   * Get wbId
+   * @return wbId
+   **/
+  @JsonProperty("wbId")
+  @ApiModelProperty(value = "")
+  public Integer getWbId() {
+    return wbId;
+  }
+
+  public void setWbId(Integer wbId) {
+    this.wbId = wbId;
   }
 
   public GridChain gridRows(List<RowChain> gridRows) {
@@ -239,14 +242,14 @@ public class GridChain   {
     this.gridCells = gridCells;
   }
 
-  public GridChain gridTransactions(List<TransactionChain> gridTransactions) {
+  public GridChain gridTransactions(List<Transaction> gridTransactions) {
     this.gridTransactions = gridTransactions;
     return this;
   }
 
-  public GridChain addGridTransactionsItem(TransactionChain gridTransactionsItem) {
+  public GridChain addGridTransactionsItem(Transaction gridTransactionsItem) {
     if (this.gridTransactions == null) {
-      this.gridTransactions = new ArrayList<TransactionChain>();
+      this.gridTransactions = new ArrayList<Transaction>();
     }
     this.gridTransactions.add(gridTransactionsItem);
     return this;
@@ -258,11 +261,11 @@ public class GridChain   {
    **/
   @JsonProperty("gridTransactions")
   @ApiModelProperty(value = "")
-  public List<TransactionChain> getGridTransactions() {
+  public List<Transaction> getGridTransactions() {
     return gridTransactions;
   }
 
-  public void setGridTransactions(List<TransactionChain> gridTransactions) {
+  public void setGridTransactions(List<Transaction> gridTransactions) {
     this.gridTransactions = gridTransactions;
   }
 
@@ -305,9 +308,9 @@ public class GridChain   {
     GridChain gridChain = (GridChain) o;
     return Objects.equals(this.creatorName, gridChain.creatorName) &&
         Objects.equals(this.creatorId, gridChain.creatorId) &&
-        Objects.equals(this.creationDateTime, gridChain.creationDateTime) &&
-        Objects.equals(this.creationDateTimeGMT, gridChain.creationDateTimeGMT) &&
         Objects.equals(this.creationTxId, gridChain.creationTxId) &&
+        Objects.equals(this.collabId, gridChain.collabId) &&
+        Objects.equals(this.wbId, gridChain.wbId) &&
         Objects.equals(this.gridRows, gridChain.gridRows) &&
         Objects.equals(this.gridColumns, gridChain.gridColumns) &&
         Objects.equals(this.gridCells, gridChain.gridCells) &&
@@ -317,7 +320,7 @@ public class GridChain   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(creatorName, creatorId, creationDateTime, creationDateTimeGMT, creationTxId, gridRows, gridColumns, gridCells, gridTransactions, gridFormulas);
+    return Objects.hash(creatorName, creatorId, creationTxId, collabId, wbId, gridRows, gridColumns, gridCells, gridTransactions, gridFormulas);
   }
 
 
@@ -328,9 +331,9 @@ public class GridChain   {
     
     sb.append("    creatorName: ").append(toIndentedString(creatorName)).append("\n");
     sb.append("    creatorId: ").append(toIndentedString(creatorId)).append("\n");
-    sb.append("    creationDateTime: ").append(toIndentedString(creationDateTime)).append("\n");
-    sb.append("    creationDateTimeGMT: ").append(toIndentedString(creationDateTimeGMT)).append("\n");
     sb.append("    creationTxId: ").append(toIndentedString(creationTxId)).append("\n");
+    sb.append("    collabId: ").append(toIndentedString(collabId)).append("\n");
+    sb.append("    wbId: ").append(toIndentedString(wbId)).append("\n");
     sb.append("    gridRows: ").append(toIndentedString(gridRows)).append("\n");
     sb.append("    gridColumns: ").append(toIndentedString(gridColumns)).append("\n");
     sb.append("    gridCells: ").append(toIndentedString(gridCells)).append("\n");

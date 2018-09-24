@@ -102,6 +102,7 @@ public class GridApiServiceImpl extends GridApiService {
 			erbs.add(erb);
 		}
 		else if (view.trim().equals("MY_ROWS") || 
+    			view.trim().equals("") || 
     			view.trim().equals("LATEST") || 
     			view.trim().equals("DESIGN") || 
     			view.trim().equals("LATEST_BY_USER") || 
@@ -156,7 +157,7 @@ public class GridApiServiceImpl extends GridApiService {
 	   		CellBuffer cbf;
 	  	 	ArrayList <ErrorRequestObject> ErrResps = new ArrayList<ErrorRequestObject>();
 	  	 	
-	  	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, authBase64String, bwcon, memberNh, statusCode);
+	  	 	cbf = GridManagement.gridGridIdGet(gridId, importTid, view, mode, baselineId, ErrResps, bwcon, memberNh, statusCode);
 
 	  	 	//[LINK IMPORT]
 	  	 	//500: Server-side Error. Exception thrown from GridManagement.gridGridIdGet [getTableBuffer] Block
@@ -235,7 +236,7 @@ public class GridApiServiceImpl extends GridApiService {
 			if (!ErrResps.isEmpty())
 			{
 				reqei = new RequestErrorInfo();
-				reqei.setErrorMessage("Authorization in Header not Found");
+				reqei.setErrorMessage("Authentication Failed");
 				reqei.setErrorDetails( ErrResps);
 				reqeis.add(reqei);
 				return Response.status(401).entity(reqeis).build();		//401: Authorization Failed
@@ -460,7 +461,7 @@ public class GridApiServiceImpl extends GridApiService {
 			if (!ErrResps.isEmpty())
 			{
 				reqei = new RequestErrorInfo();
-				reqei.setErrorMessage("Authorization in Header not Found");
+				reqei.setErrorMessage("Authentication Failed");
 				reqei.setErrorDetails( ErrResps);
 				reqeis.add(reqei);
 				return Response.status(401).entity(reqeis).build();		//401: Authorization Failed
@@ -728,7 +729,7 @@ public class GridApiServiceImpl extends GridApiService {
 			if (!ErrResps.isEmpty())
 			{
 				reqei = new RequestErrorInfo();
-				reqei.setErrorMessage("Authorization in Header not Found");
+				reqei.setErrorMessage("Authentication Failed");
 				reqei.setErrorDetails( ErrResps);
 				reqeis.add(reqei);
 				return Response.status(401).entity(reqeis).build();		//401: Authorization Failed
@@ -831,7 +832,7 @@ public class GridApiServiceImpl extends GridApiService {
 	    	ResponseInfo ri = new ResponseInfo();
 	    	ri.setStatus("Invalid Request");
 	    	ri.setInvalidRequestDetails(reqeis);
-	        return Response.status(400).entity(ri).build();		//400 : Invalid Request
+	        return Response.status(400).entity(ri).build();		//400 : Bad Request
 		}
 		
     	long difference_in_MiliSec;
@@ -869,12 +870,11 @@ public class GridApiServiceImpl extends GridApiService {
 			reqei.setErrorMessage("Failed to get Transaction Changes");
 			reqei.setErrorDetails( ErrResps);
 			reqeis.add(reqei);			
-
 			return Response.status(scode).entity(reqeis).build();   	
     	}
     	else
     	{
-    		return Response.status(200).entity(gc).build();		//200: Success. returns cellBuffer
+    		return Response.status(200).entity(gc).build();		//200: Success. returns Grid changes
     	}
       //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
@@ -1065,6 +1065,7 @@ public class GridApiServiceImpl extends GridApiService {
 	  	 	//423 : Locked. The resource that is being accessed is locked. The table is being updated by another user, Please try later
 	  	 	//412 : Precondition Failed. Columns are not Unique. 
 	  	 	//400 : Bad Request . Too many errors in payload
+	  	 	//200 : Success. Returns cellBuffer
 	  	 	
 	    	if (ErrResps.size() > 0)
 	    	{

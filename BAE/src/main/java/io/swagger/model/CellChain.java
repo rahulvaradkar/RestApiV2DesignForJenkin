@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.CellStatus;
 import io.swagger.model.StringValues;
-import io.swagger.model.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.*;
@@ -28,7 +27,7 @@ import javax.validation.constraints.*;
 /**
  * CellChain
  */
-
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2018-09-18T12:35:03.779Z")
 public class CellChain   {
   @JsonProperty("gridId")
   private Integer gridId = null;
@@ -47,9 +46,6 @@ public class CellChain   {
 
   @JsonProperty("isActive")
   private Boolean isActive = null;
-
-  @JsonProperty("lastTxDetails")
-  private List<Transaction> lastTxDetails = null;
 
   @JsonProperty("cellHistory")
   private List<StringValues> cellHistory = null;
@@ -171,33 +167,6 @@ public class CellChain   {
     this.isActive = isActive;
   }
 
-  public CellChain lastTxDetails(List<Transaction> lastTxDetails) {
-    this.lastTxDetails = lastTxDetails;
-    return this;
-  }
-
-  public CellChain addLastTxDetailsItem(Transaction lastTxDetailsItem) {
-    if (this.lastTxDetails == null) {
-      this.lastTxDetails = new ArrayList<Transaction>();
-    }
-    this.lastTxDetails.add(lastTxDetailsItem);
-    return this;
-  }
-
-  /**
-   * Get lastTxDetails
-   * @return lastTxDetails
-   **/
-  @JsonProperty("lastTxDetails")
-  @ApiModelProperty(value = "")
-  public List<Transaction> getLastTxDetails() {
-    return lastTxDetails;
-  }
-
-  public void setLastTxDetails(List<Transaction> lastTxDetails) {
-    this.lastTxDetails = lastTxDetails;
-  }
-
   public CellChain cellHistory(List<StringValues> cellHistory) {
     this.cellHistory = cellHistory;
     return this;
@@ -268,14 +237,13 @@ public class CellChain   {
         Objects.equals(this.columnId, cellChain.columnId) &&
         Objects.equals(this.cellType, cellChain.cellType) &&
         Objects.equals(this.isActive, cellChain.isActive) &&
-        Objects.equals(this.lastTxDetails, cellChain.lastTxDetails) &&
         Objects.equals(this.cellHistory, cellChain.cellHistory) &&
         Objects.equals(this.cellStatus, cellChain.cellStatus);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(gridId, cellId, rowId, columnId, cellType, isActive, lastTxDetails, cellHistory, cellStatus);
+    return Objects.hash(gridId, cellId, rowId, columnId, cellType, isActive, cellHistory, cellStatus);
   }
 
 
@@ -290,7 +258,6 @@ public class CellChain   {
     sb.append("    columnId: ").append(toIndentedString(columnId)).append("\n");
     sb.append("    cellType: ").append(toIndentedString(cellType)).append("\n");
     sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
-    sb.append("    lastTxDetails: ").append(toIndentedString(lastTxDetails)).append("\n");
     sb.append("    cellHistory: ").append(toIndentedString(cellHistory)).append("\n");
     sb.append("    cellStatus: ").append(toIndentedString(cellStatus)).append("\n");
     sb.append("}");
